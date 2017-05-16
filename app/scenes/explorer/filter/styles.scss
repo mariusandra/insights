@@ -1,0 +1,29 @@
+.insights-filter {
+  padding: 0 10px;
+
+  .filter-header {
+    line-height: 30px;
+    height: 30px;
+    vertical-align: middle;
+    cursor: pointer;
+
+    .header-text {
+      vertical-align: middle;
+    }
+    .filter-preview {
+      vertical-align: middle;
+      height: 30px;
+      margin-left: 10px;
+      .preview-part {
+        vertical-align: middle;
+        background: #eee;
+        margin-right: 8px;
+        height: 23px;
+        line-height: 23px;
+        padding: 0 5px;
+        display: inline-block;
+        border: 1px solid #ddd;
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+- react_bundle = request.env["kea.bundle"]
+
+%link{:href=>'https://fonts.googleapis.com/css?family=Roboto+Slab:400,700,300,100|Roboto:400,300', :rel=>'stylesheet', :type=>'text/css'}
+
+- if Rails.env.development?
+  %script{src: "http://localhost:3350/#{react_bundle}-bundle.js"}
+
+- else
+  = stylesheet_link_tag "react/vendor", media: 'all'
+  = stylesheet_link_tag "react/#{react_bundle}", media: 'all'
+  = javascript_include_tag "react/#{react_bundle}-bundle"

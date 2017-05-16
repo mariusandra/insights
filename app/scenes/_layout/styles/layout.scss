@@ -1,0 +1,135 @@
+$text-font: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+$text-size: 14px;
+$link-color: #75A23B;
+
+body {
+  background: #fff;
+  font-family: $text-font;
+  font-size: $text-size;
+  color: #222;
+}
+
+* { margin:0; padding:0; }
+
+html, body { height: 100%; }
+
+a {
+  color: $link-color;
+  text-decoration: none;
+  &:hover {
+    color: darken($link-color, 20%);
+    //text-decoration: underline;
+  }
+}
+
+a.button, button, input[type='submit'], input[type='button'] {
+  display: inline-block;
+  text-decoration: none;
+
+  width: auto;
+  line-height: 20px;
+  //height: 30px;
+  cursor: pointer;
+  -webkit-appearance: none;
+
+  border: 0;
+  background: #8eca10;
+  padding: 5px 20px;
+  white-space: normal;
+  color: #ffffff;
+
+  font-size: 14px;
+  font-weight: normal;
+  margin-bottom: 5px;
+  vertical-align: middle;
+  text-align: center;
+
+  border-radius: 2px;
+  transition: all 0.2s ease;
+
+  &.white {
+    background-color: #ffffff;
+    border: 1px solid #e4e4e4;
+    color: #666666;
+    &:hover {
+      border: 1px solid #c4c4c4;
+    }
+  }
+  &.dark-blue {
+    background: #1267B5;
+  }
+  &.dark-gray {
+    background: #999999;
+    color: white;
+  }
+  &.is-disabled {
+    background: #ccc;
+  }
+}
+
+input.input-text, textarea {
+  border: solid 1px #bbb;
+  display: block;
+  font-size: 13px;
+  background: #fff;
+  font-size: 13px;
+  padding: 1px 3px 0 3px;
+  line-height: 27px;
+  height: 30px;
+  outline: none !important;
+  &:focus {
+    outline: none !important;
+  }
+  &[disabled] {
+    background-color: #ddd;
+  }
+}
+
+.super-select {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  border: 1px solid #bbb;
+  vertical-align: middle;
+  height: 28px;
+
+  &.placeholder {
+    select {
+      color: #888888;
+    }
+  }
+
+  select {
+    border: 0;
+    outline: 0;
+    width: 120%;
+    background: white;
+    border-radius: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding: 6px 9px;
+    padding-right: 25px;
+    font-size: 13px;
+    color: #000000;
+    margin-bottom: 0;
+    vertical-align: top;
+  }
+  select::-ms-expand {
+    display: none;
+  }
+  .arrow {
+    content: '▾';
+    position: absolute;
+    pointer-events: none;
+    color: #82888a;
+    top: 0;
+    bottom: 1px;
+    padding-top: 7px;
+    line-height: 1;
+    right: 0;
+    width: 2em;
+    text-align: center;
+    vertical-align: top;
+    font-size: 14px;
+  }
+}

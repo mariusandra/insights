@@ -1,0 +1,93 @@
+.explorer-tree {
+  padding: 10px;
+
+  button {
+    margin-bottom: 0;
+  }
+
+  .node {
+    line-height: 20px;
+    &.disabled {
+      color: #aaa;
+    }
+    .node-entry {
+      position: relative;
+
+      &:hover {
+        background: #fafafa;
+      }
+      .node-icon {
+        width: 10px;
+        height: 10px;
+        line-height: 7px;
+        box-sizing: border-box;
+        font-size: 12px;
+        text-align: center;
+        float: left;
+        margin-top: 5px;
+
+        &.has-children {
+          border: 1px solid #eee;
+          &.collapsed {
+            &:before {
+              content: '+'
+            }
+          }
+          &.open {
+            &:before {
+              content: '-'
+            }
+          }
+        }
+      }
+      .node-title {
+        margin-left: 14px;
+        cursor: pointer;
+        &:hover {
+          text-decoration: underline;
+        }
+        .node-selected {
+          font-weight: bold;
+        }
+      }
+      .node-controls {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 0;
+        .control-button {
+          border: 1px solid #aaa;
+          background: white;
+          padding: 0 5px;
+          border-radius: 5px;
+          cursor: pointer;
+          &:hover {
+            background: #8eca10;
+            border-color: #8eca10;
+            color: #fff;
+          }
+        }
+      }
+      &:hover {
+        .node-controls {
+          display: block;
+        }
+      }
+    }
+    .node-children {
+      margin-left: 14px;
+    }
+  }
+
+  .boolean {
+    background: #aaa;
+    color: #fff;
+    font-size: 12px;
+    line-height: 18px;
+    display: inline-block;
+    padding: 0 3px;
+    &.true {
+      background: #8eca10;
+    }
+  }
+}

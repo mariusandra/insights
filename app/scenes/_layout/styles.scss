@@ -1,0 +1,22 @@
+@import "./styles/layout.scss";
+
+@import "./styles/rc-tooltip.scss";
+@import './styles/messg.css';
+@import './styles/spinner.scss';
+
+.insights-tab-row {
+  height: 40px;
+  background: #eee;
+  display: flex;
+  padding-left: 10px;
+  align-items: center;
+  div.tab-row-element {
+    padding-right: 10px;
+    button {
+      margin-bottom: 0;
+    }
+  }
+  div.tab-row-separator {
+    flex: 1;
+  }
+}

@@ -1,0 +1,2 @@
+INSIGHTS_EXPORT_PATH = '../my-app/config/insights.yml'
+INSIGHTS_TIMEZONE = 'Europe/Brussels'

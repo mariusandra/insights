@@ -1,0 +1,19 @@
+{
+  "ecmaFeatures": {
+    "jsx": true,
+    "modules": true
+  },
+  "plugins": [
+    "react"
+  ],
+  "rules": {
+    "react/jsx-uses-react": 2,
+    "react/jsx-uses-vars": 2,
+    "react/jsx-indent-props": 0,
+    "react/prop-types": 0,
+    "react/react-in-jsx-scope": 2,
+    "arrow-parens": 0
+  },
+  "extends": ["standard", "standard-react"],
+  "parser": "babel-eslint"
+}
