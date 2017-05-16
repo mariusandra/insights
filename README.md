@@ -40,7 +40,7 @@ Make sure the above commands succeed!
 
 3. Setup the local database
 
-Copy `config/database-dev.yml` to `config/database.yml`
+Copy `config/database.yml.example` to `config/database.yml`
 
 Edit `config/database` and change the `target_database:` block to point to your app's database.
 Feel free to keep the `development` database as SQLite for now, although you might want to use something else in production.
