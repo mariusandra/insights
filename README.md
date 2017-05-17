@@ -1,8 +1,20 @@
 # Insights
 
-**Insights** is a self-hosted "SQL-not-required" data analytics and visualisation tool.
+As our business grew, we faced a dilemma: we had little visibility into our data.
 
-It's loosely inspired by [Looker](https://looker.com/), but without the massive price tag. [Play with the demo here.](http://insights-demo.mariusandra.com/)
+Questions such as "who is our best customer?", "which target countries are gaining in sales?" or "what are our most popular categories for paid leads?" required tinkering in the Rails console or writing custom stats pages. We lost a lot of developer time.
+
+So we started looking for the best Business Intelligence solution out there.
+
+Unfortunately, they all had their problems. Some required knowledge of SQL. Some made multi-table data exploration a pain. Most cost an arm and a leg, per month.
+
+The best tool we found was [Looker](https://looker.com/), but at a monthly price equal to our then burn rate, it was not meant to be.
+
+So I decided to re-implement the essential part of Looker as an open source alternative.
+
+**Insights** is a self-hosted "SQL-not-required" data analytics and business intelligence tool. It's a work in progress and you're brave for checking it out!
+
+[Play with the demo here.](http://insights-demo.mariusandra.com/)
 
 ![Screenshot of the Explorer](https://github.com/mariusandra/insights/raw/master/doc/screenshot.png)
 
