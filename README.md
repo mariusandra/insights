@@ -1,6 +1,6 @@
 # Insights
 
-As our business grew, we faced a dilemma: we had little visibility into our data.
+As [our business](https://www.apprentus.com) grew, we faced a dilemma: we had little visibility into our data.
 
 Questions such as *"who is our best customer?"*, *"which target countries are gaining in sales?"* or *"what are our most popular categories for paid leads?"* required tinkering in the Rails console or writing custom stats pages. We lost *a lot* of developer time over the years.
 
@@ -88,7 +88,6 @@ Hint: to count rows, select the `id` field and then `count` from the table heade
 * Dashboards
 * Better graph controls
 * Graphs that don't require a time column
-* Authentication and login screen
 * Massive Ruby backend code refactoring
 * Moderate React/[Kea](https://github.com/mariusandra/kea) frontend code refactoring
 * Polishing
