@@ -144,8 +144,8 @@ Insights needs one database for its internal use. Feel free to keep the default 
 Then initialize it:
 
 ```
-bundle exec db:create
-bundle exec db:schema:load
+bundle exec rake db:create
+bundle exec rake db:schema:load
 ```
 
 #### 2.4. Set up the path to `insights.yml` in `config/initializers/insights.rb`
