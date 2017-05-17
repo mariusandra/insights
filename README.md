@@ -71,21 +71,6 @@ INSIGHTS_EXPORT_PATH = '/srv/my-app/current/config/insights.yml'
 
 *(Coming soon. There is no authentication yet!)*
 
-```
-config.authentication = [
-  ['user', 'password']
-]
-
-config.authentication = (connection, user, password) -> do
-  results = connection.execute("select encrypted_password from users where email=#{conn.quote(user)} and is_admin = 'true'")
-  if results.present? && results.length == 1 && results[0]['encrypted_password'] == encrypt(password)
-    user
-  else
-    nil
-  end
-end
-```
-
 6. Run it!
 
 ```
