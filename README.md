@@ -1,5 +1,9 @@
 # Insights
 
+**Insights** is a self-hosted "SQL-not-required" data analytics and visualisation tool.
+
+It's loosely inspired by [Looker](https://looker.com/), but without the massive price tag. [Play with the demo here.](http://insights-demo.mariusandra.com/)
+
 ![Screenshot of the Explorer](https://github.com/mariusandra/insights/raw/master/doc/screenshot.png)
 
 Installing `insights` is a two-part process:
