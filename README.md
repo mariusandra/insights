@@ -12,9 +12,11 @@ The best tool we found was [Looker](https://looker.com/), but at a monthly price
 
 So I decided to re-implement the essential parts of Looker as an open source alternative.
 
-**Insights** is a self-hosted "SQL-not-required" data analytics and business intelligence tool. It's a work in progress and you're brave for checking it out! Cheers!
+**Insights** is a self-hosted "SQL-not-required" data analytics and business intelligence tool. Featuring linkable URLs, easy data exploration, automatic joins, graphs, exports, facets (pivots), pretty colors and a ridiculously permissive license (MIT).
 
-[Play with the demo here](http://insights-demo.mariusandra.com/), but do not expect a polished gem!
+It's a work in progress and you're brave for checking it out! Cheers!
+
+[Play with the demo here](http://insights-demo.mariusandra.com/).
 
 ![Screenshot of the Explorer](https://github.com/mariusandra/insights/raw/master/doc/screenshot.png)
 
@@ -64,6 +66,8 @@ Order:
 ```
 
 You give this `insights.yml` file and a database connection to `insights` and start exploring.
+
+The point is this: your developers update the `.yml` file. Your CEO and CFO browse the interface. If they ask for a report, you send them a link to the right view and they can explore further.
 
 ## How to use
 
