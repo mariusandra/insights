@@ -4,7 +4,7 @@ class Url::Controller < Controller
       insights_url = InsightsUrl.create code: SecureRandom.urlsafe_base64,
                                         path: params[:path] # ,
                                         # user: current_user
-      render json: { path: "/insights/url/#{insights_url.code}" }
+      render json: { path: "/url/#{insights_url.code}" }
     else
       render json: { error: true }
     end

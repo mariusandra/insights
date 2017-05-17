@@ -62,7 +62,7 @@ export default class InsightsScene extends Component {
           <Layout layoutHeight={40}>
             <div className='insights-tab-row'>
               <div className='tab-row-element'>
-                <button onClick={() => dispatch(push('/insights/explorer'))} className={window.location.pathname.indexOf('/insights/explorer') === 0 ? 'button' : 'button white'}>Explorer</button>
+                <button onClick={() => dispatch(push('/explorer'))} className={window.location.pathname.indexOf('/explorer') === 0 ? 'button' : 'button white'}>Explorer</button>
               </div>
               <div className='tab-row-separator' />
               {url ? (

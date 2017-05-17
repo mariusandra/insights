@@ -313,7 +313,7 @@ export default class ExplorerLogic extends Logic {
 
         const anythingSelected = Object.values(url).filter(v => v).length > 0
 
-        const pathname = '/insights/explorer'
+        const pathname = '/explorer'
         const search = anythingSelected ? '?' + Object.entries(url).map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`).join('&') : ''
 
         return `${pathname}${search}`
