@@ -24,7 +24,7 @@ Similar to Looker and their LookML, insights requires you to define your data mo
 
 You use the [`insights_export`](https://github.com/mariusandra/insights_export) gem to generate this file from your Rails Models. (Adapters for other frameworks coming soon.)
 
-You keep this file in your source repository and update whenever something changes. You edit it to add custom fields (`full_name: first_name || ' ' || last_name`), hide existing fields (e.g. `encrypted_password`) or hide entire models.
+You keep this file with your code and update it whenever something changes. You edit it to add custom fields (e.g. `full_name: first_name || ' ' || last_name`), hide existing fields (e.g. `encrypted_password`) or hide entire models.
 
 When your database changes, run `rake insights:export` and the file is updated automatically.
 
@@ -62,6 +62,9 @@ Order:
         model_key: id
         my_key: user_id
 ```
+
+You give this file and a database connection to `insights` and start exploring.
+
 
 ## Installing
 
