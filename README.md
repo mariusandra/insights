@@ -76,6 +76,19 @@ You give this `insights.yml` file and a database connection to `insights` and st
 5. ... by month? ([solution](http://insights-demo.mariusandra.com/explorer?columns=User.country.name%2CUser.id!!count%2CUser.created_at!month&sort=-User.created_at!day&treeState=User%2CUser.country&graphTimeFilter=last-365&facetsColumn=User.country.name&facetsCount=6&graphCumulative=false&percentages=false))
 6. ... only ones with confirmed orders? ([solution](http://insights-demo.mariusandra.com/explorer?columns=User.country.name%2CUser.id!!count%2CUser.created_at!month%2CUser.orders.confirmed&sort=-User.created_at!day&treeState=User%2CUser.country%2CUser.orders&graphTimeFilter=last-365&facetsColumn=User.country.name&facetsCount=6&graphCumulative=false&percentages=false&filter%5B0%5D=User.orders.confirmed%3Dequals%3Atrue))
 
+Hint: to count rows, select the `id` field and then `count` from the table header.
+
+## Coming soon
+
+* Saving views
+* Dashboards
+* Better graph controls
+* Graphs that don't require a time column
+* Authentication and login screen
+* Massive Ruby backend code refactoring
+* Moderate React/[Kea](https://github.com/mariusandra/kea) frontend code refactoring
+* Polishing
+
 ## Installing
 
 Installing `insights` is a two-part process:
