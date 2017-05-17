@@ -1,0 +1,33 @@
+.login-scene {
+  padding-top: 200px;
+  .login-box {
+    width: 300px;
+    margin: 0 auto;
+    .logo {
+      font-size: 32px;
+      padding-left: 110px;
+      font-family: 'Roboto Slab';
+      margin-bottom: 20px;
+    }
+    .field {
+      display: flex;
+      line-height: 30px;
+      margin: 20px 0;
+    }
+    label {
+      float: left;
+      text-align: right;
+      width: 100px;
+      margin-right: 10px;
+    }
+    input {
+      width: 190px;
+      display: inline-block;
+    }
+    .simple-error {
+      color: red;
+      margin-left: 110px;
+      margin-top: -18px;
+    }
+  }
+}

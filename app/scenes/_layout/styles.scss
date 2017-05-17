@@ -10,10 +10,17 @@
   display: flex;
   padding-left: 10px;
   align-items: center;
+
   div.tab-row-element {
     padding-right: 10px;
+    white-space: nowrap;
     button {
       margin-bottom: 0;
+    }
+    input {
+      box-sizing: border-box;
+      display: inline-block;
+      margin: 0;
     }
   }
   div.tab-row-separator {

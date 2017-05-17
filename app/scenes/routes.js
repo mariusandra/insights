@@ -1,11 +1,13 @@
 import { combineScenesAndRoutes } from 'kea/scene'
 
 const scenes = {
-  explorer: require('bundle?lazy&name=admin_with_secret_cheese!./explorer/scene.js')
+  explorer: require('bundle?lazy&name=insights!./explorer/scene.js'),
+  login: require('bundle?lazy&name=insights!./login/scene.js')
 }
 
 const routes = {
-  '/explorer': 'explorer'
+  '/explorer': 'explorer',
+  '/login': 'login'
 }
 
 export default combineScenesAndRoutes(scenes, routes)
