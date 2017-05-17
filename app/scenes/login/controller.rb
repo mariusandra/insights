@@ -4,7 +4,7 @@ class Login::Controller < Controller
   end
 
   def check_login
-    user = params[:user]
+    user = params[:user].try(:strip)
     password = params[:password]
 
     if user.blank? || password.blank?
@@ -16,11 +16,19 @@ class Login::Controller < Controller
       }
     end
 
-    if defined?(INSIGHTS_LOGIN) && INSIGHTS_LOGIN.flatten.length == 2
-      if user.strip == INSIGHTS_LOGIN[0] && password == INSIGHTS_LOGIN[1]
+    if defined?(INSIGHTS_LOGIN) && INSIGHTS_LOGIN.present?
+      credentials = INSIGHTS_LOGIN
+
+      if INSIGHTS_LOGIN.flatten.length > 2
+        credentials = INSIGHTS_LOGIN.select { |k, v| k == user }.first
+      end
+
+      if credentials.present? && user == credentials[0] && password == credentials[1]
         render json: { success: true }
+        session[:logged_in] = true
+        session[:user] = user.strip
       else
-        render json: { errors: { password: 'Incorrect password!' } }
+        render json: { errors: { password: 'Incorrect username or password!' } }
       end
     else
       render json: { errors: { password: 'Something is weird on the backend' } }

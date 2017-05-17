@@ -9,13 +9,17 @@ import { push } from 'react-router-redux'
 import { Layout } from 'react-flex-layout'
 
 // components
+import Logout from './logout'
 import Share from './share'
 
 // logic
-@connect()
+@connect((state) => ({
+  currentUser: state.rails.currentUser,
+  loginNeeded: state.rails.loginNeeded
+}))
 export default class InsightsScene extends Component {
   render () {
-    const { dispatch } = this.props
+    const { dispatch, currentUser, loginNeeded } = this.props
 
     if (window.location.search.indexOf('embed=true') >= 0 || window.location.pathname === '/login' || window.location.pathname === '/') {
       return (
@@ -35,6 +39,12 @@ export default class InsightsScene extends Component {
               <div className='tab-row-element'>
                 <button onClick={() => dispatch(push('/explorer'))} className={window.location.pathname.indexOf('/explorer') === 0 ? 'button' : 'button white'}>Explorer</button>
               </div>
+              {loginNeeded ? <Logout /> : null}
+              {currentUser ? (
+                <div className='tab-row-element'>
+                  {currentUser}
+                </div>
+              ) : null}
               <div className='tab-row-separator' />
               <Share />
             </div>

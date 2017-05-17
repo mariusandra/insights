@@ -1,5 +1,5 @@
 class Explorer::Controller < Controller
-  before_action :check_explorer_admin
+  before_action :assure_insights_admin_access
 
   def index
     render_props_or_component
@@ -559,9 +559,6 @@ protected
       last_date = Time.new.to_date
     end
     [first_date, last_date]
-  end
-
-  def check_explorer_admin
   end
 
   def export_xlsx(response)

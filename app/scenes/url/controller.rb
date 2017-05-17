@@ -1,4 +1,6 @@
 class Url::Controller < Controller
+  before_action :assure_insights_admin_access
+
   def create_url
     if params[:path].present?
       insights_url = InsightsUrl.create code: SecureRandom.urlsafe_base64,

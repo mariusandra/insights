@@ -3,7 +3,6 @@ class Controller < ActionController::Base
 
   protect_from_forgery
 
-  before_action :check_insights_admin
   before_action :set_timezone
 
   layout 'application'
@@ -24,6 +23,11 @@ private
     Time.zone = INSIGHTS_TIMEZONE || 'Europe/Brussels'
   end
 
-  def check_insights_admin
+  def assure_insights_admin_access
+    if session[:logged_in] == true && session[:user].present?
+      true
+    elsif defined?(INSIGHTS_LOGIN) && INSIGHTS_LOGIN.present?
+      redirect_to login_path(redirect: request.fullpath)
+    end
   end
 end

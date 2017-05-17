@@ -26,7 +26,7 @@ ReactOnRails.configure do |config|
   # Default is true for development, off otherwise
   config.trace = Rails.env.development?
 
-  # config.rendering_extension = RenderingExtension
+  config.rendering_extension = RenderingExtension
 
   config.npm_build_production_command = nil
   config.npm_build_test_command = nil

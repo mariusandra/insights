@@ -1,11 +1,21 @@
 import Saga from 'kea/saga'
-import { put } from 'redux-saga/effects'
+import { put, select } from 'redux-saga/effects'
+import { push } from 'react-router-redux'
 
 import messg from 'messg'
+
+import delay from 'lib/utils/delay'
 
 import controller from './controller.rb'
 
 import loginLogic from '~/scenes/login/logic'
+
+const DEFAULT_REDIRECT = '/explorer'
+
+const getRedirectPath = () => {
+  const pairs = (window.location.search || '?').split('?')[1].split('&').map(v => v.split('=', 2))
+  return decodeURIComponent((pairs.filter(v => v[0] === 'redirect')[0] || [])[1] || DEFAULT_REDIRECT)
+}
 
 export default class LoginSaga extends Saga {
   actions = () => ([
@@ -23,18 +33,12 @@ export default class LoginSaga extends Saga {
   })
 
   run = function * () {
-    // const { doSomething } = this.actions
+    const { loginNeeded, currentUser } = yield select(state => state.rails)
 
-    console.log('Starting login saga')
-
-    // while (true) {
-    //   const propertyName = yield loginLogic.get('propertyName')
-    //   yield put(doSomething(propertyName + '!'))
-    // }
-  }
-
-  cancelled = function * () {
-    console.log('Stopping login saga')
+    if (loginNeeded && currentUser) {
+      yield delay(50) // without this, just clicking back would cause a problem with the active scene. the kea logic needs to reset the loop
+      yield put(push(getRedirectPath()))
+    }
   }
 
   performLoginWorker = function * (action) {
@@ -58,10 +62,11 @@ export default class LoginSaga extends Saga {
     try {
       yield put(loginRequest())
       const result = yield controller.checkLogin({ user, password })
-      console.log(result)
+
       if (result.success) {
+        messg.success('Login success', 2500)
         yield put(loginSuccess())
-        debugger
+        yield put(push(getRedirectPath()))
       } else {
         messg.error('Login failed', 2500)
         yield put(loginFailure(result.errors))

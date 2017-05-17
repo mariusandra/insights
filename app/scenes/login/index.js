@@ -32,13 +32,19 @@ import sceneLogic from '~/scenes/login/logic'
   ]
 })
 export default class LoginScene extends Component {
+  handleFormSubmit = (e) => {
+    const { performLogin } = this.props.actions
+    e.preventDefault()
+    performLogin()
+  }
+
   render () {
     const { user, password, errors, isSubmitting } = this.props
-    const { setUser, setPassword, performLogin } = this.props.actions
+    const { setUser, setPassword } = this.props.actions
 
     return (
       <div className='login-scene'>
-        <div className='login-box'>
+        <form className='login-box' onSubmit={this.handleFormSubmit}>
           <div className='logo'>
             Insights
           </div>
@@ -58,9 +64,9 @@ export default class LoginScene extends Component {
           ) : null}
           <div className='field'>
             <label />
-            <SubmitButton onClick={performLogin} isSubmitting={isSubmitting}>Login</SubmitButton>
+            <SubmitButton type='submit' isSubmitting={isSubmitting}>Login</SubmitButton>
           </div>
-        </div>
+        </form>
       </div>
     )
   }
