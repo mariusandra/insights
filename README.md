@@ -9,8 +9,6 @@ including custom fields and aliases that you may define.
 
 1. Generate an `insights.yml` file from your Rails app.
 
-*(Coming soon! For now you need to copy `app/services/insights/export_models.rb` to your app manually instead of adding the gem)*
-
 Add `gem 'insights_export'` to your `Gemfile` and run:
 
 ```
@@ -18,7 +16,7 @@ rake insights:export
 ```
 
 The generated `config/insights.yml` file needs to be accessible for `insights` in the next steps. I recommend keeping it in your
-app's repository and running `rake insights:export` each time your model changes to update it. You can then symlink it to `insights`.
+app's repository and running `rake insights:export` each time your database structure changes to update it. You can then symlink it to `insights`.
 
 ## Install Insights
 
@@ -38,11 +36,12 @@ yarn
 
 Make sure the above commands succeed!
 
-3. Setup the local database
+3. Setup the database
 
 Copy `config/database.yml.example` to `config/database.yml`
 
-Edit `config/database` and change the `target_database:` block to point to your app's database.
+Edit `config/database.yml` and change the `target_database:` block to point to your app's database.
+
 Feel free to keep the `development` database as SQLite for now, although you might want to use something else in production.
 
 Init the database:
