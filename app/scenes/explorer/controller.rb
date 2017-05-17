@@ -175,7 +175,13 @@ class Explorer::Controller < Controller
             conditions << "(#{filter_value[:sql]}) not in (#{string.split(/, ?/).map { |s| conn.quote(s) }.join(', ')})"
           elsif filter_condition.start_with? 'equals:'
             string = filter_condition[7..-1]
-            conditions << "(#{filter_value[:sql]}) = #{conn.quote(string)}"
+
+            if database_adapter == :sqlite && filter_value[:type] == 'boolean'
+              conditions << "(#{filter_value[:sql]}) = #{conn.quote(string == 'true' ? 't' : 'f')}"
+            else
+              conditions << "(#{filter_value[:sql]}) = #{conn.quote(string)}"
+            end
+
           elsif filter_condition.start_with? 'contains:'
             string = filter_condition[9..-1]
 
@@ -383,7 +389,7 @@ class Explorer::Controller < Controller
 
         graph_results = conn.execute(graph_sql)
         graph_results.each do |r|
-          date = r[time_column[:alias]].to_s
+          date = r[time_column[:alias]].to_date.to_s
           result_hash[date] ||= { time: date }
 
           aggregate_columns.each do |aggregate_column|
