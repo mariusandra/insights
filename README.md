@@ -122,7 +122,9 @@ git clone https://github.com/mariusandra/insights
 cd insights
 ```
 
-#### 2.2. Install the ruby (~2.3) and nodejs (6+) packages:
+#### 2.2. Install the ruby (2.3+) and nodejs (6+) packages:
+
+Assuming [bundler](https://bundler.io/) and [yarn](https://yarnpkg.com/) are installed:
 
 ```
 bundle
