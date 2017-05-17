@@ -1,15 +1,19 @@
 # Insights
 
+**Insights** is a self-hosted "SQL-not-required" data analytics and visualisation tool.
+
+It's loosely inspired by [Looker](https://looker.com/), but without the massive price tag. [Play with the demo here.](http://insights-demo.mariusandra.com/)
+
 ![Screenshot of the Explorer](https://github.com/mariusandra/insights/raw/master/doc/screenshot.png)
 
 Installing `insights` is a two-part process:
 
-## Export your app's structure
+## 1. Export your app's structure
 
 First you need to create an [`insights.yml`](https://github.com/mariusandra/insights_demo/blob/master/config/insights.yml) file from your main Rails application. This file will describe your database structure,
 including custom fields and aliases that you may define.
 
-1. Generate an `insights.yml` file from your Rails app.
+### 1.1. Generate an `insights.yml` file from your Rails app.
 
 Add `gem 'insights_export'` to your `Gemfile` and run:
 
@@ -20,16 +24,16 @@ rake insights:export
 The generated `config/insights.yml` file needs to be accessible for `insights` in the next steps. I recommend keeping it in your
 app's repository and running `rake insights:export` each time your database structure changes to update it. You can then symlink it to `insights`.
 
-## Install Insights
+## 2. Install Insights
 
-1. Git clone (or fork and clone) the repository
+### 2.1. Git clone (or fork and clone) the repository
 
 ```
 git clone https://github.com/mariusandra/insights
 cd insights
 ```
 
-2. Install the ruby (~2.3) and nodejs (6+) packages:
+### 2.2. Install the ruby (~2.3) and nodejs (6+) packages:
 
 ```
 bundle
@@ -38,7 +42,7 @@ yarn
 
 Make sure the above commands succeed!
 
-3. Setup the database
+### 2.3. Setup the database
 
 Copy `config/database.yml.example` to `config/database.yml`
 
@@ -53,7 +57,8 @@ bundle exec db:create
 bundle exec db:schema:load
 ```
 
-4. Set up the path to `insights.yml` in `config/initializers/insights.rb` (copy from `config/initializers/insights.rb.example`)
+### 2.4. Set up the path to `insights.yml` in `config/initializers/insights.rb`
+(copy from `config/initializers/insights.rb.example`)
 
 Anything like this, depending on your setup and the location of the file:
 
@@ -63,26 +68,11 @@ INSIGHTS_EXPORT_PATH = '../my-app/config/insights.yml'
 INSIGHTS_EXPORT_PATH = '/srv/my-app/current/config/insights.yml'
 ```
 
-5. Set up the credentials in `config/initializers/insights.rb`
+### 2.5. Set up the credentials in `config/initializers/insights.rb`
 
 *(Coming soon. There is no authentication yet!)*
 
-```
-config.authentication = [
-  ['user', 'password']
-]
-
-config.authentication = (connection, user, password) -> do
-  results = connection.execute("select encrypted_password from users where email=#{conn.quote(user)} and is_admin = 'true'")
-  if results.present? && results.length == 1 && results[0]['encrypted_password'] == encrypt(password)
-    user
-  else
-    nil
-  end
-end
-```
-
-6. Run it!
+### 2.6. Run it!
 
 ```
 foreman start
