@@ -2,15 +2,15 @@
 
 As our business grew, we faced a dilemma: we had little visibility into our data.
 
-Questions such as "who is our best customer?", "which target countries are gaining in sales?" or "what are our most popular categories for paid leads?" required tinkering in the Rails console or writing custom stats pages. We lost a lot of developer time.
+Questions such as *"who is our best customer?"*, *"which target countries are gaining in sales?"* or *"what are our most popular categories for paid leads?"* required tinkering in the Rails console or writing custom stats pages. We lost *a lot* of developer time over the years.
 
-So we started looking for the best Business Intelligence solution out there.
+So we started looking for the best **Business Intelligence** solution out there.
 
-Unfortunately, they all had their problems. Some required knowledge of SQL. Some made multi-table data exploration a pain. Most cost an arm and a leg, per month.
+Unfortunately, they all had their problems. Some required knowledge of SQL. Some made multi-table data exploration a pain. Most cost an arm, a leg and an iPhone. Per month.
 
-The best tool we found was [Looker](https://looker.com/), but at a monthly price equal to our then burn rate, it was not meant to be.
+The best tool we found was [Looker](https://looker.com/), but at a monthly price equal to our burn rate, it wouldn't work.
 
-So I decided to re-implement the essential part of Looker as an open source alternative.
+So I decided to re-implement the essential parts of Looker as an open source alternative.
 
 **Insights** is a self-hosted "SQL-not-required" data analytics and business intelligence tool. It's a work in progress and you're brave for checking it out!
 
