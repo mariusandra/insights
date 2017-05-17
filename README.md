@@ -139,9 +139,9 @@ Copy `config/database.yml.example` to `config/database.yml`
 
 Edit `config/database.yml` and change the `target_database:` block to point to your app's database.
 
-Feel free to keep the `development` database as SQLite for now, although you might want to use something else in production.
+Insights needs one database for its internal use. Feel free to keep the default SQLite configuration or change it for something beefier.
 
-Init the database:
+Then initialize it:
 
 ```
 bundle exec db:create
