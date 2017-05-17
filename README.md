@@ -1,6 +1,6 @@
 # Insights
 
-![https://github.com/mariusandra/insights/raw/master/doc/screenshot.png](Screenshot of the Explorer)
+![Screenshot of the Explorer](https://github.com/mariusandra/insights/raw/master/doc/screenshot.png)
 
 Installing `insights` is a two-part process:
 
