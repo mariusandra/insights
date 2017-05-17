@@ -1,12 +1,12 @@
 # Insights
 
-![https://github.com/mariusandra/insights/raw/master/doc/screenshot.png](Screenshot of the Explorer)
+![Screenshot of the Explorer](https://github.com/mariusandra/insights/raw/master/doc/screenshot.png)
 
 Installing `insights` is a two-part process:
 
 ## Export your app's structure
 
-First you need to create an `insights.yml` file from your main Rails application. This file will describe your database structure,
+First you need to create an [`insights.yml`](https://github.com/mariusandra/insights_demo/blob/master/config/insights.yml) file from your main Rails application. This file will describe your database structure,
 including custom fields and aliases that you may define.
 
 1. Generate an `insights.yml` file from your Rails app.
