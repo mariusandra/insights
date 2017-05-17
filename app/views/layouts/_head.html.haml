@@ -7,6 +7,5 @@
   %script{src: "http://localhost:3350/#{react_bundle}-bundle.js"}
 
 - else
-  = stylesheet_link_tag "react/vendor", media: 'all'
   = stylesheet_link_tag "react/#{react_bundle}", media: 'all'
   = javascript_include_tag "react/#{react_bundle}-bundle"

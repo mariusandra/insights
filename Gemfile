@@ -14,6 +14,7 @@ gem 'pg'
 gem 'rake'
 gem 'react_on_rails'
 gem 'sassc-rails'
+gem 'uglifier'
 gem 'wicked_pdf' # manually install something from here as well: wkhtmltopdf.org/downloads.html
 
 group :development, :test do
@@ -38,5 +39,5 @@ end
 
 group :production do
   gem 'scout'
-  gem 'thin'
+  gem 'puma'
 end
