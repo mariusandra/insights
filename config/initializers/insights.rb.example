@@ -1,2 +1,9 @@
 INSIGHTS_EXPORT_PATH = '../insights_demo/config/insights.yml'
 INSIGHTS_TIMEZONE = 'Europe/Brussels'
+
+# INSIGHTS_LOGIN = ['demo', 'demo']
+# INSIGHTS_LOGIN = [
+#   ['demo', 'demo'],
+#   ['admin', 'pass']
+# ]
+# INSIGHTS_LOGIN = -> (user, pass) { user == 'demo' && pass == 'password' }

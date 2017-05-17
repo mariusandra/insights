@@ -161,7 +161,16 @@ INSIGHTS_EXPORT_PATH = '/srv/my-app/current/config/insights.yml'
 
 #### 2.5. Set up the credentials in `config/initializers/insights.rb`
 
-*(Coming soon. There is no authentication yet!)*
+If you uncomment any of these lines, the app will be protected by a login screen
+
+```
+INSIGHTS_LOGIN = ['demo', 'demo']
+INSIGHTS_LOGIN = [
+  ['demo', 'demo'],
+  ['admin', 'pass']
+]
+INSIGHTS_LOGIN = -> (user, pass) { user == 'demo' && pass == 'password' }
+```
 
 #### 2.6. Run it!
 
