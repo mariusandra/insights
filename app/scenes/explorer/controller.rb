@@ -249,7 +249,7 @@ class Explorer::Controller < Controller
 
     if sort_column.present?
       sort_value = all_column_list.select { |v| v[:column] == sort_column }.first
-      if sort_value.present?
+      if sort_value.present? && sort_value[:alias].present?
         sort_parts << "\"#{sort_value[:alias]}\" #{sort_descending ? 'DESC' : 'ASC'}"
       end
     end
