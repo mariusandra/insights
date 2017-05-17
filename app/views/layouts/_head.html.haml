@@ -1,6 +1,7 @@
 - react_bundle = request.env["kea.bundle"]
 
 %link{:href=>'https://fonts.googleapis.com/css?family=Roboto+Slab:400,700,300,100|Roboto:400,300', :rel=>'stylesheet', :type=>'text/css'}
+= csrf_meta_tags
 
 - if Rails.env.development?
   %script{src: "http://localhost:3350/#{react_bundle}-bundle.js"}

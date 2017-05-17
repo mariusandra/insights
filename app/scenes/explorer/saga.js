@@ -151,8 +151,8 @@ export default class ExplorerSaga extends Saga {
     const { setResults, setPagination, setLoading, clearLoading, openTreeNode, closeTreeNode, urlChanged, requestExport } = this.actions
 
     const {
-      url, columns, offsetTarget, offset, limitTarget, limit, sort, filter, graphTimeFilter, facetsCount, facetsColumn, exportTitle, graphCumulative, percentages
-    } = yield explorerLogic.fetch('url', 'columns', 'offset', 'limit', 'offsetTarget', 'limitTarget', 'sort', 'filter', 'graphTimeFilter', 'facetsCount', 'facetsColumn', 'exportTitle', 'graphCumulative', 'percentages')
+      url, columns, offsetTarget, offset, limitTarget, limit, sort, filter, graphTimeFilter, facetsCount, facetsColumn, exportTitle, graphCumulative, percentages, graphData
+    } = yield explorerLogic.fetch('url', 'columns', 'offset', 'limit', 'offsetTarget', 'limitTarget', 'sort', 'filter', 'graphTimeFilter', 'facetsCount', 'facetsColumn', 'exportTitle', 'graphCumulative', 'percentages', 'graphData')
 
     // if paginating and fetching what is currently there (horizontal scroll)
     if (action.type === setPagination.toString() && action.payload.offset === offset && action.payload.limit === limit) {
@@ -190,7 +190,7 @@ export default class ExplorerSaga extends Saga {
           const { format } = action.payload
           response = yield fetchBlob({
             ...params,
-            ...(format === 'pdf' ? { svg: fetchSvg() } : {}),
+            ...(format === 'pdf' && graphData ? { svg: fetchSvg() } : {}),
             export: format,
             exportTitle: exportTitle
           })
