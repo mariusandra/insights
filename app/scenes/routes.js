@@ -5,7 +5,7 @@ const scenes = {
 }
 
 const routes = {
-  '/insights/explorer': 'explorer'
+  '/explorer': 'explorer'
 }
 
 export default combineScenesAndRoutes(scenes, routes)
