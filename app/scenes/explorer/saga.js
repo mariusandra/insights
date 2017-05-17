@@ -274,7 +274,7 @@ export default class ExplorerSaga extends Saga {
 
     const resultRow = results[row]
 
-    let newFilter = {}
+    let newFilter = []
 
     let newColumns = []
     let i = 0
@@ -287,9 +287,9 @@ export default class ExplorerSaga extends Saga {
       } else {
         newColumns.push(column)
         if (resultRow[i] === null) {
-          newFilter[column] = `null`
+          newFilter.push({ key: column, value: `null` })
         } else {
-          newFilter[column] = `equals:${resultRow[i]}`
+          newFilter.push({ key: column, value: `equals:${resultRow[i]}` })
         }
       }
       i += 1
