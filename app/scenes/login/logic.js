@@ -19,12 +19,10 @@ export default class LoginLogic extends Logic {
 
   reducers = ({ actions, constants }) => ({
     user: ['', PropTypes.string, {
-      [actions.setUser]: (_, payload) => payload.user,
-      [actions.loginSuccess]: () => ''
+      [actions.setUser]: (_, payload) => payload.user
     }],
     password: ['', PropTypes.string, {
-      [actions.setPassword]: (_, payload) => payload.password,
-      [actions.loginSuccess]: () => ''
+      [actions.setPassword]: (_, payload) => payload.password
     }],
     errors: [{}, PropTypes.object, {
       [actions.setUser]: () => ({}),
@@ -35,7 +33,6 @@ export default class LoginLogic extends Logic {
     }],
     isSubmitting: [false, PropTypes.bool, {
       [actions.loginRequest]: () => true,
-      [actions.loginSuccess]: () => false,
       [actions.loginFailure]: () => false
     }]
   })

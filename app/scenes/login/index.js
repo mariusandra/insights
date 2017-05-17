@@ -23,6 +23,9 @@ import sceneLogic from '~/scenes/login/logic'
     ]
   ],
   props: [
+    state => state.rails, [
+      'loginNeeded'
+    ],
     sceneLogic, [
       'user',
       'password',
@@ -39,8 +42,16 @@ export default class LoginScene extends Component {
   }
 
   render () {
-    const { user, password, errors, isSubmitting } = this.props
+    const { user, password, errors, isSubmitting, loginNeeded } = this.props
     const { setUser, setPassword } = this.props.actions
+
+    if (!loginNeeded) {
+      // saga will redirect now
+      // no need to flash the login form
+      return (
+        <div />
+      )
+    }
 
     return (
       <div className='login-scene'>
@@ -50,7 +61,7 @@ export default class LoginScene extends Component {
           </div>
           <div className='field'>
             <label>user</label>
-            <input type='text' className='input-text' value={user} onChange={(e) => setUser(e.target.value)} />
+            <input autoFocus type='text' className='input-text' value={user} onChange={(e) => setUser(e.target.value)} />
           </div>
           {errors.user ? (
             <div className='simple-error'>{errors.user}</div>

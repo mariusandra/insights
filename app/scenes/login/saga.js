@@ -1,10 +1,7 @@
 import Saga from 'kea/saga'
 import { put, select } from 'redux-saga/effects'
-import { push } from 'react-router-redux'
 
 import messg from 'messg'
-
-import delay from 'lib/utils/delay'
 
 import controller from './controller.rb'
 
@@ -35,9 +32,8 @@ export default class LoginSaga extends Saga {
   run = function * () {
     const { loginNeeded, currentUser } = yield select(state => state.rails)
 
-    if (loginNeeded && currentUser) {
-      yield delay(50) // without this, just clicking back would cause a problem with the active scene. the kea logic needs to reset the loop
-      yield put(push(getRedirectPath()))
+    if (currentUser || !loginNeeded) {
+      window.location.href = getRedirectPath()
     }
   }
 
@@ -66,7 +62,7 @@ export default class LoginSaga extends Saga {
       if (result.success) {
         messg.success('Login success', 2500)
         yield put(loginSuccess())
-        yield put(push(getRedirectPath()))
+        window.location.href = getRedirectPath()
       } else {
         messg.error('Login failed', 2500)
         yield put(loginFailure(result.errors))
