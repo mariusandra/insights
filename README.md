@@ -14,7 +14,7 @@ So I decided to re-implement the essential parts of Looker as an open source alt
 
 **Insights** is a self-hosted "SQL-not-required" data analytics and business intelligence tool. It's a work in progress and you're brave for checking it out! Cheers!
 
-[Play with the demo here.](http://insights-demo.mariusandra.com/)
+[Play with the demo here](http://insights-demo.mariusandra.com/), but do not expect a polished gem!
 
 ![Screenshot of the Explorer](https://github.com/mariusandra/insights/raw/master/doc/screenshot.png)
 
@@ -63,8 +63,16 @@ Order:
         my_key: user_id
 ```
 
-You give this file and a database connection to `insights` and start exploring.
+You give this `insights.yml` file and a database connection to `insights` and start exploring.
 
+## How to use
+
+[Play with the demo here](http://insights-demo.mariusandra.com/) and try to answer the following questions:
+
+1. Which product has been bought the most? ([solution](http://insights-demo.mariusandra.com/explorer?columns=Product.title%2CProduct.order_lines.total_price_in_eur%21%21sum%2CProduct.order_lines.id%21%21count%2CProduct.order_lines.quantity%21%21avg&facetsColumn=&facetsCount=6&graphCumulative=false&graphTimeFilter=last-60&percentages=false&redirect_path=explorer&sort=-Product.order_lines.total_price_in_eur%21%21sum&treeState=Product%2CProduct.order_lines))
+2. Sales by country by month ([solution](http://insights-demo.mariusandra.com/explorer?columns=Order.total_price_in_eur!!sum%2COrder.user.country.name%2COrder.confirmed_at!month&sort=-Order.confirmed_at!day&treeState=Order%2COrder.user%2COrder.user.country&graphTimeFilter=last-365&facetsColumn=Order.user.country.name&facetsCount=6&graphCumulative=false&percentages=false&filter%5B0%5D=Order.confirmed%3Dequals%3Atrue))
+3. Sales by delivery status ([solution](http://insights-demo.mariusandra.com/explorer?columns=Order.total_price_in_eur!!sum%2COrder.user.country.name%2COrder.status%2COrder.created_at!month&sort=-Order.created_at!day&treeState=Order%2COrder.user%2COrder.user.country&graphTimeFilter=last-365&facetsColumn=Order.status&facetsCount=6&graphCumulative=false&percentages=false))
+4. Where are your users from ([solution](http://insights-demo.mariusandra.com/explorer?columns=Country.users.id!!count%2CCountry.name&sort=-Country.users.id!!count&treeState=Country%2CCountry.users%2CCountry.users.orders&graphTimeFilter=last-365&facetsColumn=&facetsCount=6&graphCumulative=false&percentages=false))
 
 ## Installing
 
