@@ -12,6 +12,8 @@ class Explorer::Controller < Controller
   def results
     conn = TargetDatabase.connection
 
+    database_adapter = TargetDatabase.connection.adapter_name.downcase.to_sym
+
     percentages = !!params[:percentages]
 
     sort_column = params[:sort]
@@ -76,11 +78,13 @@ class Explorer::Controller < Controller
           end
 
           if data['type'].to_s == 'time'
-            sql = "(#{sql} at time zone 'UTC' at time zone '#{Time.zone.name}')"
+            if database_adapter.in? %i(postgresql postgis)
+              sql = "(#{sql} at time zone 'UTC' at time zone '#{Time.zone.name}')"
+            end
 
             if transform.present? && transform.in?(%w(hour day week month quarter year))
               sql_before_transform = sql
-              sql = date_transform(transform, sql)
+              sql = date_transform(transform, sql, database_adapter)
             end
           end
 
@@ -174,7 +178,12 @@ class Explorer::Controller < Controller
             conditions << "(#{filter_value[:sql]}) = #{conn.quote(string)}"
           elsif filter_condition.start_with? 'contains:'
             string = filter_condition[9..-1]
-            conditions << "(#{filter_value[:sql]}) ilike #{conn.quote('%' + string + '%')}"
+
+            if database_adapter.in? %i(postgresql postgis)
+              conditions << "(#{filter_value[:sql]}) ilike #{conn.quote('%' + string + '%')}"
+            else
+              conditions << "(#{filter_value[:sql]}) like #{conn.quote('%' + string + '%')}"
+            end
           elsif filter_condition.start_with? 'between:'
             start, finish = filter_condition[8..-1].split(':')
             if start != '' && !start.nil?
@@ -313,7 +322,7 @@ class Explorer::Controller < Controller
         first_date, last_date = get_times_from_string(graph_time_filter, 0, time_group)
 
         time_columns = time_columns.map do |v|
-          v.merge({ transform: time_group.to_s, sql: date_transform(time_group.to_s, v[:sql_before_transform]) })
+          v.merge({ transform: time_group.to_s, sql: date_transform(time_group.to_s, v[:sql_before_transform], database_adapter) })
         end
 
         graph_sort_sql = "ORDER BY #{time_column[:sql]}"
@@ -503,8 +512,18 @@ protected
     end.to_h
   end
 
-  def date_transform(transform, sql)
-    "date_trunc('#{transform}', #{sql})::date"
+  def date_transform(transform, sql, database_adapter)
+    if database_adapter.in? %i(postgis postgresql)
+      "date_trunc('#{transform}', #{sql})::date"
+    elsif database_adapter.in? %i(sqlite)
+      if transform == 'day'
+        "date(#{sql})"
+      else
+        "datetime(#{sql}, 'start of #{transform}')"
+      end
+    else
+      sql
+    end
   end
 
   def get_times_from_string(time_filter, smooth = 0, time_group = :day)
