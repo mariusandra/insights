@@ -1,5 +1,7 @@
 # Insights
 
+![https://github.com/mariusandra/insights/raw/master/doc/screenshot.png](Screenshot of the Explorer)
+
 Installing `insights` is a two-part process:
 
 ## Export your app's structure
