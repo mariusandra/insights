@@ -26,13 +26,26 @@ import explorerLogic from '~/scenes/explorer/logic'
 })
 @Dimensions({ elementResize: true })
 export default class Filter extends Component {
+  static propTypes = {
+    setFilterHeight: React.PropTypes.func
+  }
+
+  componentDidUpdate () {
+    const { setFilterHeight } = this.props
+
+    const element = this.refs.filter
+    if (element && element.clientHeight) {
+      setFilterHeight(element.clientHeight)
+    }
+  }
+
   render () {
     const { filter } = this.props
 
     let i = 0
 
     return (
-      <div className='insights-filter'>
+      <div className='insights-filter' ref='filter'>
         <div className='filter-header'>
           <span className='header-text'>
             Filter:

@@ -37,6 +37,14 @@ import explorerLogic from '~/scenes/explorer/logic'
   ]
 })
 export default class Explorer extends Component {
+  constructor (props) {
+    super(props)
+
+    this.state = {
+      filterHeight: 40
+    }
+  }
+
   handleClear = () => {
     const { clear } = this.props.actions
     clear()
@@ -50,8 +58,15 @@ export default class Explorer extends Component {
     }
   }
 
+  setFilterHeight = (filterHeight) => {
+    if (this.state.filterHeight !== filterHeight) {
+      this.setState({ filterHeight })
+    }
+  }
+
   render () {
     const { graphData, isSubmitting, columns, treeState, filter } = this.props
+    const { filterHeight } = this.state
     const { refreshData } = this.props.actions
 
     return (
@@ -84,8 +99,8 @@ export default class Explorer extends Component {
             </div>
           </Layout>
           {Object.keys(filter).length > 0 ? (
-            <Layout layoutHeight={40}>
-              <Filter />
+            <Layout layoutHeight={filterHeight}>
+              <Filter setFilterHeight={this.setFilterHeight} />
             </Layout>
           ) : <div />}
           {graphData ? (

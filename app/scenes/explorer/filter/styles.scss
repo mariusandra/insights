@@ -3,16 +3,16 @@
 
   .filter-header {
     line-height: 30px;
-    height: 30px;
+    box-sizing: border-box;
+    padding-bottom: 10px;
     vertical-align: middle;
-    cursor: pointer;
+    display: flex;
 
     .header-text {
       vertical-align: middle;
     }
     .filter-preview {
       vertical-align: middle;
-      height: 30px;
       margin-left: 10px;
       .preview-part {
         vertical-align: middle;
