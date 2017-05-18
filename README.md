@@ -175,7 +175,7 @@ INSIGHTS_LOGIN = -> (user, pass) { user == 'demo' && pass == 'password' }
 #### 2.6. Run it!
 
 ```
-foreman start
+bundle exec foreman start
 ```
 
 and open [`http://localhost:3300`](http://localhost:3300)
