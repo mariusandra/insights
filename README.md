@@ -1,6 +1,6 @@
 # Insights
 
-As [our business](https://www.apprentus.com) grew, we faced a dilemma: we had little visibility into our data.
+As [our education marketplace](https://www.apprentus.com) grew, we faced a dilemma: we had little visibility into our data.
 
 Questions such as *"who is our best customer?"*, *"which target countries are gaining in sales?"* or *"what are our most popular categories for paid leads?"* required tinkering in the Rails console or writing custom stats pages. We lost *a lot* of developer time over the years.
 
