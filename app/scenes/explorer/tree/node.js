@@ -36,7 +36,8 @@ const connection = {
       'structure',
       'columns',
       'treeState',
-      'search'
+      'search',
+      'filterKeys'
     ]
   ]
 }
@@ -60,6 +61,11 @@ class Node extends Component {
   isSelected = () => {
     const { path, columns } = this.props
     return columns.includes(path) || columns.some(s => s.indexOf(`${path}.`) >= 0) || columns.some(s => s.indexOf(`${path}!`) >= 0)
+  }
+
+  isFiltered = () => {
+    const { path, filterKeys } = this.props
+    return filterKeys.includes(path) || filterKeys.some(s => s.indexOf(`${path}.`) >= 0) || filterKeys.some(s => s.indexOf(`${path}!`) >= 0)
   }
 
   toggleCollapse = () => {
@@ -222,7 +228,7 @@ class Node extends Component {
           <div className={`node-icon ${hasChildNodes ? 'has-children' : 'no-children'} ${collapsed ? 'collapsed' : 'open'}`}
               onClick={this.toggleCollapse} />
           <div className='node-title' onClick={model ? this.toggleCollapse : this.toggleSelection}>
-            <span className={this.isSelected() || path === model ? 'node-selected' : ''}>
+            <span className={`${this.isSelected() || path === model ? 'node-selected' : ''} ${this.isFiltered() ? 'node-filtered' : ''}`}>
               {connection
                 ? model
                   ? (

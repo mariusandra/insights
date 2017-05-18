@@ -289,6 +289,14 @@ export default class ExplorerLogic extends Logic {
       PropTypes.array
     ],
 
+    filterKeys: [
+      () => [selectors.filter],
+      (filter) => {
+        return filter.map(f => f.key)
+      },
+      PropTypes.array
+    ],
+
     url: [
       () => [
         selectors.columns, selectors.sort, selectors.treeState, selectors.graphTimeFilter,
