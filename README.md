@@ -128,6 +128,7 @@ Assuming [bundler](https://bundler.io/) and [yarn](https://yarnpkg.com/) are ins
 ```
 bundle
 yarn
+gem install foreman
 ```
 
 Make sure the above commands succeed!
