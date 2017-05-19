@@ -47,7 +47,7 @@ INSIGHTS_TIMEZONE = 'Europe/Brussels'
 # # lamba using devise's authentication from your target database
 # INSIGHTS_LOGIN = -> (user, password) do
 #   conn = TargetDatabase.connection
-#   results = conn.execute("select encrypted_password from users where email=#{conn.quote(user)}")
+#   results = conn.execute("select encrypted_password from users where email=#{conn.quote(user)} and is_admin = 't'")
 #   return false if results.count == 0
 #
 #   encrypted_password_from_sql = results.first['encrypted_password']
