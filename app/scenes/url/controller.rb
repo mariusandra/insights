@@ -1,16 +1,16 @@
 class Url::Controller < Controller
   def create_url
     if params[:path].present?
-      insights_url = InsightsUrl.create code: SecureRandom.urlsafe_base64,
-                                        path: params[:path] # ,
-                                        # user: current_user
-      render json: { path: "/url/#{insights_url.code}" }
+      short_url = Insights::Url.create_short_url(params[:path], session[:user])
+
+      render json: { path: short_url }
     else
       render json: { error: true }
     end
   end
 
   def open_url
-    redirect_to InsightsUrl.find_by_code(params[:path]).path
+    insights_url = InsightsUrl.find_by_code!(params[:path])
+    redirect_to insights_url.path
   end
 end
