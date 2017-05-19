@@ -184,7 +184,7 @@ If you uncomment any of these lines, the app will be protected by a login screen
 INSIGHTS_LOGIN = ['demo', 'demo']
 INSIGHTS_LOGIN = [['demo', 'demo'], ['admin', 'pass']]
 INSIGHTS_LOGIN = -> (user, pass) { user == 'demo' && pass == 'password' }
-INSIGHTS_LOGIN = -> (user, pass) { connects_to_your_target_database_or_another_service_and_check_the_credentials(user, password) }
+INSIGHTS_LOGIN = -> (user, pass) { connects_to_your_app_and_check_the_credentials(user, password) }
 ```
 
 There's an example on authenticating against a devise backed users table in [`insights.rb.example`](https://github.com/mariusandra/insights/blob/master/config/initializers/insights.rb.example)
