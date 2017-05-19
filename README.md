@@ -122,7 +122,7 @@ git clone https://github.com/mariusandra/insights
 cd insights
 ```
 
-#### 2.2. Install the ruby (2.3+) and nodejs (6+) packages:
+#### 2.2. Install the ruby (2.3+) and nodejs (6+) packages
 
 Assuming [bundler](https://bundler.io/) and [yarn](https://yarnpkg.com/) are installed:
 
@@ -133,46 +133,63 @@ yarn
 
 Make sure the above commands succeed!
 
-#### 2.3. Setup the database
+#### 2.3. Setup the local database
+
+Insights needs one database for its internal use.
 
 Copy `config/database.yml.example` to `config/database.yml`
 
-Edit `config/database.yml` and change the `target_database:` block to point to your app's database.
-
-Insights needs one database for its internal use. Feel free to keep the default SQLite configuration or change it for something beefier.
-
-Then initialize it:
+Feel free to keep the default SQLite configuration or change it for something beefier. Then initialize it:
 
 ```
 bundle exec rake db:create
 bundle exec rake db:schema:load
 ```
 
-#### 2.4. Set up the path to `insights.yml` in `config/initializers/insights.rb`
-(copy from `config/initializers/insights.rb.example`)
+#### 2.4. Configure the connection your app
 
-Anything like this, depending on your setup and the location of the file:
+The connection to your app lives in `config/initializers/insights.rb`.
 
-```
+Copy it from [`config/initializers/insights.rb.example`](https://github.com/mariusandra/insights/blob/master/config/initializers/insights.rb.example) and edit accordingly.
+
+##### 2.4.1. Set up the path to `insights.yml`
+
+```rb
 INSIGHTS_EXPORT_PATH = "#{Rails.root}/insights.yml"
 INSIGHTS_EXPORT_PATH = '../my-app/config/insights.yml'
 INSIGHTS_EXPORT_PATH = '/srv/my-app/current/config/insights.yml'
 ```
 
-#### 2.5. Set up the credentials in `config/initializers/insights.rb`
+##### 2.4.2. Set up the database connection
+
+```rb
+INSIGHTS_DATABASE = {
+  adapter: 'postgresql',
+  encoding: 'unicode',
+  host: 'localhost',
+  database: 'insights_demo',
+  pool: 5,
+  variables: {
+    # it's strongly recommended to have a timeout here!
+    statement_timeout: 5000
+  }
+}
+```
+
+##### 2.4.3. Set up the credentials
 
 If you uncomment any of these lines, the app will be protected by a login screen
 
-```
+```rb
 INSIGHTS_LOGIN = ['demo', 'demo']
-INSIGHTS_LOGIN = [
-  ['demo', 'demo'],
-  ['admin', 'pass']
-]
+INSIGHTS_LOGIN = [['demo', 'demo'], ['admin', 'pass']]
 INSIGHTS_LOGIN = -> (user, pass) { user == 'demo' && pass == 'password' }
+INSIGHTS_LOGIN = -> (user, pass) { connects_to_your_target_database_or_another_service_and_check_the_credentials(user, password) }
 ```
 
-#### 2.6. Run it!
+There's an example on authenticating against a devise backed users table in [`insights.rb.example`](https://github.com/mariusandra/insights/blob/master/config/initializers/insights.rb.example)
+
+#### 2.5. Run it!
 
 ```
 bundle exec foreman start

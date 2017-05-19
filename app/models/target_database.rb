@@ -1,5 +1,5 @@
 class TargetDatabase < ActiveRecord::Base
-  establish_connection Rails.configuration.database_configuration['target_database']
+  establish_connection INSIGHTS_DATABASE
 
   self.abstract_class = true
 end

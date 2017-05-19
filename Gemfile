@@ -4,6 +4,7 @@ source 'http://rubygems.org'
 gem 'rails', '5.0.2'
 
 gem 'axlsx'
+gem 'bcrypt'
 gem 'foreman'
 gem 'hamlit'
 gem 'kea-on-rails'

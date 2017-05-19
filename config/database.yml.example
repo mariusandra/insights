@@ -21,12 +21,3 @@ development:
 #   pool: 5
 #   variables:
 #     statement_timeout: 5000
-
-target_database:
-  adapter: postgresql
-  encoding: unicode
-  host: localhost
-  database: my_app_here
-  pool: 5
-  variables:
-    statement_timeout: 5000
