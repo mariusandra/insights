@@ -3,8 +3,8 @@ class Explorer::Controller < Controller
     render_props_or_component
   end
 
-  def structure
-    render json: Insights::Structure.get_structure
+  def get_structure
+    render json: structure
   end
 
   def results
@@ -23,7 +23,6 @@ class Explorer::Controller < Controller
     end
 
     columns = params[:columns].map { |s| s }
-    structure = Insights::Structure.get_structure
 
     filter = (params[:filter] || [])
 
@@ -716,5 +715,9 @@ protected
       i = f_amt.index(" ")
     end
     f_amt
+  end
+
+  def structure
+    @structure ||= Insights::Structure.get_structure
   end
 end

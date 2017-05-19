@@ -106,7 +106,7 @@ export default class ExplorerSaga extends Saga {
 
     window.document.title = 'Explorer - Insights'
 
-    const structure = yield controller.structure()
+    const structure = yield controller.getStructure()
     yield put(setStructure(structure))
 
     yield call(this.urlToStateWorker, { payload: { pathname: window.location.pathname, search: window.location.search, firstLoad: true } })
