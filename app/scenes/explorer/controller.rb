@@ -6,7 +6,7 @@ class Explorer::Controller < Controller
   end
 
   def structure
-    render json: get_structure
+    render json: Insights::Structure.get_structure
   end
 
   def results
@@ -25,7 +25,7 @@ class Explorer::Controller < Controller
     end
 
     columns = params[:columns].map { |s| s }
-    structure = get_structure
+    structure = Insights::Structure.get_structure
 
     filter = (params[:filter] || [])
 
@@ -510,13 +510,6 @@ class Explorer::Controller < Controller
   end
 
 protected
-
-  def get_structure
-    structure = YAML::load_file(INSIGHTS_EXPORT_PATH)
-    structure = structure.select { |k, v| v['enabled'] }.map do |k, v|
-      [k, v.merge({ 'columns' => v['columns'].select { |_, vv| vv.present? } })]
-    end.to_h
-  end
 
   def date_transform(transform, sql, database_adapter)
     if database_adapter.in? %i(postgis postgresql)
