@@ -1,21 +1,17 @@
 class Controller < ActionController::Base
   include Kea::Controller
 
+  layout 'application'
+
   protect_from_forgery
 
   before_action :set_timezone
-
-  layout 'application'
-
-  before_action do
-    @props = {}
-  end
+  before_action :set_default_props
+  before_action :assure_insights_admin_access
 
   def index
     redirect_to explorer_path
   end
-
-protected
 
 private
 
@@ -23,11 +19,17 @@ private
     Time.zone = INSIGHTS_TIMEZONE || 'Europe/Brussels'
   end
 
+  def set_default_props
+    @props = {}
+  end
+
   def assure_insights_admin_access
-    if session[:logged_in] == true && session[:user].present?
-      true
-    elsif defined?(INSIGHTS_LOGIN) && INSIGHTS_LOGIN.present?
-      redirect_to login_path(redirect: request.fullpath)
+    if Insights::Authentication.login_required? && !session[:logged_in]
+      if request.format.symbol == :json
+        render json: { error: 'Not authenticated. Please refresh and log in again.' }, status: 401
+      else
+        redirect_to login_path(redirect: request.fullpath)
+      end
     end
   end
 end

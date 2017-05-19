@@ -1,4 +1,6 @@
 class Login::Controller < Controller
+  skip_before_action :assure_insights_admin_access
+
   def index
     render_props_or_component
   end
@@ -14,30 +16,17 @@ class Login::Controller < Controller
           password: password.blank? ? 'Must be present' : nil
         }
       }
+      return
     end
 
-    if defined?(INSIGHTS_LOGIN) && INSIGHTS_LOGIN.present?
-      if INSIGHTS_LOGIN.is_a?(Proc)
-        if INSIGHTS_LOGIN.call(user, password)
-          login_success!
-        else
-          login_failure!
-        end
+    if Insights::Authentication.login_required?
+      if Insights::Authentication.successful?(user, password)
+        login_success!
       else
-        credentials = INSIGHTS_LOGIN
-
-        if INSIGHTS_LOGIN.flatten.length > 2
-          credentials = INSIGHTS_LOGIN.select { |k, v| k == user }.first
-        end
-
-        if credentials.present? && user == credentials[0] && password == credentials[1]
-          login_success!
-        else
-          login_failure!
-        end
+        login_failure!
       end
     else
-      render json: { errors: { password: 'Something is weird on the backend' } }
+      render json: { errors: { password: "There's a disturbance in the force!" } }
     end
   end
 

@@ -1,6 +1,4 @@
 class Explorer::Controller < Controller
-  before_action :assure_insights_admin_access
-
   def index
     render_props_or_component
   end

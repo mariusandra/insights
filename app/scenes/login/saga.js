@@ -65,7 +65,7 @@ export default class LoginSaga extends Saga {
         window.location.href = getRedirectPath()
       } else {
         messg.error('Login failed', 2500)
-        yield put(loginFailure(result.errors))
+        yield put(loginFailure(result.errors || {}))
       }
     } catch (error) {
       messg.error('Login error', 2500)
