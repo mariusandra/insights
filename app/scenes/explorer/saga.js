@@ -16,7 +16,7 @@ function fetchBlob (params) {
 
   const requestParams = {
     endpoint: 'Explorer::Controller',
-    method: 'results',
+    method: 'get_results',
     params: params
   }
 
@@ -173,11 +173,15 @@ export default class ExplorerSaga extends Saga {
           columns,
           sort,
           filter,
-          graphTimeFilter,
+
           facetsColumn,
           facetsCount,
+
+          graphTimeFilter,
           graphCumulative,
+
           percentages,
+
           offset: offsetTarget,
           limit: limitTarget
         }
@@ -205,7 +209,7 @@ export default class ExplorerSaga extends Saga {
           }
           yield put(clearLoading())
         } else {
-          response = yield controller.results(params)
+          response = yield controller.getResults(params)
 
           if (response.success) {
             // not asking because of a pagination update
