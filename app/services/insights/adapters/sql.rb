@@ -180,5 +180,30 @@ module Insights::Adapters
       results_sql = "SELECT #{select} #{from_and_joins} #{where} #{group} #{having} #{sort} #{limit_sql} #{offset_sql}"
       execute(results_sql)
     end
+
+    def get_facet_values_and_has_other(column: nil, from_and_joins: nil, where: nil, group: nil, having: nil, limit: 10)
+      select = "#{column} AS facet_value, count(#{column}) as facet_count"
+      sort = "ORDER BY facet_count desc"
+
+      facet_sql = "SELECT #{select} #{from_and_joins} #{where} #{group} #{having} #{sort}"
+      facet_sql = "SELECT t.facet_value, sum(t.facet_count) " +
+                      "FROM (#{facet_sql}) t " +
+                      "GROUP BY t.facet_value " +
+                      "ORDER BY sum(t.facet_count) DESC " +
+                      "LIMIT #{limit + 1}"
+
+      facet_results = execute(facet_sql)
+      facet_values = facet_results.map { |r| r['facet_value'] }
+
+      values_to_return = facet_values.first(limit)
+      has_other = facet_values.length > limit
+
+      [values_to_return, has_other]
+    end
+
+    def faceted_values_or_other(column_sql, facet_values, other_value)
+      values_quoted_array = facet_values.map { |s| quote(s) }.join(', ')
+      "(CASE WHEN #{column_sql} IN (#{values_quoted_array}) THEN #{column_sql} ELSE #{quote(other_value)} END)"
+    end
   end
 end

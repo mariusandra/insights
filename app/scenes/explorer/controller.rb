@@ -291,33 +291,40 @@ class Explorer::Controller < Controller
           v.merge({ transform: time_group.to_s, sql: adapter.truncate_date(v[:sql_before_transform], time_group.to_s) })
         end
 
-        graph_sort_sql = "ORDER BY #{time_column[:sql]}"
-        graph_where_sql = first_date.blank? || last_date.blank? ? where_sql : "#{where_sql.present? ? "#{where_sql} AND " : 'WHERE '}#{time_column[:sql]} >= #{adapter.quote(first_date.to_s)} AND #{time_column[:sql]} <= #{adapter.quote(last_date.to_s)}"
+        graph_sort_parts = [adapter.order_part(time_column[:sql], false)]
+        graph_sort_sql = adapter.order_by(graph_sort_parts)
+
+        graph_where_conditions = where_conditions.dup
+        if first_date.present? && last_date.present?
+          graph_where_conditions << adapter.filter_date_range(time_column[:sql], "#{first_date.to_s}:#{last_date.to_s}")
+        end
+        graph_where_sql = adapter.where(graph_where_conditions)
 
         graph_group_parts = (time_columns + aggregate_columns + facet_columns).select { |v| v[:aggregate].blank? }.map { |v| v[:sql] }
-        graph_group_sql = "GROUP BY #{graph_group_parts.join(',')}"
+        graph_group_sql = adapter.group_by(graph_group_parts)
 
         # facets
         facet_column = facet_columns.first
         facet_values = []
 
         if facet_column.present?
-          facet_select = "#{facet_column[:sql]} AS facet_value, count(#{facet_column[:sql]}) as facet_count"
-          facet_sort_sql = "ORDER BY facet_count desc"
-          facet_sql = "SELECT #{facet_select} #{from_and_joins_sql} #{graph_where_sql} #{graph_group_sql} #{having_sql} #{facet_sort_sql}"
-          facet_sql = "SELECT t.facet_value, sum(t.facet_count) FROM (#{facet_sql}) t GROUP BY t.facet_value ORDER BY sum(t.facet_count) DESC LIMIT #{facet_count + 1}"
-          facet_results = adapter.execute(facet_sql)
-          facet_values = facet_results.map { |r| r['facet_value'] }
-
-          facet_other = facet_values.include?('Other') ? '__OTHER__' : 'Other'
+          facet_values, has_other = adapter.get_facet_values_and_has_other(
+            column: facet_column[:sql],
+            from_and_joins: from_and_joins_sql,
+            where: graph_where_sql,
+            group: graph_group_sql,
+            having: having_sql,
+            limit: facet_count
+          )
 
           if facet_column[:type] == 'string'
             if facet_values.present?
-              if facet_values.count > facet_count
+              if has_other
+                facet_other = facet_values.include?('Other') ? '__OTHER__' : 'Other'
                 facet_values = facet_values.first(facet_count)
                 facet_columns = [
                   facet_column.merge({
-                    sql: "(CASE WHEN #{facet_column[:sql]} IN (#{facet_values.map { |s| adapter.quote(s) }.join(', ')}) THEN #{facet_column[:sql]} ELSE #{adapter.quote(facet_other)} END)"
+                    sql: adapter.faceted_values_or_other(facet_column[:sql], facet_values, facet_other)
                   })
                 ]
                 facet_values << facet_other
@@ -325,7 +332,7 @@ class Explorer::Controller < Controller
                 if any_aggregate
                   graph_group_parts = (time_columns + aggregate_columns + facet_columns).select { |v| v[:aggregate].blank? }.map { |v| v[:sql] }
                   if graph_group_parts.present?
-                    graph_group_sql = "GROUP BY #{graph_group_parts.join(',')}"
+                    graph_group_sql = adapter.group_by(graph_group_parts)
                   end
                 end
               end
@@ -340,11 +347,19 @@ class Explorer::Controller < Controller
         graph_select_values = time_columns + aggregate_columns + facet_columns
         graph_select_sql = adapter.value_list_to_select(graph_select_values)
 
-        graph_sql = "SELECT #{graph_select_sql} #{from_and_joins_sql} #{graph_where_sql} #{graph_group_sql} #{having_sql} #{graph_sort_sql} LIMIT 10000"
+        graph_results = adapter.get_results(
+          select: graph_select_sql,
+          from_and_joins: from_and_joins_sql,
+          where: graph_where_sql,
+          group: graph_group_sql,
+          having: having_sql,
+          sort: graph_sort_sql,
+          limit: 10000,
+          offset: 0
+        )
 
         result_hash = {}
 
-        graph_results = adapter.execute(graph_sql)
         graph_results.each do |r|
           date = r[time_column[:alias]].to_date.to_s
           result_hash[date] ||= { time: date }
