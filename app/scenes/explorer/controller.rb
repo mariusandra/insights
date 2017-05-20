@@ -134,7 +134,7 @@ class Explorer::Controller < Controller
       end
     end
 
-    from_and_joins = adapter.connect_from_and_joins_array(joins.map { |key, join| join[:sql] })
+    from_and_joins_sql = adapter.connect_from_and_joins_array(joins.map { |key, join| join[:sql] })
 
     where_sql = ''
     having_sql = ''
@@ -225,7 +225,12 @@ class Explorer::Controller < Controller
 
     any_non_aggregate = all_column_list.select { |v| v[:aggregate].blank? }.present?
     if any_non_aggregate
-      count = adapter.execute_count(from_and_joins, where_sql, group_sql, having_sql)
+      count = adapter.get_count(
+        from_and_joins: from_and_joins_sql,
+        where: where_sql,
+        group: group_sql,
+        having: having_sql
+      )
     end
 
     # limit
@@ -240,17 +245,23 @@ class Explorer::Controller < Controller
 
     # get the results
 
-    value_array = value_list.each_with_index.map do |value, i|
-      "#{value[:sql]} AS \"#{value[:alias]}\""
-    end
-
-    results_sql = "SELECT #{value_array.join(', ')} #{from_and_joins} #{where_sql} #{group_sql} #{having_sql} #{sort_sql} LIMIT #{limit} OFFSET #{offset}"
-
+    select_sql = adapter.value_list_to_select(value_list)
     final_columns = value_list.map { |v| v[:column] }
+    final_aliases = value_list.map { |v| v[:alias] }
 
-    results = adapter.execute(results_sql)
+    results = adapter.get_results(
+      select: select_sql,
+      from_and_joins: from_and_joins_sql,
+      where: where_sql,
+      group: group_sql,
+      having: having_sql,
+      sort: sort_sql,
+      limit: limit,
+      offset: offset
+    )
+
     final_results = results.map do |row|
-      final_columns.count.times.map { |i| row["$V#{i}"] }
+      final_aliases.map { |a| row[a] }
     end
 
     # graph
@@ -293,7 +304,7 @@ class Explorer::Controller < Controller
         if facet_column.present?
           facet_select = "#{facet_column[:sql]} AS facet_value, count(#{facet_column[:sql]}) as facet_count"
           facet_sort_sql = "ORDER BY facet_count desc"
-          facet_sql = "SELECT #{facet_select} #{from_and_joins} #{graph_where_sql} #{graph_group_sql} #{having_sql} #{facet_sort_sql}"
+          facet_sql = "SELECT #{facet_select} #{from_and_joins_sql} #{graph_where_sql} #{graph_group_sql} #{having_sql} #{facet_sort_sql}"
           facet_sql = "SELECT t.facet_value, sum(t.facet_count) FROM (#{facet_sql}) t GROUP BY t.facet_value ORDER BY sum(t.facet_count) DESC LIMIT #{facet_count + 1}"
           facet_results = adapter.execute(facet_sql)
           facet_values = facet_results.map { |r| r['facet_value'] }
@@ -326,13 +337,10 @@ class Explorer::Controller < Controller
 
         # graph results
 
-        graph_values = time_columns + aggregate_columns + facet_columns
+        graph_select_values = time_columns + aggregate_columns + facet_columns
+        graph_select_sql = adapter.value_list_to_select(graph_select_values)
 
-        graph_value_array = graph_values.each_with_index.map do |value, i|
-          "#{value[:sql]} AS \"#{value[:alias]}\""
-        end
-
-        graph_sql = "SELECT #{graph_value_array.join(', ')} #{from_and_joins} #{graph_where_sql} #{graph_group_sql} #{having_sql} #{graph_sort_sql} LIMIT 10000"
+        graph_sql = "SELECT #{graph_select_sql} #{from_and_joins_sql} #{graph_where_sql} #{graph_group_sql} #{having_sql} #{graph_sort_sql} LIMIT 10000"
 
         result_hash = {}
 
@@ -406,7 +414,7 @@ class Explorer::Controller < Controller
         end
 
         graph = {
-          meta: graph_values.map { |v| v.slice(:column, :path, :type, :url, :key, :model, :aggregate, :transform, :index) },
+          meta: graph_select_values.map { |v| v.slice(:column, :path, :type, :url, :key, :model, :aggregate, :transform, :index) },
           keys: all_keys,
           facets: facet_values,
           results: result_hash.values.sort_by { |h| h[:time] },

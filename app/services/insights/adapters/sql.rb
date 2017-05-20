@@ -45,14 +45,14 @@ module Insights::Adapters
     end
 
     def truncate_date(sql, truncation)
-      raise "Bad date truncation '#{truncation}'" unless truncation.to_s.in(allowed_date_truncations)
+      raise "Bad date truncation '#{truncation}'" unless truncation.to_s.in?(allowed_date_truncations)
       sql
     end
 
     def add_aggregation(sql, aggregation)
-      raise "Bad aggregation function '#{aggregation}'" unless aggregation.to_s.in(allowed_aggregations)
+      raise "Bad aggregation function '#{aggregation}'" unless aggregation.to_s.in?(allowed_aggregations)
 
-      if aggreagtion.to_s == 'count'
+      if aggregation.to_s == 'count'
         "count(distinct #{sql})"
       else
         "#{aggregation}(#{sql})"
@@ -157,14 +157,28 @@ module Insights::Adapters
       "ORDER BY #{order_parts_array.join(',')}"
     end
 
-    def execute_count(from_and_joins, where_sql, group_sql, having_sql)
-      count_sql = "SELECT count(*) as count #{from_and_joins} #{where_sql} #{group_sql} #{having_sql}"
-      if group_sql.present?
+    def value_list_to_select(value_list)
+      value_array = value_list.map do |value|
+        "#{value[:sql]} AS \"#{value[:alias]}\""
+      end
+      value_array.join(', ')
+    end
+
+    def get_count(from_and_joins: nil, where: nil, group: nil, having: nil)
+      count_sql = "SELECT count(*) as count #{from_and_joins} #{where} #{group} #{having}"
+      if group.present?
         count_sql = "SELECT count(*) as count FROM (#{count_sql}) AS t"
       end
 
       count_results = execute(count_sql)
       count_results.first['count']
+    end
+
+    def get_results(select: nil, from_and_joins: nil, where: nil, group: nil, having: nil, sort: nil, limit: nil, offset: nil)
+      limit_sql = limit.nil? ? '' : "LIMIT #{limit}"
+      offset_sql = offset.nil? ? '' : "OFFSET #{offset}"
+      results_sql = "SELECT #{select} #{from_and_joins} #{where} #{group} #{having} #{sort} #{limit_sql} #{offset_sql}"
+      execute(results_sql)
     end
   end
 end

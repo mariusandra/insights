@@ -5,7 +5,7 @@ module Insights::Adapters
     end
 
     def truncate_date(sql, truncation)
-      raise "Bad date truncation '#{truncation}'" unless truncation.to_s.in(allowed_date_truncations)
+      raise "Bad date truncation '#{truncation}'" unless truncation.to_s.in?(allowed_date_truncations)
 
       sql = super(sql)
       if truncation.to_s == 'day'

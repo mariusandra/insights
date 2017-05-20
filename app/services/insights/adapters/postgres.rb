@@ -9,8 +9,9 @@ module Insights::Adapters
     end
 
     def truncate_date(sql, truncation)
-      raise "Bad date truncation '#{truncation}'" unless truncation.to_s.in(allowed_date_truncations)
-      "date_trunc('#{date_part}', #{sql})::date"
+      raise "Bad date truncation '#{truncation}'" unless truncation.to_s.in?(allowed_date_truncations)
+
+      "date_trunc('#{truncation}', #{sql})::date"
     end
 
     def filter_contains(sql, string)
