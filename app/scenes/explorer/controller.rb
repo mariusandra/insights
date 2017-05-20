@@ -70,7 +70,7 @@ class Explorer::Controller < Controller
           sql = nil
 
           if pointer['columns'][key]
-            sql = adapter.table_alias_column(join_name, key)
+            sql = adapter.table_alias_with_column(join_name, key)
           elsif pointer['custom'][key]
             sql = adapter.custom_sql_in_table_replace(data['sql'], join_name)
           end
@@ -134,9 +134,7 @@ class Explorer::Controller < Controller
       end
     end
 
-    from_array = joins.map do |key, join|
-      join[:sql]
-    end
+    from_and_joins = adapter.connect_from_and_joins_array(joins.map { |key, join| join[:sql] })
 
     where_sql = ''
     having_sql = ''
@@ -205,33 +203,29 @@ class Explorer::Controller < Controller
     if sort_column.present?
       sort_value = all_column_list.select { |v| v[:column] == sort_column }.first
       if sort_value.present? && sort_value[:alias].present?
-        sort_parts << "\"#{sort_value[:alias]}\" #{sort_descending ? 'DESC' : 'ASC'}"
+        column_sql = adapter.quoted_column_alias(sort_value[:alias])
+        sort_parts << adapter.order_part(column_sql, sort_descending)
       end
     end
 
     first_primary = structure[base_model_name]['columns'].select { |k, v| v['index'].to_s == 'primary' }.first.try(:first)
 
     if first_primary.present? && !any_aggregate
-      sort_parts << "\"#{first_join_name}\".\"#{first_primary}\" ASC"
+      column_sql = adapter.table_alias_with_column(first_join_name, first_primary)
+      sort_parts << adapter.order_part(column_sql, false)
     end
 
     if sort_parts.present?
-      sort_sql = "ORDER BY #{sort_parts.join(', ')}"
+      sort_sql = adapter.order_by(sort_parts)
     end
 
     # get the count
 
     count = 1
 
-    count_sql = "SELECT count(*) as count #{from_array.join(' ')} #{where_sql} #{group_sql} #{having_sql}"
-    if group_sql.present?
-      count_sql = "SELECT count(*) as count FROM (#{count_sql}) AS t"
-    end
-
     any_non_aggregate = all_column_list.select { |v| v[:aggregate].blank? }.present?
     if any_non_aggregate
-      count_results = adapter.execute(count_sql)
-      count = count_results.first['count']
+      count = adapter.execute_count(from_and_joins, where_sql, group_sql, having_sql)
     end
 
     # limit
@@ -250,7 +244,7 @@ class Explorer::Controller < Controller
       "#{value[:sql]} AS \"#{value[:alias]}\""
     end
 
-    results_sql = "SELECT #{value_array.join(', ')} #{from_array.join(' ')} #{where_sql} #{group_sql} #{having_sql} #{sort_sql} LIMIT #{limit} OFFSET #{offset}"
+    results_sql = "SELECT #{value_array.join(', ')} #{from_and_joins} #{where_sql} #{group_sql} #{having_sql} #{sort_sql} LIMIT #{limit} OFFSET #{offset}"
 
     final_columns = value_list.map { |v| v[:column] }
 
@@ -299,7 +293,7 @@ class Explorer::Controller < Controller
         if facet_column.present?
           facet_select = "#{facet_column[:sql]} AS facet_value, count(#{facet_column[:sql]}) as facet_count"
           facet_sort_sql = "ORDER BY facet_count desc"
-          facet_sql = "SELECT #{facet_select} #{from_array.join(' ')} #{graph_where_sql} #{graph_group_sql} #{having_sql} #{facet_sort_sql}"
+          facet_sql = "SELECT #{facet_select} #{from_and_joins} #{graph_where_sql} #{graph_group_sql} #{having_sql} #{facet_sort_sql}"
           facet_sql = "SELECT t.facet_value, sum(t.facet_count) FROM (#{facet_sql}) t GROUP BY t.facet_value ORDER BY sum(t.facet_count) DESC LIMIT #{facet_count + 1}"
           facet_results = adapter.execute(facet_sql)
           facet_values = facet_results.map { |r| r['facet_value'] }
@@ -338,7 +332,7 @@ class Explorer::Controller < Controller
           "#{value[:sql]} AS \"#{value[:alias]}\""
         end
 
-        graph_sql = "SELECT #{graph_value_array.join(', ')} #{from_array.join(' ')} #{graph_where_sql} #{graph_group_sql} #{having_sql} #{graph_sort_sql} LIMIT 10000"
+        graph_sql = "SELECT #{graph_value_array.join(', ')} #{from_and_joins} #{graph_where_sql} #{graph_group_sql} #{having_sql} #{graph_sort_sql} LIMIT 10000"
 
         result_hash = {}
 

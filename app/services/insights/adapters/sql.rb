@@ -28,8 +28,12 @@ module Insights::Adapters
       "FROM \"#{table_name}\" AS \"#{table_alias}\""
     end
 
-    def table_alias_column(table_alias, column)
+    def table_alias_with_column(table_alias, column)
       "\"#{table_alias}\".\"#{column}\""
+    end
+
+    def quoted_column_alias(column)
+      "\"#{column}\""
     end
 
     def custom_sql_in_table_replace(sql, table_alias)
@@ -57,6 +61,10 @@ module Insights::Adapters
 
     def left_join(table_name, table_alias, table_key, other_alias, other_key)
       "LEFT JOIN \"#{table_name}\" \"#{table_alias}\" ON (\"#{table_alias}\".\"#{table_key}\" = \"#{other_alias}\".\"#{other_key}\")"
+    end
+
+    def connect_from_and_joins_array(array)
+      array.join(' ')
     end
 
     def filter_empty(sql, type)
@@ -139,6 +147,24 @@ module Insights::Adapters
 
     def group_by(group_parts_array)
       "GROUP BY #{group_parts_array.join(',')}"
+    end
+
+    def order_part(sql, descending)
+      "#{sql} #{descending ? 'DESC' : 'ASC'}"
+    end
+
+    def order_by(order_parts_array)
+      "ORDER BY #{order_parts_array.join(',')}"
+    end
+
+    def execute_count(from_and_joins, where_sql, group_sql, having_sql)
+      count_sql = "SELECT count(*) as count #{from_and_joins} #{where_sql} #{group_sql} #{having_sql}"
+      if group_sql.present?
+        count_sql = "SELECT count(*) as count FROM (#{count_sql}) AS t"
+      end
+
+      count_results = execute(count_sql)
+      count_results.first['count']
     end
   end
 end
