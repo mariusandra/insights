@@ -382,7 +382,7 @@ module Insights
       aggregate_columns = @results_table_columns.select { |v| v[:aggregate].present? }
 
       # must have at least 1 aggregate and exactly 1 time column
-      return if aggregate_columns.count < 1 && time_columns.count != 1
+      return if aggregate_columns.count < 1 || time_columns.count != 1
 
       # graph time
       time_column = time_columns.first

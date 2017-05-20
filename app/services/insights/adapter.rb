@@ -6,7 +6,7 @@ module Insights
       if database_adapter.in? %i(postgresql postgis)
         Insights::Adapters::Postgres.new(connection)
       elsif database_adapter == :sqlite
-        Insights::Adapters::SQLite.new(connection)
+        Insights::Adapters::Sqlite.new(connection)
       else
         Insights::Adapters::SQL.new(connection)
       end

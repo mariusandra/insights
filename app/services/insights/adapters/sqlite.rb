@@ -1,5 +1,5 @@
 module Insights::Adapters
-  class SQLite < SQL
+  class Sqlite < SQL
     def allowed_date_truncations
       %w(hour day month year)
     end
