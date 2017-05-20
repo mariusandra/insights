@@ -84,12 +84,10 @@ Hint: to count rows, select the `id` field and then `count` from the table heade
 
 ## Coming soon
 
-* Saving views
 * Dashboards
 * Better graph controls
 * Graphs that don't require a time column
 * View generated SQL
-* Slight Ruby backend refactoring
 * Moderate React/[Kea](https://github.com/mariusandra/kea) frontend code refactoring
 * Polishing
 
@@ -196,3 +194,24 @@ bundle exec foreman start
 ```
 
 and open [`http://localhost:3300`](http://localhost:3300)
+
+
+## Misc
+
+### Updating
+
+Run these commands to update
+
+```
+git pull
+bundle
+yarn
+bundle exec rake db:migrate
+```
+
+### Compile the assets for production
+
+```
+./script/build/react
+RAILS_ENV=production bundle exec rake assets:precompile
+```
