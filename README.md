@@ -89,7 +89,7 @@ Hint: to count rows, select the `id` field and then `count` from the table heade
 * Better graph controls
 * Graphs that don't require a time column
 * View generated SQL
-* Massive Ruby backend code refactoring
+* Slight Ruby backend refactoring
 * Moderate React/[Kea](https://github.com/mariusandra/kea) frontend code refactoring
 * Polishing
 
