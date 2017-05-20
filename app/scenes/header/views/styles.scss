@@ -1,0 +1,35 @@
+.views-menu {
+  width: 220px;
+  font-size: 14px;
+  div.buttons {
+    height: 36px;
+    line-height: 30px;
+    span.open-new {
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+  form {
+    .input-text.full {
+      width: 150px;
+      display: inline-block;
+    }
+    button.save {
+      width: 30px;
+      padding: 5px 0;
+    }
+    button.cancel {
+      width: 30px;
+      padding: 5px 0;
+      background: #880000;
+    }
+  }
+  .list {
+    .list-item {
+      cursor: pointer;
+      &:hover {
+        background: #eee;
+      }
+    }
+  }
+}

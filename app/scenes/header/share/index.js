@@ -1,5 +1,3 @@
-import './styles.scss'
-
 // libraries
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
@@ -8,7 +6,7 @@ import { connect } from 'react-redux'
 import copy from 'copy-to-clipboard'
 import messg from 'messg'
 
-import urlController from '~/scenes/url/controller.rb'
+import urlController from './controller.rb'
 
 // logic
 @connect()

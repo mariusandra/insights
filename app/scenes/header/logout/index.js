@@ -1,5 +1,3 @@
-import './styles.scss'
-
 // libraries
 import React, { Component } from 'react'
 

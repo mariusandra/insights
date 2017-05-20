@@ -13,31 +13,13 @@ import ReactOnRails from 'react-on-rails'
 import Layout from './_layout'
 import routes from './routes'
 
+import headerScene from '~/scenes/header/scene.js'
+
 export const initFromProps = createAction('init from props', (props) => (props))
 
 const isClientSide = typeof window !== 'undefined'
 
 console.trace = function () {}
-
-function routesWithRootPath (routes, railsContext) {
-  const { location, languageUrl } = railsContext
-
-  const rootPath = `/${languageUrl}`
-  if (location === rootPath || location.indexOf(rootPath + '/') === 0) {
-    let newRoutes = {}
-
-    Object.keys(routes).forEach(route => {
-      if (route === '/') {
-        newRoutes[rootPath] = routes[route]
-      }
-      newRoutes[rootPath + route] = routes[route]
-    })
-
-    return newRoutes
-  } else {
-    return routes
-  }
-}
 
 const AppContainer = (props, railsContext) => {
   function * appSaga () {
@@ -58,54 +40,23 @@ const AppContainer = (props, railsContext) => {
 
     const store = createKeaStore(finalCreateStore, appReducers)
     sagaMiddleware.run(createRootSaga(appSaga))
-
     const history = syncHistoryWithStore(browserHistory, store)
-    const newRoutes = routesWithRootPath(routes, railsContext)
 
     // TODO: check why do we need to do this?
-    match({routes: getRoutes(Layout, store, newRoutes), location: railsContext.location}, () => {})
+    match({routes: getRoutes(Layout, store, routes), location: railsContext.location}, () => {})
 
     store.dispatch(initFromProps(props))
 
+    // custom scenes
+    store.addKeaScene(headerScene, true)
+
     return (
       <Provider store={store}>
-        <Router history={history} routes={getRoutes(Layout, store, newRoutes)} />
+        <Router history={history} routes={getRoutes(Layout, store, routes)} />
       </Provider>
     )
   } else {
-    const store = createKeaStore(createStore, appReducers)
-
-    let error
-    let redirectLocation
-    let routeProps
-
-    const { location } = railsContext
-
-    const newRoutes = routesWithRootPath(routes, railsContext)
-
-    // See https://github.com/reactjs/react-router/blob/master/docs/guides/ServerRendering.md
-    match({routes: getRoutes(Layout, store, newRoutes), location}, (_error, _redirectLocation, _routeProps) => {
-      error = _error
-      redirectLocation = _redirectLocation
-      routeProps = _routeProps
-    })
-
-    // This tell react_on_rails to skip server rendering any HTML. Note, client rendering
-    // will handle the redirect. What's key is that we don't try to render.
-    // Critical to return the Object properties to match this { error, redirectLocation }
-    if (error || redirectLocation) {
-      return { error, redirectLocation }
-    }
-
-    initLocale(railsContext.i18nLocale)
-    store.dispatch(initFromProps(props))
-
-    // Important that you don't do this if you are redirecting or have an error.
-    return (
-      <Provider store={store}>
-        <RouterContext {...routeProps} />
-      </Provider>
-    )
+    // we aren't using this at the moment
   }
 }
 
