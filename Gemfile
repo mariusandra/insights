@@ -3,6 +3,7 @@ source 'http://rubygems.org'
 
 gem 'rails', '5.0.2'
 
+# essential gems
 gem 'axlsx'
 gem 'bcrypt'
 gem 'foreman'
@@ -16,7 +17,10 @@ gem 'rake'
 gem 'react_on_rails'
 gem 'sassc-rails'
 gem 'uglifier'
-gem 'wicked_pdf' # manually install something from here as well: wkhtmltopdf.org/downloads.html
+gem 'wicked_pdf' # https://github.com/mariusandra/insights/issues/6
+
+# services used by the live demo
+gem 'bugsnag'
 
 group :development, :test do
   gem 'better_errors'

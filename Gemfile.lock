@@ -56,6 +56,7 @@ GEM
       rack (>= 0.9.0)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
+    bugsnag (5.2.0)
     builder (3.2.3)
     byebug (9.0.6)
     choice (0.2.0)
@@ -215,6 +216,7 @@ DEPENDENCIES
   axlsx
   bcrypt
   better_errors
+  bugsnag
   dotenv-rails
   foreman
   hamlit
