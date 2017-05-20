@@ -8,9 +8,7 @@ class Explorer::Controller < Controller
   end
 
   def results
-    conn = TargetDatabase.connection
-
-    database_adapter = TargetDatabase.connection.adapter_name.downcase.to_sym
+    adapter = Insights::Adapter.create
 
     percentages = !!params[:percentages]
 
@@ -44,7 +42,7 @@ class Explorer::Controller < Controller
     joins = {
       base_model_name => {
         name: first_join_name,
-        sql: "FROM \"#{table_name}\" AS \"#{first_join_name}\""
+        sql: adapter.from_table_as(table_name, first_join_name)
       }
     }
 
@@ -67,26 +65,27 @@ class Explorer::Controller < Controller
       local_path.each do |key|
         if pointer['columns'][key] || pointer['custom'][key]
           data = pointer['columns'][key] || pointer['custom'][key]
-          sql = "\"#{join_name}\".\"#{key}\""
-          sql_before_transform = nil
 
-          if pointer['custom'][key]
-            sql = (data['sql'] || '').gsub('$$.', "\"#{join_name}\".")
+          sql_before_transform = nil
+          sql = nil
+
+          if pointer['columns'][key]
+            sql = adapter.table_alias_column(join_name, key)
+          elsif pointer['custom'][key]
+            sql = adapter.custom_sql_in_table_replace(data['sql'], join_name)
           end
 
           if data['type'].to_s == 'time'
-            if database_adapter.in? %i(postgresql postgis)
-              sql = "(#{sql} at time zone 'UTC' at time zone '#{Time.zone.name}')"
-            end
+            sql = adapter.convert_sql_timezone(sql)
 
-            if transform.present? && transform.in?(%w(hour day week month quarter year))
+            if transform.present?
               sql_before_transform = sql
-              sql = date_transform(transform, sql, database_adapter)
+              sql = adapter.truncate_date(sql, transform)
             end
           end
 
-          if aggregate.present? && aggregate.in?(%w(count sum min max avg))
-            sql = "#{aggregate}(#{aggregate == 'count' ? 'distinct ' : ''}#{sql})"
+          if aggregate.present?
+            sql = adapter.add_aggregation(sql, aggregate)
           end
 
           value_object = {
@@ -128,7 +127,7 @@ class Explorer::Controller < Controller
 
             joins[traversed_path.join('.')] = {
               name: join_name,
-              sql: "LEFT JOIN \"#{pointer['table_name']}\" \"#{join_name}\" ON (\"#{join_name}\".\"#{link_data['model_key']}\" = \"#{last_join_name}\".\"#{link_data['my_key']}\")"
+              sql: adapter.left_join(pointer['table_name'], join_name, link_data['model_key'], last_join_name, link_data['my_key'])
             }
           end
         end
@@ -153,62 +152,21 @@ class Explorer::Controller < Controller
         filter_value = all_column_list.select { |v| v[:column] == column }.first
         if filter_value.present?
           if filter_condition == 'null'
-            if filter_value[:type] == 'string'
-              conditions << "((#{filter_value[:sql]}) IS NULL OR (#{filter_value[:sql]}) = '')"
-            else
-              conditions << "(#{filter_value[:sql]}) IS NULL"
-            end
+            conditions << adapter.filter_empty(filter_value[:sql], filter_value[:type])
           elsif filter_condition == 'not null'
-            if filter_value[:type] == 'string'
-              conditions << "((#{filter_value[:sql]}) IS NOT NULL AND (#{filter_value[:sql]}) != '')"
-            else
-              conditions << "(#{filter_value[:sql]}) IS NOT NULL"
-            end
+            conditions << adapter.filter_present(filter_value[:sql], filter_value[:type])
           elsif filter_condition.start_with? 'in:'
-            string = filter_condition[3..-1]
-            conditions << "(#{filter_value[:sql]}) in (#{string.split(/, ?/).map { |s| conn.quote(s) }.join(', ')})"
+            conditions << adapter.filter_in(filter_value[:sql], filter_condition[3..-1])
           elsif filter_condition.start_with? 'not_in:'
-            string = filter_condition[7..-1]
-            conditions << "(#{filter_value[:sql]}) not in (#{string.split(/, ?/).map { |s| conn.quote(s) }.join(', ')})"
+            conditions << adapter.filter_not_in(filter_value[:sql], filter_condition[7..-1])
           elsif filter_condition.start_with? 'equals:'
-            string = filter_condition[7..-1]
-
-            if database_adapter == :sqlite && filter_value[:type] == 'boolean'
-              conditions << "(#{filter_value[:sql]}) = #{conn.quote(string == 'true' ? 't' : 'f')}"
-            else
-              conditions << "(#{filter_value[:sql]}) = #{conn.quote(string)}"
-            end
-
+            conditions << adapter.filter_equals(filter_value[:sql], filter_value[:type], filter_condition[7..-1])
           elsif filter_condition.start_with? 'contains:'
-            string = filter_condition[9..-1]
-
-            if database_adapter.in? %i(postgresql postgis)
-              conditions << "(#{filter_value[:sql]}) ilike #{conn.quote('%' + string + '%')}"
-            else
-              conditions << "(#{filter_value[:sql]}) like #{conn.quote('%' + string + '%')}"
-            end
+            conditions << adapter.filter_contains(filter_value[:sql], filter_condition[9..-1])
           elsif filter_condition.start_with? 'between:'
-            start, finish = filter_condition[8..-1].split(':')
-            if start != '' && !start.nil?
-              conditions << "(#{filter_value[:sql]}) >= #{conn.quote(start)}"
-            end
-            if finish != '' && !finish.nil?
-              conditions << "(#{filter_value[:sql]}) <= #{conn.quote(finish)}"
-            end
+            conditions += adapter.filter_between(filter_value[:sql], filter_condition[8..-1])
           elsif filter_condition.start_with? 'date_range:'
-            _, start, finish = filter_condition.split(':')
-            if start.present?
-              date = start.to_date rescue nil
-              if date.present?
-                conditions << "(#{filter_value[:sql]}) >= #{conn.quote(date.to_s)}"
-              end
-            end
-            if finish.present?
-              date = finish.to_date rescue nil
-              if date.present?
-                conditions << "(#{filter_value[:sql]}) < #{conn.quote((date + 1.day).to_s)}"
-              end
-            end
+            conditions += adapter.filter_date_range(filter_value[:sql], filter_condition[11..-1])
           end
         end
 
@@ -219,10 +177,10 @@ class Explorer::Controller < Controller
         end
       end
       if where_conditions.present?
-        where_sql = "WHERE #{where_conditions.join(' AND ')}"
+        where_sql = adapter.where(where_conditions)
       end
       if having_conditions.present?
-        having_sql = "HAVING #{having_conditions.join(' AND ')}"
+        having_sql = adapter.having(having_conditions)
       end
     end
 
@@ -235,7 +193,7 @@ class Explorer::Controller < Controller
     if any_aggregate
       group_parts = all_column_list.select { |v| v[:aggregate].blank? }.map { |v| v[:sql] }
       if group_parts.present?
-        group_sql = "GROUP BY #{group_parts.join(',')}"
+        group_sql = adapter.group_by(group_parts)
       end
     end
 
@@ -272,7 +230,7 @@ class Explorer::Controller < Controller
 
     any_non_aggregate = all_column_list.select { |v| v[:aggregate].blank? }.present?
     if any_non_aggregate
-      count_results = conn.execute(count_sql)
+      count_results = adapter.execute(count_sql)
       count = count_results.first['count']
     end
 
@@ -296,7 +254,7 @@ class Explorer::Controller < Controller
 
     final_columns = value_list.map { |v| v[:column] }
 
-    results = conn.execute(results_sql)
+    results = adapter.execute(results_sql)
     final_results = results.map do |row|
       final_columns.count.times.map { |i| row["$V#{i}"] }
     end
@@ -325,11 +283,11 @@ class Explorer::Controller < Controller
         first_date, last_date = get_times_from_string(graph_time_filter, 0, time_group)
 
         time_columns = time_columns.map do |v|
-          v.merge({ transform: time_group.to_s, sql: date_transform(time_group.to_s, v[:sql_before_transform], database_adapter) })
+          v.merge({ transform: time_group.to_s, sql: adapter.truncate_date(v[:sql_before_transform], time_group.to_s) })
         end
 
         graph_sort_sql = "ORDER BY #{time_column[:sql]}"
-        graph_where_sql = first_date.blank? || last_date.blank? ? where_sql : "#{where_sql.present? ? "#{where_sql} AND " : 'WHERE '}#{time_column[:sql]} >= #{conn.quote(first_date.to_s)} AND #{time_column[:sql]} <= #{conn.quote(last_date.to_s)}"
+        graph_where_sql = first_date.blank? || last_date.blank? ? where_sql : "#{where_sql.present? ? "#{where_sql} AND " : 'WHERE '}#{time_column[:sql]} >= #{adapter.quote(first_date.to_s)} AND #{time_column[:sql]} <= #{adapter.quote(last_date.to_s)}"
 
         graph_group_parts = (time_columns + aggregate_columns + facet_columns).select { |v| v[:aggregate].blank? }.map { |v| v[:sql] }
         graph_group_sql = "GROUP BY #{graph_group_parts.join(',')}"
@@ -343,7 +301,7 @@ class Explorer::Controller < Controller
           facet_sort_sql = "ORDER BY facet_count desc"
           facet_sql = "SELECT #{facet_select} #{from_array.join(' ')} #{graph_where_sql} #{graph_group_sql} #{having_sql} #{facet_sort_sql}"
           facet_sql = "SELECT t.facet_value, sum(t.facet_count) FROM (#{facet_sql}) t GROUP BY t.facet_value ORDER BY sum(t.facet_count) DESC LIMIT #{facet_count + 1}"
-          facet_results = conn.execute(facet_sql)
+          facet_results = adapter.execute(facet_sql)
           facet_values = facet_results.map { |r| r['facet_value'] }
 
           facet_other = facet_values.include?('Other') ? '__OTHER__' : 'Other'
@@ -354,7 +312,7 @@ class Explorer::Controller < Controller
                 facet_values = facet_values.first(facet_count)
                 facet_columns = [
                   facet_column.merge({
-                    sql: "(CASE WHEN #{facet_column[:sql]} IN (#{facet_values.map { |s| conn.quote(s) }.join(', ')}) THEN #{facet_column[:sql]} ELSE #{conn.quote(facet_other)} END)"
+                    sql: "(CASE WHEN #{facet_column[:sql]} IN (#{facet_values.map { |s| adapter.quote(s) }.join(', ')}) THEN #{facet_column[:sql]} ELSE #{adapter.quote(facet_other)} END)"
                   })
                 ]
                 facet_values << facet_other
@@ -384,7 +342,7 @@ class Explorer::Controller < Controller
 
         result_hash = {}
 
-        graph_results = conn.execute(graph_sql)
+        graph_results = adapter.execute(graph_sql)
         graph_results.each do |r|
           date = r[time_column[:alias]].to_date.to_s
           result_hash[date] ||= { time: date }
@@ -507,20 +465,6 @@ class Explorer::Controller < Controller
   end
 
 protected
-
-  def date_transform(transform, sql, database_adapter)
-    if database_adapter.in? %i(postgis postgresql)
-      "date_trunc('#{transform}', #{sql})::date"
-    elsif database_adapter.in? %i(sqlite)
-      if transform == 'day'
-        "date(#{sql})"
-      else
-        "datetime(#{sql}, 'start of #{transform}')"
-      end
-    else
-      sql
-    end
-  end
 
   def get_times_from_string(time_filter, smooth = 0, time_group = :day)
     if time_filter =~ /\A20[0-9][0-9]\z/
