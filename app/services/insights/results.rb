@@ -553,7 +553,7 @@ module Insights
         keys: all_keys,
         facets: facet_values,
         results: result_hash.values.sort_by { |h| h[:time] },
-        timeGroup: time_group.to_s
+        time_group: time_group.to_s
       }
     end
 
@@ -562,7 +562,7 @@ module Insights
         success: true,
 
         columns: @results_table_columns.map { |v| v[:column] },
-        columnsMeta: @column_metadata.map { |v| [v[:column], v.slice(:column, :path, :type, :url, :key, :model, :aggregate, :transform, :index)] }.to_h,
+        columns_meta: @column_metadata.map { |v| [v[:column], v.slice(:column, :path, :type, :url, :key, :model, :aggregate, :transform, :index)] }.to_h,
         results: @final_results,
         count: @results_table_count,
         offset: @results_table_sql_parts[:offset],
@@ -573,10 +573,10 @@ module Insights
 
         graph: @graph_response,
 
-        facetsColumn: params[:facets_column] || nil,
-        facetsCount: params[:facets_count],
-        graphTimeFilter: params[:graph_time_filter] || 'last-60',
-        graphCumulative: params[:graph_cumulative],
+        facets_column: params[:facets_column] || nil,
+        facets_count: params[:facets_count],
+        graph_time_filter: params[:graph_time_filter] || 'last-60',
+        graph_cumulative: params[:graph_cumulative],
 
         percentages: params[:percentages]
       }

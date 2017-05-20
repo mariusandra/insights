@@ -1,7 +1,14 @@
 module Insights::Export
   class Pdf < Common
+    def filename
+      "#{export_title}.pdf"
+    end
 
-    def export_pdf(response)
+    def type
+      'application/pdf'
+    end
+
+    def data
       contents = ''
       contents += "<html><head><meta charset='utf-8' /><style>\n"
       contents += "body { font-family: 'Arial' }\n"
@@ -16,7 +23,7 @@ module Insights::Export
         colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
 
         contents += "<table style='width:100%'><thead><tr>"
-        contents += "<th style='color:white;background:black;'>#{response[:graph][:timeGroup].capitalize}</th>"
+        contents += "<th style='color:white;background:black;'>#{response[:graph][:time_group].capitalize}</th>"
 
         keys = response[:graph][:keys]
         facets = response[:graph][:facets]
@@ -44,7 +51,7 @@ module Insights::Export
           contents += "<tr>"
 
           day = row[:time].to_date
-          time_group = response[:graph][:timeGroup]
+          time_group = response[:graph][:time_group]
 
           if time_group == 'year'
             contents += "<td>#{day.year}</td>"
@@ -62,7 +69,7 @@ module Insights::Export
 
           column_tds = ''
 
-          max = keys.map { |k| row[k] }.select { |v| !v.nil? }.max
+          max = keys.map { |k| row[k].to_f }.select { |v| !v.nil? }.max
 
           keys.each do |key|
             value = row[key].nil? ? 0 : row[key].to_f
@@ -113,9 +120,20 @@ module Insights::Export
 
       contents += "</body></html>"
 
-      pdf = WickedPdf.new.pdf_from_string(contents, pdf: "#{export_title}.pdf", footer: nil)
-
-      send_data pdf, type: 'application/pdf', disposition: 'attachment', filename: "#{export_title}.pdf"
+      WickedPdf.new.pdf_from_string(contents, pdf: "#{export_title}.pdf", footer: nil)
     end
+
+  protected
+
+    def format_number(number, aggregate = 'count')
+      f_amt = aggregate == 'count' ? number.round.to_s : ("%.2f" % number)
+      i = f_amt.index(".") || f_amt.length
+      while i > 3
+        f_amt[i - 3] = " " + f_amt[i-3]
+        i = f_amt.index(" ")
+      end
+      f_amt
+    end
+
   end
 end

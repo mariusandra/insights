@@ -31,7 +31,17 @@ class Explorer::Controller < Controller
 
     response = Insights::Results.new(input_params).get_response
 
-    render json: response
+    if params[:export].present?
+      if params[:export] == 'xlsx'
+        export = Insights::Export::Xlsx.new(input_params, response)
+      elsif params[:export] == 'pdf'
+        export = Insights::Export::Pdf.new(input_params, response)
+      end
+
+      send_data export.data, type: export.type, filename: export.filename
+    else
+      render json: camelize_keys(response, 1)
+    end
 
   rescue ActiveRecord::StatementInvalid => e
     if e.message.split("\n").first.include?('canceling statement due to statement timeout')
@@ -42,4 +52,17 @@ class Explorer::Controller < Controller
       raise e
     end
   end
+
+protected
+
+  def camelize_keys(object, limit = nil)
+    new_object = {}
+
+    object.each do |k, v|
+      new_object[k.to_s.camelize(:lower).to_sym] = v.is_a?(Hash) && (limit.nil? || limit > 0) ? (limit.nil? ? camelize_keys(v) : camelize_keys(v, limit - 1)) : v
+    end
+
+    new_object
+  end
+
 end

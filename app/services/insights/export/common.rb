@@ -1,5 +1,26 @@
 module Insights::Export
   class Common
+    attr_accessor :params, :response
+
+    def initialize(params, response)
+      @params = params
+      @response = response
+    end
+
+    def filename
+      raise 'Must override'
+    end
+
+    def type
+      raise 'Must override'
+    end
+
+    def data
+      raise 'Must override'
+    end
+
+  protected
+
     def export_title
       params[:export_title].present? ? params[:export_title] : "Insights Export #{Time.now}"
     end
@@ -9,16 +30,6 @@ module Insights::Export
       min, max = strs.minmax
       idx = min.size.times{ |i| break i if min[i] != max[i] }
       min[0...idx]
-    end
-
-    def format_number(number, aggregate = 'count')
-      f_amt = aggregate == 'count' ? number.round.to_s : ("%.2f" % number)
-      i = f_amt.index(".") || f_amt.length
-      while i > 3
-        f_amt[i - 3] = " " + f_amt[i-3]
-        i = f_amt.index(" ")
-      end
-      f_amt
     end
   end
 end
