@@ -1,6 +1,8 @@
 class Header::Views::Controller < Controller
   def save_view
     if params[:path].present? && params[:name].present?
+      raise "Paths must start with a /" unless params[:path].start_with?('/')
+
       view = View.create name: params[:name],
                          path: params[:path],
                          created_by: session[:user]
