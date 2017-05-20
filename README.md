@@ -12,13 +12,13 @@ The best tool we found was [Looker](https://looker.com/), but at a monthly price
 
 So I decided to re-implement the essential parts of Looker as an open source alternative.
 
-**Insights** is a self-hosted "SQL-not-required" data analytics and business intelligence tool. Featuring linkable URLs, easy data exploration, automatic joins, graphs, exports, facets (pivots), pretty colors and a ridiculously permissive license (MIT).
+**Insights** is a self-hosted "SQL-not-required" data analytics and business intelligence tool. Featuring linkable URLs, easy data exploration, automatic joins, graphs, exports, facets (pivots), saveable views, pretty colors and a ridiculously permissive license (MIT).
 
 It's a work in progress and you're brave for checking it out! Cheers!
 
 [Play with the demo here](http://insights-demo.mariusandra.com/).
 
-![Screenshot of the Explorer](https://github.com/mariusandra/insights/raw/master/doc/screenshot.png)
+![Screenshot of the Explorer](https://github.com/mariusandra/insights/raw/master/doc/screenshot-views.png)
 
 ## How does it work
 
