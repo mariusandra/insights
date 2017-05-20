@@ -139,7 +139,7 @@ module Insights
         table_alias = base_table_alias
 
         # log of how far we have gotten. empty at first
-        traversed_path = []
+        traversed_path = [@base_model_name]
 
         # remove the modal from the path, so "Order.order_lines.created_at" -> "order_lines.created_at"
         local_path = path.split('.')[1..-1]
@@ -217,7 +217,7 @@ module Insights
 
             # if we already joined this table, reuse the old name
             if joins[traversed_path.join('.')].present?
-              table_alias = joins[traversed_path.join('.')][:name]
+              table_alias = joins[traversed_path.join('.')][:alias]
 
             # otherwise add it to the joins list
             else
