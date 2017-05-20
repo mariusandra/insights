@@ -134,7 +134,7 @@ export default class Graph extends Component {
       const visible = typeof visibility[v] === 'undefined' || visibility[v]
       const object = {
         key: v,
-        name: v.substring(nameSubString).split(/[_!$]/).join(' '),
+        name: v.substring(nameSubString).split(/[_!$]/).join(' ') || 'empty',
         visible: visible,
         color: visible ? colors[i] : 'white'
       }
