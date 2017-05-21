@@ -11,6 +11,7 @@ import getMeta from 'lib/explorer/get-meta'
 import explorerLogic from '~/scenes/explorer/logic'
 
 const sanitizeNumber = (str) => str.replace(/[^0-9.]/g, '')
+const sanitizeListNumber = (str) => str.replace(/[^0-9., ]/g, '')
 
 @connect({
   actions: [
@@ -84,7 +85,15 @@ export default class OneFilter extends Component {
       <div>
         <div className='filter-with-inputs'>
           <span style={{fontWeight: columnFilter && columnFilter.indexOf('equals:') === 0 ? 'bold' : 'normal'}}>Equals:</span>
-          <input type='text' value={columnFilter && columnFilter.indexOf('equals:') === 0 ? columnFilter.substring(7) : ''} onChange={(e) => setFilter(index, e.target.value === '' ? '' : `equals:${e.target.value}`)} />
+          <input type='text' placeholder='123' value={columnFilter && columnFilter.indexOf('equals:') === 0 ? columnFilter.substring(7) : ''} onChange={(e) => setFilter(index, e.target.value === '' ? '' : `equals:${sanitizeNumber(e.target.value)}`)} />
+        </div>
+        <div className='filter-with-inputs'>
+          <span style={{fontWeight: columnFilter && columnFilter.indexOf('in:') === 0 ? 'bold' : 'normal'}}>In list:</span>
+          <input type='text' placeholder='1, 2, 3' value={columnFilter && columnFilter.indexOf('in:') === 0 ? columnFilter.substring(3) : ''} onChange={(e) => setFilter(index, e.target.value === '' ? '' : `in:${sanitizeListNumber(e.target.value)}`)} />
+        </div>
+        <div className='filter-with-inputs'>
+          <span style={{fontWeight: columnFilter && columnFilter.indexOf('not_in:') === 0 ? 'bold' : 'normal'}}>Not in:</span>
+          <input type='text' placeholder='a, b, c' value={columnFilter && columnFilter.indexOf('not_in:') === 0 ? columnFilter.substring(7) : ''} onChange={(e) => setFilter(index, e.target.value === '' ? '' : `not_in:${sanitizeListNumber(e.target.value)}`)} />
         </div>
         <div className='filter-with-inputs'>
           <span style={{fontWeight: columnFilter && columnFilter.indexOf('between:') === 0 ? 'bold' : 'normal'}}>Between:</span>
