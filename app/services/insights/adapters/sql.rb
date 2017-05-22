@@ -138,14 +138,17 @@ module Insights::Adapters
     end
 
     def where(conditions_array)
+      return '' if conditions_array.blank?
       "WHERE #{conditions_array.join(' AND ')}"
     end
 
     def having(conditions_array)
+      return '' if conditions_array.blank?
       "HAVING #{conditions_array.join(' AND ')}"
     end
 
     def group_by(group_parts_array)
+      return '' if group_parts_array.blank?
       "GROUP BY #{group_parts_array.join(',')}"
     end
 
@@ -154,6 +157,7 @@ module Insights::Adapters
     end
 
     def order_by(order_parts_array)
+      return '' if order_parts_array.blank?
       "ORDER BY #{order_parts_array.join(',')}"
     end
 

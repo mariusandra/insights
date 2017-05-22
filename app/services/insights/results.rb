@@ -476,7 +476,11 @@ module Insights
       # save the results in a hash with dates as keys... and all aggregate columns with facets as values
       result_hash = {}
 
+
       graph_results.each do |r|
+        # TODO: should we do someting special with columns that have no date?
+        next if r[time_column[:alias]].blank?
+
         date = r[time_column[:alias]].to_date.to_s
         result_hash[date] ||= { time: date }
 
