@@ -97,8 +97,8 @@ export default class Views extends Component {
 
     return (
       <div className='tab-row-element'>
-        <Tooltip placement='bottomLeft' trigger={['hover']} overlay={overlay} onVisibleChange={this.handleTooltip}>
-          <button>Saved Views</button>
+        <Tooltip placement='bottomRight' trigger={['hover']} overlay={overlay} onVisibleChange={this.handleTooltip}>
+          <button className='fa fa-star' title='Saved views' />
         </Tooltip>
       </div>
     )

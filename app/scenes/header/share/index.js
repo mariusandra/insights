@@ -45,9 +45,7 @@ export default class Share extends Component {
         {url ? (
           <input type='text' defaultValue={url} className='input-text' style={{margin: 0}} />
         ) : null}
-        <button key={url ? 'copy-button' : 'generate-button'} onClick={this.handleShare} style={{marginLeft: 5}}>
-          {url ? 'Copy' : 'Generate URL'}
-        </button>
+        <button key={url ? 'copy-button' : 'generate-button'} className={url ? 'fa fa-clipboard' : 'fa fa-share-alt'} onClick={this.handleShare} style={{marginLeft: 5}} title={url ? 'Copy' : 'Generate URL'} />
       </div>
     )
   }

@@ -14,6 +14,7 @@ module.exports = {
   entry: {
     insights: [
       'babel-polyfill',
+      'font-awesome/css/font-awesome.css',
       './app/scenes/index.js',
       './app/scenes/explorer/scene.js'
     ]
@@ -46,11 +47,14 @@ module.exports = {
   module: {
     loaders: [
       { test: /\.s?css$/, loader: devBuild ? 'style!css?importLoaders=1!postcss?parser=postcss-scss' : ExtractTextPlugin.extract('style', 'css!postcss?parser=postcss-scss') },
+      { test: /\.less$/, loader: devBuild ? 'style!css?importLoaders=1!less' : ExtractTextPlugin.extract('style', 'css!less') },
       { test: /\.png$/, loader: 'url-loader?limit=10000&mimetype=image/png' },
       { test: /\.jpg$/, loader: 'url-loader?limit=10000&mimetype=image/jpeg' },
       { test: /\.gif$/, loader: 'url-loader?limit=10000&mimetype=image/gif' },
       { test: /\.svg$/, loader: 'url-loader?limit=10000&mimetype=image/svg+xml' },
       { test: /\.rb$/, loader: 'kea-rails-loader' },
+      { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff' },
+      { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file-loader' }
     ]
   }
 }
