@@ -13,6 +13,7 @@ import Share from './share'
 
 // logic
 import headerLogic from '~/scenes/header/logic'
+import explorerLogic from '~/scenes/explorer/logic'
 
 @connect({
   actions: [
@@ -21,6 +22,9 @@ import headerLogic from '~/scenes/header/logic'
     ]
   ],
   props: [
+    explorerLogic, [
+      'url as explorerUrl'
+    ],
     state => state.routing.locationBeforeTransitions, [
       'pathname'
     ],
@@ -32,14 +36,14 @@ import headerLogic from '~/scenes/header/logic'
 })
 export default class HeaderScene extends Component {
   render () {
-    const { currentUser, loginNeeded, pathname } = this.props
+    const { currentUser, loginNeeded, pathname, explorerUrl } = this.props
     const { openLocation } = this.props.actions
 
     return (
       <div className='header-scene'>
         <div className='insights-tab-row'>
           <div className='tab-row-element'>
-            <button onClick={() => openLocation('/explorer')} className={pathname.indexOf('/explorer') === 0 ? 'button' : 'button white'}>Explorer</button>
+            <button onClick={() => openLocation(explorerUrl || '/explorer')} className={pathname.indexOf('/explorer') === 0 ? 'button' : 'button white'}>Explorer</button>
           </div>
           <div className='tab-row-element'>
             <button onClick={() => openLocation('/dashboard')} className={pathname.indexOf('/dashboard') === 0 ? 'button' : 'button white'}>Dashboard</button>
