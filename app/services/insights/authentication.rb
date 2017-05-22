@@ -1,7 +1,11 @@
 module Insights
   class Authentication
     def self.login_required?
-      defined?(INSIGHTS_LOGIN) && INSIGHTS_LOGIN.present?
+      if defined?(INSIGHTS_LOGIN)
+        INSIGHTS_LOGIN.present?
+      else
+        raise 'You must define INSIGHTS_LOGIN, even if just setting to false to disable authentication'
+      end
     end
 
     def self.successful?(user, password)

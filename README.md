@@ -176,9 +176,10 @@ INSIGHTS_DATABASE = {
 
 ##### 2.4.3. Set up the credentials
 
-If you uncomment any of these lines, the app will be protected by a login screen
+Uncomment any of the following to either have your app open to everyone or protected by a login screen.
 
 ```rb
+INSIGHTS_LOGIN = false # no login screen
 INSIGHTS_LOGIN = ['demo', 'demo']
 INSIGHTS_LOGIN = [['demo', 'demo'], ['admin', 'pass']]
 INSIGHTS_LOGIN = -> (user, pass) { user == 'demo' && pass == 'password' }

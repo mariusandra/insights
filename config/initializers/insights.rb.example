@@ -30,7 +30,10 @@ INSIGHTS_TIMEZONE = 'Europe/Brussels'
 # INSIGHTS_DATABASE = Rails.configuration.database_configuration['target_database']
 
 
-# TODO: uncomment any of the following to enable authentication
+# TODO: uncomment any of the following to enable/disable authentication
+
+# # no authentication
+# INSIGHTS_LOGIN = false
 
 # # simple user/pass
 # INSIGHTS_LOGIN = ['demo', 'demo']
