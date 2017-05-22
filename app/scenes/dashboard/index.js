@@ -13,20 +13,24 @@ const ResponsiveReactGridLayout = WidthProvider(Responsive)
 // components
 
 // logic
-import dashboard from '~/scenes/dashboard/logic'
+import headerLogic from '~/scenes/header/logic'
+import dashboardLogic from '~/scenes/dashboard/logic'
 
 // const { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } = dashboard.constants
 
 @connect({
   actions: [
-    dashboard, [
+    headerLogic, [
+      'openLocation'
+    ],
+    dashboardLogic, [
       'setLayout',
       'selectDashboard',
       'addDashboard'
     ]
   ],
   props: [
-    dashboard, [
+    dashboardLogic, [
       'dashboards',
       'layout',
       'selectedDashboardId'
@@ -45,14 +49,19 @@ export default class Dashboard extends Component {
 
   generateDOM = () => {
     const { layout } = this.props
+    const { openLocation } = this.props.actions
 
-    console.log(layout)
-
-    let i = 0
     return layout.map(l => {
       return (
-        <div key={i++} className={l.static ? 'static' : ''}>
+        <div key={l.i}>
+          {l.name ? (
+            <div>
+              <strong>{l.name}</strong>
+            </div>
+          ) : null}
           {l.path}
+          <br />
+          <button onClick={() => openLocation(l.path)}>Explore</button>
         </div>
       )
     })
