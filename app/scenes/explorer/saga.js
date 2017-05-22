@@ -1,5 +1,5 @@
 import Saga from 'kea/saga'
-import { put, call } from 'redux-saga/effects'
+import { put, call, fork } from 'redux-saga/effects'
 import messg from 'messg'
 import { LOCATION_CHANGE, push } from 'react-router-redux'
 
@@ -7,7 +7,8 @@ import download from 'downloadjs'
 
 import explorerLogic from '~/scenes/explorer/logic'
 
-import controller from './controller.rb'
+import explorerController from '~/scenes/explorer/controller.rb'
+import dashboardController from '~/scenes/dashboard/controller.rb'
 
 import delay from 'lib/utils/delay'
 
@@ -97,7 +98,10 @@ export default class ExplorerSaga extends Saga {
       'setFacetsCount',
       'setGraphCumulative',
       'setPercentages',
-      'requestExport'
+      'requestExport',
+
+      'dashboardsLoaded',
+      'addToDashboard'
     ]
   ])
 
@@ -106,8 +110,9 @@ export default class ExplorerSaga extends Saga {
 
     window.document.title = 'Explorer - Insights'
 
-    const structure = yield controller.getStructure()
+    const structure = yield explorerController.getStructure()
     yield put(setStructure(structure))
+    yield fork(this.loadDashboards)
 
     yield call(this.urlToStateWorker, { payload: { pathname: window.location.pathname, search: window.location.search, firstLoad: true } })
   }
@@ -142,8 +147,17 @@ export default class ExplorerSaga extends Saga {
     [actions.setPercentages]: this.refreshDataWorker,
     [actions.requestExport]: this.refreshDataWorker,
     [actions.openTreeNode]: this.refreshDataWorker,
-    [actions.closeTreeNode]: this.refreshDataWorker
+    [actions.closeTreeNode]: this.refreshDataWorker,
+
+    [actions.addToDashboard]: this.addToDashboardWorker
   })
+
+  loadDashboards = function * (action) {
+    const { dashboardsLoaded } = this.actions
+
+    const { dashboards } = yield dashboardController.getDashboards({})
+    yield put(dashboardsLoaded(dashboards))
+  }
 
   refreshDataWorker = function * (action) {
     yield delay(50) // throttle
@@ -209,7 +223,7 @@ export default class ExplorerSaga extends Saga {
           }
           yield put(clearLoading())
         } else {
-          response = yield controller.getResults(params)
+          response = yield explorerController.getResults(params)
 
           if (response.success) {
             // not asking because of a pagination update
@@ -300,5 +314,19 @@ export default class ExplorerSaga extends Saga {
     })
 
     yield put(setColumnsAndFilter(newColumns, newFilter))
+  }
+
+  addToDashboardWorker = function * (action) {
+    const { dashboardsLoaded } = this.actions
+    const { id, name, path } = action.payload
+
+    const results = yield dashboardController.addToDashboard({ id, name, path })
+
+    if (results.dashboards) {
+      messg.success('Added!', 2500)
+      yield put(dashboardsLoaded(results.dashboards))
+    } else if (results.error) {
+      messg.success(results.error, 2500)
+    }
   }
 }

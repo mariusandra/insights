@@ -15,6 +15,7 @@ import Pagination from './pagination'
 import Tree from './tree'
 import Table from './table'
 import Filter from './filter'
+import AddToDashboard from './add-to-dashboard'
 
 // logic
 import explorerLogic from '~/scenes/explorer/logic'
@@ -92,17 +93,18 @@ export default class Explorer extends Component {
                 {graphData ? (
                   <TimeFilter />
                 ) : null}
+                {graphData ? (
+                  <AddToDashboard />
+                ) : null}
               </div>
               <div className='top-pagination'>
                 <Pagination />
               </div>
             </div>
           </Layout>
-          {Object.keys(filter).length > 0 ? (
-            <Layout layoutHeight={filterHeight}>
-              <Filter setFilterHeight={this.setFilterHeight} />
-            </Layout>
-          ) : <div />}
+          <Layout layoutHeight={filterHeight}>
+            <Filter setFilterHeight={this.setFilterHeight} />
+          </Layout>
           {graphData ? (
             <Layout layoutHeight={300}>
               <Graph />

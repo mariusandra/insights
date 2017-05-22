@@ -1,8 +1,6 @@
 import Logic, { initLogic } from 'kea/logic'
 import { PropTypes } from 'react'
 
-import range from 'lib/utils/range'
-
 // const outerActions = selectActionsFromLogic([
 //   otherScene, [
 //     'doSomething'
@@ -50,20 +48,35 @@ export default class DashboardLogic extends Logic {
   ]
 
   actions = ({ constants }) => ({
-    setLayout: (layout, layouts) => ({ layout })
+    addDashboard: true,
+    setLayout: (layout, layouts) => ({ layout }),
+
+    selectDashboard: (id, layout) => ({ id, layout }),
+    dashboardsLoaded: (dashboards) => ({ dashboards })
   })
 
   reducers = ({ actions, constants }) => ({
-    layout: [defaultLayout, PropTypes.array, {
-      [actions.setLayout]: (_, payload) => payload.layout
+    selectedDashboardId: [null, PropTypes.number, {
+      [actions.selectDashboard]: (_, payload) => payload.id
+    }],
+
+    // { 1: { layout: [{ x, y, w, h, path, name }], name: .. } }
+    dashboards: [{}, PropTypes.object, {
+      [actions.dashboardsLoaded]: (_, payload) => {
+        let newState = {}
+        payload.dashboards.forEach(dashboard => {
+          newState[dashboard.id] = dashboard
+        })
+        return newState
+      }
     }]
   })
 
   selectors = ({ constants, selectors }) => ({
-    // todoCount: [
-    //   () => [selectors.todos],
-    //   (todos) => todos.length,
-    //   PropTypes.number
-    // ]
+    layout: [
+      () => [selectors.selectedDashboardId, selectors.dashboards],
+      (id, dashboards) => dashboards[id] ? dashboards[id].layout : [],
+      PropTypes.array
+    ]
   })
 }

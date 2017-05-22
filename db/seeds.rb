@@ -9,4 +9,3 @@
 # row will be an array with the fields in the order they appear in the file
 require 'json'
 require 'csv'
-

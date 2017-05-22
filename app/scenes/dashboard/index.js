@@ -20,12 +20,16 @@ import dashboard from '~/scenes/dashboard/logic'
 @connect({
   actions: [
     dashboard, [
-      'setLayout'
+      'setLayout',
+      'selectDashboard',
+      'addDashboard'
     ]
   ],
   props: [
     dashboard, [
-      'layout'
+      'dashboards',
+      'layout',
+      'selectedDashboardId'
     ]
   ]
 })
@@ -42,27 +46,33 @@ export default class Dashboard extends Component {
   generateDOM = () => {
     const { layout } = this.props
 
+    console.log(layout)
+
     let i = 0
     return layout.map(l => {
       return (
         <div key={i++} className={l.static ? 'static' : ''}>
-          {l.static
-            ? <span className='text' title='This item is static and cannot be removed or resized.'>Static - {i}</span>
-            : <span className='text'>{i}</span>
-          }
+          {l.path}
         </div>
       )
     })
   }
 
   render () {
-    const { layout } = this.props
-    const { setLayout } = this.props.actions
+    const { layout, dashboards, selectedDashboardId } = this.props
+    const { setLayout, selectDashboard, addDashboard } = this.props.actions
 
     // breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
     // cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}}
     return (
       <div className='dashboard-scene'>
+        <div className='dashboards-list'>
+          {Object.values(dashboards).map(dashboard => (
+            <button key={dashboard.id} onClick={() => selectDashboard(dashboard.id)} className={selectedDashboardId === dashboard.id ? '' : 'white'}>{dashboard.name}</button>
+          ))}
+          <button className='white' onClick={() => addDashboard()}>+ ADD</button>
+        </div>
+
         <ResponsiveReactGridLayout className='layout'
                                    breakpoints={{sm: 768, xxs: 0}}
                                    cols={{sm: 6, xxs: 2}}

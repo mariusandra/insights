@@ -1,0 +1,31 @@
+# == Schema Information
+#
+# Table name: dashboard_items
+#
+#  created_at   :datetime         not null
+#  dashboard_id :integer
+#  h            :integer
+#  id           :integer          not null, primary key
+#  name         :string
+#  path         :string
+#  updated_at   :datetime         not null
+#  w            :integer
+#  x            :integer
+#  y            :integer
+#
+# Indexes
+#
+#  index_dashboard_items_on_dashboard_id  (dashboard_id)
+#
+
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined. If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+one: {}
+# column: value
+#
+two: {}
+# column: value
