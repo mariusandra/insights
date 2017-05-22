@@ -12,15 +12,18 @@ import Views from './views'
 import Share from './share'
 
 // logic
-import explorerLogic from '~/scenes/explorer/logic'
+import headerLogic from '~/scenes/header/logic'
 
 @connect({
   actions: [
-    explorerLogic, [
-      'clear'
+    headerLogic, [
+      'openLocation'
     ]
   ],
   props: [
+    state => state.routing.locationBeforeTransitions, [
+      'pathname'
+    ],
     state => state.rails, [
       'currentUser',
       'loginNeeded'
@@ -29,14 +32,17 @@ import explorerLogic from '~/scenes/explorer/logic'
 })
 export default class HeaderScene extends Component {
   render () {
-    const { currentUser, loginNeeded } = this.props
-    const { clear } = this.props.actions
+    const { currentUser, loginNeeded, pathname } = this.props
+    const { openLocation } = this.props.actions
 
     return (
       <div className='header-scene'>
         <div className='insights-tab-row'>
           <div className='tab-row-element'>
-            <button onClick={clear} className={window.location.pathname.indexOf('/explorer') === 0 ? 'button' : 'button white'}>Explorer</button>
+            <button onClick={() => openLocation('/explorer')} className={pathname.indexOf('/explorer') === 0 ? 'button' : 'button white'}>Explorer</button>
+          </div>
+          <div className='tab-row-element'>
+            <button onClick={() => openLocation('/dashboard')} className={pathname.indexOf('/dashboard') === 0 ? 'button' : 'button white'}>Dashboard</button>
           </div>
           {loginNeeded ? <Logout /> : null}
           {currentUser ? (

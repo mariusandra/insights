@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
   kea_bundle :insights, prerender: false do
     get 'login', to: 'login/#index', as: :login
+    get 'dashboard', to: 'dashboard/#index', as: :dashboard
     get 'explorer', to: 'explorer/#index', as: :explorer
     get 'url/:path', to: 'url/#open_url', as: :url
   end

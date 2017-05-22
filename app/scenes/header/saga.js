@@ -1,36 +1,22 @@
 import Saga from 'kea/saga'
-// import { put } from 'redux-saga/effects'
+import { put } from 'redux-saga/effects'
+import { push } from 'react-router-redux'
 
-// import headerLogic from '~/scenes/header/logic'
+import headerLogic from '~/scenes/header/logic'
 
 export default class HeaderSaga extends Saga {
-  // actions = () => ([
-  //   headerLogic, [
-  //     'doSomething'
-  //   ]
-  // ])
-  //
-  // takeEvery = ({ actions }) => ({
-  //   [actions.doSomething]: this.doSomethingWorker
-  // })
+  actions = () => ([
+    headerLogic, [
+      'openLocation'
+    ]
+  ])
 
-  run = function * () {
-    // const { doSomething } = this.actions
+  takeEvery = ({ actions }) => ({
+    [actions.openLocation]: this.openLocationWorker
+  })
 
-    console.log('Starting header saga')
-
-    // while (true) {
-    //   const propertyName = yield headerLogic.get('propertyName')
-    //   yield put(doSomething(propertyName + '!'))
-    // }
+  openLocationWorker = function * (action) {
+    const { location } = action.payload
+    yield put(push(location))
   }
-
-  cancelled = function * () {
-    console.log('Stopping header saga')
-  }
-
-  // doSomethingWorker = function * (action) {
-  //   const { variable } = action.payload
-  //   console.log('doSomething action called with', variable)
-  // }
 }
