@@ -18,6 +18,9 @@ export default class DashboardLogic extends Logic {
 
     selectDashboard: (id, layout) => ({ id, layout }),
     dashboardsLoaded: (dashboards) => ({ dashboards }),
+
+    startResizing: (id) => ({ id }),
+    stopResizing: (id) => ({ id })
   })
 
   reducers = ({ actions, constants }) => ({
@@ -69,6 +72,11 @@ export default class DashboardLogic extends Logic {
       [actions.saveDashboard]: () => true,
       [actions.dashboardSaveFailure]: () => false,
       [actions.dashboardSaveSuccess]: () => false
+    }],
+
+    resizingItem: [null, PropTypes.string, {
+      [actions.startResizing]: (_, payload) => payload.id,
+      [actions.stopResizing]: () => null
     }],
 
     currentBreakpoint: ['desktop', PropTypes.string, {

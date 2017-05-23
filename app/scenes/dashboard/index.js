@@ -27,7 +27,9 @@ import dashboardLogic from '~/scenes/dashboard/logic'
       'selectDashboard',
       'addDashboard',
       'setCurrentBreakpoint',
-      'saveDashboard'
+      'saveDashboard',
+      'startResizing',
+      'stopResizing'
     ]
   ],
   props: [
@@ -39,7 +41,8 @@ import dashboardLogic from '~/scenes/dashboard/logic'
       'selectedDashboardId',
       'currentBreakpoint',
       'layoutsUnsaved',
-      'savingDashboard'
+      'savingDashboard',
+      'resizingItem'
     ]
   ]
 })
@@ -53,7 +56,7 @@ export default class Dashboard extends Component {
   }
 
   generateDOM = () => {
-    const { layout, items } = this.props
+    const { layout, items, resizingItem } = this.props
 
     if (!layout) {
       return null
@@ -62,10 +65,20 @@ export default class Dashboard extends Component {
     return layout.map(l => {
       return (
         <div key={l.i}>
-          <Graph key={l.i} name={items[l.i].name} path={items[l.i].path} />
+          <Graph key={l.i} name={items[l.i].name} path={items[l.i].path} isResizing={l.i === resizingItem} />
         </div>
       )
     })
+  }
+
+  handleResizeStart = (layout, oldItem, newItem, placeholder, e, element) => {
+    const { startResizing } = this.props.actions
+    startResizing(oldItem.i)
+  }
+
+  handleResizeStop = (layout, oldItem, newItem, placeholder, e, element) => {
+    const { stopResizing } = this.props.actions
+    stopResizing(oldItem.i)
   }
 
   render () {
@@ -94,6 +107,8 @@ export default class Dashboard extends Component {
                                      layouts={layouts}
                                      onLayoutChange={layoutChanged}
                                      onBreakpointChange={setCurrentBreakpoint}
+                                     onResizeStart={this.handleResizeStart}
+                                     onResizeStop={this.handleResizeStop}
                                      // WidthProvider option
                                      useCSSTransforms
                                      measureBeforeMount>

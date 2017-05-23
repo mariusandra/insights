@@ -36,7 +36,8 @@ export default class DashboardGraph extends Component {
     name: PropTypes.string,
     path: PropTypes.string,
     containerWidth: PropTypes.number,
-    containerHeight: PropTypes.number
+    containerHeight: PropTypes.number,
+    isResizing: PropTypes.bool
   }
 
   constructor (props) {
@@ -67,7 +68,7 @@ export default class DashboardGraph extends Component {
   }
 
   render () {
-    const { name, path, containerWidth, containerHeight } = this.props
+    const { name, path, containerWidth, containerHeight, isResizing } = this.props
     const { loaded, graph, graphKeys, graphData } = this.state
     const { openLocation } = this.props.actions
 
@@ -81,11 +82,17 @@ export default class DashboardGraph extends Component {
                   onClick={() => openLocation(path)}
                   className='fa fa-search-plus' />
         </div>
-        <div style={{ width: containerWidth, height: containerHeight - 30 }}>
-          {loaded ? (
+        <div style={{ width: containerWidth, height: containerHeight - 30, backgroundColor: isResizing ? '#eeeeee' : '' }}>
+          {loaded && !isResizing ? (
             <ExplorerGraph graph={graph} graphKeys={graphKeys} graphData={graphData} />
+          ) : isResizing ? (
+            <span style={{position: 'absolute', left: containerWidth / 2 - 10, top: containerHeight / 2 - 10, fontSize: 48, color: '#888888'}}>
+              <i className='fa fa-arrows-alt' />
+            </span>
           ) : (
-            <span style={{position: 'absolute', left: containerWidth / 2 - 10, top: containerHeight / 2 - 10}}><Spinner /></span>
+            <span style={{position: 'absolute', left: containerWidth / 2 - 10, top: containerHeight / 2 - 10}}>
+              <Spinner />
+            </span>
           )}
         </div>
       </div>
