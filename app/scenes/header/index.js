@@ -13,7 +13,6 @@ import Share from './share'
 
 // logic
 import headerLogic from '~/scenes/header/logic'
-import explorerLogic from '~/scenes/explorer/logic'
 
 @connect({
   actions: [
@@ -22,11 +21,9 @@ import explorerLogic from '~/scenes/explorer/logic'
     ]
   ],
   props: [
-    explorerLogic, [
-      'url as explorerUrl'
-    ],
     state => state.routing.locationBeforeTransitions, [
-      'pathname'
+      'pathname',
+      'search'
     ],
     state => state.rails, [
       'currentUser',
@@ -35,18 +32,31 @@ import explorerLogic from '~/scenes/explorer/logic'
   ]
 })
 export default class HeaderScene extends Component {
-  render () {
-    const { currentUser, loginNeeded, pathname, explorerUrl } = this.props
+  constructor (props) {
+    super(props)
+    this._pathHistory = {}
+  }
+
+  componentWillUpdate (nextProps) {
+    this._pathHistory[nextProps.pathname] = nextProps.search
+  }
+
+  openLocation = (pathname) => {
     const { openLocation } = this.props.actions
+    openLocation(pathname + (this._pathHistory[pathname] || ''))
+  }
+
+  render () {
+    const { currentUser, loginNeeded, pathname } = this.props
 
     return (
       <div className='header-scene'>
         <div className='insights-tab-row'>
           <div className='tab-row-element'>
-            <button onClick={() => openLocation(explorerUrl || '/explorer')} className={pathname.indexOf('/explorer') === 0 ? 'button' : 'button white'}>Explorer</button>
+            <button onClick={() => this.openLocation('/explorer')} className={pathname.indexOf('/explorer') === 0 ? 'button' : 'button white'}>Explorer</button>
           </div>
           <div className='tab-row-element'>
-            <button onClick={() => openLocation('/dashboard')} className={pathname.indexOf('/dashboard') === 0 ? 'button' : 'button white'}>Dashboard</button>
+            <button onClick={() => this.openLocation('/dashboard')} className={pathname.indexOf('/dashboard') === 0 ? 'button' : 'button white'}>Dashboard</button>
           </div>
           {loginNeeded ? <Logout /> : null}
           {currentUser ? (

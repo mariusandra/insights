@@ -5,10 +5,11 @@ import './styles.scss'
 // libraries
 import React, { Component } from 'react'
 import { connect } from 'kea/logic'
-
-// utils
 import { Responsive, WidthProvider } from 'react-grid-layout'
 const ResponsiveReactGridLayout = WidthProvider(Responsive)
+
+// utils
+import urlToState from 'lib/explorer/url-to-state'
 
 // components
 
@@ -51,6 +52,10 @@ export default class Dashboard extends Component {
     const { layout } = this.props
     const { openLocation } = this.props.actions
 
+    if (!layout) {
+      return null
+    }
+
     return layout.map(l => {
       return (
         <div key={l.i}>
@@ -59,7 +64,7 @@ export default class Dashboard extends Component {
               <strong>{l.name}</strong>
             </div>
           ) : null}
-          {l.path}
+          {JSON.stringify(urlToState(l.path))}
           <br />
           <button onClick={() => openLocation(l.path)}>Explore</button>
         </div>

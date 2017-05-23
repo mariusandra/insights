@@ -24,18 +24,7 @@ export default class DashboardSaga extends Saga {
 
   run = function * () {
     yield fork(this.loadDashboards)
-
-    // console.log('Starting dashboard saga')
-
-    // while (true) {
-    //   const propertyName = yield dashboardLogic.get('propertyName')
-    //   yield put(doSomething(propertyName + '!'))
-    // }
   }
-
-  // cancelled = function * () {
-  //   console.log('Stopping dashboard saga')
-  // }
 
   loadDashboards = function * (action) {
     const { dashboardsLoaded } = this.actions
