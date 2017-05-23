@@ -9,21 +9,17 @@ import { Responsive, WidthProvider } from 'react-grid-layout'
 const ResponsiveReactGridLayout = WidthProvider(Responsive)
 
 // utils
-import urlToState from 'lib/explorer/url-to-state'
 
 // components
+import Graph from '~/scenes/dashboard/graph'
 
 // logic
-import headerLogic from '~/scenes/header/logic'
 import dashboardLogic from '~/scenes/dashboard/logic'
 
 // const { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } = dashboard.constants
 
 @connect({
   actions: [
-    headerLogic, [
-      'openLocation'
-    ],
     dashboardLogic, [
       'setLayout',
       'selectDashboard',
@@ -50,7 +46,6 @@ export default class Dashboard extends Component {
 
   generateDOM = () => {
     const { layout } = this.props
-    const { openLocation } = this.props.actions
 
     if (!layout) {
       return null
@@ -59,14 +54,7 @@ export default class Dashboard extends Component {
     return layout.map(l => {
       return (
         <div key={l.i}>
-          {l.name ? (
-            <div>
-              <strong>{l.name}</strong>
-            </div>
-          ) : null}
-          {JSON.stringify(urlToState(l.path))}
-          <br />
-          <button onClick={() => openLocation(l.path)}>Explore</button>
+          <Graph key={l.i} name={l.name} path={l.path} />
         </div>
       )
     })
