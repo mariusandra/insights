@@ -26,7 +26,9 @@ class Explorer::Controller < Controller
       graph_cumulative: !!params[:graphCumulative],
 
       facets_column: params[:facetsColumn],
-      facets_count: params[:facetsCount].present? ? params[:facetsCount].to_i : 6
+      facets_count: params[:facetsCount].present? ? params[:facetsCount].to_i : 6,
+
+      graph_only: !!params[:graphOnly]
     }
 
     response = Insights::Results.new(input_params).get_response

@@ -8,9 +8,6 @@
     }
   }
 
-  #content {
-    width: 100%;
-  }
   .react-grid-layout {
     background: #fafafa;
   }
@@ -29,8 +26,9 @@
     box-sizing: border-box;
   }
   .react-grid-item:not(.react-grid-placeholder) {
-    background: #ccc;
-    border: 1px solid black;
+    background: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
   }
   .react-grid-item.resizing {
     opacity: 0.9;

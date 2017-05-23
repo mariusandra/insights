@@ -42,8 +42,10 @@ module Insights
       set_sort!
       set_limit!
 
-      get_count!
-      get_results!
+      unless params[:graph_only]
+        get_count!
+        get_results!
+      end
 
       # graph
       get_graph!

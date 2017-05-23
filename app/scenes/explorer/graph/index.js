@@ -1,6 +1,5 @@
 // libraries
-import React, { Component } from 'react'
-import { connect } from 'kea/logic'
+import React, { Component, PropTypes } from 'react'
 import { ResponsiveContainer, ComposedChart, Area, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine } from 'recharts'
 import moment from 'moment'
 
@@ -11,7 +10,6 @@ import Dimensions from 'react-dimensions'
 import CustomTooltip from './tooltip'
 
 // logic
-import explorerLogic from '~/scenes/explorer/logic'
 
 export const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
 
@@ -25,17 +23,14 @@ function sharedStart (array) {
   return a1.substring(0, i)
 }
 
-@connect({
-  props: [
-    explorerLogic, [
-      'graph',
-      'graphData',
-      'graphKeys'
-    ]
-  ]
-})
 @Dimensions({ elementResize: true })
 export default class Graph extends Component {
+  static propTypes = {
+    graph: PropTypes.object,
+    graphKeys: PropTypes.array,
+    graphData: PropTypes.array
+  }
+
   constructor (props) {
     super(props)
     this.state = {
@@ -259,7 +254,7 @@ export default class Graph extends Component {
                  tickFormatter={percentages ? (y) => `${Math.round(y)}%` : (y) => `${y.toLocaleString('en')}${unit}`}
                  allowDecimals={false} />
           <CartesianGrid />
-          <Tooltip content={<CustomTooltip />} />
+          <Tooltip content={<CustomTooltip graph={graph} />} />
           {nullLineNeeded ? (
             <ReferenceLine y={0} stroke='red' alwaysShow />
           ) : null}

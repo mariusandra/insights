@@ -2,25 +2,9 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'kea/logic'
 import moment from 'moment'
 
-import explorerLogic from '~/scenes/explorer/logic'
-
-@connect({
-  props: [
-    explorerLogic, [
-      // 'timeGroup',
-      // 'meta',
-      // 'percentages',
-      // 'controls'
-      'graph'
-    ]
-  ]
-})
 export default class Tooltip extends Component {
   static propTypes = {
-    // type: PropTypes.string,
-    // payload: PropTypes.array,
-    // label: PropTypes.number,
-    // timeGroup: PropTypes.string
+    graph: PropTypes.object
   }
 
   labelFormatter (time) {

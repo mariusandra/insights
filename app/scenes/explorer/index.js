@@ -10,7 +10,7 @@ import SubmitButton from 'lib/tags/submit-button'
 
 // components
 import Graph from './graph'
-import TimeFilter from './graph/time-filter'
+import TimeFilter from './time-filter'
 import Pagination from './pagination'
 import Tree from './tree'
 import Table from './table'
@@ -29,7 +29,9 @@ import explorerLogic from '~/scenes/explorer/logic'
   ],
   props: [
     explorerLogic, [
+      'graph',
       'graphData',
+      'graphKeys',
       'isSubmitting',
       'columns',
       'treeState',
@@ -66,7 +68,7 @@ export default class Explorer extends Component {
   }
 
   render () {
-    const { graphData, isSubmitting, columns, treeState, filter } = this.props
+    const { graphData, isSubmitting, columns, treeState, graph, graphKeys } = this.props
     const { filterHeight } = this.state
     const { refreshData } = this.props.actions
 
@@ -107,7 +109,7 @@ export default class Explorer extends Component {
           </Layout>
           {graphData ? (
             <Layout layoutHeight={300}>
-              <Graph />
+              <Graph graph={graph} graphKeys={graphKeys} graphData={graphData} />
             </Layout>
           ) : <div />}
           {graphData ? <LayoutSplitter /> : <div />}
