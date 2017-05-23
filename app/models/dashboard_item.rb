@@ -4,14 +4,10 @@
 #
 #  created_at   :datetime         not null
 #  dashboard_id :integer
-#  h            :integer
 #  id           :integer          not null, primary key
 #  name         :string
 #  path         :string
 #  updated_at   :datetime         not null
-#  w            :integer
-#  x            :integer
-#  y            :integer
 #
 # Indexes
 #

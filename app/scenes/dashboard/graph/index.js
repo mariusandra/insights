@@ -12,6 +12,7 @@ import ExplorerGraph from '~/scenes/explorer/graph'
 import Spinner from 'lib/tags/spinner'
 
 // logic
+import dashboardLogic from '~/scenes/dashboard/logic'
 import headerLogic from '~/scenes/header/logic'
 
 import explorerController from '~/scenes/explorer/controller.rb'
@@ -21,6 +22,11 @@ import explorerController from '~/scenes/explorer/controller.rb'
   actions: [
     headerLogic, [
       'openLocation'
+    ]
+  ],
+  props: [
+    dashboardLogic, [
+      'items'
     ]
   ]
 })

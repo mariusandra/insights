@@ -15,10 +15,6 @@ ActiveRecord::Schema.define(version: 20170522092705) do
   create_table "dashboard_items", force: :cascade do |t|
     t.integer  "dashboard_id"
     t.string   "name"
-    t.integer  "x"
-    t.integer  "y"
-    t.integer  "w"
-    t.integer  "h"
     t.string   "path"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
@@ -27,8 +23,10 @@ ActiveRecord::Schema.define(version: 20170522092705) do
 
   create_table "dashboards", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.text     "desktop_layout"
+    t.text     "mobile_layout"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
   create_table "insights_urls", force: :cascade do |t|

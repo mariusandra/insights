@@ -12,18 +12,34 @@ export default class DashboardSaga extends Saga {
     dashboardLogic, [
       'dashboardsLoaded',
       'selectDashboard',
-      'setLayout',
-      'addDashboard'
+      'setCurrentBreakpoint',
+      'layoutChanged',
+      'updateLayouts',
+      'addDashboard',
+      'saveDashboard',
+      'dashboardSaveSuccess',
+      'dashboardSaveFailure'
     ]
   ])
 
   takeEvery = ({ actions }) => ({
     [actions.addDashboard]: this.addDashboardWorker,
-    [actions.dashboardsLoaded]: this.dashboardsLoadedWorker
+    [actions.dashboardsLoaded]: this.dashboardsLoadedWorker,
+    [actions.layoutChanged]: this.layoutChangedWorker
+  })
+
+  takeLatest = ({ actions }) => ({
+    [actions.saveDashboard]: this.saveDashboardWorker
   })
 
   run = function * () {
+    yield fork(this.setCurrentBreakpoint)
     yield fork(this.loadDashboards)
+  }
+
+  setCurrentBreakpoint = function * (action) {
+    const { setCurrentBreakpoint } = this.actions
+    yield put(setCurrentBreakpoint(window.innerWidth >= 768 ? 'desktop' : 'mobile'))
   }
 
   loadDashboards = function * (action) {
@@ -34,14 +50,13 @@ export default class DashboardSaga extends Saga {
   }
 
   dashboardsLoadedWorker = function * (action) {
-    const { selectDashboard, setLayout } = this.actions
+    const { selectDashboard } = this.actions
     const { dashboards } = action.payload
 
     const selectedDashboardId = yield dashboardLogic.get('selectedDashboardId')
     if (selectedDashboardId === null && Object.keys(dashboards).length > 0) {
       const firstDashboard = Object.values(dashboards)[0]
       yield put(selectDashboard(firstDashboard.id))
-      yield put(setLayout(firstDashboard.layout))
     }
   }
 
@@ -56,6 +71,37 @@ export default class DashboardSaga extends Saga {
       } else {
         messg.error(error, 2500)
       }
+    }
+  }
+
+  layoutChangedWorker = function * (action) {
+    const { updateLayouts } = this.actions
+    const { layouts } = action.payload
+
+    const { selectedDashboardId, layouts: currentLayouts } = yield dashboardLogic.fetch('selectedDashboardId', 'layouts')
+
+    if (JSON.stringify(currentLayouts) !== JSON.stringify(layouts)) {
+      yield put(updateLayouts(layouts, selectedDashboardId))
+    }
+  }
+
+  saveDashboardWorker = function * (action) {
+    const { dashboardSaveSuccess, dashboardSaveFailure } = this.actions
+    const { selectedDashboardId, layouts } = yield dashboardLogic.fetch('selectedDashboardId', 'layouts')
+
+    try {
+      const result = yield dashboardController.saveDashboard({ id: selectedDashboardId, mobileLayout: JSON.stringify(layouts.mobile), desktopLayout: JSON.stringify(layouts.desktop) })
+
+      if (result.dashboards) {
+        yield put(dashboardSaveSuccess(selectedDashboardId))
+        messg.success('Layout saved', 2500)
+      } else if (messg.error) {
+        yield put(dashboardSaveFailure(selectedDashboardId))
+        messg.error(result.error, 2500)
+      }
+    } catch (error) {
+      yield put(dashboardSaveFailure(selectedDashboardId))
+      messg.error('Unexpected error', 2500)
     }
   }
 }

@@ -7,11 +7,13 @@ import React, { Component } from 'react'
 import { connect } from 'kea/logic'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 const ResponsiveReactGridLayout = WidthProvider(Responsive)
+import { Layout } from 'react-flex-layout'
 
 // utils
 
 // components
 import Graph from '~/scenes/dashboard/graph'
+import Spinner from 'lib/tags/spinner'
 
 // logic
 import dashboardLogic from '~/scenes/dashboard/logic'
@@ -21,22 +23,28 @@ import dashboardLogic from '~/scenes/dashboard/logic'
 @connect({
   actions: [
     dashboardLogic, [
-      'setLayout',
+      'layoutChanged',
       'selectDashboard',
-      'addDashboard'
+      'addDashboard',
+      'setCurrentBreakpoint',
+      'saveDashboard'
     ]
   ],
   props: [
     dashboardLogic, [
       'dashboards',
+      'layouts',
       'layout',
-      'selectedDashboardId'
+      'items',
+      'selectedDashboardId',
+      'currentBreakpoint',
+      'layoutsUnsaved',
+      'savingDashboard'
     ]
   ]
 })
 export default class Dashboard extends Component {
   state = {
-    currentBreakpoint: 'lg',
     mounted: false
   }
 
@@ -45,7 +53,7 @@ export default class Dashboard extends Component {
   }
 
   generateDOM = () => {
-    const { layout } = this.props
+    const { layout, items } = this.props
 
     if (!layout) {
       return null
@@ -54,38 +62,45 @@ export default class Dashboard extends Component {
     return layout.map(l => {
       return (
         <div key={l.i}>
-          <Graph key={l.i} name={l.name} path={l.path} />
+          <Graph key={l.i} name={items[l.i].name} path={items[l.i].path} />
         </div>
       )
     })
   }
 
   render () {
-    const { layout, dashboards, selectedDashboardId } = this.props
-    const { setLayout, selectDashboard, addDashboard } = this.props.actions
+    const { layouts, dashboards, selectedDashboardId, layoutsUnsaved, savingDashboard } = this.props
+    const { layoutChanged, selectDashboard, addDashboard, setCurrentBreakpoint, saveDashboard } = this.props.actions
 
-    // breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
-    // cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}}
     return (
-      <div className='dashboard-scene'>
-        <div className='dashboards-list'>
-          {Object.values(dashboards).map(dashboard => (
-            <button key={dashboard.id} onClick={() => selectDashboard(dashboard.id)} className={selectedDashboardId === dashboard.id ? '' : 'white'}>{dashboard.name}</button>
-          ))}
-          <button className='white' onClick={() => addDashboard()}>+ ADD</button>
-        </div>
-
-        <ResponsiveReactGridLayout className='layout'
-                                   breakpoints={{sm: 768, xxs: 0}}
-                                   cols={{sm: 6, xxs: 2}}
-                                   rowHeight={30}
-                                   layouts={{ sm: layout }}
-                                   onLayoutChange={setLayout}
-                                   // WidthProvider option
-                                   measureBeforeMount>
-          {this.generateDOM()}
-        </ResponsiveReactGridLayout>
-      </div>
+      <Layout className='dashboard-scene' ref={ref => { this._layout = ref }}>
+        <Layout layoutHeight={50}>
+          <div className='dashboards-list'>
+            {Object.values(dashboards).map(dashboard => (
+              <button key={dashboard.id} onClick={() => selectDashboard(dashboard.id)} className={selectedDashboardId === dashboard.id ? '' : 'white'}>{dashboard.name}</button>
+            ))}
+            <button className='white' onClick={() => addDashboard()}>+ ADD</button>
+            {layoutsUnsaved ? (
+              savingDashboard ? <Spinner />
+                              : <button className='fa fa-save' onClick={saveDashboard} />
+            ) : null}
+          </div>
+        </Layout>
+        <Layout layoutHeight='flex'>
+          <ResponsiveReactGridLayout className='layout'
+                                     breakpoints={{desktop: 768, mobile: 0}}
+                                     cols={{desktop: 6, mobile: 2}}
+                                     rowHeight={30}
+                                     layouts={layouts}
+                                     onLayoutChange={layoutChanged}
+                                     onBreakpointChange={setCurrentBreakpoint}
+                                     // WidthProvider option
+                                     useCSSTransforms
+                                     measureBeforeMount>
+            {this.generateDOM()}
+          </ResponsiveReactGridLayout>
+        </Layout>
+      </Layout>
     )
   }
 }

@@ -3,10 +3,6 @@ class CreateDashboardItems < ActiveRecord::Migration[5.0]
     create_table :dashboard_items do |t|
       t.integer :dashboard_id
       t.string :name
-      t.integer :x
-      t.integer :y
-      t.integer :w
-      t.integer :h
       t.string :path
       t.timestamps
     end
