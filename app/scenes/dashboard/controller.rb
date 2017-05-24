@@ -41,6 +41,13 @@ class Dashboard::Controller < Controller
       end
     end
 
+    (params[:deletedItems] || []).each do |id, name|
+      item = dashboard.dashboard_items.where(id: id).first
+      if item.present?
+        item.destroy!
+      end
+    end
+
     get_dashboards
   end
 

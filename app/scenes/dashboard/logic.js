@@ -108,6 +108,36 @@ export default class DashboardLogic extends Logic {
         } else {
           return state
         }
+      },
+      [actions.deleteItem]: (state, payload) => {
+        const { dashboardId, itemId } = payload
+
+        if (state && state[dashboardId] && state[dashboardId].items) {
+          const items = state[dashboardId].changedItems || state[dashboardId].items
+          const layouts = state[dashboardId].changedLayouts || state[dashboardId].layouts
+
+          const changedLayouts = {
+            mobile: layouts.mobile.filter(l => l.i !== itemId),
+            desktop: layouts.desktop.filter(l => l.i !== itemId)
+          }
+
+          let changedItems = {}
+          Object.values(items).filter(item => item.id !== itemId).forEach(item => {
+            changedItems[item.id] = item
+          })
+
+          return {
+            ...state,
+            [dashboardId]: {
+              ...state[dashboardId],
+              changedItems,
+              changedLayouts,
+              unsaved: true
+            }
+          }
+        } else {
+          return state
+        }
       }
     }],
 

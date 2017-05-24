@@ -24,6 +24,7 @@ import explorerController from '~/scenes/explorer/controller.rb'
       'openLocation'
     ],
     dashboardLogic, [
+      'deleteItem',
       'renameItem'
     ]
   ],
@@ -108,6 +109,13 @@ export default class DashboardGraph extends Component {
     }
   }
 
+  handleDelete = () => {
+    const { itemId, dashboardId } = this.props
+    const { deleteItem } = this.props.actions
+
+    deleteItem(dashboardId, itemId)
+  }
+
   render () {
     const { name, path, containerWidth, containerHeight } = this.props
     const { loaded, graph, graphKeys, graphData, isResizing } = this.state
@@ -124,6 +132,9 @@ export default class DashboardGraph extends Component {
           <button style={{position: 'absolute', top: 0, right: 0, marginBottom: 0}}
                   onClick={() => openLocation(path)}
                   className='fa fa-search-plus' />
+          <i className='fa fa-trash'
+             onClick={this.handleDelete}
+             style={{ position: 'absolute', top: 8, right: 45, cursor: 'pointer' }} />
         </div>
         <div style={{ width: containerWidth, height: containerHeight - 30, backgroundColor: isResizing ? '#eeeeee' : '', overflow: 'hidden' }}>
           {loaded && !isResizing ? (
