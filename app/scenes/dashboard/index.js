@@ -28,6 +28,7 @@ import dashboardLogic from '~/scenes/dashboard/logic'
       'addDashboard',
       'setCurrentBreakpoint',
       'saveDashboard',
+      'undoDashboard',
       'startResizing',
       'stopResizing'
     ]
@@ -56,7 +57,7 @@ export default class Dashboard extends Component {
   }
 
   generateDOM = () => {
-    const { layout, items, resizingItem } = this.props
+    const { layout, items, resizingItem, selectedDashboardId } = this.props
 
     if (!layout) {
       return null
@@ -65,7 +66,12 @@ export default class Dashboard extends Component {
     return layout.map(l => {
       return (
         <div key={l.i}>
-          <Graph key={l.i} name={items[l.i].name} path={items[l.i].path} isResizing={l.i === resizingItem} />
+          <Graph key={l.i}
+                 itemId={l.i}
+                 dashboardId={selectedDashboardId}
+                 name={items[l.i].name}
+                 path={items[l.i].path}
+                 isResizing={l.i === resizingItem} />
         </div>
       )
     })
@@ -83,7 +89,7 @@ export default class Dashboard extends Component {
 
   render () {
     const { layouts, dashboards, selectedDashboardId, layoutsUnsaved, savingDashboard } = this.props
-    const { layoutChanged, selectDashboard, addDashboard, setCurrentBreakpoint, saveDashboard } = this.props.actions
+    const { layoutChanged, selectDashboard, addDashboard, setCurrentBreakpoint, saveDashboard, undoDashboard } = this.props.actions
     const { mounted } = this.state
 
     return (
@@ -96,7 +102,12 @@ export default class Dashboard extends Component {
             <button className='white' onClick={() => addDashboard()}>+ ADD</button>
             {layoutsUnsaved ? (
               savingDashboard ? <Spinner />
-                              : <button className='fa fa-save' onClick={saveDashboard} />
+                              : (
+                                <div style={{display: 'inline-block'}}>
+                                  <button className='fa fa-save' onClick={() => saveDashboard(selectedDashboardId)} />
+                                  <button className='fa fa-undo' onClick={() => undoDashboard(selectedDashboardId)} />
+                                </div>
+                              )
             ) : null}
           </div>
         </Layout>

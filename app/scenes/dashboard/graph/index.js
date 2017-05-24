@@ -22,6 +22,9 @@ import explorerController from '~/scenes/explorer/controller.rb'
   actions: [
     headerLogic, [
       'openLocation'
+    ],
+    dashboardLogic, [
+      'renameItem'
     ]
   ],
   props: [
@@ -37,7 +40,9 @@ export default class DashboardGraph extends Component {
     path: PropTypes.string,
     containerWidth: PropTypes.number,
     containerHeight: PropTypes.number,
-    isResizing: PropTypes.bool
+    isResizing: PropTypes.bool,
+    itemId: PropTypes.string,
+    dashboardId: PropTypes.number
   }
 
   constructor (props) {
@@ -92,6 +97,17 @@ export default class DashboardGraph extends Component {
     }
   }
 
+  handleEdit = () => {
+    const { name, itemId, dashboardId } = this.props
+    const { renameItem } = this.props.actions
+
+    const newName = window.prompt('Please enter a new name', name)
+
+    if (newName !== null && newName !== name) {
+      renameItem(dashboardId, itemId, newName)
+    }
+  }
+
   render () {
     const { name, path, containerWidth, containerHeight } = this.props
     const { loaded, graph, graphKeys, graphData, isResizing } = this.state
@@ -102,6 +118,8 @@ export default class DashboardGraph extends Component {
         <div style={{ width: containerWidth, height: 30, background: '#fafafa', borderBottom: '1px solid #eee' }}>
           <div style={{ lineHeight: '30px', marginLeft: 10 }}>
             {name || 'Untitled graph'}
+            {' '}
+            <i className='fa fa-edit' onClick={this.handleEdit} style={{ cursor: 'pointer' }} />
           </div>
           <button style={{position: 'absolute', top: 0, right: 0, marginBottom: 0}}
                   onClick={() => openLocation(path)}

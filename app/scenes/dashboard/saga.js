@@ -16,6 +16,7 @@ export default class DashboardSaga extends Saga {
       'layoutChanged',
       'updateLayouts',
       'addDashboard',
+      'undoDashboard',
       'saveDashboard',
       'dashboardSaveSuccess',
       'dashboardSaveFailure'
@@ -86,21 +87,38 @@ export default class DashboardSaga extends Saga {
   }
 
   saveDashboardWorker = function * (action) {
-    const { dashboardSaveSuccess, dashboardSaveFailure } = this.actions
-    const { selectedDashboardId, layouts } = yield dashboardLogic.fetch('selectedDashboardId', 'layouts')
+    const { dashboardSaveSuccess, dashboardSaveFailure, dashboardsLoaded } = this.actions
+    const { dashboardId } = action.payload
+    const { layouts, dashboard } = yield dashboardLogic.fetch('selectedDashboardId', 'layouts', 'dashboard')
+
+    const renamedItems = dashboard.changedItems
+                            ? Object.values(dashboard.changedItems).filter(i => dashboard.items[i.id].name !== i.name).map(i => [i.id, i.name])
+                            : []
+
+    const deletedItems = dashboard.changedItems
+                            ? Object.values(dashboard.items).filter(i => !dashboard.changedItems[i.id]).map(i => i.id)
+                            : []
 
     try {
-      const result = yield dashboardController.saveDashboard({ id: selectedDashboardId, mobileLayout: JSON.stringify(layouts.mobile), desktopLayout: JSON.stringify(layouts.desktop) })
+      const props = {
+        id: dashboardId,
+        mobileLayout: JSON.stringify(layouts.mobile),
+        desktopLayout: JSON.stringify(layouts.desktop),
+        renamedItems,
+        deletedItems
+      }
+      const result = yield dashboardController.saveDashboard(props)
 
       if (result.dashboards) {
-        yield put(dashboardSaveSuccess(selectedDashboardId))
+        yield put(dashboardSaveSuccess(dashboardId))
+        yield put(dashboardsLoaded(result.dashboards))
         messg.success('Layout saved', 2500)
       } else if (messg.error) {
-        yield put(dashboardSaveFailure(selectedDashboardId))
+        yield put(dashboardSaveFailure(dashboardId))
         messg.error(result.error, 2500)
       }
     } catch (error) {
-      yield put(dashboardSaveFailure(selectedDashboardId))
+      yield put(dashboardSaveFailure(dashboardId))
       messg.error('Unexpected error', 2500)
     }
   }

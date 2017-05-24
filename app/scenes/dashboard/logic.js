@@ -8,7 +8,9 @@ export default class DashboardLogic extends Logic {
   actions = ({ constants }) => ({
     addDashboard: true,
 
-    saveDashboard: true,
+    saveDashboard: (dashboardId) => ({ dashboardId }),
+    undoDashboard: (dashboardId) => ({ dashboardId }),
+
     dashboardSaveSuccess: (dashboardId) => ({ dashboardId }),
     dashboardSaveFailure: (dashboardId) => ({ dashboardId }),
 
@@ -16,16 +18,19 @@ export default class DashboardLogic extends Logic {
     updateLayouts: (layouts, dashboardId) => ({ layouts, dashboardId }),
     setCurrentBreakpoint: (breakpoint) => ({ breakpoint }),
 
-    selectDashboard: (id, layout) => ({ id, layout }),
+    selectDashboard: (dashboardId, layout) => ({ dashboardId, layout }),
     dashboardsLoaded: (dashboards) => ({ dashboards }),
 
-    startResizing: (id) => ({ id }),
-    stopResizing: (id) => ({ id })
+    startResizing: (dashboardId) => ({ dashboardId }),
+    stopResizing: (dashboardId) => ({ dashboardId }),
+
+    renameItem: (dashboardId, itemId, name) => ({ dashboardId, itemId, name }),
+    deleteItem: (dashboardId, itemId) => ({ dashboardId, itemId })
   })
 
   reducers = ({ actions, constants }) => ({
     selectedDashboardId: [null, PropTypes.number, {
-      [actions.selectDashboard]: (_, payload) => payload.id
+      [actions.selectDashboard]: (_, payload) => payload.dashboardId
     }],
 
     dashboards: [{}, PropTypes.object, {
@@ -52,6 +57,22 @@ export default class DashboardLogic extends Logic {
           return state
         }
       },
+      [actions.undoDashboard]: (state, payload) => {
+        const { dashboardId } = payload
+        if (state && state[dashboardId]) {
+          return {
+            ...state,
+            [dashboardId]: {
+              ...state[dashboardId],
+              changedLayouts: null,
+              changedItems: null,
+              unsaved: false
+            }
+          }
+        } else {
+          return state
+        }
+      },
       [actions.dashboardSaveSuccess]: (state, payload) => {
         const { dashboardId } = payload
         if (state && state[dashboardId] && state[dashboardId].unsaved) {
@@ -60,6 +81,28 @@ export default class DashboardLogic extends Logic {
             [dashboardId]: {
               ...state[dashboardId],
               unsaved: false
+            }
+          }
+        } else {
+          return state
+        }
+      },
+      [actions.renameItem]: (state, payload) => {
+        const { dashboardId, itemId, name } = payload
+
+        if (state && state[dashboardId] && state[dashboardId].items) {
+          return {
+            ...state,
+            [dashboardId]: {
+              ...state[dashboardId],
+              changedItems: {
+                ...(state[dashboardId].changedItems || state[dashboardId].items),
+                [itemId]: {
+                  ...(state[dashboardId].changedItems || state[dashboardId].items)[itemId],
+                  name: name
+                }
+              },
+              unsaved: true
             }
           }
         } else {
@@ -75,7 +118,7 @@ export default class DashboardLogic extends Logic {
     }],
 
     resizingItem: [null, PropTypes.string, {
-      [actions.startResizing]: (_, payload) => payload.id,
+      [actions.startResizing]: (_, payload) => payload.dashboardId,
       [actions.stopResizing]: () => null
     }],
 
@@ -93,7 +136,7 @@ export default class DashboardLogic extends Logic {
 
     items: [
       () => [selectors.dashboard, selectors.currentBreakpoint],
-      (dashboard, selectedDashboardId) => (dashboard && dashboard.items) || {},
+      (dashboard, selectedDashboardId) => (dashboard && (dashboard.changedItems || dashboard.items)) || {},
       PropTypes.object
     ],
 
