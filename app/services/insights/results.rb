@@ -397,8 +397,9 @@ module Insights
 
       # add the date truncation transform to the columns if none present
       time_columns = time_columns.map do |v|
-        v.merge({ transform: time_group.to_s, sql: adapter.truncate_date(v[:sql_before_transform], time_group.to_s) })
+        v.merge({ transform: time_group.to_s, sql: adapter.truncate_date(v[:sql_before_transform] || v[:sql], time_group.to_s) })
       end
+      time_column = time_columns.first
 
       # sort by time
       graph_sort_parts = [adapter.order_part(time_column[:sql], false)]
