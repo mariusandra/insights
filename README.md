@@ -20,6 +20,8 @@ It's a work in progress and you're brave for checking it out! Cheers!
 
 ![Screenshot of the Explorer](https://github.com/mariusandra/insights/raw/master/doc/screenshot-views.png)
 
+![Screenshot of the Dashboard](https://github.com/mariusandra/insights/raw/master/doc/screenshot-dashboard.png)
+
 ## How does it work
 
 Similar to Looker and their LookML, insights requires you to define your data model in a file called [`insights.yml`](https://github.com/mariusandra/insights_demo/blob/master/config/insights.yml).
