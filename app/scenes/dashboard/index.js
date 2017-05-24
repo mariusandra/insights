@@ -84,6 +84,7 @@ export default class Dashboard extends Component {
   render () {
     const { layouts, dashboards, selectedDashboardId, layoutsUnsaved, savingDashboard } = this.props
     const { layoutChanged, selectDashboard, addDashboard, setCurrentBreakpoint, saveDashboard } = this.props.actions
+    const { mounted } = this.state
 
     return (
       <Layout className='dashboard-scene' ref={ref => { this._layout = ref }}>
@@ -110,7 +111,7 @@ export default class Dashboard extends Component {
                                      onResizeStart={this.handleResizeStart}
                                      onResizeStop={this.handleResizeStop}
                                      // WidthProvider option
-                                     useCSSTransforms
+                                     useCSSTransforms={mounted}
                                      measureBeforeMount>
             {this.generateDOM()}
           </ResponsiveReactGridLayout>

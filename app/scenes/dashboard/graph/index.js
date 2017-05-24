@@ -47,7 +47,8 @@ export default class DashboardGraph extends Component {
       graph: null,
       graphKeys: null,
       graphData: null,
-      loaded: false
+      loaded: false,
+      isResizing: false
     }
   }
 
@@ -67,9 +68,33 @@ export default class DashboardGraph extends Component {
     })
   }
 
+  // fix jerky post-resize double resize by adding a 100min delay to the isResizing change
+  componentWillUpdate (nextProps) {
+    if (this.props.isResizing && !nextProps.isResizing) {
+      if (this._resizeTimeout) {
+        window.clearTimeout(this._resizeTimeout)
+      }
+      this._resizeTimeout = window.setTimeout(() => {
+        this.setState({ isResizing: false })
+      }, 100)
+    }
+    if (!this.props.isResizing && nextProps.isResizing) {
+      this.setState({ isResizing: true })
+      if (this._resizeTimeout) {
+        window.clearTimeout(this._resizeTimeout)
+      }
+    }
+  }
+
+  componentWillUnmount () {
+    if (this._resizeTimeout) {
+      window.clearTimeout(this._resizeTimeout)
+    }
+  }
+
   render () {
-    const { name, path, containerWidth, containerHeight, isResizing } = this.props
-    const { loaded, graph, graphKeys, graphData } = this.state
+    const { name, path, containerWidth, containerHeight } = this.props
+    const { loaded, graph, graphKeys, graphData, isResizing } = this.state
     const { openLocation } = this.props.actions
 
     return (
@@ -82,7 +107,7 @@ export default class DashboardGraph extends Component {
                   onClick={() => openLocation(path)}
                   className='fa fa-search-plus' />
         </div>
-        <div style={{ width: containerWidth, height: containerHeight - 30, backgroundColor: isResizing ? '#eeeeee' : '' }}>
+        <div style={{ width: containerWidth, height: containerHeight - 30, backgroundColor: isResizing ? '#eeeeee' : '', overflow: 'hidden' }}>
           {loaded && !isResizing ? (
             <ExplorerGraph graph={graph} graphKeys={graphKeys} graphData={graphData} />
           ) : isResizing ? (
