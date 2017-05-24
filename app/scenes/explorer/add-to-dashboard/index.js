@@ -45,7 +45,7 @@ export default class OneFilter extends Component {
 
     addToDashboard({ id: dashboard, name, path: `${window.location.pathname}${window.location.search}` })
 
-    this.setState({ added: true })
+    this.setState({ added: true, name: '' })
   }
 
   handleOpen = () => {
