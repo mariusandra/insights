@@ -1,5 +1,6 @@
 import { put, fork, call } from 'redux-saga/effects'
 import Saga from 'kea/saga'
+import { LOCATION_CHANGE, push } from 'react-router-redux'
 
 import messg from 'messg'
 
@@ -26,7 +27,10 @@ export default class DashboardSaga extends Saga {
   takeEvery = ({ actions }) => ({
     [actions.addDashboard]: this.addDashboardWorker,
     [actions.dashboardsLoaded]: this.dashboardsLoadedWorker,
-    [actions.layoutChanged]: this.layoutChangedWorker
+    [actions.layoutChanged]: this.layoutChangedWorker,
+
+    [LOCATION_CHANGE]: this.setDashboardFromUrl,
+    [actions.selectDashboard]: this.setUrlFromDashboard
   })
 
   takeLatest = ({ actions }) => ({
@@ -47,11 +51,30 @@ export default class DashboardSaga extends Saga {
   setDashboardFromUrl = function * () {
     const { selectDashboard } = this.actions
 
+    const selectedDashboardId = yield dashboardLogic.get('selectedDashboardId')
+
     const pathname = window.location.pathname
     const match = pathname.match(/\/dashboard\/([0-9]+)\/?/)
+    const urlDashboardId = match ? parseInt(match[1]) : null
 
-    if (match) {
-      yield put(selectDashboard(parseInt(match[1])))
+    if (match && urlDashboardId !== selectedDashboardId) {
+      yield put(selectDashboard(urlDashboardId))
+    }
+  }
+
+  setUrlFromDashboard = function * () {
+    const selectedDashboardId = yield dashboardLogic.get('selectedDashboardId')
+
+    const pathname = window.location.pathname
+    const match = pathname.match(/\/dashboard\/([0-9]+)\/?/)
+    const urlDashboardId = match ? parseInt(match[1]) : null
+
+    if (selectedDashboardId !== urlDashboardId) {
+      if (selectedDashboardId) {
+        yield put(push(`/dashboard/${selectedDashboardId}`))
+      } else {
+        yield put(push('/dashboard'))
+      }
     }
   }
 

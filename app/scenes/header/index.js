@@ -38,12 +38,14 @@ export default class HeaderScene extends Component {
   }
 
   componentWillUpdate (nextProps) {
-    this._pathHistory[nextProps.pathname] = nextProps.search
+    const page = nextProps.pathname.split('/')[1] || 'root'
+    this._pathHistory[page] = nextProps.pathname + nextProps.search
   }
 
   openLocation = (pathname) => {
     const { openLocation } = this.props.actions
-    openLocation(pathname + (this._pathHistory[pathname] || ''))
+    const page = pathname.split('/')[1] || 'root'
+    openLocation(this._pathHistory[page] || pathname)
   }
 
   render () {
