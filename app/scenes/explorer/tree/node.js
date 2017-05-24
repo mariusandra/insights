@@ -151,7 +151,7 @@ class Node extends Component {
     let firstChildren = []
     let newChildren = []
 
-    const { links, columns, custom } = structure[model]
+    const { links, columns, custom } = structure[model] || {}
 
     if (!collapsed) {
       if (links) {
