@@ -10,7 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170520223834) do
+ActiveRecord::Schema.define(version: 20170522092705) do
+
+  create_table "dashboard_items", force: :cascade do |t|
+    t.integer  "dashboard_id"
+    t.string   "name"
+    t.string   "path"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["dashboard_id"], name: "index_dashboard_items_on_dashboard_id"
+  end
+
+  create_table "dashboards", force: :cascade do |t|
+    t.string   "name"
+    t.text     "desktop_layout"
+    t.text     "mobile_layout"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
 
   create_table "insights_urls", force: :cascade do |t|
     t.string   "code"
@@ -21,6 +38,14 @@ ActiveRecord::Schema.define(version: 20170520223834) do
     t.index ["code"], name: "index_insights_urls_on_code", unique: true
     t.index ["path"], name: "index_insights_urls_on_path"
     t.index ["user"], name: "index_insights_urls_on_user"
+  end
+
+  create_table "saved_views", force: :cascade do |t|
+    t.text     "path"
+    t.string   "title"
+    t.string   "created_by"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "views", force: :cascade do |t|

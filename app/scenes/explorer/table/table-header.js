@@ -38,9 +38,10 @@ export default class TableHeader extends Component {
   }
 
   handleSort = () => {
-    const { sort, column, columnsMeta } = this.props
+    const { sort, column, columnsMeta, structure } = this.props
     const { setSort } = this.props.actions
-    const meta = columnsMeta[column]
+    const [ path, transform, aggregate ] = column.split('!')
+    const meta = columnsMeta[column] || { ...getMeta(path, structure), transform, aggregate }
 
     // strings default to ascending, everything else to descending
     if (meta.type === 'string' ? sort === column : sort !== `-${column}`) {

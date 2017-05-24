@@ -27,6 +27,9 @@ import viewsLogic from '~/scenes/header/views/logic'
       'newName',
       'newOpen',
       'sortedViews'
+    ],
+    state => state.routing.locationBeforeTransitions, [
+      'pathname'
     ]
   ]
 })
@@ -54,24 +57,32 @@ export default class Views extends Component {
   }
 
   render () {
-    const { newName, sortedViews, newOpen } = this.props
+    const { newName, sortedViews, newOpen, pathname } = this.props
     const { setNewName, openNew, cancelNew } = this.props.actions
 
     const overlay = (
       <div className='views-menu'>
-        {newOpen ? (
-          <form onSubmit={this.saveView}>
-            <input className='input-text full'
-                   placeholder='Enter a title'
-                   onChange={e => setNewName(e.target.value)}
-                   value={newName}
-                   autoFocus />
-            <button className='save' onClick={this.saveView}>✔</button>
-            <button className='cancel' onClick={cancelNew}>✕</button>
-          </form>
+        {pathname.includes('/explorer') ? (
+          <div>
+            {newOpen ? (
+              <form onSubmit={this.saveView}>
+                <input className='input-text full'
+                      placeholder='Enter a title'
+                      onChange={e => setNewName(e.target.value)}
+                      value={newName}
+                      autoFocus />
+                <button className='save' onClick={this.saveView}>✔</button>
+                <button className='cancel' onClick={cancelNew}>✕</button>
+              </form>
+            ) : (
+              <div className='buttons'>
+                <span className='open-new' onClick={openNew}>Save this page</span>
+              </div>
+            )}
+          </div>
         ) : (
-          <div className='buttons'>
-            <span className='open-new' onClick={openNew}>Save this page</span>
+          <div className='cannot-save-notice'>
+            Open the explorer to save views
           </div>
         )}
         <div className='list'>
@@ -86,8 +97,8 @@ export default class Views extends Component {
 
     return (
       <div className='tab-row-element'>
-        <Tooltip placement='bottomLeft' trigger={['hover']} overlay={overlay} onVisibleChange={this.handleTooltip}>
-          <button>Saved Views</button>
+        <Tooltip placement='bottomRight' trigger={['hover']} overlay={overlay} onVisibleChange={this.handleTooltip}>
+          <button className='fa fa-star' title='Saved views' />
         </Tooltip>
       </div>
     )

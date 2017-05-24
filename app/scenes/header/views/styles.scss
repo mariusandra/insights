@@ -9,6 +9,12 @@
       cursor: pointer;
     }
   }
+  div.cannot-save-notice {
+    height: 36px;
+    line-height: 30px;
+    color: #888;
+    font-weight: 100;
+  }
   form {
     .input-text.full {
       width: 150px;

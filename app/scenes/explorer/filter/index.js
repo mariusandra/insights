@@ -54,6 +54,9 @@ export default class Filter extends Component {
             {filter.map(({ key, value }) => (
               <OneFilter key={i} column={key} value={value} index={i++} />
             ))}
+            {filter.length === 0 ? (
+              <span className='filter-placeholder'>Add filter conditions from the column headers or the tree</span>
+            ) : null}
           </span>
         </div>
       </div>

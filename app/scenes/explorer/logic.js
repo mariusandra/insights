@@ -58,7 +58,10 @@ export default class ExplorerLogic extends Logic {
 
     setSearch: (search) => ({ search }),
 
-    requestExport: (format) => ({ format })
+    requestExport: (format) => ({ format }),
+
+    addToDashboard: ({ id, name, path }) => ({ id, name, path }),
+    dashboardsLoaded: (dashboards) => ({ dashboards })
   })
 
   reducers = ({ actions, constants }) => ({
@@ -238,6 +241,17 @@ export default class ExplorerLogic extends Logic {
     exportTitle: ['', PropTypes.string, {
       [actions.setExportTitle]: (state, payload) => payload.exportTitle,
       [actions.clear]: () => ''
+    }],
+
+    // { 1: { layout: [{x,y,w,h,path,name}], name: .. } }
+    dashboards: [{}, PropTypes.object, {
+      [actions.dashboardsLoaded]: (_, payload) => {
+        let newState = {}
+        payload.dashboards.forEach(dashboard => {
+          newState[dashboard.id] = dashboard
+        })
+        return newState
+      }
     }]
   })
 
