@@ -1,4 +1,4 @@
-import { put, fork } from 'redux-saga/effects'
+import { put, fork, call } from 'redux-saga/effects'
 import Saga from 'kea/saga'
 
 import messg from 'messg'
@@ -34,16 +34,28 @@ export default class DashboardSaga extends Saga {
   })
 
   run = function * () {
+    yield call(this.setDashboardFromUrl)
     yield fork(this.setCurrentBreakpoint)
     yield fork(this.loadDashboards)
   }
 
-  setCurrentBreakpoint = function * (action) {
+  setCurrentBreakpoint = function * () {
     const { setCurrentBreakpoint } = this.actions
     yield put(setCurrentBreakpoint(window.innerWidth >= 768 ? 'desktop' : 'mobile'))
   }
 
-  loadDashboards = function * (action) {
+  setDashboardFromUrl = function * () {
+    const { selectDashboard } = this.actions
+
+    const pathname = window.location.pathname
+    const match = pathname.match(/\/dashboard\/([0-9]+)\/?/)
+
+    if (match) {
+      yield put(selectDashboard(parseInt(match[1])))
+    }
+  }
+
+  loadDashboards = function * () {
     const { dashboardsLoaded } = this.actions
 
     const { dashboards } = yield dashboardController.getDashboards({})

@@ -5,14 +5,22 @@ import Tooltip from 'rc-tooltip'
 import Select from 'lib/forms/select'
 
 import explorerLogic from '~/scenes/explorer/logic'
+import headerLogic from '~/scenes/header/logic'
 
 @connect({
   actions: [
     explorerLogic, [
       'addToDashboard'
+    ],
+    headerLogic, [
+      'openLocation'
     ]
   ],
   props: [
+    state => state.routing.locationBeforeTransitions, [
+      'pathname',
+      'search'
+    ],
     explorerLogic, [
       'dashboards'
     ]
@@ -24,7 +32,8 @@ export default class OneFilter extends Component {
 
     this.state = {
       dashboard: Object.keys(props.dashboards)[0],
-      name: ''
+      name: '',
+      added: false
     }
   }
 
@@ -35,11 +44,25 @@ export default class OneFilter extends Component {
     e.preventDefault()
 
     addToDashboard({ id: dashboard, name, path: `${window.location.pathname}${window.location.search}` })
+
+    this.setState({ added: true })
+  }
+
+  handleOpen = () => {
+    const { dashboard } = this.state
+    const { openLocation } = this.props.actions
+    openLocation(`/dashboard/${dashboard}`)
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.pathname !== this.props.pathname || nextProps.search !== this.props.search) {
+      this.setState({ added: false })
+    }
   }
 
   renderOverlay () {
     const { dashboards } = this.props
-    const { dashboard, name } = this.state
+    const { dashboard, name, added } = this.state
 
     return (
       <div className='filter-options' style={{minWidth: 100}}>
@@ -49,6 +72,17 @@ export default class OneFilter extends Component {
         {Object.keys(dashboards).length === 0 ? (
           <div>
             Please first create a dashboard from the dashboards page
+          </div>
+        ) : added ? (
+          <div>
+            <div style={{marginTop: 10, marginBottom: 10}}>
+              Graph added!
+            </div>
+            <div>
+              <span style={{textDecoration: 'underline', cursor: 'pointer'}} onClick={this.handleOpen}>
+                Go to dashboard
+              </span>
+            </div>
           </div>
         ) : (
           <form onSubmit={this.handleAdd}>

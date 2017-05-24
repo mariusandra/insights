@@ -8,6 +8,7 @@ const scenes = {
 
 const routes = {
   '/dashboard': 'dashboard',
+  '/dashboard/:id': 'dashboard',
   '/explorer': 'explorer',
   '/login': 'login'
 }
