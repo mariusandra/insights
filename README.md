@@ -55,16 +55,14 @@ Order:
       sql: "$$.total_price * $$.currency_to_eur"
       type: :number
   links:
-    incoming:
-      order_lines:
-        model: OrderLine
-        model_key: order_id
-        my_key: id
-    outgoing:
-      user:
-        model: User
-        model_key: id
-        my_key: user_id
+    order_lines:
+      model: OrderLine
+      model_key: order_id
+      my_key: id
+    user:
+      model: User
+      model_key: id
+      my_key: user_id
 ```
 
 You give this `insights.yml` file and a database connection to `insights` and start exploring.
