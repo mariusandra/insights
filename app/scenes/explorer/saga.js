@@ -112,8 +112,12 @@ export default class ExplorerSaga extends Saga {
 
     window.document.title = 'Explorer - Insights'
 
-    const structure = yield explorerController.getStructure()
-    yield put(setStructure(structure))
+    try {
+      const structure = yield explorerController.getStructure()
+      yield put(setStructure(structure))
+    } catch (e) {
+      messg.error('Error loading structure from insights.yml!', 2500)
+    }
     yield fork(this.loadDashboards)
 
     yield call(this.urlToStateWorker, { payload: { pathname: window.location.pathname, search: window.location.search, firstLoad: true } })
