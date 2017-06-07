@@ -140,6 +140,11 @@ module Insights
         node = structure[@base_model_name]
         table_alias = base_table_alias
 
+        # merge the links if using the old deprecated links: { incoming: {}, outgoing: {} } structure
+        if node['links'].keys.sort == %w(incoming outgoing)
+          node['links'] = node['links']['incoming'].merge(node['links']['outgoing'])
+        end
+
         # log of how far we have gotten. empty at first
         traversed_path = [@base_model_name]
 
@@ -204,9 +209,9 @@ module Insights
             value_counter += 1
 
           # the current traversed node is a link to a new model (foreign key)
-          elsif node['links']['incoming'][key] || node['links']['outgoing'][key]
+          elsif node['links'][key]
             # details of the link
-            link_meta = node['links']['incoming'][key] || node['links']['outgoing'][key]
+            link_meta = node['links'][key]
 
             # remember the node's table's alias for the join
             last_table_alias = table_alias
