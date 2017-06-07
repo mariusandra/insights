@@ -26,6 +26,7 @@ import dashboardLogic from '~/scenes/dashboard/logic'
       'layoutChanged',
       'selectDashboard',
       'addDashboard',
+      'deleteDashboard',
       'setCurrentBreakpoint',
       'saveDashboard',
       'undoDashboard',
@@ -89,13 +90,16 @@ export default class Dashboard extends Component {
 
   render () {
     const { layouts, dashboards, selectedDashboardId, layoutsUnsaved, savingDashboard } = this.props
-    const { layoutChanged, selectDashboard, addDashboard, setCurrentBreakpoint, saveDashboard, undoDashboard } = this.props.actions
+    const { layoutChanged, selectDashboard, addDashboard, deleteDashboard, setCurrentBreakpoint, saveDashboard, undoDashboard } = this.props.actions
     const { mounted } = this.state
 
     return (
       <Layout className='dashboard-scene' ref={ref => { this._layout = ref }}>
         <Layout layoutHeight={50}>
           <div className='dashboards-list'>
+            {selectedDashboardId ? (
+              <button className='red fa fa-trash delete-dashboard' onClick={() => deleteDashboard(selectedDashboardId)} title='Delete dashboard' />
+            ) : null}
             {Object.values(dashboards).map(dashboard => (
               <button key={dashboard.id} onClick={() => selectDashboard(dashboard.id)} className={selectedDashboardId === dashboard.id ? '' : 'white'}>{dashboard.name}</button>
             ))}

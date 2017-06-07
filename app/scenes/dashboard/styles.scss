@@ -6,6 +6,11 @@
     button {
       margin-right: 10px;
     }
+    button.delete-dashboard {
+      float: right;
+      margin-right: 0;
+      margin-left: 10px;
+    }
   }
 
   .react-grid-layout {

@@ -17,6 +17,7 @@ export default class DashboardSaga extends Saga {
       'layoutChanged',
       'updateLayouts',
       'addDashboard',
+      'deleteDashboard',
       'undoDashboard',
       'saveDashboard',
       'dashboardSaveSuccess',
@@ -26,6 +27,7 @@ export default class DashboardSaga extends Saga {
 
   takeEvery = ({ actions }) => ({
     [actions.addDashboard]: this.addDashboardWorker,
+    [actions.deleteDashboard]: this.deleteDashboardWorker,
     [actions.dashboardsLoaded]: this.dashboardsLoadedWorker,
     [actions.layoutChanged]: this.layoutChangedWorker,
 
@@ -97,12 +99,37 @@ export default class DashboardSaga extends Saga {
   }
 
   addDashboardWorker = function * (action) {
-    const { dashboardsLoaded } = this.actions
+    const { dashboardsLoaded, selectDashboard } = this.actions
 
     const name = window.prompt('Name of the new dashboard')
     if (name) {
       const { dashboards, error } = yield dashboardController.addDashboard({ name: name })
       if (dashboards) {
+        const dashboardIds = Object.values(dashboards).map(d => parseInt(d.id)).sort((a, b) => a - b)
+        const lastDashboard = dashboardIds[dashboardIds.length - 1]
+        yield put(selectDashboard(lastDashboard))
+        yield put(dashboardsLoaded(dashboards))
+      } else {
+        messg.error(error, 2500)
+      }
+    }
+  }
+
+  deleteDashboardWorker = function * (action) {
+    const { dashboardsLoaded, selectDashboard } = this.actions
+
+    const { dashboardId } = action.payload
+    const { dashboards } = yield dashboardLogic.fetch('dashboards')
+
+    const dashboard = dashboards[dashboardId]
+
+    const response = window.confirm(`Are you sure you want to delete the dashboad "${dashboard.name}"? This can't be reversed!`)
+    if (response) {
+      const { dashboards, error } = yield dashboardController.deleteDashboard({ id: dashboardId })
+      if (dashboards) {
+        const dashboardIds = Object.values(dashboards).map(d => parseInt(d.id)).sort((a, b) => a - b)
+        const firstDashboard = dashboardIds[0]
+        yield put(selectDashboard(firstDashboard))
         yield put(dashboardsLoaded(dashboards))
       } else {
         messg.error(error, 2500)

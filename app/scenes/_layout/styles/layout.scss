@@ -62,6 +62,10 @@ a.button, button, input[type='submit'], input[type='button'] {
     background: #999999;
     color: white;
   }
+  &.red {
+    background: #c40000;
+    color: white;
+  }
   &.is-disabled {
     background: #ccc;
   }

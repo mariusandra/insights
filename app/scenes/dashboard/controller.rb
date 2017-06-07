@@ -16,6 +16,14 @@ class Dashboard::Controller < Controller
     end
   end
 
+  def delete_dashboard
+    dashboard = Dashboard.find(params[:id])
+    dashboard.deleted = true
+    dashboard.save!
+
+    get_dashboards
+  end
+
   def add_to_dashboard
     dashboard = Dashboard.find(params[:id])
     dashboard_item = dashboard.dashboard_items.build({
@@ -54,7 +62,7 @@ class Dashboard::Controller < Controller
 private
 
   def dashboards_json
-    Dashboard.all.map do |dashboard|
+    Dashboard.not_deleted.map do |dashboard|
       dashboard_items = dashboard.dashboard_items.order(:created_at)
       dashboard_item_ids = dashboard_items.map { |i| i.id.to_s }
 

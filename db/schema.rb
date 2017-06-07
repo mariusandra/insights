@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170522092705) do
+ActiveRecord::Schema.define(version: 20170607065053) do
 
   create_table "dashboard_items", force: :cascade do |t|
     t.integer  "dashboard_id"
@@ -25,8 +25,10 @@ ActiveRecord::Schema.define(version: 20170522092705) do
     t.string   "name"
     t.text     "desktop_layout"
     t.text     "mobile_layout"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.boolean  "deleted",        default: false
+    t.index ["deleted"], name: "index_dashboards_on_deleted"
   end
 
   create_table "insights_urls", force: :cascade do |t|

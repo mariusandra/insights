@@ -7,6 +7,7 @@ export default class DashboardLogic extends Logic {
 
   actions = ({ constants }) => ({
     addDashboard: true,
+    deleteDashboard: (dashboardId) => ({ dashboardId }),
 
     saveDashboard: (dashboardId) => ({ dashboardId }),
     undoDashboard: (dashboardId) => ({ dashboardId }),
@@ -18,7 +19,7 @@ export default class DashboardLogic extends Logic {
     updateLayouts: (layouts, dashboardId) => ({ layouts, dashboardId }),
     setCurrentBreakpoint: (breakpoint) => ({ breakpoint }),
 
-    selectDashboard: (dashboardId, layout) => ({ dashboardId, layout }),
+    selectDashboard: (dashboardId) => ({ dashboardId }),
     dashboardsLoaded: (dashboards) => ({ dashboards }),
 
     startResizing: (dashboardId) => ({ dashboardId }),
