@@ -10,20 +10,20 @@ module.exports = function () {
   const structure = getStructure(config)
   const adapter = createAdapter(database)
 
-  app.use('/structure', {
+  app.use('/api/structure', {
     find (params) {
       return Promise.resolve(structure)
     }
   })
 
-  app.use('/results', {
+  app.use('/api/results', {
     find (params) {
       const results = new Results({ params: params.query, adapter, structure })
       return results.getResponse()
     }
   })
 
-  app.use('/dashboards', {
+  app.use('/api/dashboards', {
     find (params) {
       return Promise.resolve({})
     }
