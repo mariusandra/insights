@@ -1,3 +1,5 @@
+This branch is for the NodeJS rewrite. For the old Rails version, see the master branch.
+
 # Insights
 
 As our [education marketplace](https://www.apprentus.com) grew, we faced a dilemma: we had little visibility into our data.
@@ -42,18 +44,18 @@ Order:
   primary_key: id
   columns:
     id:
-      type: :number
-      index: :primary_key
+      type: number
+      index: primary_key
     total_price:
-      type: :number
+      type: number
     hidden_field: false # this stays hidden
     currency:
-      type: :string
+      type: string
     # ...
   custom:
     total_price_in_eur:
       sql: "$$.total_price * $$.currency_to_eur"
-      type: :number
+      type: number
   links:
     order_lines:
       model: OrderLine

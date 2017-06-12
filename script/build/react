@@ -1,5 +1,0 @@
-#!/bin/bash
-npm run build:insights
-mkdir -p ./app/assets/stylesheets/react
-cp -a ./app/assets/javascripts/react/*.css ./app/assets/stylesheets/react/
-rm ./app/assets/javascripts/react/*.css
