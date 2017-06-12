@@ -6,6 +6,7 @@ module.exports = function (app) {
 
   app.use(require('webpack-dev-middleware')(compiler, {
     // historyApiFallback: true,
+    publicPath: '/dist/',
     stats: {colors: true}
     // noInfo: true,
   }))

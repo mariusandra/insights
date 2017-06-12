@@ -20,8 +20,8 @@ let config = {
   },
   output: {
     filename: '[name]-bundle.js',
-    path: path.join(__dirname, '..', '..', 'public'),
-    publicPath: '/'
+    path: path.join(__dirname, '..', '..', 'public', 'dist'),
+    publicPath: '/dist/'
   },
   resolve: {
     extensions: ['', '.webpack.js', '.web.js', '.js', '.jsx', '.scss', '.css', 'config.js'],
