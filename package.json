@@ -14,7 +14,7 @@
   "contributors": [],
   "bugs": {},
   "directories": {
-    "lib": "app"
+    "lib": "app/backend"
   },
   "engines": {
     "node": ">= 6.0.0",
@@ -62,6 +62,7 @@
     "feathers-errors": "^2.8.1",
     "feathers-hooks": "^2.0.1",
     "feathers-hooks-common": "^3.5.1",
+    "feathers-nedb": "^2.6.2",
     "feathers-rest": "^1.7.3",
     "feathers-socketio": "^2.0.0",
     "file-loader": "0.10.0",
@@ -76,6 +77,7 @@
     "messg": "mariusandra/messg#e698a77bc0b81a4f7b81329361ebbe33afa4f9b8",
     "mocha": "^3.4.2",
     "moment": "^2.18.1",
+    "nedb": "^1.8.0",
     "nprogress": "0.2.0",
     "pg": "^6.2.4",
     "pg-escape": "^0.2.0",

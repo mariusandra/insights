@@ -6,8 +6,10 @@ import viewsLogic from '~/scenes/header/views/logic'
 
 import messg from 'messg'
 
+import client from '~/client'
+
 // import controller from './controller.rb'
-const controller = {}
+const viewsService = client.service('api/views')
 
 export default class SavedSaga extends Saga {
   actions = () => ([
@@ -26,12 +28,11 @@ export default class SavedSaga extends Saga {
 
   run = function * (action) {
     const { viewsLoaded } = this.actions
-    // const result = yield controller.getViews({})
+    const results = yield viewsService.find({})
 
-    // if (result.success) {
-    //   yield put(viewsLoaded(result.views))
-    // }
-    yield put(viewsLoaded([]))
+    if (results.total > 0) {
+      yield put(viewsLoaded(results.data))
+    }
   }
 
   saveViewHelper = function * (action) {
@@ -40,10 +41,10 @@ export default class SavedSaga extends Saga {
 
     if (newName.trim()) {
       const newPath = `${window.location.pathname}${window.location.search}`
-      const result = yield controller.saveView({ name: newName, path: newPath })
+      const result = yield viewsService.create({ name: newName, path: newPath })
 
-      if (result.success) {
-        yield put(viewSaved(result.view))
+      if (result) {
+        yield put(viewSaved(result))
       }
     } else {
       messg.error('Please enter a name', 1000)

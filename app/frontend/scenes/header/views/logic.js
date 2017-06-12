@@ -35,11 +35,11 @@ export default class ViewsLogic extends Logic {
       [actions.viewsLoaded]: (_, payload) => {
         const newState = {}
         payload.views.forEach(view => {
-          newState[view.id] = view
+          newState[view._id] = view
         })
         return newState
       },
-      [actions.viewSaved]: (state, payload) => Object.assign({}, state, { [payload.view.id]: payload.view })
+      [actions.viewSaved]: (state, payload) => Object.assign({}, state, { [payload.view._id]: payload.view })
     }]
   })
 

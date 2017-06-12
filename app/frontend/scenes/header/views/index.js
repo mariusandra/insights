@@ -87,7 +87,7 @@ export default class Views extends Component {
         )}
         <div className='list'>
           {sortedViews.map(view => (
-            <div key={view.id} className='list-item' onClick={() => this.openView(view.id)}>
+            <div key={view._id} className='list-item' onClick={() => this.openView(view._id)}>
               {view.name}
             </div>
           ))}
