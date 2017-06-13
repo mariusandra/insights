@@ -13,7 +13,7 @@ import Header from '~/scenes/header'
 
 export default class InsightsScene extends Component {
   render () {
-    if (window.location.search.indexOf('embed=true') >= 0 || window.location.pathname === '/login' || window.location.pathname === '/') {
+    if (window.location.search.indexOf('embed=true') >= 0 || window.location.pathname === '/login') {
       return (
         <div className='insights-scene'>
           <Layout fill='window'>

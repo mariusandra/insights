@@ -1,4 +1,4 @@
-import { put, fork, call } from 'redux-saga/effects'
+import { all, put, fork, call } from 'redux-saga/effects'
 import Saga from 'kea/saga'
 import { LOCATION_CHANGE, push } from 'react-router-redux'
 
@@ -6,7 +6,10 @@ import messg from 'messg'
 
 import dashboardLogic from '~/scenes/dashboard/logic'
 
-// import dashboardController from '~/scenes/dashboard/controller.rb'
+import client from '~/client'
+
+const dashboardsService = client.service('api/dashboards')
+const dashboardItemsService = client.service('api/dashboard-items')
 
 const dashboardController = {}
 
@@ -14,6 +17,9 @@ export default class DashboardSaga extends Saga {
   actions = () => ([
     dashboardLogic, [
       'dashboardsLoaded',
+      'dashboardItemsLoaded',
+      'dashboardUpdated',
+      'dashboardRemoved',
       'selectDashboard',
       'setCurrentBreakpoint',
       'layoutChanged',
@@ -83,10 +89,18 @@ export default class DashboardSaga extends Saga {
   }
 
   loadDashboards = function * () {
-    const { dashboardsLoaded } = this.actions
+    const { dashboardsLoaded, dashboardItemsLoaded } = this.actions
 
-    const { dashboards } = yield dashboardController.getDashboards({})
-    yield put(dashboardsLoaded(dashboards))
+    const [
+      dashboards,
+      dashboardItems
+    ] = yield all([
+      dashboardsService.find(),
+      dashboardItemsService.find()
+    ])
+
+    yield put(dashboardItemsLoaded(dashboardItems.data))
+    yield put(dashboardsLoaded(dashboards.data))
   }
 
   dashboardsLoadedWorker = function * (action) {
@@ -96,29 +110,23 @@ export default class DashboardSaga extends Saga {
     const selectedDashboardId = yield dashboardLogic.get('selectedDashboardId')
     if (selectedDashboardId === null && Object.keys(dashboards).length > 0) {
       const firstDashboard = Object.values(dashboards)[0]
-      yield put(selectDashboard(firstDashboard.id))
+      yield put(selectDashboard(firstDashboard._id))
     }
   }
 
   addDashboardWorker = function * (action) {
-    const { dashboardsLoaded, selectDashboard } = this.actions
+    const { dashboardUpdated, selectDashboard } = this.actions
 
     const name = window.prompt('Name of the new dashboard')
     if (name) {
-      const { dashboards, error } = yield dashboardController.addDashboard({ name: name })
-      if (dashboards) {
-        const dashboardIds = Object.values(dashboards).map(d => parseInt(d.id)).sort((a, b) => a - b)
-        const lastDashboard = dashboardIds[dashboardIds.length - 1]
-        yield put(selectDashboard(lastDashboard))
-        yield put(dashboardsLoaded(dashboards))
-      } else {
-        messg.error(error, 2500)
-      }
+      const dashboard = yield dashboardsService.create({ name, mobileLayout: [], desktopLayout: [] })
+      yield put(dashboardUpdated(dashboard))
+      yield put(selectDashboard(dashboard._id))
     }
   }
 
   deleteDashboardWorker = function * (action) {
-    const { dashboardsLoaded, selectDashboard } = this.actions
+    const { dashboardRemoved, selectDashboard } = this.actions
 
     const { dashboardId } = action.payload
     const { dashboards } = yield dashboardLogic.fetch('dashboards')
@@ -126,15 +134,18 @@ export default class DashboardSaga extends Saga {
     const dashboard = dashboards[dashboardId]
 
     const response = window.confirm(`Are you sure you want to delete the dashboad "${dashboard.name}"? This can't be reversed!`)
+
     if (response) {
-      const { dashboards, error } = yield dashboardController.deleteDashboard({ id: dashboardId })
-      if (dashboards) {
-        const dashboardIds = Object.values(dashboards).map(d => parseInt(d.id)).sort((a, b) => a - b)
-        const firstDashboard = dashboardIds[0]
-        yield put(selectDashboard(firstDashboard))
-        yield put(dashboardsLoaded(dashboards))
+      yield dashboardsService.remove(dashboardId)
+      yield put(dashboardRemoved(dashboardId))
+
+      const dashboardIds = Object.keys(dashboards)
+
+      const index = dashboardIds.indexOf(dashboardId)
+      if (index > 0) {
+        yield put(selectDashboard(dashboardIds[index - 1]))
       } else {
-        messg.error(error, 2500)
+        yield put(selectDashboard(dashboardIds[0]))
       }
     }
   }

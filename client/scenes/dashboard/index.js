@@ -101,7 +101,7 @@ export default class Dashboard extends Component {
               <button className='red fa fa-trash delete-dashboard' onClick={() => deleteDashboard(selectedDashboardId)} title='Delete dashboard' />
             ) : null}
             {Object.values(dashboards).map(dashboard => (
-              <button key={dashboard.id} onClick={() => selectDashboard(dashboard.id)} className={selectedDashboardId === dashboard.id ? '' : 'white'}>{dashboard.name}</button>
+              <button key={dashboard._id} onClick={() => selectDashboard(dashboard._id)} className={selectedDashboardId === dashboard._id ? '' : 'white'}>{dashboard.name}</button>
             ))}
             <button className='white' onClick={() => addDashboard()}>+ ADD</button>
             {layoutsUnsaved ? (

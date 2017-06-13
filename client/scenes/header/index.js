@@ -55,7 +55,7 @@ export default class HeaderScene extends Component {
       <div className='header-scene'>
         <div className='insights-tab-row'>
           <div className='tab-row-element'>
-            <button onClick={() => this.openLocation('/explorer')} className={pathname.indexOf('/explorer') === 0 ? 'button' : 'button white'}>Explorer</button>
+            <button onClick={() => this.openLocation('/explorer')} className={pathname.indexOf('/explorer') === 0 || pathname === '/' ? 'button' : 'button white'}>Explorer</button>
           </div>
           <div className='tab-row-element'>
             <button onClick={() => this.openLocation('/dashboard')} className={pathname.indexOf('/dashboard') === 0 ? 'button' : 'button white'}>Dashboard</button>

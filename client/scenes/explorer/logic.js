@@ -248,7 +248,7 @@ export default class ExplorerLogic extends Logic {
       [actions.dashboardsLoaded]: (_, payload) => {
         let newState = {}
         payload.dashboards.forEach(dashboard => {
-          newState[dashboard.id] = dashboard
+          newState[dashboard._id] = dashboard
         })
         return newState
       }

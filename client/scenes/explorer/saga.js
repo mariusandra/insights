@@ -162,10 +162,10 @@ export default class ExplorerSaga extends Saga {
   })
 
   loadDashboards = function * (action) {
-    // const { dashboardsLoaded } = this.actions
+    const { dashboardsLoaded } = this.actions
 
-    // const { dashboards } = yield dashboardsService.find()
-    // yield put(dashboardsLoaded(dashboards))
+    const response = yield dashboardsService.find()
+    yield put(dashboardsLoaded(response.data))
   }
 
   refreshDataWorker = function * (action) {

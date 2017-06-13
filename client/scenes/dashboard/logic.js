@@ -20,7 +20,11 @@ export default class DashboardLogic extends Logic {
     setCurrentBreakpoint: (breakpoint) => ({ breakpoint }),
 
     selectDashboard: (dashboardId) => ({ dashboardId }),
+
+    dashboardUpdated: (dashboard) => ({ dashboard }),
+    dashboardRemoved: (dashboardId) => ({ dashboardId }),
     dashboardsLoaded: (dashboards) => ({ dashboards }),
+    dashboardItemsLoaded: (dashboardItems) => ({ dashboardItems }),
 
     startResizing: (dashboardId) => ({ dashboardId }),
     stopResizing: (dashboardId) => ({ dashboardId }),
@@ -30,17 +34,32 @@ export default class DashboardLogic extends Logic {
   })
 
   reducers = ({ actions, constants }) => ({
-    selectedDashboardId: [null, PropTypes.number, {
+    selectedDashboardId: [null, PropTypes.string, {
       [actions.selectDashboard]: (_, payload) => payload.dashboardId
+    }],
+
+    dashboardItems: [{}, PropTypes.object, {
+      [actions.dashboardItemsLoaded]: (_, payload) => {
+        let newState = {}
+        payload.dashboardItems.forEach(dashboardItem => {
+          newState[dashboardItem._id] = dashboardItem
+        })
+        return newState
+      }
     }],
 
     dashboards: [{}, PropTypes.object, {
       [actions.dashboardsLoaded]: (_, payload) => {
         let newState = {}
         payload.dashboards.forEach(dashboard => {
-          newState[dashboard.id] = dashboard
+          newState[dashboard._id] = dashboard
         })
         return newState
+      },
+      [actions.dashboardUpdated]: (state, payload) => Object.assign({}, state, { [payload.dashboard._id]: payload.dashboard }),
+      [actions.dashboardRemoved]: (state, payload) => {
+        const { [payload.dashboardId]: discard, ...rest } = state // eslint-disable-line
+        return rest
       },
       [actions.updateLayouts]: (state, payload) => {
         const { layouts, dashboardId } = payload
