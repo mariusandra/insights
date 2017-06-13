@@ -15,9 +15,8 @@ import Spinner from 'lib/tags/spinner'
 import dashboardLogic from '~/scenes/dashboard/logic'
 import headerLogic from '~/scenes/header/logic'
 
-// import explorerController from '~/scenes/explorer/controller.rb'
-
-const explorerController = {}
+import client from '~/client'
+const resultsService = client.service('api/results')
 
 @connect({
   actions: [
@@ -44,7 +43,7 @@ export default class DashboardGraph extends Component {
     containerHeight: PropTypes.number,
     isResizing: PropTypes.bool,
     itemId: PropTypes.string,
-    dashboardId: PropTypes.number
+    dashboardId: PropTypes.string
   }
 
   constructor (props) {
@@ -62,7 +61,7 @@ export default class DashboardGraph extends Component {
   componentDidMount () {
     const { path } = this.props
 
-    explorerController.getResults({ ...urlToState(path), graphOnly: true }).then(response => {
+    resultsService.find({ query: { ...urlToState(path), graphOnly: true } }).then(response => {
       const { graph } = response
       const graphKeys = graph.keys
 

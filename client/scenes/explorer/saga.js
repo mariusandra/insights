@@ -16,6 +16,7 @@ import client from '~/client'
 const structureService = client.service('api/structure')
 const resultsService = client.service('api/results')
 const dashboardsService = client.service('api/dashboards')
+const dashboardItemsService = client.service('api/dashboard-items')
 
 function fetchBlob (params) {
   var qs = document.querySelector('meta[name=csrf-token]')
@@ -293,16 +294,12 @@ export default class ExplorerSaga extends Saga {
   }
 
   addToDashboardWorker = function * (action) {
-    const { dashboardsLoaded } = this.actions
     const { id, name, path } = action.payload
 
-    const results = yield dashboardsService.create({ id, name, path })
+    const dashboardItem = yield dashboardItemsService.create({ dashboardId: id, name, path })
 
-    if (results.dashboards) {
+    if (dashboardItem) {
       messg.success('Added!', 2500)
-      yield put(dashboardsLoaded(results.dashboards))
-    } else if (results.error) {
-      messg.success(results.error, 2500)
     }
   }
 }

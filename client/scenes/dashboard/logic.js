@@ -179,8 +179,47 @@ export default class DashboardLogic extends Logic {
 
   selectors = ({ constants, selectors }) => ({
     dashboard: [
-      () => [selectors.dashboards, selectors.selectedDashboardId],
-      (dashboards, selectedDashboardId) => dashboards && dashboards[selectedDashboardId],
+      () => [selectors.dashboards, selectors.dashboardItems, selectors.selectedDashboardId],
+      (dashboards, dashboardItems, selectedDashboardId) => {
+        const dashboard = dashboards && dashboards[selectedDashboardId]
+        if (dashboard) {
+          let items = {}
+          let layouts = { mobile: [], desktop: [] }
+
+          Object.values(dashboardItems).filter(item => item.dashboardId === selectedDashboardId).forEach(item => {
+            items[item._id] = item
+          });
+
+          ['mobile', 'desktop'].forEach(layoutType => {
+            let addedItems = {};
+
+            ((dashboard.layouts || {})[layoutType] || []).forEach(layoutItem => {
+              if (items[layoutItem.i]) {
+                layouts[layoutType].push(layoutItem)
+                addedItems[layoutItem.i] = true
+              }
+            })
+
+            Object.values(items).forEach(item => {
+              if (!addedItems[item._id]) {
+                layouts[layoutType].push({
+                  i: item._id,
+                  x: 0,
+                  y: 0,
+                  w: layoutType === 'desktop' ? 6 : 2,
+                  h: 10
+                })
+              }
+            })
+          })
+
+          return Object.assign({}, dashboard, {
+            items,
+            layouts
+          })
+        }
+        return null
+      },
       PropTypes.object
     ],
 
