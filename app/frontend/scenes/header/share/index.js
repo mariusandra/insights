@@ -6,8 +6,9 @@ import { connect } from 'react-redux'
 import copy from 'copy-to-clipboard'
 import messg from 'messg'
 
-// import urlController from './controller.rb'
-const urlController = {}
+import client from '~/client'
+
+const urlService = client.service('api/url')
 
 // logic
 @connect()
@@ -29,9 +30,9 @@ export default class Share extends Component {
       messg.success('Copied to clipboard!', 2500)
       this.setState({ path: '', url: '' })
     } else {
-      urlController.createUrl({ path: newPath }).then(result => {
-        if (result.path) {
-          this.setState({ path: newPath, url: window.location.origin + result.path })
+      urlService.create({ path: newPath }).then(url => {
+        if (url) {
+          this.setState({ path: newPath, url: window.location.origin + '/url/' + url.code })
         } else {
           messg.error('Error', 2500)
         }
