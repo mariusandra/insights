@@ -9,7 +9,6 @@ import { connect } from 'kea/logic'
 // logic
 import explorerLogic from '~/scenes/explorer/logic'
 
-
 @connect({
   actions: [
     explorerLogic, [

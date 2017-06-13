@@ -28,7 +28,7 @@ function main () {
   //   limit: 81
   // }
 
-  const params = {"columns":["Product.title","Product.order_lines.total_price_in_eur!!sum","Product.order_lines.id!!count","Product.order_lines.quantity!!avg"],"sort":"-Product.order_lines.total_price_in_eur!!sum","filter":[],"facetsColumn":null,"facetsCount":6,"graphTimeFilter":"last-60","graphCumulative":false,"percentages":false,"offset":0,"limit":48}
+  const params = {'columns': ['Product.title', 'Product.order_lines.total_price_in_eur!!sum', 'Product.order_lines.id!!count', 'Product.order_lines.quantity!!avg'], 'sort': '-Product.order_lines.total_price_in_eur!!sum', 'filter': [], 'facetsColumn': null, 'facetsCount': 6, 'graphTimeFilter': 'last-60', 'graphCumulative': false, 'percentages': false, 'offset': 0, 'limit': 48}
 
   const results = new Results({ params, adapter, structure })
   results.getResponse().then(response => {

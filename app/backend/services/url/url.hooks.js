@@ -1,6 +1,5 @@
 
-
-const urlRandomCode = require('../../hooks/url-random-code');
+const urlRandomCode = require('../../hooks/url-random-code')
 
 module.exports = {
   before: {
@@ -32,4 +31,4 @@ module.exports = {
     patch: [],
     remove: []
   }
-};
+}

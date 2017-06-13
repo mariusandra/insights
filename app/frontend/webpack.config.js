@@ -5,8 +5,6 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const devBuild = process.env.NODE_ENV !== 'production'
 const nodeEnv = devBuild ? 'development' : 'production'
 
-const hotPort = process.env.HOT_PORT || 3350
-
 let config = {
   // the project dir
   context: path.join(__dirname, '..', '..'),

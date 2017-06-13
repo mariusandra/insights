@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react'
-import { connect } from 'kea/logic'
 import moment from 'moment'
 
 export default class Tooltip extends Component {

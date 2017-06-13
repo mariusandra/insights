@@ -1,10 +1,10 @@
-const assert = require('assert');
-const app = require('../../app/backend/app');
+const assert = require('assert')
+const app = require('../../app/backend/app')
 
 describe('\'dashboards\' service', () => {
   it('registered the service', () => {
-    const service = app.service('api/dashboards');
+    const service = app.service('api/dashboards')
 
-    assert.ok(service, 'Registered the service');
-  });
-});
+    assert.ok(service, 'Registered the service')
+  })
+})

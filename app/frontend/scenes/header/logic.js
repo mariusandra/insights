@@ -1,5 +1,4 @@
 import Logic, { initLogic } from 'kea/logic'
-import { PropTypes } from 'react'
 
 @initLogic
 export default class HeaderLogic extends Logic {

@@ -24,7 +24,7 @@
     "test": "npm run eslint && npm run mocha",
     "lint": "eslint app test config",
     "lint:fix": "eslint app test config --fix",
-    "start": "NODE_ENV=development node app/backend/",
+    "start": "NODE_ENV=development node --inspect app/backend/",
     "mocha": "mocha test/ --recursive",
     "frontend:build": "NODE_ENV=production webpack --profile --config config/webpack/webpack.insights.rails.config.js --display-chunks --display-modules",
     "frontend:dev": "rm -f npm-debug.log* && node app/frontend/server.js"
