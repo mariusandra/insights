@@ -5,11 +5,17 @@ class Service {
   }
 
   find (params) {
-    const { database, config } = require('../../../../config/insights')
+    const { database, config } = require('../../../config/insights')
+
     const getStructure = require('../../insights/structure')
+    const createAdapter = require('../../insights/adapter')
+    const Results = require('../../insights/results')
 
     const structure = getStructure(config)
-    return Promise.resolve(structure)
+    const adapter = createAdapter(database)
+
+    const results = new Results({ params: params.query, adapter, structure })
+    return results.getResponse()
   }
 }
 

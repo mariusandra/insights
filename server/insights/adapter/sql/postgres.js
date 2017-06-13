@@ -3,7 +3,7 @@ const escape = require('pg-escape')
 
 const SQL = require('./index')
 
-const { timezone } = require('../../../../../config/insights')
+const { timezone } = require('../../../../config/insights')
 
 module.exports = class Postgres extends SQL {
   constructor (connection) {

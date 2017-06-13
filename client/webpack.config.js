@@ -7,25 +7,25 @@ const nodeEnv = devBuild ? 'development' : 'production'
 
 let config = {
   // the project dir
-  context: path.join(__dirname, '..', '..'),
+  context: path.join(__dirname, '..'),
   entry: {
     insights: [
       'babel-polyfill',
       'font-awesome/css/font-awesome.css',
-      './app/frontend/scenes/index.js',
-      './app/frontend/scenes/explorer/scene.js'
+      './client/scenes/index.js',
+      './client/scenes/explorer/scene.js'
     ]
   },
   output: {
     filename: '[name]-bundle.js',
-    path: path.join(__dirname, '..', '..', 'public', 'dist'),
+    path: path.join(__dirname, '..', 'public', 'dist'),
     publicPath: '/dist/'
   },
   resolve: {
     extensions: ['', '.webpack.js', '.web.js', '.js', '.jsx', '.scss', '.css', 'config.js'],
     alias: {
-      '~': path.join(process.cwd(), 'app', 'frontend'),
-      lib: path.join(process.cwd(), 'app', 'frontend', 'lib')
+      '~': path.join(process.cwd(), 'client'),
+      lib: path.join(process.cwd(), 'client', 'lib')
     }
   },
   postcss: function (webpack) {

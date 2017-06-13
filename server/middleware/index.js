@@ -8,7 +8,7 @@ module.exports = function () {
 
   if (process.env.NODE_ENV === 'development') {
     // run webpack with hot module replacement in development
-    const development = require('../../frontend/middleware')
+    const development = require('../../client/middleware')
     development(app)
   }
 

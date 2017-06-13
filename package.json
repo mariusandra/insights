@@ -14,20 +14,18 @@
   "contributors": [],
   "bugs": {},
   "directories": {
-    "lib": "app/backend"
+    "lib": "server"
   },
   "engines": {
-    "node": ">= 6.0.0",
+    "node": ">= 7.6.0",
     "yarn": ">= 0.18.0"
   },
   "scripts": {
     "test": "npm run eslint && npm run mocha",
     "lint": "eslint app test config",
     "lint:fix": "eslint app test config --fix",
-    "start": "NODE_ENV=development node --inspect app/backend/",
-    "mocha": "mocha test/ --recursive",
-    "frontend:build": "NODE_ENV=production webpack --profile --config config/webpack/webpack.insights.rails.config.js --display-chunks --display-modules",
-    "frontend:dev": "rm -f npm-debug.log* && node app/frontend/server.js"
+    "start": "NODE_ENV=development node --inspect server/",
+    "mocha": "mocha test/ --recursive"
   },
   "dependencies": {
     "babel-cli": "^6.24.1",
