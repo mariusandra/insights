@@ -26,6 +26,7 @@
     "lint:fix": "eslint app test config --fix",
     "start": "NODE_ENV=development node --inspect server/",
     "build": "NODE_ENV=production webpack --profile --config client/webpack.config.js",
+    "analyze": "NODE_ENV=production ANALYZE_BUNDLE=true webpack --config client/webpack.config.js",
     "production": "NODE_ENV=production node server/",
     "mocha": "mocha test/ --recursive"
   },
@@ -111,7 +112,7 @@
     "style-loader": "0.13.1",
     "url-loader": "0.5.7",
     "webpack": "1.13.3",
-    "webpack-bundle-analyzer": "2.3.0",
+    "webpack-bundle-analyzer": "^2.8.2",
     "webpack-bundle-size-analyzer": "2.5.0",
     "webpack-dev-server": "1.16.2",
     "webpack-hot-middleware": "^2.18.0",

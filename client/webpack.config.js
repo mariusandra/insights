@@ -44,7 +44,8 @@ let config = {
     }),
     new webpack.ProvidePlugin({
       'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
-    })
+    }),
+    new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en-gb/)
   ],
   module: {
     loaders: [
@@ -59,6 +60,11 @@ let config = {
       { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file-loader' }
     ]
   }
+}
+
+if (process.env.ANALYZE_BUNDLE) {
+  var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+  config.plugins.push(new BundleAnalyzerPlugin())
 }
 
 if (devBuild) {
