@@ -30,6 +30,8 @@
       "service": "users",
       "usernameField": "email",
       "passwordField": "password"
+    },
+    "electron-connect-api-key": {
     }
   }
 }

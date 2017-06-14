@@ -40,16 +40,6 @@ export default class LoginScene extends Component {
     const { email, password, errors, isSubmitting } = this.props
     const { setEmail, setPassword } = this.props.actions
 
-    const loginNeeded = true
-
-    if (!loginNeeded) {
-      // saga will redirect now
-      // no need to flash the login form
-      return (
-        <div />
-      )
-    }
-
     return (
       <div className='login-scene'>
         <form className='login-box' onSubmit={this.handleFormSubmit}>

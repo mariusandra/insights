@@ -16,10 +16,6 @@ class AuthLogic extends Logic {
   })
 
   reducers = ({ actions, constants }) => ({
-    loginNeeded: [true, PropTypes.bool, {
-
-    }],
-
     isLoggedIn: [false, PropTypes.bool, {
       [actions.loginStarted]: () => false,
       [actions.loginSuccess]: () => true,
@@ -47,7 +43,7 @@ class AuthLogic extends Logic {
     }],
 
     user: [{}, PropTypes.object, {
-      [actions.loginSuccess]: (_, payload) => payload.user
+      [actions.loginSuccess]: (_, payload) => payload.user && payload.user._id ? payload.user : null
     }]
   })
 }
@@ -60,8 +56,19 @@ export function * authenticate (credentials) {
 
   yield put(loginStarted())
 
+  let payload = {}
+
+  if (credentials) {
+    payload = Object.assign({ strategy: 'local' }, credentials)
+  }
+
+  if (window.location.search.includes('electron-connect-api-key')) {
+    const search = window.location.search.indexOf('?') === 0 ? window.location.search.substring(1) : window.location.search
+    const key = search.split('&').map(k => k.split('=').map(decodeURIComponent)).filter(k => k[0] === 'electron-connect-api-key')[0][1]
+    payload = { strategy: 'electron-connect-api-key', key }
+  }
+
   try {
-    const payload = credentials ? Object.assign({ strategy: 'local' }, credentials) : {}
     const authenticationResponse = yield client.authenticate(payload)
     const { accessToken, user } = authenticationResponse
 

@@ -4260,6 +4260,12 @@ pascal-case@^2.0.0:
     camel-case "^3.0.0"
     upper-case-first "^1.1.0"
 
+passport-custom@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/passport-custom/-/passport-custom-1.0.5.tgz#2d1d9c174a6a4685bf0289bce61091cd5ec7b0f4"
+  dependencies:
+    passport-strategy "1.x.x"
+
 passport-jwt@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/passport-jwt/-/passport-jwt-2.2.1.tgz#0e004c94071319d673d9d9bcfd1574a868011527"

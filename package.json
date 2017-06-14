@@ -29,7 +29,7 @@
     "analyze": "NODE_ENV=production ANALYZE_BUNDLE=true webpack --config client/webpack.config.js",
     "production": "NODE_ENV=production node server/",
     "electron": "NODE_ENV=production ./node_modules/.bin/electron server/electron",
-    "electron:dev": "NODE_ENV=development ./node_modules/.bin/electron server/electron",
+    "electron:dev": "NODE_ENV=development ./node_modules/.bin/electron -i server/electron",
     "mocha": "mocha test/ --recursive"
   },
   "dependencies": {
@@ -87,6 +87,7 @@
     "moment": "^2.18.1",
     "nedb": "^1.8.0",
     "nprogress": "0.2.0",
+    "passport-custom": "^1.0.5",
     "pg": "^6.2.4",
     "pg-escape": "^0.2.0",
     "postcss-loader": "1.3.0",

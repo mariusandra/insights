@@ -27,8 +27,7 @@ import headerLogic from '~/scenes/header/logic'
       'search'
     ],
     authLogic, [
-      'user',
-      'loginNeeded'
+      'user'
     ]
   ]
 })
@@ -50,7 +49,7 @@ export default class HeaderScene extends Component {
   }
 
   render () {
-    const { user, loginNeeded, pathname } = this.props
+    const { user, pathname } = this.props
 
     return (
       <div className='header-scene'>
@@ -66,7 +65,7 @@ export default class HeaderScene extends Component {
               {user.email}
             </div>
           ) : null}
-          {loginNeeded ? <Logout /> : null}
+          {user ? <Logout /> : null}
           <div className='tab-row-separator' />
           <Views />
           <Share />

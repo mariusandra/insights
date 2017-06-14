@@ -2,14 +2,11 @@ const { app, BrowserWindow } = require('electron')
 
 const server = require('./app')
 
+const authenticationElectron = require('./authentication-electron')
+server.configure(authenticationElectron)
+
 let mainWindow = null
 
-// crashReporter.start({
-//   productName: 'YourName',
-//   companyName: 'YourCompany',
-//   submitURL: 'https://your-domain.com/url-to-submit',
-//   uploadToServer: true
-// })
 const httpServer = server.listen(0)
 
 app.on('window-all-closed', () => {
@@ -29,7 +26,7 @@ const createWindow = () => {
   })
 
   let port = httpServer.address().port
-  mainWindow.loadURL(`http://localhost:${port}`)
+  mainWindow.loadURL(`http://localhost:${port}/?electron-connect-api-key=${server.get('electronConnectApiKey')}`)
 
   if (process.env.NODE_ENV !== 'production') {
     mainWindow.openDevTools()
