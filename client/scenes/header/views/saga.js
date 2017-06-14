@@ -1,7 +1,8 @@
 import Saga from 'kea/saga'
-import { put } from 'redux-saga/effects'
+import { put, call } from 'redux-saga/effects'
 import { push } from 'react-router-redux'
 
+import { waitUntilLogin } from '~/scenes/auth'
 import viewsLogic from '~/scenes/header/views/logic'
 
 import messg from 'messg'
@@ -11,7 +12,7 @@ import client from '~/client'
 // import controller from './controller.rb'
 const viewsService = client.service('api/views')
 
-export default class SavedSaga extends Saga {
+export default class ViewsSaga extends Saga {
   actions = () => ([
     viewsLogic, [
       'saveView',
@@ -27,6 +28,16 @@ export default class SavedSaga extends Saga {
   })
 
   run = function * (action) {
+    yield call(waitUntilLogin)
+
+    try {
+      yield call(this.loadViews)
+    } catch (error) {
+      console.error('Could not load views', error)
+    }
+  }
+
+  loadViews = function * (action) {
     const { viewsLoaded } = this.actions
     const results = yield viewsService.find({})
 

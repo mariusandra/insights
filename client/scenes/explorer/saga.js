@@ -5,6 +5,7 @@ import { LOCATION_CHANGE, push } from 'react-router-redux'
 
 import download from 'downloadjs'
 
+import { waitUntilLogin } from '~/scenes/auth'
 import explorerLogic from '~/scenes/explorer/logic'
 
 import urlToState from 'lib/explorer/url-to-state'
@@ -113,6 +114,8 @@ export default class ExplorerSaga extends Saga {
 
   run = function * () {
     const { setStructure } = this.actions
+
+    yield call(waitUntilLogin)
 
     window.document.title = 'Explorer - Insights'
 

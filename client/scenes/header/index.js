@@ -12,6 +12,7 @@ import Views from './views'
 import Share from './share'
 
 // logic
+import authLogic from '~/scenes/auth'
 import headerLogic from '~/scenes/header/logic'
 
 @connect({
@@ -25,8 +26,8 @@ import headerLogic from '~/scenes/header/logic'
       'pathname',
       'search'
     ],
-    state => state.rails, [
-      'currentUser',
+    authLogic, [
+      'user',
       'loginNeeded'
     ]
   ]
@@ -49,7 +50,7 @@ export default class HeaderScene extends Component {
   }
 
   render () {
-    const { currentUser, loginNeeded, pathname } = this.props
+    const { user, loginNeeded, pathname } = this.props
 
     return (
       <div className='header-scene'>
@@ -60,12 +61,12 @@ export default class HeaderScene extends Component {
           <div className='tab-row-element'>
             <button onClick={() => this.openLocation('/dashboard')} className={pathname.indexOf('/dashboard') === 0 ? 'button' : 'button white'}>Dashboard</button>
           </div>
-          {loginNeeded ? <Logout /> : null}
-          {currentUser ? (
+          {user ? (
             <div className='tab-row-element'>
-              {currentUser}
+              {user.email}
             </div>
           ) : null}
+          {loginNeeded ? <Logout /> : null}
           <div className='tab-row-separator' />
           <Views />
           <Share />

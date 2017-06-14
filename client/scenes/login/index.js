@@ -12,22 +12,17 @@ import SubmitButton from 'lib/tags/submit-button'
 // logic
 import sceneLogic from '~/scenes/login/logic'
 
-// const { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } = sceneLogic.constants
-
 @connect({
   actions: [
     sceneLogic, [
-      'setUser',
+      'setEmail',
       'setPassword',
       'performLogin'
     ]
   ],
   props: [
-    state => state.rails, [
-      'loginNeeded'
-    ],
     sceneLogic, [
-      'user',
+      'email',
       'password',
       'errors',
       'isSubmitting'
@@ -42,8 +37,10 @@ export default class LoginScene extends Component {
   }
 
   render () {
-    const { user, password, errors, isSubmitting, loginNeeded } = this.props
-    const { setUser, setPassword } = this.props.actions
+    const { email, password, errors, isSubmitting } = this.props
+    const { setEmail, setPassword } = this.props.actions
+
+    const loginNeeded = true
 
     if (!loginNeeded) {
       // saga will redirect now
@@ -60,11 +57,11 @@ export default class LoginScene extends Component {
             Insights
           </div>
           <div className='field'>
-            <label>user</label>
-            <input autoFocus type='text' className='input-text' value={user} onChange={(e) => setUser(e.target.value)} />
+            <label>email</label>
+            <input autoFocus type='text' className='input-text' value={email} onChange={(e) => setEmail(e.target.value)} />
           </div>
-          {errors.user ? (
-            <div className='simple-error'>{errors.user}</div>
+          {errors.email ? (
+            <div className='simple-error'>{errors.email}</div>
           ) : null}
           <div className='field'>
             <label>password</label>

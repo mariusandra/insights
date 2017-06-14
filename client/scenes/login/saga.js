@@ -1,13 +1,13 @@
 import Saga from 'kea/saga'
-import { put, select } from 'redux-saga/effects'
+import { put, call } from 'redux-saga/effects'
+import { push } from 'react-router-redux'
 
 import messg from 'messg'
 
-// import controller from './controller.rb'
-
+import { waitUntilLogin, authenticate } from '~/scenes/auth'
 import loginLogic from '~/scenes/login/logic'
 
-const controller = {}
+import delay from 'lib/utils/delay'
 
 const DEFAULT_REDIRECT = '/explorer'
 
@@ -22,7 +22,6 @@ export default class LoginSaga extends Saga {
       'performLogin',
       'setErrors',
       'loginFailure',
-      'loginSuccess',
       'loginRequest'
     ]
   ])
@@ -32,21 +31,20 @@ export default class LoginSaga extends Saga {
   })
 
   run = function * () {
-    const { loginNeeded, currentUser } = yield select(state => state.rails)
-
-    if (currentUser || !loginNeeded) {
-      window.location.href = getRedirectPath()
-    }
+    yield delay(50)
+    yield call(waitUntilLogin)
+    const path = getRedirectPath()
+    yield put(push(path))
   }
 
   performLoginWorker = function * (action) {
-    const { setErrors, loginFailure, loginSuccess, loginRequest } = this.actions
-    const { user, password } = yield loginLogic.fetch('user', 'password')
+    const { setErrors, loginFailure, loginRequest } = this.actions
+    const { email, password } = yield loginLogic.fetch('email', 'password')
 
     let errors = {}
 
-    if (!user.trim()) {
-      errors.user = 'Must be present'
+    if (!email.trim()) {
+      errors.email = 'Must be present'
     }
 
     if (!password.trim()) {
@@ -57,20 +55,14 @@ export default class LoginSaga extends Saga {
       yield put(setErrors(errors))
       return
     }
-    try {
-      yield put(loginRequest())
-      const result = yield controller.checkLogin({ user, password })
 
-      if (result.success) {
-        messg.success('Login success', 2500)
-        yield put(loginSuccess())
-        window.location.href = getRedirectPath()
-      } else {
-        messg.error('Login failed', 2500)
-        yield put(loginFailure(result.errors || {}))
-      }
-    } catch (error) {
-      messg.error('Login error', 2500)
+    yield put(loginRequest())
+    const result = yield call(authenticate, { email, password })
+
+    if (result) {
+      messg.success('Login success', 2500)
+    } else {
+      messg.error('Login failed', 2500)
       yield put(loginFailure({}))
     }
   }

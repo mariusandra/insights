@@ -6,7 +6,7 @@ export default class LoginLogic extends Logic {
   path = () => ['scenes', 'login', 'index']
 
   actions = ({ constants }) => ({
-    setUser: user => ({ user }),
+    setEmail: email => ({ email }),
     setPassword: password => ({ password }),
     setErrors: errors => ({ errors }),
 
@@ -18,14 +18,14 @@ export default class LoginLogic extends Logic {
   })
 
   reducers = ({ actions, constants }) => ({
-    user: ['', PropTypes.string, {
-      [actions.setUser]: (_, payload) => payload.user
+    email: ['', PropTypes.string, {
+      [actions.setEmail]: (_, payload) => payload.email
     }],
     password: ['', PropTypes.string, {
       [actions.setPassword]: (_, payload) => payload.password
     }],
     errors: [{}, PropTypes.object, {
-      [actions.setUser]: () => ({}),
+      [actions.setEmail]: () => ({}),
       [actions.setPassword]: () => ({}),
       [actions.performLogin]: () => ({}),
       [actions.loginFailure]: (_, payload) => payload.errors,

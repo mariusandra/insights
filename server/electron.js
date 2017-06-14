@@ -1,4 +1,4 @@
-const { app, BrowserWindow, crashReporter } = require('electron')
+const { app, BrowserWindow } = require('electron')
 
 const server = require('./app')
 

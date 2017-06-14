@@ -8,11 +8,14 @@ import { createRootSaga, createKeaStore } from 'kea/scene'
 
 import headerScene from '~/scenes/header/scene'
 
-function * appSaga () {
-}
+import authLogic, { authenticate } from '~/scenes/auth'
 
 const appReducers = {
-  routing: routerReducer
+  routing: routerReducer,
+  auth: authLogic.reducer
+}
+
+function * appSaga () {
 }
 
 const sagaMiddleware = createSagaMiddleware()
@@ -23,7 +26,10 @@ const finalCreateStore = compose(
 )(createStore)
 
 const store = createKeaStore(finalCreateStore, appReducers)
+
+sagaMiddleware.run(authenticate)
 sagaMiddleware.run(createRootSaga(appSaga))
+
 store.addKeaScene(headerScene, true)
 
 export default store

@@ -4,6 +4,7 @@ import { LOCATION_CHANGE, push } from 'react-router-redux'
 
 import messg from 'messg'
 
+import { waitUntilLogin } from '~/scenes/auth'
 import dashboardLogic from '~/scenes/dashboard/logic'
 
 import client from '~/client'
@@ -48,6 +49,8 @@ export default class DashboardSaga extends Saga {
   })
 
   run = function * () {
+    yield call(waitUntilLogin)
+
     yield call(this.setDashboardFromUrl)
     yield fork(this.setCurrentBreakpoint)
     yield fork(this.loadDashboards)
