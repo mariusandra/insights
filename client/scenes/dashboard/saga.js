@@ -122,7 +122,7 @@ export default class DashboardSaga extends Saga {
 
     const name = window.prompt('Name of the new dashboard')
     if (name) {
-      const dashboard = yield dashboardsService.create({ name, mobileLayout: [], desktopLayout: [] })
+      const dashboard = yield dashboardsService.create({ name, layouts: { mobile: [], desktop: [] } })
       yield put(dashboardUpdated(dashboard))
       yield put(selectDashboard(dashboard._id))
     }
@@ -167,31 +167,23 @@ export default class DashboardSaga extends Saga {
   saveDashboardWorker = function * (action) {
     const { dashboardSaveSuccess, dashboardSaveFailure, dashboardsLoaded } = this.actions
     const { dashboardId } = action.payload
-    const { layouts, dashboard } = yield dashboardLogic.fetch('selectedDashboardId', 'layouts', 'dashboard')
+    const { layouts } = yield dashboardLogic.fetch('layouts')
 
-    const renamedItems = dashboard.changedItems
-                            ? Object.values(dashboard.changedItems).filter(i => dashboard.items[i.id].name !== i.name).map(i => [i.id, i.name])
-                            : []
+    // const renamedItems = dashboard.changedItems
+    //                         ? Object.values(dashboard.changedItems).filter(i => dashboard.items[i.id].name !== i.name).map(i => [i.id, i.name])
+    //                         : []
 
-    const deletedItems = dashboard.changedItems
-                            ? Object.values(dashboard.items).filter(i => !dashboard.changedItems[i.id]).map(i => i.id)
-                            : []
+    // const deletedItems = dashboard.changedItems
+    //                         ? Object.values(dashboard.items).filter(i => !dashboard.changedItems[i.id]).map(i => i.id)
+    //                         : []
 
     try {
-      const props = {
-        id: dashboardId,
-        mobileLayout: JSON.stringify(layouts.mobile),
-        desktopLayout: JSON.stringify(layouts.desktop),
-        renamedItems,
-        deletedItems
-      }
-      const result = yield dashboardController.saveDashboard(props)
+      const result = yield dashboardsService.patch(dashboardId, { layouts })
 
-      if (result.dashboards) {
-        yield put(dashboardSaveSuccess(dashboardId))
-        yield put(dashboardsLoaded(result.dashboards))
+      if (result) {
+        yield put(dashboardSaveSuccess(dashboardId, result))
         messg.success('Layout saved', 2500)
-      } else if (messg.error) {
+      } else {
         yield put(dashboardSaveFailure(dashboardId))
         messg.error(result.error, 2500)
       }

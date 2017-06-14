@@ -12,7 +12,7 @@ export default class DashboardLogic extends Logic {
     saveDashboard: (dashboardId) => ({ dashboardId }),
     undoDashboard: (dashboardId) => ({ dashboardId }),
 
-    dashboardSaveSuccess: (dashboardId) => ({ dashboardId }),
+    dashboardSaveSuccess: (dashboardId, dashboard) => ({ dashboardId, dashboard }),
     dashboardSaveFailure: (dashboardId) => ({ dashboardId }),
 
     layoutChanged: (layout, layouts) => ({ layout, layouts }),
@@ -61,10 +61,11 @@ export default class DashboardLogic extends Logic {
         const { [payload.dashboardId]: discard, ...rest } = state // eslint-disable-line
         return rest
       },
+
       [actions.updateLayouts]: (state, payload) => {
         const { layouts, dashboardId } = payload
 
-        if (state && state[dashboardId] && state[dashboardId].layouts) {
+        if (state && state[dashboardId] && state[dashboardId]) {
           return {
             ...state,
             [dashboardId]: {
@@ -94,14 +95,11 @@ export default class DashboardLogic extends Logic {
         }
       },
       [actions.dashboardSaveSuccess]: (state, payload) => {
-        const { dashboardId } = payload
+        const { dashboardId, dashboard } = payload
         if (state && state[dashboardId] && state[dashboardId].unsaved) {
           return {
             ...state,
-            [dashboardId]: {
-              ...state[dashboardId],
-              unsaved: false
-            }
+            [dashboardId]: dashboard
           }
         } else {
           return state
