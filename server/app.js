@@ -52,6 +52,6 @@ app.get('*', serveHtmlForEnvironment)
 module.exports = app
 
 function serveHtmlForEnvironment (req, res) {
-  var html = path.join(app.get('public'), 'index.html')
+  var html = path.join(app.get('public'), process.env.NODE_ENV === 'development' ? 'index-dev.html' : 'index.html')
   res.sendFile(html)
 }

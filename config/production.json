@@ -1,4 +1,4 @@
 {
-  "host": "insights-core-app.feathersjs.com",
-  "port": "PORT"
+  "host": "localhost",
+  "port": 3030
 }

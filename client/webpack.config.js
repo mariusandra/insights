@@ -106,16 +106,17 @@ if (devBuild) {
 } else {
   // See webpack.common.config for adding modules common to both the webpack dev server and rails
   config.module.loaders.push({ test: /\.jsx?$/, loader: 'babel-loader', exclude: /node_modules/ })
-
   module.exports = config
 
-  if (devBuild) {
-    module.exports.devtool = '#eval-source-map'
-  } else {
-    config.plugins.push(
-      new webpack.optimize.DedupePlugin()
-    )
-  }
+  config.plugins.push(
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.UglifyJsPlugin({
+      sourceMap: true,
+      compress: {
+        warnings: false
+      }
+    })
+  )
 }
 
 module.exports = config
