@@ -24,7 +24,10 @@ export default class DashboardLogic extends Logic {
     dashboardUpdated: (dashboard) => ({ dashboard }),
     dashboardRemoved: (dashboardId) => ({ dashboardId }),
     dashboardsLoaded: (dashboards) => ({ dashboards }),
+
     dashboardItemsLoaded: (dashboardItems) => ({ dashboardItems }),
+    dashboardItemUpdated: (dashboardItemId, changes) => ({ dashboardItemId, changes }),
+    dashboardItemRemoved: (dashboardItemId) => ({ dashboardItemId }),
 
     startResizing: (dashboardId) => ({ dashboardId }),
     stopResizing: (dashboardId) => ({ dashboardId }),
@@ -45,6 +48,17 @@ export default class DashboardLogic extends Logic {
           newState[dashboardItem._id] = dashboardItem
         })
         return newState
+      },
+      [actions.dashboardItemUpdated]: (state, payload) => {
+        const { dashboardItemId, changes } = payload
+        return Object.assign({}, state, {
+          [dashboardItemId]: Object.assign({}, state[dashboardItemId], changes)
+        })
+      },
+      [actions.dashboardItemRemoved]: (state, payload) => {
+        const { dashboardItemId } = payload
+        const { [dashboardItemId]: discard, ...rest } = state // eslint-disable-line
+        return rest
       }
     }],
 
@@ -86,7 +100,8 @@ export default class DashboardLogic extends Logic {
             [dashboardId]: {
               ...state[dashboardId],
               changedLayouts: null,
-              changedItems: null,
+              updatedItems: null,
+              deletedItems: null,
               unsaved: false
             }
           }
@@ -108,16 +123,16 @@ export default class DashboardLogic extends Logic {
       [actions.renameItem]: (state, payload) => {
         const { dashboardId, itemId, name } = payload
 
-        if (state && state[dashboardId] && state[dashboardId].items) {
+        if (state && state[dashboardId]) {
           return {
             ...state,
             [dashboardId]: {
               ...state[dashboardId],
-              changedItems: {
-                ...(state[dashboardId].changedItems || state[dashboardId].items),
+              updatedItems: {
+                ...(state[dashboardId].updatedItems || {}),
                 [itemId]: {
-                  ...(state[dashboardId].changedItems || state[dashboardId].items)[itemId],
-                  name: name
+                  ...((state[dashboardId].updatedItems || {})[itemId] || {}),
+                  name
                 }
               },
               unsaved: true
@@ -130,26 +145,15 @@ export default class DashboardLogic extends Logic {
       [actions.deleteItem]: (state, payload) => {
         const { dashboardId, itemId } = payload
 
-        if (state && state[dashboardId] && state[dashboardId].items) {
-          const items = state[dashboardId].changedItems || state[dashboardId].items
-          const layouts = state[dashboardId].changedLayouts || state[dashboardId].layouts
-
-          const changedLayouts = {
-            mobile: layouts.mobile.filter(l => l.i !== itemId),
-            desktop: layouts.desktop.filter(l => l.i !== itemId)
-          }
-
-          let changedItems = {}
-          Object.values(items).filter(item => item.id !== itemId).forEach(item => {
-            changedItems[item.id] = item
-          })
-
+        if (state && state[dashboardId]) {
           return {
             ...state,
             [dashboardId]: {
               ...state[dashboardId],
-              changedItems,
-              changedLayouts,
+              deletedItems: {
+                ...(state[dashboardId].deletedItems || {}),
+                [itemId]: true
+              },
               unsaved: true
             }
           }
@@ -184,8 +188,13 @@ export default class DashboardLogic extends Logic {
           let items = {}
           let layouts = { mobile: [], desktop: [] }
 
-          Object.values(dashboardItems).filter(item => item.dashboardId === selectedDashboardId).forEach(item => {
-            items[item._id] = item
+          const updatedItems = dashboard.updatedItems || {}
+          const deletedItems = dashboard.deletedItems || {}
+
+          Object.values(dashboardItems)
+          .filter(item => item.dashboardId === selectedDashboardId)
+          .filter(item => !deletedItems[item._id]).forEach(item => {
+            items[item._id] = Object.assign({}, item, updatedItems[item._id] || {})
           });
 
           ['mobile', 'desktop'].forEach(layoutType => {

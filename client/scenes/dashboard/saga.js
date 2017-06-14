@@ -21,6 +21,8 @@ export default class DashboardSaga extends Saga {
       'dashboardItemsLoaded',
       'dashboardUpdated',
       'dashboardRemoved',
+      'dashboardItemUpdated',
+      'dashboardItemRemoved',
       'selectDashboard',
       'setCurrentBreakpoint',
       'layoutChanged',
@@ -165,17 +167,27 @@ export default class DashboardSaga extends Saga {
   }
 
   saveDashboardWorker = function * (action) {
-    const { dashboardSaveSuccess, dashboardSaveFailure, dashboardsLoaded } = this.actions
+    const { dashboardSaveSuccess, dashboardSaveFailure, dashboardItemUpdated, dashboardItemRemoved } = this.actions
     const { dashboardId } = action.payload
-    const { layouts } = yield dashboardLogic.fetch('layouts')
+    const { layouts, dashboard } = yield dashboardLogic.fetch('layouts', 'dashboard')
 
-    // const renamedItems = dashboard.changedItems
-    //                         ? Object.values(dashboard.changedItems).filter(i => dashboard.items[i.id].name !== i.name).map(i => [i.id, i.name])
-    //                         : []
+    if (dashboard.updatedItems) {
+      const itemChanges = Object.entries(dashboard.updatedItems)
+      for (let i = 0; i < itemChanges.length; i++) {
+        const [ itemId, changes ] = itemChanges[i]
+        yield dashboardItemsService.patch(itemId, changes)
+        yield put(dashboardItemUpdated(itemId, changes))
+      }
+    }
 
-    // const deletedItems = dashboard.changedItems
-    //                         ? Object.values(dashboard.items).filter(i => !dashboard.changedItems[i.id]).map(i => i.id)
-    //                         : []
+    if (dashboard.deletedItems) {
+      const deletedKeys = Object.keys(dashboard.deletedItems)
+      for (let i = 0; i < deletedKeys.length; i++) {
+        const itemId = deletedKeys[i]
+        yield dashboardItemsService.remove(itemId)
+        yield put(dashboardItemRemoved(itemId))
+      }
+    }
 
     try {
       const result = yield dashboardsService.patch(dashboardId, { layouts })
