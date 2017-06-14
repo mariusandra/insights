@@ -3,7 +3,7 @@
   "description": "",
   "version": "0.0.0",
   "homepage": "",
-  "main": "app",
+  "main": "server",
   "keywords": [
     "feathers"
   ],
@@ -22,12 +22,14 @@
   },
   "scripts": {
     "test": "npm run eslint && npm run mocha",
-    "lint": "eslint app test config",
-    "lint:fix": "eslint app test config --fix",
+    "lint": "eslint client server test config",
+    "lint:fix": "eslint client server test config --fix",
     "start": "NODE_ENV=development node --inspect server/",
     "build": "NODE_ENV=production webpack --profile --config client/webpack.config.js",
     "analyze": "NODE_ENV=production ANALYZE_BUNDLE=true webpack --config client/webpack.config.js",
     "production": "NODE_ENV=production node server/",
+    "electron": "NODE_ENV=production ./node_modules/.bin/electron server/electron",
+    "electron:dev": "NODE_ENV=development ./node_modules/.bin/electron server/electron",
     "mocha": "mocha test/ --recursive"
   },
   "dependencies": {
@@ -49,6 +51,7 @@
     "css-loader": "0.26.1",
     "diacritics": "1.3.0",
     "downloadjs": "^1.4.7",
+    "electron": "^1.6.11",
     "eslint": "^3.19.0",
     "eslint-config-standard": "7.1.0",
     "eslint-config-standard-react": "4.3.0",
