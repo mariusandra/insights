@@ -32,7 +32,9 @@ app.get('/', serveHtmlForEnvironment)
 
 // Host the public folder
 app.use('/assets', feathers.static(path.join(app.get('public'), 'assets')))
-app.use('/dist', feathers.static(path.join(app.get('public'), 'dist')))
+if (process.env.NODE_ENV === 'production') {
+  app.use('/dist', feathers.static(path.join(app.get('public'), 'dist')))
+}
 
 // Set up Plugins and providers
 app.configure(hooks())
