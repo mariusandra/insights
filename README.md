@@ -27,7 +27,7 @@ It's a work in progress and you're brave for checking it out! Cheers!
 To install, run:
 
 ```
-npm install -g insights
+npm install -g insights@latest
 
 insights          # run the electron version
 insights --server # run the server
