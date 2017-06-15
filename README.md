@@ -1,5 +1,3 @@
-This branch is for the NodeJS rewrite. For the old Rails version, see the master branch.
-
 # Insights
 
 As our [education marketplace](https://www.apprentus.com) grew, we faced a dilemma: we had little visibility into our data.
@@ -14,7 +12,7 @@ The best tool we found was [Looker](https://looker.com/), but at a monthly price
 
 So I decided to re-implement the essential parts of Looker as an open source alternative.
 
-**Insights** is a self-hosted "SQL-not-required" data analytics and business intelligence tool. Featuring linkable URLs, easy data exploration, automatic joins, graphs, exports, facets (pivots), saveable views, pretty colors and a ridiculously permissive license (MIT).
+**Insights** is a desktop or self-hosted "SQL-not-required" data analytics and business intelligence tool. Featuring linkable URLs, easy data exploration, automatic joins, graphs, exports, facets (pivots), saveable views, pretty colors and a ridiculously permissive license (MIT).
 
 It's a work in progress and you're brave for checking it out! Cheers!
 
@@ -24,11 +22,24 @@ It's a work in progress and you're brave for checking it out! Cheers!
 
 ![Screenshot of the Dashboard](https://github.com/mariusandra/insights/raw/master/doc/screenshot-dashboard.png)
 
+## Installing
+
+To install, run:
+
+```
+npm install -g insights
+
+insights          # run the electron version
+insights --server # run the server
+```
+
 ## How does it work
 
-Similar to Looker and their LookML, insights requires you to define your data model in a file called [`insights.yml`](https://github.com/mariusandra/insights_demo/blob/master/config/insights.yml).
+Similar to Looker and their LookML, insights lets you to define your data model in a file called [`insights.yml`](https://github.com/mariusandra/insights_demo/blob/master/config/insights.yml).
 
-You use the [`insights_export`](https://github.com/mariusandra/insights_export) gem to generate this file from your Rails Models. (Adapters for other frameworks coming soon.)
+If this file is not found, we try to autodetect your database schema and connections.
+
+You can use the [`insights_export`](https://github.com/mariusandra/insights_export) gem to generate this file from your Rails Models. Adapters for other frameworks coming soon.
 
 You keep this file with your code and update it whenever something changes. You edit it to add custom fields (e.g. `full_name: first_name || ' ' || last_name`), hide existing fields (e.g. `encrypted_password`) or hide entire models.
 
@@ -92,129 +103,3 @@ Hint: to count rows, select the `id` field and then `count` from the table heade
 * View generated SQL
 * Moderate React/[Kea](https://github.com/mariusandra/kea) frontend code refactoring
 * Polishing
-
-## Installing
-
-Installing `insights` is a two-part process:
-
-### 1. Export your app's structure
-
-First you need to create an [`insights.yml`](https://github.com/mariusandra/insights_demo/blob/master/config/insights.yml) file from your main Rails application. This file will describe your database structure,
-including custom fields and aliases that you may define.
-
-#### 1.1. Generate an `insights.yml` file from your Rails app
-
-Add `gem 'insights_export'` to your `Gemfile` and run:
-
-```
-rake insights:export
-```
-
-The generated `config/insights.yml` file needs to be accessible for `insights` in the next steps. I recommend keeping it in your
-app's repository and running `rake insights:export` each time your database structure changes to update it. You can then symlink it to `insights`.
-
-### 2. Install Insights
-
-#### 2.1. Git clone (or fork and clone) the repository
-
-```
-git clone https://github.com/mariusandra/insights
-cd insights
-```
-
-#### 2.2. Install the ruby (2.3+) and nodejs (6+) packages
-
-Assuming [bundler](https://bundler.io/) and [yarn](https://yarnpkg.com/) are installed:
-
-```
-bundle
-yarn
-```
-
-Make sure the above commands succeed!
-
-#### 2.3. Setup the local database
-
-Insights needs one database for its internal use.
-
-Copy `config/database.yml.example` to `config/database.yml`
-
-Feel free to keep the default SQLite configuration or change it for something beefier. Then initialize it:
-
-```
-bundle exec rake db:create
-bundle exec rake db:schema:load
-```
-
-#### 2.4. Configure the connection your app
-
-The connection to your app lives in `config/initializers/insights.rb`.
-
-Copy it from [`config/initializers/insights.rb.example`](https://github.com/mariusandra/insights/blob/master/config/initializers/insights.rb.example) and edit accordingly.
-
-##### 2.4.1. Set up the path to `insights.yml`
-
-```rb
-INSIGHTS_EXPORT_PATH = "#{Rails.root}/insights.yml"
-INSIGHTS_EXPORT_PATH = '../my-app/config/insights.yml'
-INSIGHTS_EXPORT_PATH = '/srv/my-app/current/config/insights.yml'
-```
-
-##### 2.4.2. Set up the database connection
-
-```rb
-INSIGHTS_DATABASE = {
-  adapter: 'postgresql',
-  encoding: 'unicode',
-  host: 'localhost',
-  database: 'insights_demo',
-  pool: 5,
-  variables: {
-    # it's strongly recommended to have a timeout here!
-    statement_timeout: 5000
-  }
-}
-```
-
-##### 2.4.3. Set up the credentials
-
-Uncomment any of the following to either have your app open to everyone or protected by a login screen.
-
-```rb
-INSIGHTS_LOGIN = false # no login screen
-INSIGHTS_LOGIN = ['demo', 'demo']
-INSIGHTS_LOGIN = [['demo', 'demo'], ['admin', 'pass']]
-INSIGHTS_LOGIN = -> (user, pass) { user == 'demo' && pass == 'password' }
-INSIGHTS_LOGIN = -> (user, pass) { connect_to_your_app_and_check_the_credentials(user, password) }
-```
-
-There's an example on authenticating against a devise backed users table in [`insights.rb.example`](https://github.com/mariusandra/insights/blob/master/config/initializers/insights.rb.example)
-
-#### 2.5. Run it!
-
-```
-bundle exec foreman start
-```
-
-and open [`http://localhost:3300`](http://localhost:3300)
-
-
-## Misc
-
-### Updating
-
-Run these commands to update
-
-```
-git pull
-bundle
-yarn
-bundle exec rake db:migrate
-```
-
-### Compile the assets for production
-
-```
-./script/build/react
-RAILS_ENV=production bundle exec rake assets:precompile
-```
