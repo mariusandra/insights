@@ -76,11 +76,14 @@ module.exports = async function postgresGenerator (database) {
 function convertPgType (type) {
   switch (type) {
   case 'integer':
+  case 'bigint':
   case 'numeric':
     return 'number'
+  case 'timestamp with time zone':
   case 'timestamp without time zone':
     return 'time'
   case 'character varying':
+  case 'text':
     return 'string'
   case 'boolean':
     return 'boolean'
