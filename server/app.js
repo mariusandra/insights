@@ -20,7 +20,7 @@ const authentication = require('./authentication')
 const app = feathers()
 
 // Load app configuration
-app.configure(configuration(path.join(__dirname, '..')))
+app.configure(configuration(path.join(process.cwd(), '..')))
 
 // Enable CORS, security, compression, favicon and body parsing
 app.use(cors())
