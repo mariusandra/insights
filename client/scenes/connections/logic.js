@@ -12,6 +12,9 @@ export default class ConnectionsLogic extends Logic {
     addConnection: ({ keyword, url }) => ({ keyword, url }),
     connectionAdded: (connection) => ({ connection }),
 
+    editConnection: (id, url) => ({ id, url }),
+    connectionEdited: (connection) => ({ connection }),
+
     testConnection: (id) => ({ id }),
 
     removeConnection: (id) => ({ id }),
@@ -33,6 +36,9 @@ export default class ConnectionsLogic extends Logic {
         return newState
       },
       [actions.connectionAdded]: (state, payload) => {
+        return Object.assign({}, state, { [payload.connection._id]: payload.connection })
+      },
+      [actions.connectionEdited]: (state, payload) => {
         return Object.assign({}, state, { [payload.connection._id]: payload.connection })
       },
       [actions.connectionRemoved]: (state, payload) => {

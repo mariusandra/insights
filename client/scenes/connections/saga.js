@@ -20,6 +20,9 @@ export default class ConnectionsSaga extends Saga {
       'addConnection',
       'connectionAdded',
 
+      'editConnection',
+      'connectionEdited',
+
       'removeConnection',
       'connectionRemoved',
 
@@ -29,6 +32,7 @@ export default class ConnectionsSaga extends Saga {
 
   takeEvery = ({ actions }) => ({
     [actions.addConnection]: this.addConnectionWorker,
+    [actions.editConnection]: this.editConnectionWorker,
     [actions.removeConnection]: this.removeConnectionWorker,
     [actions.testConnection]: this.testConnectionWorker
   })
@@ -49,6 +53,13 @@ export default class ConnectionsSaga extends Saga {
     const { keyword, url } = action.payload
     const connection = yield connectionsService.create({ keyword, url })
     yield put(connectionAdded(connection))
+  }
+
+  editConnectionWorker = function * (action) {
+    const { connectionEdited } = this.actions
+    const { id, url } = action.payload
+    const connection = yield connectionsService.patch(id, { url })
+    yield put(connectionEdited(connection))
   }
 
   removeConnectionWorker = function * (action) {

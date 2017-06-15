@@ -12,7 +12,7 @@ import connectionsLogic from '~/scenes/connections/logic'
     ]
   ]
 })
-export default class OneFilter extends Component {
+export default class AddConnection extends Component {
   constructor (props) {
     super(props)
 
@@ -60,7 +60,7 @@ export default class OneFilter extends Component {
                 {' - '}
                 This will be used in URLs, dashboards, etc to refer to your database. Changing it later will result in problems...
                 <br />
-                <input placeholder='mydb' value={keyword} onChange={e => this.setState({ keyword: e.target.value })} className='input-text' style={{width: 400}} />
+                <input autoFocus placeholder='mydb' value={keyword} onChange={e => this.setState({ keyword: e.target.value })} className='input-text' style={{width: 400}} />
               </div>
               <div style={{marginBottom: 10}}>
                 <strong>Connection URL</strong>
