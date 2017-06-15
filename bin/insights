@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-# Thanks to https://github.com/mysamai/mysam/blob/master/bin/mysam for this script!
+// Thanks to https://github.com/mysamai/mysam/blob/master/bin/mysam for this script!
 
 var path = require('path');
 var program = require('commander');
