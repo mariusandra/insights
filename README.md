@@ -24,7 +24,7 @@ It's a work in progress and you're brave for checking it out! Cheers!
 
 ## Installing
 
-To install, run:
+To install, make sure you have Node 7.6+ installed and then run:
 
 ```
 npm install -g insights@latest
