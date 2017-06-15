@@ -52,14 +52,13 @@ export default class HeaderScene extends Component {
   render () {
     const { user, pathname, runningInElectron } = this.props
 
-    // TODO: add when connections are ready
-    // <div className='tab-row-element'>
-    //   <button onClick={() => this.openLocation('/connections')} className={pathname.indexOf('/connections') === 0 ? 'button' : 'button white'}>Connections</button>
-    // </div>
 
     return (
       <div className='header-scene'>
         <div className='insights-tab-row'>
+          <div className='tab-row-element'>
+            <button onClick={() => this.openLocation('/connections')} className={pathname.indexOf('/connections') === 0 ? 'button' : 'button white'}>Connections</button>
+          </div>
           <div className='tab-row-element'>
             <button onClick={() => this.openLocation('/explorer')} className={pathname.indexOf('/explorer') === 0 || pathname === '/' ? 'button' : 'button white'}>Explorer</button>
           </div>

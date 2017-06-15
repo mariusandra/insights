@@ -46,6 +46,9 @@ export default class ConnectionsScene extends Component {
                 <br />
                 <br />
                 For now you must still edit the config.js file to connect to your db. Connections editing coming soon!
+                <br />
+                <br />
+                If you installed this via "npm install -g insights", you're temporarily out of luck. Clone the project and edit config.js instead!
               </div>
             ) : sortedConnections.map(connection => (
               <div key={connection._id}>
