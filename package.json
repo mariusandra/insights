@@ -34,6 +34,9 @@
     "mocha": "mocha test/ --recursive",
     "prepublish": "npm run build"
   },
+  "bin": {
+    "insights": "./bin/insights"
+  },
   "files": [
     "client",
     "config",

@@ -1,0 +1,27 @@
+#!/usr/bin/env node
+
+# Thanks to https://github.com/mysamai/mysam/blob/master/bin/mysam for this script!
+
+var path = require('path');
+var program = require('commander');
+var root = path.join(__dirname, '..');
+var pkg = require(path.join(root, 'package.json'));
+var electron = require('electron');
+var proc = require('child_process');
+
+var electronScript = path.join(root, 'server', 'electron')
+
+program.version(pkg.version)
+  .usage('[options]')
+  .description(pkg.description)
+  .option('-s, --server', 'Run server only')
+  .option('-d --develop', 'Run in development mode')
+  .parse(process.argv);
+
+process.env.NODE_ENV = program.develop ? 'development' : 'production';
+
+if (program.server) {
+  require('../server');
+} else {
+  proc.spawn(electron, [electronScript], {stdio: 'inherit'});
+}
