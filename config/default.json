@@ -14,7 +14,7 @@
       "local"
     ],
     "path": "/authentication",
-    "service": "users",
+    "service": "api/users",
     "jwt": {
       "header": {
         "type": "access"
@@ -27,7 +27,7 @@
     },
     "local": {
       "entity": "user",
-      "service": "users",
+      "service": "api/users",
       "usernameField": "email",
       "passwordField": "password"
     },
