@@ -3,11 +3,17 @@ const fs = require('fs')
 
 const generator = require('./generators')
 
+let structureCache = {}
+
 module.exports = async function (configPath, database) {
   if (configPath) {
     return getConfigStructure(configPath)
+  } else if (structureCache[database]) {
+    return structureCache[database]
   } else {
-    return await generator(database)
+    const strucutre = await generator(database)
+    structureCache[database] = strucutre
+    return strucutre
   }
 }
 
