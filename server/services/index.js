@@ -5,6 +5,7 @@ const dashboards = require('./dashboards/dashboards.service.js')
 const url = require('./url/url.service.js')
 const dashboardItems = require('./dashboard-items/dashboard-items.service.js')
 const users = require('./users/users.service.js')
+const connections = require('./connections/connections.service.js')
 module.exports = function () {
   const app = this // eslint-disable-line no-unused-vars
   app.configure(structure)
@@ -14,4 +15,5 @@ module.exports = function () {
   app.configure(url)
   app.configure(dashboardItems)
   app.configure(users)
+  app.configure(connections)
 }
