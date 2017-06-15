@@ -38,6 +38,7 @@
     "insights": "./bin/insights"
   },
   "files": [
+    "bin",
     "client",
     "config",
     "public",
