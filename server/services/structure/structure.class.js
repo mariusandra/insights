@@ -4,11 +4,12 @@ class Service {
     this.options = options || {}
   }
 
-  find (params) {
+  async find (params) {
     const { database, config } = require('../../../config/insights')
     const getStructure = require('../../insights/structure')
 
-    const structure = getStructure(config)
+    const structure = await getStructure(config, database)
+
     return Promise.resolve(structure)
   }
 }

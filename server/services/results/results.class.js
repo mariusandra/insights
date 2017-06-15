@@ -4,14 +4,14 @@ class Service {
     this.options = options || {}
   }
 
-  find (params) {
+  async find (params) {
     const { database, config } = require('../../../config/insights')
 
     const getStructure = require('../../insights/structure')
     const createAdapter = require('../../insights/adapter')
     const Results = require('../../insights/results')
 
-    const structure = getStructure(config)
+    const structure = await getStructure(config, database)
     const adapter = createAdapter(database)
 
     const results = new Results({ params: params.query, adapter, structure })

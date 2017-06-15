@@ -1,7 +1,17 @@
 const yaml = require('js-yaml')
 const fs = require('fs')
 
-module.exports = function (configPath) {
+const generator = require('./generators')
+
+module.exports = async function (configPath, database) {
+  if (configPath) {
+    return getConfigStructure(configPath)
+  } else {
+    return await generator(database)
+  }
+}
+
+function getConfigStructure (configPath) {
   const structure = yaml.safeLoad(fs.readFileSync(configPath, 'utf8'))
 
   Object.keys(structure).forEach(model => {
