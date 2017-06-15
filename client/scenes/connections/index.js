@@ -8,6 +8,7 @@ import { connect } from 'kea/logic'
 
 // components
 import Spinner from 'lib/tags/spinner'
+import AddConnection from './add-connection'
 
 // logic
 import connections from '~/scenes/connections/logic'
@@ -17,8 +18,8 @@ import connections from '~/scenes/connections/logic'
 @connect({
   actions: [
     connections, [
-      // 'showAll',
-      // 'setVisibilityFilter'
+      'removeConnection',
+      'testConnection'
     ]
   ],
   props: [
@@ -29,6 +30,20 @@ import connections from '~/scenes/connections/logic'
   ]
 })
 export default class ConnectionsScene extends Component {
+  handleRemove = (e, id) => {
+    const { removeConnection } = this.props.actions
+    e.preventDefault()
+    if (window.prompt('Are you sure?')) {
+      removeConnection(id)
+    }
+  }
+
+  handleTest = (e, id) => {
+    const { testConnection } = this.props.actions
+    e.preventDefault()
+    testConnection(id)
+  }
+
   render () {
     const { isLoading, sortedConnections } = this.props
 
@@ -41,27 +56,29 @@ export default class ConnectionsScene extends Component {
         ) : (
           <div>
             {sortedConnections.length === 0 ? (
-              <div>
+              <div style={{marginBottom: 20}}>
                 You have not configured any connections. Add one below.
-                <br />
-                <br />
-                For now you must still edit the config.js file to connect to your db. Connections editing coming soon!
-                <br />
-                <br />
-                If you installed this via "npm install -g insights", you're temporarily out of luck. Clone the project and edit config.js instead!
               </div>
             ) : sortedConnections.map(connection => (
-              <div key={connection._id}>
-                Name:
-                {connection.name}
-                <br />
+              <div key={connection._id} style={{marginBottom: 20}}>
+                <h3>{connection.keyword}</h3>
                 Keyword:
+                {' '}
                 {connection.keyword}
                 <br />
                 URL:
+                {' '}
                 {connection.url}
+                <br />
+                <br />
+                Actions:
+                {' '}
+                <a href='#' onClick={(e) => this.handleRemove(e, connection._id)}>Remove</a>
+                {' | '}
+                <a href='#' onClick={(e) => this.handleTest(e, connection._id)}>Test connection</a>
               </div>
             ))}
+            <AddConnection />
           </div>
         )}
       </div>

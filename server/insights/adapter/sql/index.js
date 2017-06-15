@@ -5,6 +5,10 @@ module.exports = class SQL {
     this.connection = connection
   }
 
+  async test () {
+    return !!(await this.execute('select now()'))
+  }
+
   quote (string) {
     // TODO: make safe
     return `"${string}"`

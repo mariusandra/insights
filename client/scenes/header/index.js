@@ -52,7 +52,6 @@ export default class HeaderScene extends Component {
   render () {
     const { user, pathname, runningInElectron } = this.props
 
-
     return (
       <div className='header-scene'>
         <div className='insights-tab-row'>

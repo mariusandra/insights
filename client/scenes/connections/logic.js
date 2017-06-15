@@ -8,6 +8,14 @@ export default class ConnectionsLogic extends Logic {
   actions = ({ constants }) => ({
     loadingConnections: true,
     connectionsLoaded: connections => ({ connections }),
+
+    addConnection: ({ keyword, url }) => ({ keyword, url }),
+    connectionAdded: (connection) => ({ connection }),
+
+    testConnection: (id) => ({ id }),
+
+    removeConnection: (id) => ({ id }),
+    connectionRemoved: (id) => ({ id })
   })
 
   reducers = ({ actions, constants }) => ({
@@ -23,6 +31,13 @@ export default class ConnectionsLogic extends Logic {
           newState[connection._id] = connection
         })
         return newState
+      },
+      [actions.connectionAdded]: (state, payload) => {
+        return Object.assign({}, state, { [payload.connection._id]: payload.connection })
+      },
+      [actions.connectionRemoved]: (state, payload) => {
+        const { [payload.id]: discard, ...rest } = state // eslint-disable-line
+        return rest
       }
     }]
   })
@@ -30,7 +45,7 @@ export default class ConnectionsLogic extends Logic {
   selectors = ({ constants, selectors }) => ({
     sortedConnections: [
       () => [selectors.connections],
-      (connections) => Object.values(connections).sort((a, b) => a.name.localeCompare(b.name)),
+      (connections) => Object.values(connections).sort((a, b) => a.keyword.localeCompare(b.keyword)),
       PropTypes.array
     ]
   })
