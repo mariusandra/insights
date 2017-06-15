@@ -1,7 +1,7 @@
 {
-  "name": "insights-core",
+  "name": "insights",
   "description": "",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "homepage": "",
   "main": "server",
   "keywords": [
@@ -31,8 +31,17 @@
     "production": "NODE_ENV=production node server/",
     "electron": "NODE_ENV=production ./node_modules/.bin/electron server/electron",
     "electron:dev": "NODE_ENV=development ./node_modules/.bin/electron -i server/electron",
-    "mocha": "mocha test/ --recursive"
+    "mocha": "mocha test/ --recursive",
+    "prepublish": "npm run build"
   },
+  "files": [
+    "client",
+    "config",
+    "public",
+    "server",
+    "test",
+    "README.md"
+  ],
   "dependencies": {
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
