@@ -2,12 +2,12 @@
 
 // Thanks to https://github.com/mysamai/mysam/blob/master/bin/mysam for this script!
 
-var path = require('path');
-var program = require('commander');
-var root = path.join(__dirname, '..');
-var pkg = require(path.join(root, 'package.json'));
-var electron = require('electron');
-var proc = require('child_process');
+var path = require('path')
+var program = require('commander')
+var root = path.join(__dirname, '..')
+var pkg = require(path.join(root, 'package.json'))
+var electron = require('electron')
+var proc = require('child_process')
 
 var electronScript = path.join(root, 'server', 'electron')
 
@@ -16,12 +16,13 @@ program.version(pkg.version)
   .description(pkg.description)
   .option('-s, --server', 'Run server only')
   .option('-d --develop', 'Run in development mode')
-  .parse(process.argv);
+  .parse(process.argv)
 
-process.env.NODE_ENV = program.develop ? 'development' : 'production';
+process.env.NODE_ENV = program.develop ? 'development' : 'production'
+process.env.NODE_CONFIG_DIR = path.join(__dirname, '..', 'config')
 
 if (program.server) {
-  require('../server');
+  require('../server')
 } else {
-  proc.spawn(electron, [electronScript], {stdio: 'inherit'});
+  proc.spawn(electron, [electronScript], {stdio: 'inherit'})
 }
