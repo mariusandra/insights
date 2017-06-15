@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
-
 const createAdapter = require('../../insights/adapter')
+const getStructure = require('../../insights/structure')
 
 class Service {
   constructor (options) {
@@ -15,8 +14,16 @@ class Service {
     const connectionsService = this.app.service('api/connections')
 
     try {
-      const connection = await connectionsService.get(id)
-      const working = await createAdapter(connection.url).test()
+      const { url, structurePath } = await connectionsService.get(id)
+
+      // check that this doesn't throw up
+      await createAdapter(url).test()
+
+      // if we want a structure from a file, test that it exists
+      if (structurePath) {
+        await getStructure(structurePath)
+      }
+
       return Promise.resolve({
         working: true
       })

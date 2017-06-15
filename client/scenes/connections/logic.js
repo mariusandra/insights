@@ -9,10 +9,10 @@ export default class ConnectionsLogic extends Logic {
     loadingConnections: true,
     connectionsLoaded: connections => ({ connections }),
 
-    addConnection: ({ keyword, url }) => ({ keyword, url }),
+    addConnection: ({ keyword, url, structurePath }) => ({ keyword, url, structurePath }),
     connectionAdded: (connection) => ({ connection }),
 
-    editConnection: (id, url) => ({ id, url }),
+    editConnection: (id, url, structurePath) => ({ id, url, structurePath }),
     connectionEdited: (connection) => ({ connection }),
 
     testConnection: (id) => ({ id }),

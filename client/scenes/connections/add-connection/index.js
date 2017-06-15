@@ -19,6 +19,7 @@ export default class AddConnection extends Component {
     this.state = {
       keyword: '',
       url: '',
+      structurePath: '',
       adding: false,
       added: false
     }
@@ -26,7 +27,7 @@ export default class AddConnection extends Component {
 
   handleAdd = (e) => {
     const { addConnection } = this.props.actions
-    const { keyword, url } = this.state
+    const { keyword, url, structurePath } = this.state
 
     e.preventDefault()
 
@@ -40,13 +41,13 @@ export default class AddConnection extends Component {
       return
     }
 
-    addConnection({ keyword, url })
+    addConnection({ keyword, url, structurePath })
 
     this.setState({ adding: false, keyword: '', url: '' })
   }
 
   render () {
-    const { adding, keyword, url } = this.state
+    const { adding, keyword, url, structurePath } = this.state
 
     return (
       <div>
@@ -68,6 +69,13 @@ export default class AddConnection extends Component {
                 Currently only URLs in the format "psql://user:pass@localhost/dbname" are supported.
                 <br />
                 <input placeholder='psql://user:pass@localhost/dbname' value={url} onChange={e => this.setState({ url: e.target.value })} className='input-text' style={{width: 400}} />
+              </div>
+              <div style={{marginBottom: 10}}>
+                <strong>insights.yml path</strong>
+                {' - '}
+                Leave empty to autodetect the database structure
+                <br />
+                <input placeholder='/Users/yourname/projects/code/insights.yml' value={structurePath} onChange={e => this.setState({ structurePath: e.target.value })} className='input-text' style={{width: 400}} />
               </div>
               <div>
                 <button type='submit'>Add</button>

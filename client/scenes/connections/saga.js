@@ -50,15 +50,15 @@ export default class ConnectionsSaga extends Saga {
 
   addConnectionWorker = function * (action) {
     const { connectionAdded } = this.actions
-    const { keyword, url } = action.payload
-    const connection = yield connectionsService.create({ keyword, url })
+    const { keyword, url, structurePath } = action.payload
+    const connection = yield connectionsService.create({ keyword, url, structurePath })
     yield put(connectionAdded(connection))
   }
 
   editConnectionWorker = function * (action) {
     const { connectionEdited } = this.actions
-    const { id, url } = action.payload
-    const connection = yield connectionsService.patch(id, { url })
+    const { id, url, structurePath } = action.payload
+    const connection = yield connectionsService.patch(id, { url, structurePath })
     yield put(connectionEdited(connection))
   }
 
@@ -73,7 +73,6 @@ export default class ConnectionsSaga extends Saga {
     const { id } = action.payload
 
     const result = yield connectionTestService.get(id)
-    console.log(result)
 
     if (result.working) {
       messg.success('The connection is working!', 2500)
