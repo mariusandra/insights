@@ -15,7 +15,7 @@ app.on('window-all-closed', () => {
   }
 })
 
-const createWindow = () => {
+const createWindow = async () => {
   mainWindow = new BrowserWindow({
     width: 1024,
     height: 768
@@ -25,8 +25,15 @@ const createWindow = () => {
     mainWindow = null
   })
 
+  let url = '/'
+
+  const connections = await server.service('api/connections').find({})
+  if (connections.total === 0) {
+    url = '/connections'
+  }
+
   let port = httpServer.address().port
-  mainWindow.loadURL(`http://localhost:${port}/?electron-connect-api-key=${server.get('electronConnectApiKey')}`)
+  mainWindow.loadURL(`http://localhost:${port}${url}?electron-connect-api-key=${server.get('electronConnectApiKey')}`)
 
   if (process.env.NODE_ENV !== 'production') {
     mainWindow.openDevTools()
