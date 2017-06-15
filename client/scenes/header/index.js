@@ -27,7 +27,8 @@ import headerLogic from '~/scenes/header/logic'
       'search'
     ],
     authLogic, [
-      'user'
+      'user',
+      'runningInElectron'
     ]
   ]
 })
@@ -49,7 +50,7 @@ export default class HeaderScene extends Component {
   }
 
   render () {
-    const { user, pathname } = this.props
+    const { user, pathname, runningInElectron } = this.props
 
     return (
       <div className='header-scene'>
@@ -68,7 +69,7 @@ export default class HeaderScene extends Component {
           {user ? <Logout /> : null}
           <div className='tab-row-separator' />
           <Views />
-          <Share />
+          {!runningInElectron ? <Share /> : null}
         </div>
       </div>
     )
