@@ -72,17 +72,17 @@ export default class Connection extends Component {
     const { editing, url, structurePath } = this.state
 
     return (
-      <div key={connection._id} style={{marginBottom: 20}}>
+      <div key={connection._id} className='one-connection'>
         <h3>{connection.keyword}</h3>
         {editing ? (
           <div>
             <br />
-            <div style={{marginBottom: 10}}>
+            <div className='details-edit-line'>
               <strong>connection url</strong>
               <br />
               <input placeholder='psql://user:pass@localhost/dbname' value={url} onChange={e => this.setState({ url: e.target.value })} className='input-text' style={{width: 400}} />
             </div>
-            <div style={{marginBottom: 10}}>
+            <div className='details-edit-line'>
               <strong>insights.yml path</strong>
               <br />
               <input placeholder='insights.yml path' value={structurePath} onChange={e => this.setState({ structurePath: e.target.value })} className='input-text' style={{width: 400}} />
@@ -93,14 +93,14 @@ export default class Connection extends Component {
           </div>
         ) : (
           <div>
-            <div>
-              connection url: {connection.url}
+            <div className='details-line'>
+              <small>connection url:</small>
+              <span>{connection.url}</span>
             </div>
             {connection.structurePath ? (
-              <div>
-                insights.yml path:
-                {' '}
-                {connection.structurePath}
+              <div className='details-line'>
+                <small>insights.yml path:</small>
+                <span>{connection.structurePath}</span>
               </div>
             ) : null}
             <br />
