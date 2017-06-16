@@ -4,6 +4,8 @@ import { LOCATION_CHANGE, push } from 'react-router-redux'
 
 import messg from 'messg'
 
+import deletePopup from 'lib/popups/delete'
+
 import { waitUntilLogin } from '~/scenes/auth'
 import dashboardLogic from '~/scenes/dashboard/logic'
 
@@ -11,8 +13,6 @@ import client from '~/client'
 
 const dashboardsService = client.service('api/dashboards')
 const dashboardItemsService = client.service('api/dashboard-items')
-
-const dashboardController = {}
 
 export default class DashboardSaga extends Saga {
   actions = () => ([
@@ -138,11 +138,13 @@ export default class DashboardSaga extends Saga {
 
     const dashboard = dashboards[dashboardId]
 
-    const response = window.confirm(`Are you sure you want to delete the dashboad "${dashboard.name}"? This can't be reversed!`)
+    const response = yield deletePopup(`Are you sure you want to delete the dashboad "${dashboard.name}"? This can't be reversed!`)
 
     if (response) {
       yield dashboardsService.remove(dashboardId)
       yield put(dashboardRemoved(dashboardId))
+
+      messg.success('Dashboard deleted!', 2500)
 
       const dashboardIds = Object.keys(dashboards)
 

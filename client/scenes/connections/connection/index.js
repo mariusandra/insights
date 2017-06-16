@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'kea/logic'
 
 import messg from 'messg'
-import Popup from 'react-popup'
+
+import deletePopup from 'lib/popups/delete'
 
 import connectionsLogic from '~/scenes/connections/logic'
 
@@ -59,26 +60,8 @@ export default class Connection extends Component {
     const { _id, keyword } = connection
     e.preventDefault()
 
-    Popup.create({
-      title: null,
-      content: `Are you sure you want to delete the connection "${keyword}"?`,
-      buttons: {
-        left: [{
-          text: 'Cancel',
-          className: '',
-          action: () => {
-            Popup.close()
-          }
-        }],
-        right: [{
-          text: 'Delete',
-          className: 'danger',
-          action: () => {
-            removeConnection(_id)
-            Popup.close()
-          }
-        }]
-      }
+    deletePopup(`Are you sure you want to delete the connection "${keyword}"?`).then(() => {
+      removeConnection(_id)
     })
   }
 
