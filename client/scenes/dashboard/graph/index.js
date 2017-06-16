@@ -6,6 +6,7 @@ import moment from 'moment'
 
 // utils
 import urlToState from 'lib/explorer/url-to-state'
+import promptPopup from 'lib/popups/prompt'
 
 // components
 import ExplorerGraph from '~/scenes/explorer/graph'
@@ -102,11 +103,11 @@ export default class DashboardGraph extends Component {
     const { name, itemId, dashboardId } = this.props
     const { renameItem } = this.props.actions
 
-    const newName = window.prompt('Please enter a new name', name)
-
-    if (newName !== null && newName !== name) {
-      renameItem(dashboardId, itemId, newName)
-    }
+    promptPopup('Please enter a new name', name).then(newName => {
+      if (newName !== null && newName !== name) {
+        renameItem(dashboardId, itemId, newName)
+      }
+    })
   }
 
   handleDelete = () => {

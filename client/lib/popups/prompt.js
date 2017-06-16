@@ -6,7 +6,7 @@ class Prompt extends React.Component {
     super(props)
 
     this.state = {
-      value: this.props.defaultValue || ''
+      value: this.props.value
     }
 
     this.onChange = (e) => this._onChange(e)
@@ -34,7 +34,7 @@ class Prompt extends React.Component {
 }
 
 /** Prompt plugin */
-Popup.registerPlugin('prompt', function (title, placeholder, defaultValue, callback) {
+Popup.registerPlugin('prompt', function (title, defaultValue, placeholder, callback) {
   let promptValue = null
   let promptChange = function (value) {
     promptValue = value
@@ -63,10 +63,10 @@ Popup.registerPlugin('prompt', function (title, placeholder, defaultValue, callb
   })
 })
 
-export default function promptPopup (title, placeholder = '', defaultValue = '') {
+export default function promptPopup (title, defaultValue = '', placeholder = '', ) {
   return new Promise((resolve, reject) => {
     Popup.close()
-    Popup.plugins().prompt(title, placeholder, defaultValue, function (value) {
+    Popup.plugins().prompt(title, defaultValue, placeholder, function (value) {
       resolve(value)
     })
   })
