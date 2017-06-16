@@ -118,7 +118,8 @@ export default class ExplorerSaga extends Saga {
 
   takeEvery = ({ actions }) => ({
     [LOCATION_CHANGE]: this.urlToStateWorker,
-    [actions.digDeeper]: this.digDeeperWorker
+    [actions.digDeeper]: this.digDeeperWorker,
+    [actions.setConnection]: this.setConnectionWorker
   })
 
   takeLatest = ({ actions }) => ({
@@ -152,8 +153,7 @@ export default class ExplorerSaga extends Saga {
   })
 
   run = function * () {
-    const { setStructure, setConnections, setConnection } = this.actions
-
+    const { setConnections, setConnection } = this.actions
     yield call(waitUntilLogin)
 
     window.document.title = 'Explorer - Insights'
@@ -198,6 +198,13 @@ export default class ExplorerSaga extends Saga {
     try {
       const connections = yield explorerLogic.get('connections')
       const connection = connections[keyword]
+
+      if (!connection) {
+        messg.error(`Connection "${keyword}" not found!`, 2500)
+        yield put(setStructure({}))
+        return
+      }
+
       const structure = yield structureService.get(connection._id)
       yield put(setStructure(structure))
     } catch (e) {
@@ -205,10 +212,23 @@ export default class ExplorerSaga extends Saga {
     }
   }
 
-  refreshDataWorker = function * (action) {
-    yield delay(50) // throttle
+  setConnectionWorker = function * (action) {
+    const { clear } = this.actions
+    const { connection } = action.payload
+    const urlValues = urlToState(window.location.search)
 
+    if (urlValues.connection !== connection) {
+      yield call(this.loadStructure, connection)
+      yield put(clear())
+    }
+  }
+
+  refreshDataWorker = function * (action) {
     const { setResults, setPagination, setLoading, clearLoading, openTreeNode, closeTreeNode, urlChanged, requestExport } = this.actions
+
+    if (action.type !== urlChanged.toString()) {
+      yield delay(50) // throttle unless coming from an url change
+    }
 
     const {
       connection,
@@ -286,8 +306,9 @@ export default class ExplorerSaga extends Saga {
           }
         }
       } catch (e) {
+        console.error(e)
         yield put(clearLoading())
-        messg.error('Error', 2500)
+        messg.error(`Error: ${e.message}`, 2500)
       }
     }
   }
@@ -297,6 +318,19 @@ export default class ExplorerSaga extends Saga {
     const { search } = action.payload
 
     const values = urlToState(search)
+
+    // fetch a new structure if the connection changes
+    const oldConnection = yield explorerLogic.get('connection')
+    const newConnection = values.connection
+
+    if (newConnection !== oldConnection) {
+      const connections = yield explorerLogic.get('connections')
+      if (connections[newConnection]) {
+        yield call(this.loadStructure, newConnection)
+      } else {
+        messg.error(`Connection "${newConnection}" not found!`, 2500)
+      }
+    }
 
     yield put(urlChanged(values))
   }

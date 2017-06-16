@@ -10,6 +10,7 @@ import HighlightText from 'lib/utils/highlight-text'
 
 // components
 import Node from './node'
+import Connection from './connection'
 
 // logic
 import explorerLogic from '~/scenes/explorer/logic'
@@ -25,7 +26,8 @@ import explorerLogic from '~/scenes/explorer/logic'
     explorerLogic, [
       'search',
       'models',
-      'selectedModel'
+      'selectedModel',
+      'connections'
     ]
   ]
 })
@@ -44,21 +46,26 @@ export default class ExplorerTree extends Component {
   }
 
   render () {
-    const { models, search, selectedModel } = this.props
+    const { models, search, selectedModel, connections } = this.props
+
+    const showConnections = Object.keys(connections).length > 1
 
     return (
       <Layout>
-        <Layout layoutHeight={50}>
-          <div style={{padding: 10}}>
-            <input ref='search'
-                   type='search'
-                   id='tree-search'
-                   autoFocus
-                   value={search}
-                   className='input-text'
-                   onChange={this.handleSearch}
-                   style={{width: '100%'}}
-                   placeholder='Type to search...' />
+        <Layout layoutHeight={showConnections ? 90 : 50}>
+          <div>
+            {showConnections ? <Connection /> : null}
+            <div style={{padding: 10}}>
+              <input ref='search'
+                    type='search'
+                    id='tree-search'
+                    autoFocus
+                    value={search}
+                    className='input-text'
+                    onChange={this.handleSearch}
+                    style={{width: '100%'}}
+                    placeholder='Type to search...' />
+            </div>
           </div>
         </Layout>
         <Layout layoutHeight='flex'>

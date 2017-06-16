@@ -12,8 +12,8 @@ class Service {
   }
 
   async find (params) {
-    const { connection } = params
-    const connectionsResult = await this.app.service('api/connections').find({ keyword: connection })
+    const { connection } = params.query || {}
+    const connectionsResult = await this.app.service('api/connections').find({ query: { keyword: connection } })
 
     const { structurePath, url } = connectionsResult.data[0]
 
