@@ -15,6 +15,7 @@ program.version(pkg.version)
   .usage('[options]')
   .description(pkg.description)
   .option('-s, --server', 'Run server only')
+  .option('-p, --port [number]', 'Port in server mode. Defaults to 3030')
   .option('-d --develop', 'Run in development mode')
   .parse(process.argv)
 
@@ -22,6 +23,9 @@ process.env.NODE_ENV = program.develop ? 'development' : 'production'
 process.env.NODE_CONFIG_DIR = path.join(__dirname, '..', 'config')
 
 if (program.server) {
+  if (program.port) {
+    process.env.INSIGHTS_PORT = program.port
+  }
   require('../server')
 } else {
   proc.spawn(electron, [electronScript], {stdio: 'inherit'})
