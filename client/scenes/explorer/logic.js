@@ -82,7 +82,8 @@ export default class ExplorerLogic extends Logic {
       }
     }],
     connection: [null, PropTypes.string, {
-      [actions.setConnection]: (_, payload) => payload.connection
+      [actions.setConnection]: (_, payload) => payload.connection,
+      [actions.urlChanged]: (state, payload) => payload.connection || state
     }],
     // shape of each model
     structure: [{}, PropTypes.object, {
