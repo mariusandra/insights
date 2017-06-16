@@ -108,7 +108,7 @@ if (devBuild) {
     }
   )
 
-  config.devtool = '#eval-source-map'
+  config.devtool = '#cheap-module-source-map'
 } else {
   // See webpack.common.config for adding modules common to both the webpack dev server and rails
   config.module.loaders.push({ test: /\.jsx?$/, loader: 'babel-loader', exclude: /node_modules/ })
