@@ -323,7 +323,7 @@ export default class ExplorerSaga extends Saga {
     const oldConnection = yield explorerLogic.get('connection')
     const newConnection = values.connection
 
-    if (newConnection !== oldConnection) {
+    if (newConnection && newConnection !== oldConnection) {
       const connections = yield explorerLogic.get('connections')
       if (connections[newConnection]) {
         yield call(this.loadStructure, newConnection)
