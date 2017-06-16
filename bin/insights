@@ -16,11 +16,13 @@ program.version(pkg.version)
   .description(pkg.description)
   .option('-s, --server', 'Run server only')
   .option('-p, --port [number]', 'Port in server mode. Defaults to 3030')
+  .option('--data [folder]', 'Where to store the local NeDB database. Defaults to ~/.insights/data')
   .option('-d --develop', 'Run in development mode')
   .parse(process.argv)
 
 process.env.NODE_ENV = program.develop ? 'development' : 'production'
 process.env.NODE_CONFIG_DIR = path.join(__dirname, '..', 'config')
+process.env.INSIGHTS_DATA = program.data || path.join(require('os').homedir(), '.insights', 'data')
 
 if (program.server) {
   if (program.port) {

@@ -22,6 +22,10 @@ const app = feathers()
 // Load app configuration
 app.configure(configuration(path.join(__dirname, '..')))
 
+if (process.env.INSIGHTS_DATA) {
+  app.set('nedb', process.env.INSIGHTS_DATA)
+}
+
 // Enable CORS, security, compression, favicon and body parsing
 app.use(cors())
 app.use(helmet())

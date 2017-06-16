@@ -8,5 +8,7 @@ module.exports = function (app) {
     autoload: true
   })
 
+  Model.ensureIndex({ fieldName: 'keyword', unique: true })
+
   return Model
 }
