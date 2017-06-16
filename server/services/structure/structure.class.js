@@ -1,16 +1,18 @@
-/* eslint-disable no-unused-vars */
+const getStructure = require('../../insights/structure')
+
 class Service {
   constructor (options) {
     this.options = options || {}
   }
 
-  async find (params) {
-    const { database, config } = require('../../../config/insights')
-    const getStructure = require('../../insights/structure')
+  setup (app) {
+    this.app = app
+  }
 
-    const structure = await getStructure(config, database)
+  async get (id) {
+    const { url, structurePath } = await this.app.service('api/connections').get(id)
 
-    return Promise.resolve(structure)
+    return getStructure(structurePath, url)
   }
 }
 

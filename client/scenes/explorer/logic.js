@@ -14,7 +14,11 @@ export default class ExplorerLogic extends Logic {
   ]
 
   actions = ({ constants }) => ({
+    setConnections: connections => ({ connections }),
+    setConnection: connection => ({ connection }),
+
     setStructure: structure => ({ structure }),
+
     setColumnsAndFilter: (columns, filter) => ({ columns, filter }),
     setColumns: columns => ({ columns }),
     addColumn: column => ({ column }),
@@ -67,6 +71,18 @@ export default class ExplorerLogic extends Logic {
   reducers = ({ actions, constants }) => ({
     search: ['', PropTypes.string, {
       [actions.setSearch]: (_, payload) => payload.search
+    }],
+    connections: [{}, PropTypes.object, {
+      [actions.setConnections]: (_, payload) => {
+        let newState = {}
+        payload.connections.forEach(connection => {
+          newState[connection.keyword] = connection
+        })
+        return newState
+      }
+    }],
+    connection: [null, PropTypes.string, {
+      [actions.setConnection]: (_, payload) => payload.connection
     }],
     // shape of each model
     structure: [{}, PropTypes.object, {
@@ -313,11 +329,12 @@ export default class ExplorerLogic extends Logic {
 
     url: [
       () => [
-        selectors.columns, selectors.sort, selectors.treeState, selectors.graphTimeFilter,
+        selectors.connection, selectors.columns, selectors.sort, selectors.treeState, selectors.graphTimeFilter,
         selectors.facetsColumn, selectors.facetsCount, selectors.filter, selectors.graphCumulative, selectors.percentages
       ],
-      (columns, sort, treeState, graphTimeFilter, facetsColumn, facetsCount, filter, graphCumulative, percentages) => {
+      (connection, columns, sort, treeState, graphTimeFilter, facetsColumn, facetsCount, filter, graphCumulative, percentages) => {
         let url = {
+          connection: connection,
           columns: columns.join(','),
           sort: sort || '',
           treeState: Object.keys(treeState).join(','),

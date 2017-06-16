@@ -1,18 +1,24 @@
-/* eslint-disable no-unused-vars */
+const getStructure = require('../../insights/structure')
+const createAdapter = require('../../insights/adapter')
+const Results = require('../../insights/results')
+
 class Service {
   constructor (options) {
     this.options = options || {}
   }
 
+  setup (app) {
+    this.app = app
+  }
+
   async find (params) {
-    const { database, config } = require('../../../config/insights')
+    const { connection } = params
+    const connectionsResult = await this.app.service('api/connections').find({ keyword: connection })
 
-    const getStructure = require('../../insights/structure')
-    const createAdapter = require('../../insights/adapter')
-    const Results = require('../../insights/results')
+    const { structurePath, url } = connectionsResult.data[0]
 
-    const structure = await getStructure(config, database)
-    const adapter = createAdapter(database)
+    const structure = await getStructure(structurePath, url)
+    const adapter = createAdapter(url)
 
     const results = new Results({ params: params.query, adapter, structure })
     return results.getResponse()

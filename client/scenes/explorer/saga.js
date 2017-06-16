@@ -14,6 +14,7 @@ import delay from 'lib/utils/delay'
 
 import client from '~/client'
 
+const connectionsService = client.service('api/connections')
 const structureService = client.service('api/structure')
 const resultsService = client.service('api/results')
 const dashboardsService = client.service('api/dashboards')
@@ -75,6 +76,9 @@ function fetchSvg () {
 export default class ExplorerSaga extends Saga {
   actions = () => ([
     explorerLogic, [
+      'setConnections',
+      'setConnection',
+
       'setStructure',
 
       'refreshData',
@@ -112,24 +116,6 @@ export default class ExplorerSaga extends Saga {
     ]
   ])
 
-  run = function * () {
-    const { setStructure } = this.actions
-
-    yield call(waitUntilLogin)
-
-    window.document.title = 'Explorer - Insights'
-
-    try {
-      const structure = yield structureService.find()
-      yield put(setStructure(structure))
-    } catch (e) {
-      messg.error('Error loading structure from insights.yml!', 2500)
-    }
-    yield fork(this.loadDashboards)
-
-    yield call(this.urlToStateWorker, { payload: { pathname: window.location.pathname, search: window.location.search, firstLoad: true } })
-  }
-
   takeEvery = ({ actions }) => ({
     [LOCATION_CHANGE]: this.urlToStateWorker,
     [actions.digDeeper]: this.digDeeperWorker
@@ -165,11 +151,58 @@ export default class ExplorerSaga extends Saga {
     [actions.addToDashboard]: this.addToDashboardWorker
   })
 
+  run = function * () {
+    const { setStructure, setConnections, setConnection } = this.actions
+
+    yield call(waitUntilLogin)
+
+    window.document.title = 'Explorer - Insights'
+
+    const connections = yield connectionsService.find()
+
+    if (connections.total === 0) {
+      messg.warning('Please set up a connection!', 2500)
+      yield put(push('/connections'))
+      return
+    }
+
+    yield put(setConnections(connections.data))
+
+    const connectionInUrl = urlToState(window.location.search).connection
+    let connection
+
+    if (connectionInUrl && connections.data.filter(c => c.keyword === connectionInUrl).length > 0) {
+      connection = connectionInUrl
+    } else {
+      connection = connections.data[0].keyword
+    }
+
+    yield put(setConnection(connection))
+
+    yield fork(this.loadDashboards)
+    yield call(this.loadStructure, connection)
+
+    yield call(this.urlToStateWorker, { payload: { pathname: window.location.pathname, search: window.location.search, firstLoad: true } })
+  }
+
   loadDashboards = function * (action) {
     const { dashboardsLoaded } = this.actions
 
     const response = yield dashboardsService.find()
     yield put(dashboardsLoaded(response.data))
+  }
+
+  loadStructure = function * (keyword) {
+    const { setStructure } = this.actions
+
+    try {
+      const connections = yield explorerLogic.get('connections')
+      const connection = connections[keyword]
+      const structure = yield structureService.get(connection._id)
+      yield put(setStructure(structure))
+    } catch (e) {
+      messg.error('Error loading database structure for connection!', 2500)
+    }
   }
 
   refreshDataWorker = function * (action) {
@@ -178,8 +211,10 @@ export default class ExplorerSaga extends Saga {
     const { setResults, setPagination, setLoading, clearLoading, openTreeNode, closeTreeNode, urlChanged, requestExport } = this.actions
 
     const {
-      url, columns, offsetTarget, offset, limitTarget, limit, sort, filter, graphTimeFilter, facetsCount, facetsColumn, exportTitle, graphCumulative, percentages, graphData
-    } = yield explorerLogic.fetch('url', 'columns', 'offset', 'limit', 'offsetTarget', 'limitTarget', 'sort', 'filter', 'graphTimeFilter', 'facetsCount', 'facetsColumn', 'exportTitle', 'graphCumulative', 'percentages', 'graphData')
+      connection,
+      url, columns, offsetTarget, offset, limitTarget, limit, sort, filter, graphTimeFilter,
+      facetsCount, facetsColumn, exportTitle, graphCumulative, percentages, graphData
+    } = yield explorerLogic.fetch('connection', 'url', 'columns', 'offset', 'limit', 'offsetTarget', 'limitTarget', 'sort', 'filter', 'graphTimeFilter', 'facetsCount', 'facetsColumn', 'exportTitle', 'graphCumulative', 'percentages', 'graphData')
 
     // if paginating and fetching what is currently there (horizontal scroll)
     if (action.type === setPagination.toString() && action.payload.offset === offset && action.payload.limit === limit) {
@@ -197,6 +232,8 @@ export default class ExplorerSaga extends Saga {
     if (columns.length > 0) {
       try {
         const params = {
+          connection,
+
           columns,
           sort,
           filter,
