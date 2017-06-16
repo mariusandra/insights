@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'kea/logic'
 
 import messg from 'messg'
+import Popup from 'react-popup'
 
 import connectionsLogic from '~/scenes/connections/logic'
 
@@ -53,12 +54,32 @@ export default class Connection extends Component {
     this.setState({ editing: true, url, structurePath })
   }
 
-  handleRemove = (e, id) => {
+  handleDelete = (e, connection) => {
     const { removeConnection } = this.props.actions
+    const { _id, keyword } = connection
     e.preventDefault()
-    if (window.confirm('Are you sure?')) {
-      removeConnection(id)
-    }
+
+    Popup.create({
+      title: null,
+      content: `Are you sure you want to delete the connection "${keyword}"?`,
+      buttons: {
+        left: [{
+          text: 'Cancel',
+          className: '',
+          action: () => {
+            Popup.close()
+          }
+        }],
+        right: [{
+          text: 'Delete',
+          className: 'danger',
+          action: () => {
+            removeConnection(_id)
+            Popup.close()
+          }
+        }]
+      }
+    })
   }
 
   handleTest = (e, id) => {
@@ -106,7 +127,7 @@ export default class Connection extends Component {
             <br />
             Actions:
             {' '}
-            <a href='#' onClick={(e) => this.handleRemove(e, connection._id)}>Remove</a>
+            <a href='#' onClick={(e) => this.handleDelete(e, connection)}>Delete</a>
             {' | '}
             <a href='#' onClick={this.handleEdit}>Edit</a>
             {' | '}

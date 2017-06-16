@@ -123,6 +123,7 @@
     "react-flex-layout": "mariusandra/react-flex-layout",
     "react-grid-layout": "^0.14.6",
     "react-on-rails": "6.9.3",
+    "react-popup": "^0.8.0",
     "react-pure-render": "1.0.2",
     "react-redux": "5.0.2",
     "react-router": "3.0.2",
