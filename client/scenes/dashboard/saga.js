@@ -4,6 +4,7 @@ import { LOCATION_CHANGE, push } from 'react-router-redux'
 
 import messg from 'messg'
 
+import promptPopup from 'lib/popups/prompt'
 import deletePopup from 'lib/popups/delete'
 
 import { waitUntilLogin } from '~/scenes/auth'
@@ -122,7 +123,8 @@ export default class DashboardSaga extends Saga {
   addDashboardWorker = function * (action) {
     const { dashboardUpdated, selectDashboard } = this.actions
 
-    const name = window.prompt('Name of the new dashboard')
+    const name = yield promptPopup('Name of the new dashboard')
+
     if (name) {
       const dashboard = yield dashboardsService.create({ name, layouts: { mobile: [], desktop: [] } })
       yield put(dashboardUpdated(dashboard))
