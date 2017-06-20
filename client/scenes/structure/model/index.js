@@ -80,7 +80,7 @@ export default class StructureModel extends Component {
                     {custom}
                     {' - '}
                     <small style={{color: '#888'}}>
-                      {Object.values(modelStructure.customs[custom]).join(', ')}
+                      {Object.values(modelStructure.custom[custom]).join(', ')}
                     </small>
                   </div>
                 ))}
