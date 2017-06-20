@@ -43,9 +43,9 @@ export default class StructureModel extends Component {
     const { model, modelStructure } = this.props
     const { expanded } = this.state
 
-    const columns = Object.keys(modelStructure.columns)
-    const customs = Object.keys(modelStructure.custom)
-    const links = Object.keys(modelStructure.links)
+    const columns = Object.keys(modelStructure.columns).sort((a, b) => a.localeCompare(b))
+    const customs = Object.keys(modelStructure.custom).sort((a, b) => a.localeCompare(b))
+    const links = Object.keys(modelStructure.links).sort((a, b) => a.localeCompare(b))
 
     return (
       <div>
