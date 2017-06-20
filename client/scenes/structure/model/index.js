@@ -4,20 +4,8 @@ import React, { PropTypes, Component } from 'react'
 // utils
 
 // components
+import Column from './column'
 
-// logic
-// import structure from '~/scenes/structure/logic'
-
-// @connect({
-//   actions: [
-//     structure, [
-//     ]
-//   ],
-//   props: [
-//     structure, [
-//     ]
-//   ]
-// })
 export default class StructureModel extends Component {
   static propTypes = {
     model: PropTypes.string,
@@ -60,15 +48,17 @@ export default class StructureModel extends Component {
               <div style={{paddingBottom: 10}}>
                 <strong>Columns:</strong>
                 <br />
-                {columns.map(column => (
-                  <div key={column}>
-                    {column}
-                    {' - '}
-                    <small style={{color: '#888'}}>
-                      {Object.values(modelStructure.columns[column]).join(', ')}
-                    </small>
-                  </div>
-                ))}
+                <table>
+                  <thead>
+                    <th>Enabled?</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Misc</th>
+                  </thead>
+                  <tbody>
+                    {columns.map(column => <Column key={column} column={column} columnMeta={modelStructure.columns[column]} />)}
+                  </tbody>
+                </table>
               </div>
             ) : null}
             {customs.length > 0 ? (

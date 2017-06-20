@@ -9,7 +9,9 @@ export default class StructureLogic extends Logic {
     openConnections: true,
     startLoading: true,
     connectionLoaded: connection => ({ connection }),
-    structureLoaded: structure => ({ structure })
+    structureLoaded: structure => ({ structure }),
+
+    addChange: (model, type, column, key, change) => ({ model, type, column, key, change })
   })
 
   reducers = ({ actions, constants }) => ({
@@ -24,6 +26,10 @@ export default class StructureLogic extends Logic {
     structure: [null, PropTypes.object, {
       [actions.startLoading]: () => null,
       [actions.structureLoaded]: (_, payload) => payload.structure
+    }],
+    structureChanges: [{}, PropTypes.object, {
+      [actions.startLoading]: () => ({}),
+      [actions.structureLoaded]: () => ({})
     }]
   })
 
