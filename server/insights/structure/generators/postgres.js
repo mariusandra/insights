@@ -1,6 +1,7 @@
 const pgStructure = require('pg-structure')
 const parse = require('pg-connection-string').parse
 const changeCase = require('change-case')
+const singular = require('pluralize').singular
 
 module.exports = async function postgresGenerator (database) {
   const dbConfig = parse(database)
@@ -11,7 +12,7 @@ module.exports = async function postgresGenerator (database) {
 
   tablesArray.forEach(table => {
     const name = table.name
-    const model = changeCase.pascalCase(name)
+    const model = changeCase.pascalCase(singular(name))
 
     structure[model] = structure[model] || {
       enabled: true,
@@ -25,7 +26,7 @@ module.exports = async function postgresGenerator (database) {
 
   tablesArray.forEach(table => {
     const name = table.name
-    const model = changeCase.pascalCase(name)
+    const model = changeCase.pascalCase(singular(name))
 
     let primaryKey
 
@@ -35,7 +36,7 @@ module.exports = async function postgresGenerator (database) {
       if (foreignKeyConstraints.size > 0) {
         foreignKeyConstraints.forEach(constraint => {
           const otherTableName = constraint.referencedTable.name
-          const otherModel = changeCase.pascalCase(otherTableName)
+          const otherModel = changeCase.pascalCase(singular(otherTableName))
           const otherKey = constraint.referencedColumnsBy.get(name).name
 
           const linkName = name.replace(/_id$/, '')
@@ -78,9 +79,11 @@ function convertPgType (type) {
   case 'integer':
   case 'bigint':
   case 'numeric':
+  case 'double precision':
     return 'number'
   case 'timestamp with time zone':
   case 'timestamp without time zone':
+  case 'date':
     return 'time'
   case 'character varying':
   case 'text':
