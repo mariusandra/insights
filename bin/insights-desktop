@@ -8,6 +8,7 @@ var root = path.join(__dirname, '..')
 var pkg = require(path.join(root, 'package.json'))
 var electron = require('electron')
 var proc = require('child_process')
+var randomString = require('../server/lib/random-string')
 
 var electronScript = path.join(root, 'server', 'electron')
 
@@ -22,5 +23,7 @@ program.parse(process.argv)
 process.env.NODE_ENV = program.develop ? 'development' : 'production'
 process.env.NODE_CONFIG_DIR = path.join(__dirname, '..', 'config')
 process.env.INSIGHTS_DATA = program.data || path.join(require('os').homedir(), '.insights', 'data')
+
+process.env.AUTHENTICATION_SECRET = randomString(64)
 
 proc.spawn(electron, [electronScript], {stdio: 'inherit'})

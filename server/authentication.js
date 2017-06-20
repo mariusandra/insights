@@ -4,7 +4,18 @@ const local = require('feathers-authentication-local')
 
 module.exports = function () {
   const app = this
-  const config = app.get('authentication')
+  const originalConfig = app.get('authentication')
+
+  if (process.env.NODE_ENV === 'production' && !process.env.AUTHENTICATION_SECRET) {
+    console.error('AUTHENTICATION_SECRET not set! Can\'t run in production mode without it!')
+    process.exit(1)
+  }
+
+  const config = Object.assign(
+    {},
+    originalConfig,
+    process.env.AUTHENTICATION_SECRET ? { secret: process.env.AUTHENTICATION_SECRET } : {}
+  )
 
   // Set up authentication with the secret
   app.configure(authentication(config))

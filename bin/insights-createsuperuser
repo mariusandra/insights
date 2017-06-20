@@ -4,6 +4,7 @@ var path = require('path')
 var program = require('commander')
 var root = path.join(__dirname, '..')
 var pkg = require(path.join(root, 'package.json'))
+var randomString = require('../server/lib/random-string')
 
 program.version(pkg.version)
   .usage('[options]')
@@ -25,5 +26,8 @@ if (program.email) {
 if (program.password) {
   process.env.INSIGHTS_SUPERUSER_PASSWORD = program.password
 }
+
+// can be random for this case as we will not start the server
+process.env.AUTHENTICATION_SECRET = randomString(64)
 
 require('../server/createsuperuser')

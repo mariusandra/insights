@@ -38,6 +38,7 @@
     "insights": "./bin/insights",
     "insights-server": "./bin/insights-server",
     "insights-desktop": "./bin/insights-desktop",
+    "insights-createsecret": "./bin/insights-createsecret",
     "insights-createsuperuser": "./bin/insights-createsuperuser"
   },
   "files": [

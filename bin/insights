@@ -12,6 +12,7 @@ program.version(pkg.version)
 program
   .command('desktop', 'run the desktop/electron app [default]', { isDefault: true })
   .command('server', 'run as a server')
+  .command('createsecret', 'create a new authentication secret')
   .command('createsuperuser', 'create a new admin user')
 
 program.parse(process.argv)
