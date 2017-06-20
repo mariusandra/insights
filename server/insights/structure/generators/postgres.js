@@ -83,8 +83,9 @@ function convertPgType (type) {
     return 'number'
   case 'timestamp with time zone':
   case 'timestamp without time zone':
-  case 'date':
     return 'time'
+  case 'date':
+    return 'date'
   case 'character varying':
   case 'text':
     return 'string'

@@ -31,8 +31,8 @@ export default (props) => {
     className = 'boolean false'
   }
 
-  if (value && meta && meta.type === 'time' && meta.transform) {
-    if (meta.transform === 'day') {
+  if (value && meta && (meta.type === 'time' || meta.type === 'date')) {
+    if (meta.transform === 'day' || (!meta.transform && meta.type === 'date')) {
       displayValue = moment(value).format('YYYY-MM-DD')
     } else if (meta.transform === 'quarter') {
       displayValue = 'Q' + moment(value).format('Q YYYY')

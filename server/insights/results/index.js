@@ -171,11 +171,11 @@ module.exports = class Results {
           // perform date conversion if needed
           if (meta.type === 'time') {
             sql = this.adapter.convertSqlTimezone(sql)
+          }
 
-            if (transform) {
-              sqlBeforeTransform = sql
-              sql = this.adapter.truncateDate(sql, transform)
-            }
+          if (transform && (meta.type === 'time' || meta.type === 'date')) {
+            sqlBeforeTransform = sql
+            sql = this.adapter.truncateDate(sql, transform)
           }
 
           // add aggregation functions (count(...), etc)
@@ -400,7 +400,7 @@ module.exports = class Results {
     const facetsColumnKey = this.params.facetsColumn
 
     // see what we have to work with
-    let timeColumns = this.resultsTableColumns.filter(v => v.type === 'time' && !v.aggregate)
+    let timeColumns = this.resultsTableColumns.filter(v => (v.type === 'time' || v.type === 'date') && !v.aggregate)
     const aggregateColumns = this.resultsTableColumns.filter(v => v.aggregate)
 
     // must have at least 1 aggregate and exactly 1 time column

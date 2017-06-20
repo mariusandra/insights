@@ -82,18 +82,20 @@ export default class TableHeader extends Component {
 
     const [ , transform, aggregate ] = column.split('!')
 
-    if (meta.type !== 'time') {
+    if (meta.type !== 'time' && meta.type !== 'date') {
       return <div />
     }
 
     return (
       <div className='filter-options'>
         <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: !transform ? 'bold' : 'normal'}}
-              onClick={() => setTransform(index, '', aggregate)}>Time</span>
+              onClick={() => setTransform(index, '', aggregate)}>{meta.type === 'date' ? 'Day' : 'Time'}</span>
         {' '}
-        <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: transform === 'day' ? 'bold' : 'normal'}}
-              onClick={() => setTransform(index, 'day', aggregate)}>Day</span>
-        {' '}
+        {meta.type === 'time' ? (
+          <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: transform === 'day' ? 'bold' : 'normal'}}
+                onClick={() => setTransform(index, 'day', aggregate)}>Day</span>
+        ) : null}
+        {meta.type === 'time' ? ' ' : ''}
         <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: transform === 'week' ? 'bold' : 'normal'}}
               onClick={() => setTransform(index, 'week', aggregate)}>Week</span>
         {' '}
