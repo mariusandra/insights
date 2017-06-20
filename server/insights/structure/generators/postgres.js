@@ -46,7 +46,23 @@ module.exports = async function postgresGenerator (database) {
             my_key: name
           }
 
-          structure[otherModel].links[table.name] = {
+          let reverseKey = table.name
+
+          if (structure[otherModel].links[reverseKey]) {
+            structure[otherModel].links[`${reverseKey}_1`] = structure[otherModel].links[reverseKey]
+            delete structure[otherModel].links[reverseKey]
+          }
+
+          if (structure[otherModel].links[`${reverseKey}_1`]) {
+            for (let i = 2; i < Object.keys(structure[otherModel].links).length + 1; i++) {
+              if (!structure[otherModel].links[`${reverseKey}_${i}`]) {
+                reverseKey = `${reverseKey}_${i}`
+                break
+              }
+            }
+          }
+
+          structure[otherModel].links[reverseKey] = {
             model: model,
             model_key: name,
             my_key: otherKey
@@ -88,6 +104,7 @@ function convertPgType (type) {
     return 'date'
   case 'character varying':
   case 'text':
+  case 'json':
     return 'string'
   case 'boolean':
     return 'boolean'
