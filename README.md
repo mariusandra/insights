@@ -18,9 +18,9 @@ It's a work in progress and you're brave for checking it out! Cheers!
 
 [Play with the demo here](http://insights-demo.mariusandra.com/).
 
-![Screenshot of the Explorer](https://github.com/mariusandra/insights/raw/master/doc/screenshot-views.png)
+![Screenshot of the Explorer](https://github.com/mariusandra/insights/raw/old-rails-version/doc/screenshot-views.png)
 
-![Screenshot of the Dashboard](https://github.com/mariusandra/insights/raw/master/doc/screenshot-dashboard.png)
+![Screenshot of the Dashboard](https://github.com/mariusandra/insights/raw/old-rails-version/doc/screenshot-dashboard.png)
 
 ## Installing
 
