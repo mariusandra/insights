@@ -15,6 +15,8 @@ export default class ConnectionsLogic extends Logic {
     editConnection: (id, url, structurePath) => ({ id, url, structurePath }),
     connectionEdited: (connection) => ({ connection }),
 
+    viewStructure: (id) => ({ id }),
+
     testConnection: (id) => ({ id }),
 
     removeConnection: (id) => ({ id }),

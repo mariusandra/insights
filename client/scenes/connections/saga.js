@@ -1,5 +1,6 @@
 import Saga from 'kea/saga'
 import { put, call } from 'redux-saga/effects'
+import { push } from 'react-router-redux'
 
 import messg from 'messg'
 
@@ -26,7 +27,9 @@ export default class ConnectionsSaga extends Saga {
       'removeConnection',
       'connectionRemoved',
 
-      'testConnection'
+      'testConnection',
+
+      'viewStructure'
     ]
   ])
 
@@ -34,7 +37,8 @@ export default class ConnectionsSaga extends Saga {
     [actions.addConnection]: this.addConnectionWorker,
     [actions.editConnection]: this.editConnectionWorker,
     [actions.removeConnection]: this.removeConnectionWorker,
-    [actions.testConnection]: this.testConnectionWorker
+    [actions.testConnection]: this.testConnectionWorker,
+    [actions.viewStructure]: this.viewStructureWorker
   })
 
   run = function * () {
@@ -79,5 +83,10 @@ export default class ConnectionsSaga extends Saga {
     } else {
       messg.error(`Error: ${result.error}`, 4000)
     }
+  }
+
+  viewStructureWorker = function * (action) {
+    const { id } = action.payload
+    yield put(push(`/connections/${id}`))
   }
 }

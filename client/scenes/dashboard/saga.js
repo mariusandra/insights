@@ -70,8 +70,8 @@ export default class DashboardSaga extends Saga {
     const selectedDashboardId = yield dashboardLogic.get('selectedDashboardId')
 
     const pathname = window.location.pathname
-    const match = pathname.match(/\/dashboard\/([0-9]+)\/?/)
-    const urlDashboardId = match ? parseInt(match[1]) : null
+    const match = pathname.match(/\/dashboard\/([A-Za-z0-9]+)\/?/)
+    const urlDashboardId = match ? match[1] : null
 
     if (match && urlDashboardId !== selectedDashboardId) {
       yield put(selectDashboard(urlDashboardId))
@@ -82,8 +82,8 @@ export default class DashboardSaga extends Saga {
     const selectedDashboardId = yield dashboardLogic.get('selectedDashboardId')
 
     const pathname = window.location.pathname
-    const match = pathname.match(/\/dashboard\/([0-9]+)\/?/)
-    const urlDashboardId = match ? parseInt(match[1]) : null
+    const match = pathname.match(/\/dashboard\/([A-Za-z0-9]+)\/?/)
+    const urlDashboardId = match ? match[1] : null
 
     if (selectedDashboardId !== urlDashboardId) {
       if (selectedDashboardId) {

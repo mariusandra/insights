@@ -12,7 +12,8 @@ import connectionsLogic from '~/scenes/connections/logic'
     connectionsLogic, [
       'editConnection',
       'testConnection',
-      'removeConnection'
+      'removeConnection',
+      'viewStructure'
     ]
   ]
 })
@@ -71,6 +72,12 @@ export default class Connection extends Component {
     testConnection(id)
   }
 
+  handleViewStructure = (e, id) => {
+    const { viewStructure } = this.props.actions
+    e.preventDefault()
+    viewStructure(id)
+  }
+
   render () {
     const { connection } = this.props
     const { editing, url, structurePath } = this.state
@@ -115,6 +122,8 @@ export default class Connection extends Component {
             <a href='#' onClick={this.handleEdit}>Edit</a>
             {' | '}
             <a href='#' onClick={(e) => this.handleTest(e, connection._id)}>Test connection</a>
+            {' | '}
+            <a href={`/connections/${connection._id}`} onClick={(e) => this.handleViewStructure(e, connection._id)}>View structure</a>
           </div>
         )}
       </div>
