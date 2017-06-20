@@ -7,31 +7,31 @@ export default class StructureLogic extends Logic {
 
   actions = ({ constants }) => ({
     openConnections: true,
-    loading: true,
+    startLoading: true,
     connectionLoaded: connection => ({ connection }),
     structureLoaded: structure => ({ structure })
   })
 
   reducers = ({ actions, constants }) => ({
-    loading: [false, PropTypes.bool, {
-      [actions.loading]: () => true,
+    isLoading: [false, PropTypes.bool, {
+      [actions.startLoading]: () => true,
       [actions.structureLoaded]: () => false
     }],
     connection: [null, PropTypes.object, {
-      [actions.loading]: () => null,
+      [actions.startLoading]: () => null,
       [actions.connectionLoaded]: (_, payload) => payload.connection
     }],
     structure: [null, PropTypes.object, {
-      [actions.loading]: () => null,
+      [actions.startLoading]: () => null,
       [actions.structureLoaded]: (_, payload) => payload.structure
     }]
   })
 
   selectors = ({ constants, selectors }) => ({
-    // todoCount: [
-    //   () => [selectors.todos],
-    //   (todos) => todos.length,
-    //   PropTypes.number
-    // ]
+    models: [
+      () => [selectors.structure],
+      (structure) => structure ? Object.keys(structure).sort((a, b) => a.localeCompare(b)) : [],
+      PropTypes.array
+    ]
   })
 }

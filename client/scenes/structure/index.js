@@ -8,6 +8,7 @@ import { connect } from 'kea/logic'
 
 // components
 import Spinner from 'lib/tags/spinner'
+import StructureModel from './model'
 
 // logic
 import structure from '~/scenes/structure/logic'
@@ -20,7 +21,10 @@ import structure from '~/scenes/structure/logic'
   ],
   props: [
     structure, [
-      'loading'
+      'isLoading',
+      'structure',
+      'connection',
+      'models'
     ]
   ]
 })
@@ -33,17 +37,27 @@ export default class StructureScene extends Component {
   }
 
   render () {
-    const { loading } = this.props
+    const { isLoading, structure, connection, models } = this.props
+
+    if (isLoading || !connection || !structure) {
+      return (
+        <div className='structure-scene'>
+          <Spinner />
+        </div>
+      )
+    }
 
     return (
       <div className='structure-scene'>
-        {loading ? <Spinner /> : (
-          <div>
-            <a href='/connections' onClick={this.handleOpenConnections}>Back to all connections</a>
-            <br /><br />
-            The structure interface will come here
-          </div>
-        )}
+        <div>
+          <a href='/connections' onClick={this.handleOpenConnections}>&laquo; Back to all connections</a>
+          <br /><br />
+          <h2>Connection: {connection.keyword}</h2>
+          <br />
+          {models.map(model => (
+            <StructureModel key={model} model={model} modelStructure={structure[model]} />
+          ))}
+        </div>
       </div>
     )
   }

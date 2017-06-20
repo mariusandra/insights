@@ -14,7 +14,7 @@ import structureLogic from '~/scenes/structure/logic'
 export default class StructureSaga extends Saga {
   actions = () => ([
     structureLogic, [
-      'loading',
+      'startLoading',
       'connectionLoaded',
       'structureLoaded',
       'openConnections'
@@ -32,9 +32,9 @@ export default class StructureSaga extends Saga {
   }
 
   setStructureFromUrl = function * (action) {
-    const { loading, connectionLoaded, structureLoaded } = this.actions
+    const { startLoading, connectionLoaded, structureLoaded } = this.actions
 
-    yield put(loading())
+    yield put(startLoading())
 
     const pathname = window.location.pathname
     const match = pathname.match(/\/connections\/([A-Za-z0-9]+)\/?/)
