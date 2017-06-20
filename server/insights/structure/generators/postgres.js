@@ -9,6 +9,7 @@ module.exports = async function postgresGenerator (database) {
   const tablesArray = db.get('public').tables
 
   let structure = {}
+  let multiples = {}
 
   tablesArray.forEach(table => {
     const name = table.name
@@ -22,6 +23,8 @@ module.exports = async function postgresGenerator (database) {
       custom: {},
       links: {}
     }
+
+    multiples[model] = {}
   })
 
   tablesArray.forEach(table => {
@@ -48,18 +51,16 @@ module.exports = async function postgresGenerator (database) {
 
           let reverseKey = table.name
 
-          if (structure[otherModel].links[reverseKey]) {
-            structure[otherModel].links[`${reverseKey}_1`] = structure[otherModel].links[reverseKey]
-            delete structure[otherModel].links[reverseKey]
+          if (structure[otherModel].links[table.name]) {
+            multiples[otherModel][table.name] = true
+
+            let otherReverseKey = `${table.name}_as_${structure[otherModel].links[table.name].model_key.replace(/_id$/, '')}`
+            structure[otherModel].links[otherReverseKey] = structure[otherModel].links[table.name]
+            delete structure[otherModel].links[table.name]
           }
 
-          if (structure[otherModel].links[`${reverseKey}_1`]) {
-            for (let i = 2; i < Object.keys(structure[otherModel].links).length + 1; i++) {
-              if (!structure[otherModel].links[`${reverseKey}_${i}`]) {
-                reverseKey = `${reverseKey}_${i}`
-                break
-              }
-            }
+          if (multiples[otherModel][table.name]) {
+            reverseKey = `${table.name}_as_${name.replace(/_id$/, '')}`
           }
 
           structure[otherModel].links[reverseKey] = {
