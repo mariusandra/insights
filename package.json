@@ -35,7 +35,10 @@
     "prepublish": "npm run build"
   },
   "bin": {
-    "insights": "./bin/insights"
+    "insights": "./bin/insights",
+    "insights-server": "./bin/insights-server",
+    "insights-desktop": "./bin/insights-desktop",
+    "insights-createsuperuser": "./bin/insights-createsuperuser"
   },
   "files": [
     "bin",

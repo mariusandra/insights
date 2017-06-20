@@ -1,34 +1,17 @@
 #!/usr/bin/env node
 
-// Thanks to https://github.com/mysamai/mysam/blob/master/bin/mysam for this script!
-
 var path = require('path')
 var program = require('commander')
 var root = path.join(__dirname, '..')
 var pkg = require(path.join(root, 'package.json'))
-var electron = require('electron')
-var proc = require('child_process')
-
-var electronScript = path.join(root, 'server', 'electron')
 
 program.version(pkg.version)
-  .usage('[options]')
-  .description(pkg.description)
-  .option('-s, --server', 'Run server only')
-  .option('-p, --port [number]', 'Port in server mode. Defaults to 3030')
-  .option('--data [folder]', 'Where to store the local NeDB database. Defaults to ~/.insights/data')
-  .option('-d --develop', 'Run in development mode')
-  .parse(process.argv)
+  .usage('<command> [options]')
+  .description('Run insights dekstop app, server or helper commands')
 
-process.env.NODE_ENV = program.develop ? 'development' : 'production'
-process.env.NODE_CONFIG_DIR = path.join(__dirname, '..', 'config')
-process.env.INSIGHTS_DATA = program.data || path.join(require('os').homedir(), '.insights', 'data')
+program
+  .command('desktop', 'run the desktop/electron app [default]', { isDefault: true })
+  .command('server', 'run as a server')
+  .command('createsuperuser', 'create a new admin user')
 
-if (program.server) {
-  if (program.port) {
-    process.env.INSIGHTS_PORT = program.port
-  }
-  require('../server')
-} else {
-  proc.spawn(electron, [electronScript], {stdio: 'inherit'})
-}
+program.parse(process.argv)
