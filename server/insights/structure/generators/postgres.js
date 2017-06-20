@@ -106,6 +106,7 @@ function convertPgType (type) {
   case 'character varying':
   case 'text':
   case 'json':
+  case 'name':
     return 'string'
   case 'boolean':
     return 'boolean'
