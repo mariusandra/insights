@@ -80,6 +80,7 @@ export default class StructureScene extends Component {
           {selectedModel ? (
             <div className='models-pane'>
               <h2>{selectedModel}</h2>
+              <br />
               <StructureModel model={selectedModel} modelStructure={structure[selectedModel]} />
             </div>
           ) : null}

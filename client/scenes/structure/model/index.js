@@ -27,14 +27,15 @@ export default class StructureModel extends Component {
       <div>
         {columns.length > 0 ? (
           <div style={{paddingBottom: 10}}>
-            <strong>Columns:</strong>
-            <br />
-            <table>
+            <strong>Columns ({columns.length})</strong>
+            <table className='structure-table'>
               <thead>
-                <th>Enabled?</th>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Misc</th>
+                <tr>
+                  <th>Enabled?</th>
+                  <th>Name</th>
+                  <th>Type</th>
+                  <th>Misc</th>
+                </tr>
               </thead>
               <tbody>
                 {columns.map(column => <Column key={column} column={column} columnMeta={modelStructure.columns[column]} />)}
@@ -43,7 +44,7 @@ export default class StructureModel extends Component {
           </div>
         ) : null}
         <div style={{paddingBottom: 10}}>
-          <strong>Customs:</strong>
+          <strong>Customs ({customs.length})</strong>
           <br />
           {customs.map(custom => (
             <div key={custom}>
@@ -58,7 +59,7 @@ export default class StructureModel extends Component {
         </div>
         {links.length > 0 ? (
           <div style={{paddingBottom: 10}}>
-            <strong>Links:</strong>
+            <strong>Links ({links.length})</strong>
             <br />
             {links.map(link => (
               <div key={link}>

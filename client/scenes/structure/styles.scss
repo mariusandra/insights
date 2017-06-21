@@ -15,4 +15,23 @@
       }
     }
   }
+
+  table.structure-table {
+    margin-left: 10px;
+    margin-top: 10px;
+    tr {
+      th {
+        font-size: 14px;
+      }
+      td {
+        font-size: 14px;
+        padding: 3px;
+      }
+      &:hover {
+        td {
+          background: #eee;
+        }
+      }
+    }
+  }
 }
