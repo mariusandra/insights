@@ -76,7 +76,9 @@ export default class StructureLogic extends Logic {
         let changeCount = 0
         Object.values(structureChanges || {}).forEach(modelChanges => {
           Object.values(modelChanges || {}).forEach(typeChanges => {
-            changeCount += Object.keys(typeChanges).length
+            Object.values(typeChanges || {}).forEach(valueChanges => {
+              changeCount += Object.keys(valueChanges).length
+            })
           })
         })
         return changeCount

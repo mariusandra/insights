@@ -28,7 +28,8 @@ import structure from '~/scenes/structure/logic'
       'structureChanges',
       'connection',
       'models',
-      'selectedModel'
+      'selectedModel',
+      'numberOfChanges'
     ]
   ]
 })
@@ -46,7 +47,7 @@ export default class StructureScene extends Component {
   }
 
   render () {
-    const { isLoading, structure, connection, models, selectedModel } = this.props
+    const { isLoading, structure, connection, models, selectedModel, numberOfChanges } = this.props
 
     if (isLoading || !connection || !structure) {
       return (
@@ -78,13 +79,22 @@ export default class StructureScene extends Component {
         </Layout>
         <LayoutSplitter />
         <Layout layoutWidth='flex' ref={ref => { this._rightPane = ref }}>
-          {selectedModel ? (
-            <div className='models-pane'>
-              <h2>{selectedModel}</h2>
-              <br />
-              <StructureModel />
-            </div>
-          ) : null}
+          {numberOfChanges > 0 ? (
+            <Layout layoutHeight={30}>
+              <div className='unsaved-changes'>
+                You have {numberOfChanges} unsaved change{numberOfChanges === 1 ? '' : 's'}!
+              </div>
+            </Layout>
+          ) : <div />}
+          <Layout layoutHeight='flex'>
+            {selectedModel ? (
+              <div className='models-pane'>
+                <h2>{selectedModel}</h2>
+                <br />
+                <StructureModel />
+              </div>
+            ) : null}
+          </Layout>
         </Layout>
       </Layout>
     )

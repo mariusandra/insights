@@ -16,8 +16,17 @@
     }
   }
 
+  .unsaved-changes {
+    line-height: 30px;
+    background: #549854;
+    color: #fff;
+    text-align: center;
+  }
+
   table.structure-table {
+    width: 100%;
     margin-left: 10px;
+    margin-right: 10px;
     margin-top: 10px;
     tbody tr {
       height: 36px;
@@ -40,7 +49,12 @@
       }
       &.changed {
         td {
-          background: #0f0;
+          background: #cdfdcd;
+        }
+        &:hover {
+          td {
+            background: #b6eab6;
+          }
         }
       }
     }
