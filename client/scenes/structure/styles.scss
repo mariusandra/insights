@@ -1,3 +1,18 @@
 .structure-scene {
-  padding: 20px;
+  .models-pane {
+    padding: 10px;
+
+    .model-row {
+      line-height: 20px;
+      cursor: pointer;
+
+      &:hover {
+        background: #eee;
+      }
+      &.selected {
+        font-weight: bold;
+        background: #eee;
+      }
+    }
+  }
 }

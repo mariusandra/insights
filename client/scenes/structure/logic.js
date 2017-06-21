@@ -11,6 +11,8 @@ export default class StructureLogic extends Logic {
     connectionLoaded: connection => ({ connection }),
     structureLoaded: structure => ({ structure }),
 
+    selectModel: model => ({ model }),
+
     addChange: (model, type, column, key, change) => ({ model, type, column, key, change })
   })
 
@@ -30,6 +32,9 @@ export default class StructureLogic extends Logic {
     structureChanges: [{}, PropTypes.object, {
       [actions.startLoading]: () => ({}),
       [actions.structureLoaded]: () => ({})
+    }],
+    selectedModel: [null, PropTypes.string, {
+      [actions.selectModel]: (_, payload) => payload.model
     }]
   })
 
