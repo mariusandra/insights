@@ -13,7 +13,7 @@ export default class StructureLogic extends Logic {
 
     selectModel: model => ({ model }),
 
-    addChange: (model, type, column, key, change) => ({ model, type, column, key, change })
+    addChange: (model, type, column, key, change, original) => ({ model, type, column, key, change, original })
   })
 
   reducers = ({ actions, constants }) => ({
@@ -31,7 +31,33 @@ export default class StructureLogic extends Logic {
     }],
     structureChanges: [{}, PropTypes.object, {
       [actions.startLoading]: () => ({}),
-      [actions.structureLoaded]: () => ({})
+      [actions.structureLoaded]: () => ({}),
+      [actions.addChange]: (state, payload) => {
+        const { model, type, column, key, change, original } = payload
+
+        let newColumn = {}
+
+        if (change === original) {
+          const { [key]: discard, ...rest } = ((state[model] || {})[type] || {})[column] // eslint-disable-line
+          newColumn = rest
+        } else {
+          newColumn = {
+            ...((state[model] || {})[type] || {})[column],
+            [key]: change
+          }
+        }
+
+        return {
+          ...state,
+          [model]: {
+            ...(state[model] || {}),
+            [type]: {
+              ...(state[model] || {})[type],
+              [column]: newColumn
+            }
+          }
+        }
+      }
     }],
     selectedModel: [null, PropTypes.string, {
       [actions.selectModel]: (_, payload) => payload.model
@@ -43,6 +69,19 @@ export default class StructureLogic extends Logic {
       () => [selectors.structure],
       (structure) => structure ? Object.keys(structure).sort((a, b) => a.localeCompare(b)) : [],
       PropTypes.array
+    ],
+    numberOfChanges: [
+      () => [selectors.structureChanges],
+      (structureChanges) => {
+        let changeCount = 0
+        Object.values(structureChanges || {}).forEach(modelChanges => {
+          Object.values(modelChanges || {}).forEach(typeChanges => {
+            changeCount += Object.keys(typeChanges).length
+          })
+        })
+        return changeCount
+      },
+      PropTypes.number
     ]
   })
 }

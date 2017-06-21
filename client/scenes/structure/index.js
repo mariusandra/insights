@@ -25,6 +25,7 @@ import structure from '~/scenes/structure/logic'
     structure, [
       'isLoading',
       'structure',
+      'structureChanges',
       'connection',
       'models',
       'selectedModel'
@@ -81,7 +82,7 @@ export default class StructureScene extends Component {
             <div className='models-pane'>
               <h2>{selectedModel}</h2>
               <br />
-              <StructureModel model={selectedModel} modelStructure={structure[selectedModel]} />
+              <StructureModel />
             </div>
           ) : null}
         </Layout>

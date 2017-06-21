@@ -19,6 +19,9 @@
   table.structure-table {
     margin-left: 10px;
     margin-top: 10px;
+    tbody tr {
+      height: 36px;
+    }
     tr {
       th {
         font-size: 14px;
@@ -30,6 +33,14 @@
       &:hover {
         td {
           background: #eee;
+        }
+      }
+      &.disabled {
+        color: #aaa;
+      }
+      &.changed {
+        td {
+          background: #0f0;
         }
       }
     }

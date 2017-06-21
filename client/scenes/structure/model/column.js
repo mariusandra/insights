@@ -6,39 +6,77 @@ const otherMetaFields = ['index', 'url']
 
 export default class ModelColumn extends Component {
   static PropTypes = {
+    model: PropTypes.string,
     column: PropTypes.string,
-    columnMeta: PropTypes.object
+    columnMeta: PropTypes.any,
+    metaChanges: PropTypes.object,
+    addChange: PropTypes.func
+  }
+
+  getOriginalMeta = () => {
+    const { columnMeta } = this.props
+
+    if (columnMeta === false) {
+      return { disabled: true }
+    } else {
+      return Object.assign({ disabled: false }, columnMeta)
+    }
+  }
+
+  getMeta = () => {
+    const { metaChanges } = this.props
+
+    const meta = this.getOriginalMeta()
+
+    if (metaChanges) {
+      return Object.assign({}, meta, metaChanges)
+    }
+
+    return meta
+  }
+
+  handleToggleDisable = () => {
+    const { model, column, addChange } = this.props
+    const meta = this.getMeta()
+    const originalMeta = this.getOriginalMeta()
+
+    addChange(model, 'columns', column, 'disabled', !meta.disabled, originalMeta.disabled)
   }
 
   render () {
-    const { column, columnMeta } = this.props
+    const { metaChanges } = this.props
+    const { column } = this.props
+
+    const meta = this.getMeta()
+
+    const hasChanged = metaChanges && Object.keys(metaChanges).length > 0
 
     return (
-      <tr>
+      <tr className={`${meta.disabled ? 'disabled ' : ''}${hasChanged ? 'changed ' : ''}`}>
         <td>
-          <input type='checkbox' checked />
+          <input type='checkbox' checked={!meta.disabled} onChange={this.handleToggleDisable} />
         </td>
         <td>{column}</td>
         <td>
-          <Select value={columnMeta.type} options={columnTypes} onValueChange={() => {}} />
+          {!meta.disabled ? <Select value={meta.type} options={columnTypes} onValueChange={() => {}} /> : null}
         </td>
         <td>
-          {otherMetaFields.map(metaField => (
+          {!meta.disabled ? otherMetaFields.map(metaField => (
             <span key={metaField}>
               <label>
-                <input type='checkbox' checked={columnMeta[metaField] !== undefined} />
+                <input type='checkbox' checked={meta[metaField] !== undefined} />
                 {' '}
                 {metaField}
               </label>
-              {columnMeta[metaField] !== undefined
+              {meta[metaField] !== undefined
                 ? metaField === 'url'
-                  ? <input type='text' value={columnMeta[metaField]} />
+                  ? <input type='text' value={meta[metaField]} />
                   : metaField === 'index'
-                    ? <input type='text' value={columnMeta[metaField]} />
+                    ? <input type='text' value={meta[metaField]} />
                     : null
                 : null}
             </span>
-          ))}
+          )) : null}
         </td>
       </tr>
     )

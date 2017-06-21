@@ -1,19 +1,39 @@
 // libraries
 import React, { PropTypes, Component } from 'react'
+import { connect } from 'kea/logic'
 
 // utils
 
 // components
 import Column from './column'
 
+import structure from '~/scenes/structure/logic'
+
+@connect({
+  actions: [
+    structure, [
+      'addChange'
+    ]
+  ],
+  props: [
+    structure, [
+      'structure',
+      'structureChanges',
+      'selectedModel'
+    ]
+  ]
+})
 export default class StructureModel extends Component {
-  static propTypes = {
-    model: PropTypes.string,
-    modelStructure: PropTypes.object
+  getStructure = () => {
+    const { structure, selectedModel } = this.props
+    return structure[selectedModel]
   }
 
   render () {
-    const { model, modelStructure } = this.props
+    const { selectedModel, structureChanges } = this.props
+    const { addChange } = this.props.actions
+
+    const modelStructure = this.getStructure()
 
     const allColumns = Object.keys(modelStructure.columns).sort((a, b) => a.localeCompare(b))
     const fkColumns = allColumns.filter(c => modelStructure.columns[c].index)
@@ -38,7 +58,14 @@ export default class StructureModel extends Component {
                 </tr>
               </thead>
               <tbody>
-                {columns.map(column => <Column key={column} column={column} columnMeta={modelStructure.columns[column]} />)}
+                {columns.map(column => (
+                  <Column key={column}
+                          model={selectedModel}
+                          column={column}
+                          columnMeta={modelStructure.columns[column]}
+                          metaChanges={((structureChanges[selectedModel] || {}).columns || {})[column]}
+                          addChange={addChange} />
+                ))}
               </tbody>
             </table>
           </div>
