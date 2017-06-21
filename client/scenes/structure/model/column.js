@@ -43,6 +43,13 @@ export default class ModelColumn extends Component {
     addChange(model, 'columns', column, 'disabled', !meta.disabled, originalMeta.disabled)
   }
 
+  handleTypeChange = (type) => {
+    const { model, column, addChange } = this.props
+    const originalMeta = this.getOriginalMeta()
+
+    addChange(model, 'columns', column, 'type', type, originalMeta.type)
+  }
+
   render () {
     const { metaChanges } = this.props
     const { column } = this.props
@@ -58,7 +65,7 @@ export default class ModelColumn extends Component {
         </td>
         <td>{column}</td>
         <td>
-          {!meta.disabled ? <Select value={meta.type} options={columnTypes} onValueChange={() => {}} /> : null}
+          {!meta.disabled ? <Select value={meta.type} options={columnTypes} onValueChange={(value) => this.handleTypeChange(value)} /> : null}
         </td>
         <td>
           {!meta.disabled ? otherMetaFields.map(metaField => (
