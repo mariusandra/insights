@@ -31,7 +31,11 @@ export default class StructureModel extends Component {
     const { model, modelStructure } = this.props
     const { expanded } = this.state
 
-    const columns = Object.keys(modelStructure.columns).sort((a, b) => a.localeCompare(b))
+    const allColumns = Object.keys(modelStructure.columns).sort((a, b) => a.localeCompare(b))
+    const fkColumns = allColumns.filter(c => modelStructure.columns[c].index)
+    const otherColumns = allColumns.filter(c => !modelStructure.columns[c].index)
+    const columns = fkColumns.concat(otherColumns)
+
     const customs = Object.keys(modelStructure.custom).sort((a, b) => a.localeCompare(b))
     const links = Object.keys(modelStructure.links).sort((a, b) => a.localeCompare(b))
 
@@ -61,21 +65,20 @@ export default class StructureModel extends Component {
                 </table>
               </div>
             ) : null}
-            {customs.length > 0 ? (
-              <div style={{paddingBottom: 10}}>
-                <strong>Customs:</strong>
-                <br />
-                {customs.map(custom => (
-                  <div key={custom}>
-                    {custom}
-                    {' - '}
-                    <small style={{color: '#888'}}>
-                      {Object.values(modelStructure.custom[custom]).join(', ')}
-                    </small>
-                  </div>
-                ))}
-              </div>
-            ) : null}
+            <div style={{paddingBottom: 10}}>
+              <strong>Customs:</strong>
+              <br />
+              {customs.map(custom => (
+                <div key={custom}>
+                  {custom}
+                  {' - '}
+                  <small style={{color: '#888'}}>
+                    {Object.values(modelStructure.custom[custom]).join(', ')}
+                  </small>
+                </div>
+              ))}
+              <a href='#'>+ Add</a>
+            </div>
             {links.length > 0 ? (
               <div style={{paddingBottom: 10}}>
                 <strong>Links:</strong>
