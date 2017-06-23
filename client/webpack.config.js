@@ -5,6 +5,17 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const devBuild = process.env.NODE_ENV !== 'production'
 const nodeEnv = devBuild ? 'development' : 'production'
 
+let postcssPlugins = (webpack) => [
+  require('postcss-smart-import')({ addDependencyTo: webpack }),
+  require('autoprefixer'),
+  require('precss')
+]
+
+let postcssLoader = {
+  loader: 'postcss-loader',
+  options: { parser: 'postcss-scss', ident: 'postcss', plugins: postcssPlugins }
+}
+
 let config = {
   // the project dir
   context: path.join(__dirname, '..'),
@@ -22,20 +33,14 @@ let config = {
     publicPath: '/dist/'
   },
   resolve: {
-    extensions: ['', '.webpack.js', '.web.js', '.js', '.jsx', '.scss', '.css', 'config.js'],
+    extensions: ['.webpack.js', '.web.js', '.js', '.jsx', '.scss', '.css', 'config.js'],
     alias: {
       '~': path.join(process.cwd(), 'client'),
       lib: path.join(process.cwd(), 'client', 'lib')
     }
   },
-  postcss: function (webpack) {
-    return [
-      require('postcss-smart-import')({ addDependencyTo: webpack }),
-      require('autoprefixer'),
-      require('precss')
-    ]
-  },
   plugins: [
+    new webpack.optimize.ModuleConcatenationPlugin(),
     new ExtractTextPlugin('[name].css'),
     new webpack.DefinePlugin({
       'process.env': {
@@ -43,19 +48,31 @@ let config = {
       }
     }),
     new webpack.ProvidePlugin({
-      'fetch': 'imports?this=>global!exports?global.fetch!whatwg-fetch'
+      'fetch': 'imports-loader?this=>global!exports-loader?global.fetch!whatwg-fetch'
     }),
     new webpack.ContextReplacementPlugin(/moment[/\\]locale$/, /en-gb/)
   ],
   module: {
-    loaders: [
-      { test: /\.s?css$/, loader: devBuild ? 'style!css?importLoaders=1!postcss?parser=postcss-scss' : ExtractTextPlugin.extract('style', 'css!postcss?parser=postcss-scss') },
-      { test: /\.less$/, loader: devBuild ? 'style!css?importLoaders=1!less' : ExtractTextPlugin.extract('style', 'css!less') },
+    rules: [
+      {
+        test: /\.s?css$/,
+        loader: devBuild
+          ? [
+            'style-loader',
+            'css-loader?importLoaders=1',
+            postcssLoader
+          ] : ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+            use: [
+              'css-loader',
+              postcssLoader
+            ]
+          })
+      },
       { test: /\.png$/, loader: 'url-loader?limit=10000&mimetype=image/png' },
       { test: /\.jpg$/, loader: 'url-loader?limit=10000&mimetype=image/jpeg' },
       { test: /\.gif$/, loader: 'url-loader?limit=10000&mimetype=image/gif' },
       { test: /\.svg$/, loader: 'url-loader?limit=10000&mimetype=image/svg+xml' },
-      { test: /\.rb$/, loader: 'kea-rails-loader' },
       { test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'url-loader?limit=10000&mimetype=application/font-woff' },
       { test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file-loader' }
     ]
@@ -74,17 +91,17 @@ if (devBuild) {
       // 'webpack-dev-server/client', // ?http://localhost:' + hotPort,
       'webpack/hot/dev-server',
       'webpack-hot-middleware/client',
-      'expose?Perf!react-addons-perf'
+      'expose-loader?Perf!react-addons-perf'
     )
   })
 
   // See webpack.common.config for adding modules common to both the webpack dev server and rails
   config.plugins.unshift(
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
+    new webpack.NoEmitOnErrorsPlugin()
   )
 
-  config.module.loaders.push(
+  config.module.rules.push(
     {
       test: /\.jsx?$/,
       loader: 'babel-loader',
@@ -111,11 +128,10 @@ if (devBuild) {
   config.devtool = '#cheap-module-source-map'
 } else {
   // See webpack.common.config for adding modules common to both the webpack dev server and rails
-  config.module.loaders.push({ test: /\.jsx?$/, loader: 'babel-loader', exclude: /node_modules/ })
+  config.module.rules.push({ test: /\.jsx?$/, loader: 'babel-loader', exclude: /node_modules/ })
   module.exports = config
 
   config.plugins.push(
-    new webpack.optimize.DedupePlugin(),
     new webpack.optimize.UglifyJsPlugin({
       sourceMap: true,
       compress: {

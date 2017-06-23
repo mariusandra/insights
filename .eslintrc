@@ -4,10 +4,6 @@
     "node": true,
     "mocha": true
   },
-  "ecmaFeatures": {
-    "jsx": true,
-    "modules": true
-  },
   "extends": ["standard", "standard-react"],
   "parser": "babel-eslint",
   "rules": {
