@@ -27,7 +27,7 @@ export default class Select extends Component {
 
     return (
       <div className={`super-select${placeholder && !value ? ' placeholder' : ''}`} style={style}>
-        <select ref='field' name={name} className='input-text inline' multiple={!!multiple} disabled={disabled} value={value} onChange={this.handleChange}>
+        <select ref='field' name={name} className='inline' multiple={!!multiple} disabled={disabled} value={value} onChange={this.handleChange}>
           {placeholder ? <option value=''>{placeholder}</option> : null}
           {options.map(option => (
             (typeof option === 'string' || typeof option === 'number')

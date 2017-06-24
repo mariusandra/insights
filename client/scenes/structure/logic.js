@@ -13,7 +13,7 @@ export default class StructureLogic extends Logic {
 
     selectModel: model => ({ model }),
 
-    addChange: (model, type, column, key, change, original) => ({ model, type, column, key, change, original })
+    addChange: (model, column, key, change, original) => ({ model, column, key, change, original })
   })
 
   reducers = ({ actions, constants }) => ({
@@ -33,16 +33,16 @@ export default class StructureLogic extends Logic {
       [actions.startLoading]: () => ({}),
       [actions.structureLoaded]: () => ({}),
       [actions.addChange]: (state, payload) => {
-        const { model, type, column, key, change, original } = payload
+        const { model, column, key, change, original } = payload
 
         let newColumn = {}
 
         if (change === original) {
-          const { [key]: discard, ...rest } = ((state[model] || {})[type] || {})[column] // eslint-disable-line
+          const { [key]: discard, ...rest } = (state[model] || {})[column] // eslint-disable-line
           newColumn = rest
         } else {
           newColumn = {
-            ...((state[model] || {})[type] || {})[column],
+            ...(state[model] || {})[column],
             [key]: change
           }
         }
@@ -51,10 +51,7 @@ export default class StructureLogic extends Logic {
           ...state,
           [model]: {
             ...(state[model] || {}),
-            [type]: {
-              ...(state[model] || {})[type],
-              [column]: newColumn
-            }
+            [column]: newColumn
           }
         }
       }
@@ -70,6 +67,35 @@ export default class StructureLogic extends Logic {
       (structure) => structure ? Object.keys(structure).sort((a, b) => a.localeCompare(b)) : [],
       PropTypes.array
     ],
+
+    combinedStructure: [
+      () => [selectors.structure],
+      (structure) => {
+        if (!structure) {
+          return {}
+        }
+
+        let combinedStructure = {}
+
+        Object.keys(structure).forEach(model => {
+          let structureForModel = {}
+          Object.keys(structure[model].columns).forEach(key => {
+            structureForModel[key] = Object.assign({ group: 'column', key: key }, structure[model].columns[key])
+          })
+          Object.keys(structure[model].links).forEach(key => {
+            structureForModel[key] = Object.assign({ group: 'link', key: key }, structure[model].links[key])
+          })
+          Object.keys(structure[model].custom).forEach(key => {
+            structureForModel[key] = Object.assign({ group: 'custom', key: key }, structure[model].custom[key])
+          })
+          combinedStructure[model] = structureForModel
+        })
+
+        return combinedStructure
+      },
+      PropTypes.object
+    ],
+
     numberOfChanges: [
       () => [selectors.structureChanges],
       (structureChanges) => {
