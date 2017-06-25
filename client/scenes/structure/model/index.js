@@ -12,7 +12,8 @@ import structure from '~/scenes/structure/logic'
 @connect({
   actions: [
     structure, [
-      'addChange'
+      'addChange',
+      'discardChanges'
     ]
   ],
   props: [
@@ -33,7 +34,7 @@ export default class StructureModel extends Component {
 
   render () {
     const { selectedModel, structureChanges, models } = this.props
-    const { addChange } = this.props.actions
+    const { addChange, discardChanges } = this.props.actions
 
     const modelStructure = this.getStructure()
 
@@ -48,7 +49,7 @@ export default class StructureModel extends Component {
       <div>
         {columns.length > 0 ? (
           <div style={{paddingBottom: 10}}>
-            <strong>Columns ({columns.length})</strong>
+            <strong>{columns.length} column{columns.length === 1 ? '' : 's'}</strong>
             <table className='structure-table'>
               <tbody>
                 {columns.map(column => (
@@ -59,7 +60,8 @@ export default class StructureModel extends Component {
                     column={column}
                     columnMeta={modelStructure[column]}
                     metaChanges={(structureChanges[selectedModel] || {})[column]}
-                    addChange={addChange} />
+                    addChange={addChange}
+                    discardChanges={discardChanges} />
                 ))}
               </tbody>
             </table>

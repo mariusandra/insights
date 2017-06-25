@@ -7,7 +7,7 @@ const indexTypes = ['', 'primary_key']
 const otherMetaFields = {
   column: ['type', 'index', 'url'],
   link: ['model', 'model_key', 'my_key'],
-  custom: ['type', 'sql', 'url']
+  custom: ['sql', 'type', 'url']
 }
 
 export default class ModelColumn extends Component {
@@ -15,9 +15,10 @@ export default class ModelColumn extends Component {
     model: PropTypes.string,
     models: PropTypes.array,
     column: PropTypes.string,
-    columnMeta: PropTypes.any,
+    columnMeta: PropTypes.object,
     metaChanges: PropTypes.object,
-    addChange: PropTypes.func
+    addChange: PropTypes.func,
+    discardChanges: PropTypes.func
   }
 
   constructor (props) {
@@ -27,55 +28,50 @@ export default class ModelColumn extends Component {
     }
   }
 
-  getOriginalMeta = () => {
-    const { columnMeta } = this.props
-
-    if (columnMeta === false) {
-      return { disabled: true }
-    } else {
-      return Object.assign({ disabled: false }, columnMeta)
-    }
-  }
-
   getMeta = () => {
-    const { metaChanges } = this.props
+    const { columnMeta, metaChanges } = this.props
 
-    const meta = this.getOriginalMeta()
-
-    if (metaChanges) {
-      return Object.assign({}, meta, metaChanges)
-    }
-
-    return meta
+    return metaChanges ? Object.assign({}, columnMeta, metaChanges) : columnMeta
   }
 
   handleToggleDisable = () => {
-    const { model, column, addChange } = this.props
+    const { model, column, columnMeta, addChange } = this.props
     const meta = this.getMeta()
-    const originalMeta = this.getOriginalMeta()
 
-    addChange(model, column, 'disabled', !meta.disabled, originalMeta.disabled)
+    addChange(model, column, 'disabled', !meta.disabled, columnMeta.disabled)
   }
 
-  handleTypeChange = (type) => {
-    const { model, column, addChange } = this.props
-    const originalMeta = this.getOriginalMeta()
+  handleMetaChange = (value, metaKey) => {
+    const { model, column, columnMeta, addChange } = this.props
 
-    addChange(model, column, 'type', type, originalMeta.type)
+    addChange(model, column, metaKey, value, columnMeta[metaKey])
+  }
+
+  handleDiscardChanges = () => {
+    const { model, column, discardChanges } = this.props
+    discardChanges(model, column)
+    this.setState({ editing: false })
   }
 
   renderMetaEdit = (field, value) => {
     const { models, column } = this.props
 
     if (field === 'type') {
-      return <Select value={value} options={columnTypes} />
+      return <Select value={value} options={columnTypes} onValueChange={val => this.handleMetaChange(val, 'type')} />
     } else if (field === 'model') {
-      return <Select value={value} options={models} />
+      return <Select value={value} options={models} onValueChange={val => this.handleMetaChange(val, 'model')} />
     } else if (field === 'index') {
-      return <Select value={value} options={indexTypes} />
+      return <Select value={value} options={indexTypes} onValueChange={val => this.handleMetaChange(val, 'inex')} />
     } else {
       const placeholder = field === 'url' ? `https://mysite.com/admin/?${column}={${column}}` : ''
-      return <input type='text' className='input-text meta-input' placeholder={placeholder} value={value} />
+      return (
+        <input
+          type='text'
+          className='input-text meta-input'
+          placeholder={placeholder}
+          value={value}
+          onChange={e => this.handleMetaChange(e.target.value, field)} />
+      )
     }
   }
 
@@ -90,14 +86,29 @@ export default class ModelColumn extends Component {
     return (
       <tr className={`${meta.disabled ? 'disabled ' : ''}${hasChanged ? 'changed ' : ''}`}>
         {editing ? (
-          <td className='no-wrap'>
-            <input type='checkbox' checked={!meta.disabled} onChange={this.handleToggleDisable} />
-            {' '}
-            {meta.disabled ? column : <input type='text' className='input-text column-name' value={column} />}
+          <td style={{verticalAlign: 'top'}}>
+            {meta.disabled
+              ? <span className='column-label'>{column}</span>
+              : <input type='text' className='input-text column-name' value={column} />}
+            <br />
+            <div style={{marginTop: 5}}>
+              <label style={{display: 'inline-block'}}>
+                <input type='checkbox' checked={!meta.disabled} onChange={this.handleToggleDisable} />
+                {' '}
+                Enabled?
+              </label>
+            </div>
+            <div style={{marginTop: 5}}>
+              <button type='button' onClick={() => this.setState({ editing: false })}>Save</button>
+              {' '}
+              {metaChanges
+                ? <button className='white' type='button' onClick={this.handleDiscardChanges}>Discard</button>
+                : null}
+            </div>
           </td>
         ) : (
           <td className='no-wrap'>
-            {column}
+            <span className='column-label'>{column}</span>
             {' '}
             <span className='edit-link' onClick={() => this.setState({ editing: true })}>(edit)</span>
           </td>
@@ -107,8 +118,12 @@ export default class ModelColumn extends Component {
             <span className={`column-group ${meta.group}`}>{meta.group}</span>
           </td>
         ) : (
-          <td>
-            <Select value={meta.group} options={groupTypes} />
+          <td style={{verticalAlign: 'top'}}>
+            <Select
+              value={meta.group}
+              options={groupTypes}
+              onValueChange={val => this.handleMetaChange(val, 'group')}
+              style={{width: 80}} />
           </td>
         )}
         {meta.disabled || !editing ? (

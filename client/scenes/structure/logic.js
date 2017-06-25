@@ -13,7 +13,8 @@ export default class StructureLogic extends Logic {
 
     selectModel: model => ({ model }),
 
-    addChange: (model, column, key, change, original) => ({ model, column, key, change, original })
+    addChange: (model, column, key, change, original) => ({ model, column, key, change, original }),
+    discardChanges: (model, column) => ({ model, column })
   })
 
   reducers = ({ actions, constants }) => ({
@@ -54,6 +55,16 @@ export default class StructureLogic extends Logic {
             [column]: newColumn
           }
         }
+      },
+      [actions.discardChanges]: (state, payload) => {
+        const { model, column } = payload
+
+        const { [column]: discard, ...rest } = state[model]
+
+        return {
+          ...state,
+          [model]: rest
+        }
       }
     }],
     selectedModel: [null, PropTypes.string, {
@@ -80,13 +91,22 @@ export default class StructureLogic extends Logic {
         Object.keys(structure).forEach(model => {
           let structureForModel = {}
           Object.keys(structure[model].columns).forEach(key => {
-            structureForModel[key] = Object.assign({ group: 'column', key: key }, structure[model].columns[key])
+            structureForModel[key] = Object.assign(
+              { group: 'column', key: key, my_key: key, disabled: false },
+              structure[model].columns[key] || { disabled: true }
+            )
           })
           Object.keys(structure[model].links).forEach(key => {
-            structureForModel[key] = Object.assign({ group: 'link', key: key }, structure[model].links[key])
+            structureForModel[key] = Object.assign(
+              { group: 'link', key: key, disabled: false },
+              structure[model].links[key]
+            )
           })
           Object.keys(structure[model].custom).forEach(key => {
-            structureForModel[key] = Object.assign({ group: 'custom', key: key }, structure[model].custom[key])
+            structureForModel[key] = Object.assign(
+              { group: 'custom', key: key, disabled: false },
+              structure[model].custom[key]
+            )
           })
           combinedStructure[model] = structureForModel
         })
@@ -101,10 +121,8 @@ export default class StructureLogic extends Logic {
       (structureChanges) => {
         let changeCount = 0
         Object.values(structureChanges || {}).forEach(modelChanges => {
-          Object.values(modelChanges || {}).forEach(typeChanges => {
-            Object.values(typeChanges || {}).forEach(valueChanges => {
-              changeCount += Object.keys(valueChanges).length
-            })
+          Object.values(modelChanges || {}).forEach(columnChanges => {
+            changeCount += Object.keys(columnChanges).length
           })
         })
         return changeCount

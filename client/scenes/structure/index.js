@@ -47,7 +47,7 @@ export default class StructureScene extends Component {
   }
 
   render () {
-    const { isLoading, structure, connection, models, selectedModel, numberOfChanges } = this.props
+    const { isLoading, structure, connection, models, selectedModel, structureChanges, numberOfChanges } = this.props
 
     if (isLoading || !connection || !structure) {
       return (
@@ -70,8 +70,14 @@ export default class StructureScene extends Component {
           <Layout layoutHeight='flex'>
             <div className='models-pane'>
               {models.map(model => (
-                <div key={model} onClick={() => this.handleSelectModel(model)} className={`model-row${selectedModel === model ? ' selected' : ''}`}>
+                <div
+                  key={model}
+                  onClick={() => this.handleSelectModel(model)}
+                  className={`model-row${selectedModel === model ? ' selected' : ''}${structureChanges[model] && Object.keys(structureChanges[model]).length > 0 ? ' changed' : ''}`}>
                   {model}
+                  {structureChanges[model] && Object.keys(structureChanges[model]).length > 0
+                    ? <span className='changed'>(changed)</span>
+                    : null}
                 </div>
               ))}
             </div>
