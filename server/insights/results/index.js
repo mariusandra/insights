@@ -165,7 +165,36 @@ module.exports = class Results {
             sql = this.adapter.tableAliasWithColumn(tableAlias, key)
           } else if (node.custom[key]) {
             meta = node.custom[key]
-            sql = this.adapter.customSqlInTableReplace(meta.sql, tableAlias)
+
+            sql = meta.sql
+            let limit = 0
+
+            // replace keys like "${other_column}"
+            while (true) {
+              limit += 1
+              if (limit > 100) {
+                throw new Error(`Recursive loop when evalutating custom key ${traversedPath.join('.')}.${key}`)
+              }
+
+              const match = sql.match(/\${([^}]+)}/)
+              if (!match) {
+                break
+              }
+
+              const toReplace = match[0]
+              const keyword = match[1]
+
+              if (node.columns[keyword]) {
+                sql = sql.split(toReplace).join(this.adapter.tableAliasWithColumn(tableAlias, keyword))
+              }
+
+              if (node.custom[keyword]) {
+                sql = sql.split(toReplace).join(`(${node.custom[keyword].sql})`)
+              }
+            }
+
+            // replace "$$." with the table name
+            sql = this.adapter.customSqlInTableReplace(sql, tableAlias)
           }
 
           // perform date conversion if needed
