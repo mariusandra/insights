@@ -67,10 +67,10 @@ export default class Views extends Component {
             {newOpen ? (
               <form onSubmit={this.saveView}>
                 <input className='input-text full'
-                      placeholder='Enter a title'
-                      onChange={e => setNewName(e.target.value)}
-                      value={newName}
-                      autoFocus />
+                  placeholder='Enter a title'
+                  onChange={e => setNewName(e.target.value)}
+                  value={newName}
+                  autoFocus />
                 <button className='save' onClick={this.saveView}>✔</button>
                 <button className='cancel' onClick={cancelNew}>✕</button>
               </form>

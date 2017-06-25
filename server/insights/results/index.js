@@ -438,8 +438,8 @@ module.exports = class Results {
 
     if (facetsColumnKey) {
       facetsColumns = this.resultsTableColumns
-                              .filter(v => ['string', 'boolean'].includes(v.type) && !v.aggregate && v.column === facetsColumnKey)
-                              .slice(0, 1)
+        .filter(v => ['string', 'boolean'].includes(v.type) && !v.aggregate && v.column === facetsColumnKey)
+        .slice(0, 1)
       facetsColumn = facetsColumns[0]
     }
 

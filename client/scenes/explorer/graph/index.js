@@ -110,9 +110,9 @@ export default class Graph extends Component {
     }
 
     const tickFormatter = unit === 'year' ? this.yearFormatter
-                        : unit === 'quarter' ? (ticks.length > 5 ? this.shortQuarterFormatter : this.quarterFormatter)
-                        : unit === 'month' ? (ticks.length > 13 ? this.shortMonthFormatter : this.monthFormatter)
-                                           : this.timeFormatter
+      : unit === 'quarter' ? (ticks.length > 5 ? this.shortQuarterFormatter : this.quarterFormatter)
+        : unit === 'month' ? (ticks.length > 13 ? this.shortMonthFormatter : this.monthFormatter)
+          : this.timeFormatter
 
     return { ticks, tickFormatter }
   }
@@ -176,22 +176,22 @@ export default class Graph extends Component {
     return (
       <g key={key}>
         <text x={x}
-              y={y}
-              dy={-5}
-              fill={'#fff'}
-              stroke={'#fff'}
-              strokeWidth={3}
-              strokeOpacity={0.9}
-              fontSize={10}
-              textAnchor='middle'>
+          y={y}
+          dy={-5}
+          fill={'#fff'}
+          stroke={'#fff'}
+          strokeWidth={3}
+          strokeOpacity={0.9}
+          fontSize={10}
+          textAnchor='middle'>
           {displayValue}{percentages ? '%' : ''}
         </text>
         <text x={x}
-              y={y}
-              dy={-5}
-              fill={stroke}
-              fontSize={10}
-              textAnchor='middle'>
+          y={y}
+          dy={-5}
+          fill={stroke}
+          fontSize={10}
+          textAnchor='middle'>
           {displayValue}{percentages ? '%' : ''}
         </text>
       </g>
@@ -232,27 +232,27 @@ export default class Graph extends Component {
     return (
       <ResponsiveContainer width='100%' height={containerHeight}>
         <ComposedChart data={graphData}
-                       key={key}
-                       ref='lineChart'
-                       margin={{top: 5, right: 10, left: 0, bottom: 5}}>
+          key={key}
+          ref='lineChart'
+          margin={{top: 5, right: 10, left: 0, bottom: 5}}>
           <Legend verticalAlign='top'
-                  align='right'
-                  height={25}
-                  iconSize={10}
-                  wrapperStyle={{fontSize: 12, marginRight: -10}}
-                  onClick={this.handleClick}
-                  onMouseOver={this.handleMouseEnter}
-                  onMouseOut={this.handleMouseLeave} />
+            align='right'
+            height={25}
+            iconSize={10}
+            wrapperStyle={{fontSize: 12, marginRight: -10}}
+            onClick={this.handleClick}
+            onMouseOver={this.handleMouseEnter}
+            onMouseOut={this.handleMouseLeave} />
           <XAxis type='number'
-                 dataKey='time'
-                 domain={xDomain}
-                 tickFormatter={tickFormatter}
-                 ticks={ticks} />
+            dataKey='time'
+            domain={xDomain}
+            tickFormatter={tickFormatter}
+            ticks={ticks} />
           <YAxis tickCount={Math.floor(containerHeight / 30)}
-                 domain={percentages ? [0, 100] : ['auto', 'auto']}
-                 interval={0}
-                 tickFormatter={percentages ? (y) => `${Math.round(y)}%` : (y) => `${y.toLocaleString('en')}${unit}`}
-                 allowDecimals={false} />
+            domain={percentages ? [0, 100] : ['auto', 'auto']}
+            interval={0}
+            tickFormatter={percentages ? (y) => `${Math.round(y)}%` : (y) => `${y.toLocaleString('en')}${unit}`}
+            allowDecimals={false} />
           <CartesianGrid />
           <Tooltip content={<CustomTooltip graph={graph} />} />
           {nullLineNeeded ? (
@@ -260,8 +260,8 @@ export default class Graph extends Component {
           ) : null}
           {(facets ? keysWithMeta.reverse() : keysWithMeta).map(key => (
             bars ? <Bar {...this.getLineData(key, facets && summed)} />
-                 : facets && summed ? <Area {...this.getLineData(key, facets && summed)} />
-                                    : <Line {...this.getLineData(key, facets && summed)} />))}
+              : facets && summed ? <Area {...this.getLineData(key, facets && summed)} />
+                : <Line {...this.getLineData(key, facets && summed)} />))}
         </ComposedChart>
       </ResponsiveContainer>
     )

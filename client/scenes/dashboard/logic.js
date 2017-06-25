@@ -192,10 +192,10 @@ export default class DashboardLogic extends Logic {
           const deletedItems = dashboard.deletedItems || {}
 
           Object.values(dashboardItems)
-          .filter(item => item.dashboardId === selectedDashboardId)
-          .filter(item => !deletedItems[item._id]).forEach(item => {
-            items[item._id] = Object.assign({}, item, updatedItems[item._id] || {})
-          });
+            .filter(item => item.dashboardId === selectedDashboardId)
+            .filter(item => !deletedItems[item._id]).forEach(item => {
+              items[item._id] = Object.assign({}, item, updatedItems[item._id] || {})
+            });
 
           ['mobile', 'desktop'].forEach(layoutType => {
             let addedItems = {};

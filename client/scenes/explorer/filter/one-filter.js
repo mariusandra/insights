@@ -97,22 +97,24 @@ export default class OneFilter extends Component {
         </div>
         <div className='filter-with-inputs'>
           <span style={{fontWeight: columnFilter && columnFilter.indexOf('between:') === 0 ? 'bold' : 'normal'}}>Between:</span>
-          <input className='half'
-                 placeholder='- ∞'
-                 type='text'
-                 value={columnFilter && columnFilter.indexOf('between:') === 0 ? columnFilter.split(':')[1] : ''}
-                 onChange={(e) => {
-                   const str = `${sanitizeNumber(e.target.value || '')}:${(columnFilter || '').split(':')[2] || ''}`
-                   setFilter(index, str === ':' ? '' : `between:${str}`)
-                 }} />
-          <input className='half'
-                 placeholder='+ ∞'
-                 type='text'
-                 value={columnFilter && columnFilter.indexOf('between:') === 0 ? columnFilter.split(':')[2] : ''}
-                 onChange={(e) => {
-                   const str = `${(columnFilter || '').split(':')[1] || ''}:${sanitizeNumber(e.target.value || '')}`
-                   setFilter(index, str === ':' ? '' : `between:${str}`)
-                 }} />
+          <input
+            className='half'
+            placeholder='- ∞'
+            type='text'
+            value={columnFilter && columnFilter.indexOf('between:') === 0 ? columnFilter.split(':')[1] : ''}
+            onChange={(e) => {
+              const str = `${sanitizeNumber(e.target.value || '')}:${(columnFilter || '').split(':')[2] || ''}`
+              setFilter(index, str === ':' ? '' : `between:${str}`)
+            }} />
+          <input
+            className='half'
+            placeholder='+ ∞'
+            type='text'
+            value={columnFilter && columnFilter.indexOf('between:') === 0 ? columnFilter.split(':')[2] : ''}
+            onChange={(e) => {
+              const str = `${(columnFilter || '').split(':')[1] || ''}:${sanitizeNumber(e.target.value || '')}`
+              setFilter(index, str === ':' ? '' : `between:${str}`)
+            }} />
         </div>
       </div>
     )
@@ -148,32 +150,32 @@ export default class OneFilter extends Component {
         <div className='filter-with-inputs'>
           <span style={{fontWeight: columnFilter && columnFilter.indexOf('equals:') === 0 ? 'bold' : 'normal'}}>Equals:</span>
           <DateTime value={equalsDate}
-                    dateFormat='YYYY-MM-DD'
-                    timeFormat={false}
-                    className='full'
-                    closeOnSelect
-                    onChange={(date) => setFilter(index, date ? `equals:${date.format('YYYY-MM-DD')}` : '')} />
+            dateFormat='YYYY-MM-DD'
+            timeFormat={false}
+            className='full'
+            closeOnSelect
+            onChange={(date) => setFilter(index, date ? `equals:${date.format('YYYY-MM-DD')}` : '')} />
         </div>
         <div className='filter-with-inputs'>
           <span style={{fontWeight: columnFilter && columnFilter.indexOf('date_range:') === 0 ? 'bold' : 'normal'}}>Between:</span>
           <DateTime value={startDate}
-                    dateFormat='YYYY-MM-DD'
-                    timeFormat={false}
-                    className='half'
-                    closeOnSelect
-                    onChange={(date) => {
-                      const str = `${date ? date.format('YYYY-MM-DD') : ''}:${endDate ? endDate.format('YYYY-MM-DD') : ''}`
-                      setFilter(index, str === ':' ? '' : `date_range:${str}`)
-                    }} />
+            dateFormat='YYYY-MM-DD'
+            timeFormat={false}
+            className='half'
+            closeOnSelect
+            onChange={(date) => {
+              const str = `${date ? date.format('YYYY-MM-DD') : ''}:${endDate ? endDate.format('YYYY-MM-DD') : ''}`
+              setFilter(index, str === ':' ? '' : `date_range:${str}`)
+            }} />
           <DateTime value={endDate}
-                    dateFormat='YYYY-MM-DD'
-                    timeFormat={false}
-                    className='half'
-                    closeOnSelect
-                    onChange={(date) => {
-                      const str = `${startDate ? startDate.format('YYYY-MM-DD') : ''}:${date ? date.format('YYYY-MM-DD') : ''}`
-                      setFilter(index, str === ':' ? '' : `date_range:${str}`)
-                    }} />
+            dateFormat='YYYY-MM-DD'
+            timeFormat={false}
+            className='half'
+            closeOnSelect
+            onChange={(date) => {
+              const str = `${startDate ? startDate.format('YYYY-MM-DD') : ''}:${date ? date.format('YYYY-MM-DD') : ''}`
+              setFilter(index, str === ':' ? '' : `date_range:${str}`)
+            }} />
         </div>
       </div>
     )

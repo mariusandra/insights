@@ -130,12 +130,14 @@ export default class DashboardGraph extends Component {
             {' '}
             <i className='fa fa-edit' onClick={this.handleEdit} style={{ cursor: 'pointer' }} />
           </div>
-          <button style={{position: 'absolute', top: 0, right: 0, marginBottom: 0}}
-                  onClick={() => openLocation(path)}
-                  className='fa fa-search-plus' />
-          <i className='fa fa-trash'
-             onClick={this.handleDelete}
-             style={{ position: 'absolute', top: 8, right: 45, cursor: 'pointer' }} />
+          <button
+            style={{position: 'absolute', top: 0, right: 0, marginBottom: 0}}
+            onClick={() => openLocation(path)}
+            className='fa fa-search-plus' />
+          <i
+            className='fa fa-trash'
+            onClick={this.handleDelete}
+            style={{ position: 'absolute', top: 8, right: 45, cursor: 'pointer' }} />
         </div>
         <div style={{ width: containerWidth, height: containerHeight - 30, backgroundColor: isResizing ? '#eeeeee' : '', overflow: 'hidden' }}>
           {loaded && !isResizing ? (

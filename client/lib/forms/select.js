@@ -31,8 +31,8 @@ export default class Select extends Component {
           {placeholder ? <option value=''>{placeholder}</option> : null}
           {options.map(option => (
             (typeof option === 'string' || typeof option === 'number')
-            ? <option key={option} value={option}>{option}</option>
-            : <option key={option._id || option.id} value={option._id || option.id}>{option.name}</option>
+              ? <option key={option} value={option}>{option}</option>
+              : <option key={option._id || option.id} value={option._id || option.id}>{option.name}</option>
           ))}
         </select>
         <div className='arrow'>▾</div>

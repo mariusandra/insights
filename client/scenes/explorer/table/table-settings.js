@@ -96,7 +96,7 @@ export default class TableSettings extends Component {
     return (
       <Tooltip placement='bottomLeft' trigger={['hover']} overlay={overlay} onVisibleChange={this.handleTooltip}>
         <div className={className}
-             onClick={this.handleSort}>
+          onClick={this.handleSort}>
           ☰
         </div>
       </Tooltip>

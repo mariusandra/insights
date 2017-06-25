@@ -138,43 +138,43 @@ export default class ExplorerTable extends Component {
     return (
       <div className='results-explorer-table'>
         <Table rowsCount={count}
-               rowHeight={30}
-               headerHeight={30}
-               width={containerWidth - 20}
-               height={this.tableHeight()}
-               scrollToRow={scrollToRow}
-               isColumnResizing={false}
-               isColumnReordering={false}
-               onColumnResizeEndCallback={setColumnWidth}
-               onColumnReorderEndCallback={this.handleColumnReorder}
-               onScrollStart={this.handleScrollStart}
-               onScrollEnd={this.handleScrollEnd} >
+          rowHeight={30}
+          headerHeight={30}
+          width={containerWidth - 20}
+          height={this.tableHeight()}
+          scrollToRow={scrollToRow}
+          isColumnResizing={false}
+          isColumnReordering={false}
+          onColumnResizeEndCallback={setColumnWidth}
+          onColumnReorderEndCallback={this.handleColumnReorder}
+          onScrollStart={this.handleScrollStart}
+          onScrollEnd={this.handleScrollEnd} >
           <Column header={<Cell><TableSettings /></Cell>}
-                  cell={props => (
-                    <Cell {...props}>
-                      <div className='cell-body'>
-                        {props.rowIndex + 1}.
-                      </div>
-                    </Cell>
-                  )}
-                  fixed
-                  width={Math.max(`${count}`.length * 10 + 18, 30)} />
+            cell={props => (
+              <Cell {...props}>
+                <div className='cell-body'>
+                  {props.rowIndex + 1}.
+                </div>
+              </Cell>
+            )}
+            fixed
+            width={Math.max(`${count}`.length * 10 + 18, 30)} />
           {columns.map(s => [s, columnsMeta[s], i++]).map(([column, meta, i]) => (
             <Column key={column}
-                    header={<Cell><TableHeader index={i} column={column} /></Cell>}
-                    columnKey={column}
-                    isResizable
-                    isReorderable
-                    cell={props => (
-                      <TableCell results={results}
-                                 row={props.rowIndex}
-                                 index={i}
-                                 offset={offset}
-                                 meta={meta}
-                                 digDeeper={digDeeper} />
-                    )}
-                    width={columnWidths[column] || defaultColumnWidth(meta)}
-                    flexGrow={typeof columnWidths[column] === 'undefined' ? 1 : null} />
+              header={<Cell><TableHeader index={i} column={column} /></Cell>}
+              columnKey={column}
+              isResizable
+              isReorderable
+              cell={props => (
+                <TableCell results={results}
+                  row={props.rowIndex}
+                  index={i}
+                  offset={offset}
+                  meta={meta}
+                  digDeeper={digDeeper} />
+              )}
+              width={columnWidths[column] || defaultColumnWidth(meta)}
+              flexGrow={typeof columnWidths[column] === 'undefined' ? 1 : null} />
           ))}
         </Table>
       </div>

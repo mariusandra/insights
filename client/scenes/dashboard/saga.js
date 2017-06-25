@@ -101,9 +101,9 @@ export default class DashboardSaga extends Saga {
       dashboards,
       dashboardItems
     ] = yield all([
-      dashboardsService.find(),
-      dashboardItemsService.find()
-    ])
+        dashboardsService.find(),
+        dashboardItemsService.find()
+      ])
 
     yield put(dashboardItemsLoaded(dashboardItems.data))
     yield put(dashboardsLoaded(dashboards.data))

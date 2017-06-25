@@ -136,8 +136,8 @@ class Node extends Component {
     const { links, columns, custom } = structure[model] || {}
 
     return ((links
-              ? (links.incoming && links.outgoing ? (Object.keys(links.outgoing || {}).length + Object.keys(links.incoming).length)
-              : Object.keys(links).length) : 0) +
+      ? (links.incoming && links.outgoing ? (Object.keys(links.outgoing || {}).length + Object.keys(links.incoming).length)
+        : Object.keys(links).length) : 0) +
             Object.keys(columns).length + Object.keys(custom).length) > 0
   }
 
@@ -235,7 +235,7 @@ class Node extends Component {
             </div>
           ) : null}
           <div className={`node-icon ${hasChildNodes ? 'has-children' : 'no-children'} ${collapsed ? 'collapsed' : 'open'}`}
-              onClick={this.toggleCollapse} />
+            onClick={this.toggleCollapse} />
           <div className='node-title' onClick={model ? this.toggleCollapse : this.toggleSelection}>
             <span className={`${this.isSelected() || path === model ? 'node-selected' : ''} ${this.isFiltered() ? 'node-filtered' : ''}`}>
               {connection
@@ -246,7 +246,7 @@ class Node extends Component {
                       {' '}
                       <span style={{fontWeight: 300}}>{`(${model})`}</span>
                     </span>
-                    )
+                  )
                   : connection
                 : model || '-'}
             </span>
@@ -261,10 +261,10 @@ class Node extends Component {
           <div className='node-children'>
             {childNodes.filter(child => !localSearch || stringIn(localSearch.split(' ')[0], `${path}.${child.connection}`)).map(child => (
               <ConnectedNode key={child.connection}
-                             path={`${path}.${child.connection}`}
-                             model={child.model}
-                             localSearch={localSearch.split(' ').slice(1).join(' ')}
-                             connection={child.connection} />
+                path={`${path}.${child.connection}`}
+                model={child.model}
+                localSearch={localSearch.split(' ').slice(1).join(' ')}
+                connection={child.connection} />
             ))}
           </div>
         ) : null}

@@ -6,7 +6,6 @@ import './styles.scss'
 import React, { Component } from 'react'
 import { connect } from 'kea/logic'
 import { Responsive, WidthProvider } from 'react-grid-layout'
-const ResponsiveReactGridLayout = WidthProvider(Responsive)
 import { Layout } from 'react-flex-layout'
 
 // utils
@@ -18,6 +17,7 @@ import Spinner from 'lib/tags/spinner'
 // logic
 import dashboardLogic from '~/scenes/dashboard/logic'
 
+const ResponsiveReactGridLayout = WidthProvider(Responsive)
 // const { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } = dashboard.constants
 
 @connect({
@@ -68,11 +68,11 @@ export default class Dashboard extends Component {
       return (
         <div key={l.i}>
           <Graph key={l.i}
-                 itemId={l.i}
-                 dashboardId={selectedDashboardId}
-                 name={items[l.i].name}
-                 path={items[l.i].path}
-                 isResizing={l.i === resizingItem} />
+            itemId={l.i}
+            dashboardId={selectedDashboardId}
+            name={items[l.i].name}
+            path={items[l.i].path}
+            isResizing={l.i === resizingItem} />
         </div>
       )
     })
@@ -106,28 +106,28 @@ export default class Dashboard extends Component {
             <button className='white' onClick={() => addDashboard()}>+ ADD</button>
             {layoutsUnsaved ? (
               savingDashboard ? <Spinner />
-                              : (
-                                <div style={{display: 'inline-block'}}>
-                                  <button className='fa fa-save' onClick={() => saveDashboard(selectedDashboardId)} />
-                                  <button className='fa fa-undo' onClick={() => undoDashboard(selectedDashboardId)} />
-                                </div>
-                              )
+                : (
+                  <div style={{display: 'inline-block'}}>
+                    <button className='fa fa-save' onClick={() => saveDashboard(selectedDashboardId)} />
+                    <button className='fa fa-undo' onClick={() => undoDashboard(selectedDashboardId)} />
+                  </div>
+                )
             ) : null}
           </div>
         </Layout>
         <Layout layoutHeight='flex'>
           <ResponsiveReactGridLayout className='layout'
-                                     breakpoints={{desktop: 768, mobile: 0}}
-                                     cols={{desktop: 6, mobile: 2}}
-                                     rowHeight={30}
-                                     layouts={layouts}
-                                     onLayoutChange={layoutChanged}
-                                     onBreakpointChange={setCurrentBreakpoint}
-                                     onResizeStart={this.handleResizeStart}
-                                     onResizeStop={this.handleResizeStop}
-                                     // WidthProvider option
-                                     useCSSTransforms={mounted}
-                                     measureBeforeMount>
+            breakpoints={{desktop: 768, mobile: 0}}
+            cols={{desktop: 6, mobile: 2}}
+            rowHeight={30}
+            layouts={layouts}
+            onLayoutChange={layoutChanged}
+            onBreakpointChange={setCurrentBreakpoint}
+            onResizeStart={this.handleResizeStart}
+            onResizeStop={this.handleResizeStop}
+            // WidthProvider option
+            useCSSTransforms={mounted}
+            measureBeforeMount>
             {this.generateDOM()}
           </ResponsiveReactGridLayout>
         </Layout>

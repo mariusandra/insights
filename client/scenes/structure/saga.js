@@ -6,10 +6,10 @@ import { waitUntilLogin } from '~/scenes/auth'
 
 import client from '~/client'
 
+import structureLogic from '~/scenes/structure/logic'
+
 const connectionsService = client.service('api/connections')
 const structureService = client.service('api/structure')
-
-import structureLogic from '~/scenes/structure/logic'
 
 export default class StructureSaga extends Saga {
   actions = () => ([

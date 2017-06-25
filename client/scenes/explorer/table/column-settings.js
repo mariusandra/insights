@@ -89,24 +89,24 @@ export default class TableHeader extends Component {
     return (
       <div className='filter-options'>
         <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: !transform ? 'bold' : 'normal'}}
-              onClick={() => setTransform(index, '', aggregate)}>{meta.type === 'date' ? 'Day' : 'Time'}</span>
+          onClick={() => setTransform(index, '', aggregate)}>{meta.type === 'date' ? 'Day' : 'Time'}</span>
         {' '}
         {meta.type === 'time' ? (
           <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: transform === 'day' ? 'bold' : 'normal'}}
-                onClick={() => setTransform(index, 'day', aggregate)}>Day</span>
+            onClick={() => setTransform(index, 'day', aggregate)}>Day</span>
         ) : null}
         {meta.type === 'time' ? ' ' : ''}
         <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: transform === 'week' ? 'bold' : 'normal'}}
-              onClick={() => setTransform(index, 'week', aggregate)}>Week</span>
+          onClick={() => setTransform(index, 'week', aggregate)}>Week</span>
         {' '}
         <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: transform === 'month' ? 'bold' : 'normal'}}
-              onClick={() => setTransform(index, 'month', aggregate)}>Month</span>
+          onClick={() => setTransform(index, 'month', aggregate)}>Month</span>
         {' '}
         <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: transform === 'quarter' ? 'bold' : 'normal'}}
-              onClick={() => setTransform(index, 'quarter', aggregate)}>Quarter</span>
+          onClick={() => setTransform(index, 'quarter', aggregate)}>Quarter</span>
         {' '}
         <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: transform === 'year' ? 'bold' : 'normal'}}
-              onClick={() => setTransform(index, 'year', aggregate)}>Year</span>
+          onClick={() => setTransform(index, 'year', aggregate)}>Year</span>
       </div>
     )
   }
@@ -122,7 +122,7 @@ export default class TableHeader extends Component {
     return (
       <div className='filter-options'>
         <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: facetsColumn === column ? 'bold' : 'normal'}}
-              onClick={() => setFacetsColumn(facetsColumn === column ? null : column)}>Facet by this column</span>
+          onClick={() => setFacetsColumn(facetsColumn === column ? null : column)}>Facet by this column</span>
       </div>
     )
   }
@@ -142,27 +142,27 @@ export default class TableHeader extends Component {
         {meta.index === 'primary_key' ? (
           <span>
             <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: aggregate === 'count' ? 'bold' : 'normal'}}
-                  onClick={() => setTransform(index, transform, aggregate === 'count' ? '' : 'count')}>Count</span>
+              onClick={() => setTransform(index, transform, aggregate === 'count' ? '' : 'count')}>Count</span>
             {' '}
           </span>
         ) : null}
         {meta.type === 'string' || meta.type === 'number' ? (
           <span>
             <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: aggregate === 'min' ? 'bold' : 'normal'}}
-                  onClick={() => setTransform(index, transform, aggregate === 'min' ? '' : 'min')}>Min</span>
+              onClick={() => setTransform(index, transform, aggregate === 'min' ? '' : 'min')}>Min</span>
             {' '}
             <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: aggregate === 'max' ? 'bold' : 'normal'}}
-                  onClick={() => setTransform(index, transform, aggregate === 'max' ? '' : 'max')}>Max</span>
+              onClick={() => setTransform(index, transform, aggregate === 'max' ? '' : 'max')}>Max</span>
             {' '}
           </span>
         ) : null}
         {meta.type === 'number' ? (
           <span>
             <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: aggregate === 'avg' ? 'bold' : 'normal'}}
-                  onClick={() => setTransform(index, transform, aggregate === 'avg' ? '' : 'avg')}>Avg</span>
+              onClick={() => setTransform(index, transform, aggregate === 'avg' ? '' : 'avg')}>Avg</span>
             {' '}
             <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: aggregate === 'sum' ? 'bold' : 'normal'}}
-                  onClick={() => setTransform(index, transform, aggregate === 'sum' ? '' : 'sum')}>Sum</span>
+              onClick={() => setTransform(index, transform, aggregate === 'sum' ? '' : 'sum')}>Sum</span>
           </span>
         ) : null}
       </div>

@@ -57,14 +57,14 @@ export default class ExplorerTree extends Component {
             {showConnections ? <Connection /> : null}
             <div style={{padding: 10}}>
               <input ref='search'
-                    type='search'
-                    id='tree-search'
-                    autoFocus
-                    value={search}
-                    className='input-text'
-                    onChange={this.handleSearch}
-                    style={{width: '100%'}}
-                    placeholder='Type to search...' />
+                type='search'
+                id='tree-search'
+                autoFocus
+                value={search}
+                className='input-text'
+                onChange={this.handleSearch}
+                style={{width: '100%'}}
+                placeholder='Type to search...' />
             </div>
           </div>
         </Layout>
@@ -72,15 +72,15 @@ export default class ExplorerTree extends Component {
           <div className='explorer-tree'>
             {selectedModel ? (
               <Node key={selectedModel}
-                    path={selectedModel}
-                    localSearch={search}
-                    model={selectedModel} />
+                path={selectedModel}
+                localSearch={search}
+                model={selectedModel} />
             ) : (
               models.sort().filter(m => !search || m.toLowerCase().includes(search.toLowerCase())).map(model => (
                 <div className='node' key={model}>
                   <div className='node-entry'>
                     <div className='node-icon has-children collapsed'
-                        onClick={() => this.openModel(model)} />
+                      onClick={() => this.openModel(model)} />
                     <div className='node-title' onClick={() => this.openModel(model)}>
                       {search ? <HighlightText highlight={search}>{model}</HighlightText> : model}
                     </div>

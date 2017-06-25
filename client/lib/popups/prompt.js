@@ -63,7 +63,7 @@ Popup.registerPlugin('prompt', function (title, defaultValue, placeholder, callb
   })
 })
 
-export default function promptPopup (title, defaultValue = '', placeholder = '', ) {
+export default function promptPopup (title, defaultValue = '', placeholder = '') {
   return new Promise((resolve, reject) => {
     Popup.close()
     Popup.plugins().prompt(title, defaultValue, placeholder, function (value) {
