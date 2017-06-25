@@ -6,7 +6,7 @@ const columnTypes = ['unknown', 'number', 'string', 'boolean', 'time', 'date']
 const indexTypes = ['', 'primary_key']
 const otherMetaFields = {
   column: ['type', 'index', 'url'],
-  link: ['model', 'model_key', 'my_key'],
+  link: ['my_key', 'model', 'model_key'],
   custom: ['sql', 'type', 'url']
 }
 

@@ -92,7 +92,7 @@ export default class StructureLogic extends Logic {
           let structureForModel = {}
           Object.keys(structure[model].columns).forEach(key => {
             structureForModel[key] = Object.assign(
-              { group: 'column', key: key, my_key: key, disabled: false },
+              { group: 'column', key: key, my_key: key, sql: '${' + key + '}', disabled: false },
               structure[model].columns[key] || { disabled: true }
             )
           })
