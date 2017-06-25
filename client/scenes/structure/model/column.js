@@ -129,7 +129,7 @@ export default class ModelColumn extends Component {
         {meta.disabled || !editing ? (
           <td>
             {otherMetaFields[meta.group].filter(metaField => meta[metaField]).map(metaField => (
-              <span key={metaField} className='meta-field'>
+              <span key={metaField} className={`meta-field${hasChanged && metaChanges[metaField] ? ' changed-field' : ''}`}>
                 <span className='label'>
                   {metaField.split('_').join(' ')}:
                 </span>
@@ -141,7 +141,7 @@ export default class ModelColumn extends Component {
           <td>
             {otherMetaFields[meta.group].map(metaField => (
               <div key={metaField}>
-                <span className='meta-field'>
+                <span className={`meta-field${hasChanged && metaChanges[metaField] ? ' changed-field' : ''}`}>
                   <span className='label'>
                     {metaField.split('_').join(' ')}{meta[metaField] !== undefined ? ':' : ''}
                   </span>

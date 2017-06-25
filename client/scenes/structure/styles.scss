@@ -142,5 +142,11 @@
       color: #888;
       margin-right: 3px;
     }
+
+    &.changed-field {
+      color: #549854;
+      background: #b6eab6;
+      border: 1px solid #080;
+    }
   }
 }
