@@ -13,7 +13,7 @@ export default class StructureLogic extends Logic {
 
     selectModel: model => ({ model }),
 
-    addChange: (model, column, key, change, original) => ({ model, column, key, change, original }),
+    addChange: (model, column, field, change, original) => ({ model, column, field, change, original }),
     discardChanges: (model, column) => ({ model, column })
   })
 
@@ -34,17 +34,17 @@ export default class StructureLogic extends Logic {
       [actions.startLoading]: () => ({}),
       [actions.structureLoaded]: () => ({}),
       [actions.addChange]: (state, payload) => {
-        const { model, column, key, change, original } = payload
+        const { model, column, field, change, original } = payload
 
         let newColumn = {}
 
         if (change === original) {
-          const { [key]: discard, ...rest } = (state[model] || {})[column] // eslint-disable-line
+          const { [field]: discard, ...rest } = (state[model] || {})[column] // eslint-disable-line
           newColumn = rest
         } else {
           newColumn = {
             ...(state[model] || {})[column],
-            [key]: change
+            [field]: change
           }
         }
 

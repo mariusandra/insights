@@ -10,6 +10,8 @@ const otherMetaFields = {
   custom: ['sql', 'type', 'url']
 }
 
+const noop = () => {}
+
 export default class ModelColumn extends Component {
   static PropTypes = {
     model: PropTypes.string,
@@ -24,7 +26,7 @@ export default class ModelColumn extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      editing: false
+      editing: {}
     }
   }
 
@@ -41,37 +43,79 @@ export default class ModelColumn extends Component {
     addChange(model, column, 'disabled', !meta.disabled, columnMeta.disabled)
   }
 
-  handleMetaChange = (value, metaKey) => {
+  handleMetaChange = (value, field, close = false) => {
     const { model, column, columnMeta, addChange } = this.props
 
-    addChange(model, column, metaKey, value, columnMeta[metaKey])
+    addChange(model, column, field, value, columnMeta[field])
+
+    if (close) {
+      this.clearEditing(field)
+    }
   }
 
   handleDiscardChanges = () => {
     const { model, column, discardChanges } = this.props
     discardChanges(model, column)
-    this.setState({ editing: false })
+    this.setState({ editing: {} })
   }
 
   renderMetaEdit = (field, value) => {
     const { models, column } = this.props
 
     if (field === 'type') {
-      return <Select value={value} options={columnTypes} onValueChange={val => this.handleMetaChange(val, 'type')} />
+      return <Select value={value} options={columnTypes} onValueChange={val => this.handleMetaChange(val, 'type', true)} />
     } else if (field === 'model') {
-      return <Select value={value} options={models} onValueChange={val => this.handleMetaChange(val, 'model')} />
+      return <Select value={value} options={models} onValueChange={val => this.handleMetaChange(val, 'model', true)} />
     } else if (field === 'index') {
-      return <Select value={value} options={indexTypes} onValueChange={val => this.handleMetaChange(val, 'inex')} />
+      return <Select value={value} options={indexTypes} onValueChange={val => this.handleMetaChange(val, 'inex', true)} />
     } else {
       const placeholder = field === 'url' ? `https://mysite.com/admin/?${column}={${column}}` : ''
       return (
         <input
+          autoFocus
           type='text'
           className='input-text meta-input'
           placeholder={placeholder}
           value={value}
+          onBlur={() => this.clearEditing(field)}
           onChange={e => this.handleMetaChange(e.target.value, field)} />
       )
+    }
+  }
+
+  renderMetaShow = (field, value) => {
+    return value
+  }
+
+  setEditing = (field) => {
+    const { editing } = this.state
+    const meta = this.getMeta()
+
+    this.setState({
+      editing: {
+        ...editing,
+        [field]: true
+      }
+    })
+
+    if (meta[field] === undefined) {
+      this.handleMetaChange('', field)
+    }
+  }
+
+  clearEditing = (field) => {
+    const { editing } = this.state
+    const meta = this.getMeta()
+
+    this.setState({
+      editing: {
+        ...editing,
+        [field]: false
+      }
+    })
+
+    if (meta[field] === '') {
+      this.handleMetaChange(undefined, field)
     }
   }
 
@@ -85,71 +129,61 @@ export default class ModelColumn extends Component {
 
     return (
       <tr className={`${meta.disabled ? 'disabled ' : ''}${hasChanged ? 'changed ' : ''}`}>
-        {editing ? (
-          <td style={{verticalAlign: 'top'}}>
-            {meta.disabled
-              ? <span className='column-label'>{column}</span>
-              : <input type='text' className='input-text column-name' value={column} />}
-            <br />
-            <div style={{marginTop: 5}}>
-              <label style={{display: 'inline-block'}}>
-                <input type='checkbox' checked={!meta.disabled} onChange={this.handleToggleDisable} />
-                {' '}
-                Enabled?
-              </label>
-            </div>
-            <div style={{marginTop: 5}}>
-              <button type='button' onClick={() => this.setState({ editing: false })}>Save</button>
-              {' '}
-              {metaChanges
-                ? <button className='white' type='button' onClick={this.handleDiscardChanges}>Discard</button>
-                : null}
-            </div>
-          </td>
-        ) : (
-          <td className='no-wrap'>
-            <span className='column-label'>{column}</span>
-            {' '}
-            <span className='edit-link' onClick={() => this.setState({ editing: true })}>(edit)</span>
-          </td>
-        )}
-        {meta.disabled || !editing ? (
+        <td>
+          {meta.disabled || !editing.column
+            ? <span className='column-label' onClick={() => this.setEditing('column')}>{column}</span>
+            : <input autoFocus type='text' onBlur={() => this.clearEditing('column')} className='input-text column-name' value={column} />}
+          {' '}
+          {hasChanged
+            ? <span className='tag discard' onClick={this.handleDiscardChanges}>Discard</span>
+            : null}
+        </td>
+        <td>
+          <span className={meta.disabled ? 'tag disabled' : 'tag enabled'} onClick={this.handleToggleDisable}>
+            {meta.disabled ? 'Disabled' : 'Enabled'}
+          </span>
+        </td>
+        <td>
+          {meta.disabled || !editing.group
+            ? <span className={`tag ${meta.group}`} onClick={() => this.setEditing('group')}>{meta.group}</span>
+            : (
+              <Select
+                value={meta.group}
+                options={groupTypes}
+                onBlur={() => this.clearEditing('group')}
+                onValueChange={val => this.handleMetaChange(val, 'group', true)}
+                style={{width: 80}} />
+            )}
+        </td>
+        {!meta.disabled ? (
           <td>
-            <span className={`column-group ${meta.group}`}>{meta.group}</span>
-          </td>
-        ) : (
-          <td style={{verticalAlign: 'top'}}>
-            <Select
-              value={meta.group}
-              options={groupTypes}
-              onValueChange={val => this.handleMetaChange(val, 'group')}
-              style={{width: 80}} />
-          </td>
-        )}
-        {meta.disabled || !editing ? (
-          <td>
-            {otherMetaFields[meta.group].filter(metaField => meta[metaField]).map(metaField => (
-              <span key={metaField} className={`meta-field${hasChanged && metaChanges[metaField] ? ' changed-field' : ''}`}>
-                <span className='label'>
-                  {metaField.split('_').join(' ')}:
-                </span>
-                {meta[metaField]}
-              </span>
-            ))}
-          </td>
-        ) : (
-          <td>
-            {otherMetaFields[meta.group].map(metaField => (
-              <div key={metaField}>
-                <span className={`meta-field${hasChanged && metaChanges[metaField] ? ' changed-field' : ''}`}>
+            {otherMetaFields[meta.group].filter(metaField => meta[metaField] !== undefined).map(metaField => (
+              <div key={metaField} className={`meta-field-container${editing[metaField] ? ' editing' : ' showing'}`}>
+                <span
+                  className={`meta-field${hasChanged && metaChanges[metaField] ? ' changed-field' : ''}`}
+                  onClick={!editing[metaField] ? () => { this.setEditing(metaField) } : noop}>
                   <span className='label'>
-                    {metaField.split('_').join(' ')}{meta[metaField] !== undefined ? ':' : ''}
+                    {metaField.split('_').join(' ')}:
                   </span>
-                  {this.renderMetaEdit(metaField, meta[metaField])}
+                  {editing[metaField]
+                    ? this.renderMetaEdit(metaField, meta[metaField])
+                    : this.renderMetaShow(metaField, meta[metaField])}
+                </span>
+              </div>
+            ))}
+            {otherMetaFields[meta.group].filter(metaField => meta[metaField] === undefined).map(metaField => (
+              <div key={metaField} className='meta-field-container empty'>
+                <span className={`meta-field${hasChanged && metaChanges[metaField] ? ' changed-field' : ''}`}
+                  onClick={() => { this.setEditing(metaField) }}>
+                  <span className='label no-field'>
+                    {metaField.split('_').join(' ')}
+                  </span>
                 </span>
               </div>
             ))}
           </td>
+        ) : (
+          <td />
         )}
       </tr>
     )
