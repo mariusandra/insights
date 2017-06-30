@@ -1,7 +1,7 @@
 {
   "name": "insights",
   "description": "",
-  "version": "0.0.14",
+  "version": "0.0.16",
   "homepage": "",
   "main": "app",
   "keywords": [
@@ -20,25 +20,15 @@
     "node": ">= 7.6.0",
     "yarn": ">= 0.18.0"
   },
-  "scripts": {
-    "test": "npm run eslint && npm run mocha",
-    "lint": "eslint client app test config",
-    "lint:fix": "eslint client app test config --fix",
-    "start": "NODE_ENV=development node --inspect app/",
-    "createsuperuser": "NODE_ENV=production node app/createsuperuser.js",
-    "build": "NODE_ENV=production webpack --profile --config client/webpack.config.js",
-    "production": "NODE_ENV=production node app/",
-    "mocha": "mocha test/ --recursive",
-    "prepublish": "npm run build"
-  },
+  "scripts": {},
   "bin": {
     "insights": "./bin/insights"
   },
   "files": [
     "bin"
   ],
-  "peerDependencies": {
-  },
+  "peerDependencies": {},
   "dependencies": {
+    "commander": "^2.10.0"
   }
 }

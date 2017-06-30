@@ -1,7 +1,7 @@
 {
   "name": "insights-server",
   "description": "",
-  "version": "0.0.14",
+  "version": "0.0.18",
   "homepage": "",
   "main": "app",
   "keywords": [
@@ -38,5 +38,8 @@
     "insights-core": "*"
   },
   "dependencies": {
+    "commander": "^2.10.0",
+    "prompt-promise": "1.0.3",
+    "winston": "2.3.1"
   }
 }
