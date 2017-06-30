@@ -1,0 +1,42 @@
+{
+  "name": "insights-server",
+  "description": "",
+  "version": "0.0.14",
+  "homepage": "",
+  "main": "app",
+  "keywords": [
+    "feathers"
+  ],
+  "author": {
+    "name": "Marius Andra",
+    "email": "marius.andra@gmail.com"
+  },
+  "contributors": [],
+  "bugs": {},
+  "directories": {
+    "lib": "app"
+  },
+  "engines": {
+    "node": ">= 7.6.0",
+    "yarn": ">= 0.18.0"
+  },
+  "scripts": {
+    "start": "NODE_ENV=development node --inspect app/",
+    "createsuperuser": "NODE_ENV=production node app/createsuperuser.js",
+    "production": "NODE_ENV=production node app/"
+  },
+  "bin": {
+    "insights-server": "./bin/insights-server",
+    "insights-createsecret": "./bin/insights-createsecret",
+    "insights-createsuperuser": "./bin/insights-createsuperuser"
+  },
+  "files": [
+    "app",
+    "bin"
+  ],
+  "peerDependencies": {
+    "insights-core": "*"
+  },
+  "dependencies": {
+  }
+}

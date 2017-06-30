@@ -6,7 +6,6 @@ const helmet = require('helmet')
 const bodyParser = require('body-parser')
 
 const feathers = require('feathers')
-const configuration = require('feathers-configuration')
 const hooks = require('feathers-hooks')
 const rest = require('feathers-rest')
 const socketio = require('feathers-socketio')
@@ -19,8 +18,13 @@ const authentication = require('./authentication')
 
 const app = feathers()
 
-// Load app configuration
-app.configure(configuration(path.join(__dirname, '..')))
+// set path of config to insights-core/config
+const configDir = path.join(__dirname, '..', 'config')
+process.env.NODE_CONFIG_DIR = configDir
+
+const configuration = require('feathers-configuration')
+
+app.configure(configuration())
 
 if (process.env.INSIGHTS_DATA) {
   app.set('nedb', process.env.INSIGHTS_DATA)
@@ -32,6 +36,8 @@ app.use(helmet())
 app.use(compress())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+
+console.log(app.get('public'))
 app.use(favicon(path.join(app.get('public'), 'assets', 'favicon.ico')))
 
 app.get('/', serveHtmlForEnvironment)

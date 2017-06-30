@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 const logger = require('winston')
-const app = require('./app')
+const app = require('insights-core/app')
 
 const port = process.env.INSIGHTS_PORT || app.get('port')
 

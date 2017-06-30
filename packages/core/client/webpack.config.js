@@ -35,8 +35,8 @@ let config = {
   resolve: {
     extensions: ['.webpack.js', '.web.js', '.js', '.jsx', '.scss', '.css', 'config.js'],
     alias: {
-      '~': path.join(process.cwd(), 'client'),
-      lib: path.join(process.cwd(), 'client', 'lib')
+      '~': path.join(__dirname),
+      lib: path.join(__dirname, 'lib')
     }
   },
   plugins: [

@@ -1,0 +1,40 @@
+{
+  "name": "insights-desktop",
+  "description": "",
+  "version": "0.0.14",
+  "homepage": "",
+  "main": "app",
+  "keywords": [
+    "feathers"
+  ],
+  "author": {
+    "name": "Marius Andra",
+    "email": "marius.andra@gmail.com"
+  },
+  "contributors": [],
+  "bugs": {},
+  "directories": {
+    "lib": "app"
+  },
+  "engines": {
+    "node": ">= 7.6.0",
+    "yarn": ">= 0.18.0"
+  },
+  "scripts": {
+    "start": "NODE_ENV=development ./node_modules/.bin/electron -i app/electron",
+    "electron": "NODE_ENV=production ./node_modules/.bin/electron app/electron"
+  },
+  "bin": {
+    "insights-desktop": "./bin/insights-desktop"
+  },
+  "files": [
+    "app",
+    "bin"
+  ],
+  "peerDependencies": {
+    "insights-core": "*"
+  },
+  "dependencies": {
+    "electron": "1.6.11"
+  }
+}

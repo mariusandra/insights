@@ -1,4 +1,4 @@
-const randomString = require('./lib/random-string')
+const randomString = require('insights-core/app/lib/random-string')
 const electronConnectApiKey = randomString(40)
 const CustomStrategy = require('passport-custom')
 

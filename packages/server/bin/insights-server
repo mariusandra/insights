@@ -40,4 +40,4 @@ if (program.port) {
   process.env.INSIGHTS_PORT = program.port
 }
 
-require('../server')
+require('../app')

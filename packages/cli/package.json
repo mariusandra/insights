@@ -1,0 +1,44 @@
+{
+  "name": "insights",
+  "description": "",
+  "version": "0.0.14",
+  "homepage": "",
+  "main": "app",
+  "keywords": [
+    "feathers"
+  ],
+  "author": {
+    "name": "Marius Andra",
+    "email": "marius.andra@gmail.com"
+  },
+  "contributors": [],
+  "bugs": {},
+  "directories": {
+    "lib": "app"
+  },
+  "engines": {
+    "node": ">= 7.6.0",
+    "yarn": ">= 0.18.0"
+  },
+  "scripts": {
+    "test": "npm run eslint && npm run mocha",
+    "lint": "eslint client app test config",
+    "lint:fix": "eslint client app test config --fix",
+    "start": "NODE_ENV=development node --inspect app/",
+    "createsuperuser": "NODE_ENV=production node app/createsuperuser.js",
+    "build": "NODE_ENV=production webpack --profile --config client/webpack.config.js",
+    "production": "NODE_ENV=production node app/",
+    "mocha": "mocha test/ --recursive",
+    "prepublish": "npm run build"
+  },
+  "bin": {
+    "insights": "./bin/insights"
+  },
+  "files": [
+    "bin"
+  ],
+  "peerDependencies": {
+  },
+  "dependencies": {
+  }
+}

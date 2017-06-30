@@ -1,6 +1,6 @@
 const { app, BrowserWindow } = require('electron')
 
-const server = require('./app')
+const server = require('insights-core/app')
 
 const authenticationElectron = require('./authentication-electron')
 server.configure(authenticationElectron)
