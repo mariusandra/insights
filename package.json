@@ -1,7 +1,7 @@
 {
   "name": "insights-build",
   "description": "",
-  "version": "0.0.15",
+  "version": "0.0.18",
   "homepage": "",
   "main": "server",
   "keywords": [
@@ -24,10 +24,10 @@
     "test": "npm run eslint && npm run mocha",
     "lint": "eslint packages --ignore-pattern=node_modules",
     "lint:fix": "eslint packages --fix --ignore-pattern=node_modules",
-    "start": "NODE_ENV=development node --inspect packages/server/app",
-    "build": "NODE_ENV=production packages/core/node_modules/.bin/webpack --profile --config packages/core/client/webpack.config.js",
-    "analyze": "NODE_ENV=production ANALYZE_BUNDLE=true packages/core/node_modules/.bin/webpack --config packages/core/client/webpack.config.js",
-    "production": "NODE_ENV=production node packages/server/app",
+    "start": "NODE_ENV=development node --inspect packages/insights-server/app",
+    "build": "NODE_ENV=production packages/insights-core/node_modules/.bin/webpack --profile --config packages/insights-core/client/webpack.config.js",
+    "analyze": "NODE_ENV=production ANALYZE_BUNDLE=true packages/insights-core/node_modules/.bin/webpack --config packages/insights-core/client/webpack.config.js",
+    "production": "NODE_ENV=production node packages/insights-server/app",
     "mocha": "mocha test/ --recursive",
     "prepublish": "npm run build"
   },
@@ -36,12 +36,16 @@
     "README.md"
   ],
   "dependencies": {
-    "insights": "file:./packages/cli",
-    "insights-core": "file:./packages/core",
-    "insights-desktop": "file:./packages/desktop",
-    "insights-server": "file:./packages/server"
+    "insights": "file:./packages/insights",
+    "insights-core": "file:./packages/insights-core",
+    "insights-desktop": "file:./packages/insights-desktop",
+    "insights-server": "file:./packages/insights-server",
+    "semver": "^5.3.0"
   },
   "peerDependencies": {
     "webpack": "*"
+  },
+  "devDependencies": {
+    "oao": "^0.8.5"
   }
 }
