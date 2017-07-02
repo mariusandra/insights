@@ -104,10 +104,11 @@ yarn start
 Here's the latest workflow to publish a new version. This may change in the future.
 
 ```sh
-# update the versions of the repos under packages/*
-oao all "npm version patch"
+# optional: check if the core builds as needed.
+yarn run build:core
 
-# update the version of the root repo
+# update the versions of the repos under packages/* and the root repo
+oao all "npm version patch"
 npm version patch
 
 # sync package.jsons
