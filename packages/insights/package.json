@@ -1,12 +1,13 @@
 {
   "name": "insights",
-  "description": "",
+  "description": "Desktop and Self-Hosted \"SQL-not-required\" data analytics and visualisation tool.",
   "version": "0.0.16",
   "homepage": "",
   "main": "app",
   "license": "MIT",
   "keywords": [
-    "feathers"
+    "feathers",
+    "insights"
   ],
   "author": {
     "name": "Marius Andra",

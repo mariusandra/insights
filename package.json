@@ -1,12 +1,13 @@
 {
   "name": "insights-build",
-  "description": "",
+  "description": "Desktop and Self-Hosted \"SQL-not-required\" data analytics and visualisation tool.",
   "version": "0.0.18",
   "homepage": "",
   "main": "server",
   "license": "MIT",
   "keywords": [
-    "feathers"
+    "feathers",
+    "insights"
   ],
   "author": {
     "name": "Marius Andra",
