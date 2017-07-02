@@ -28,12 +28,11 @@
     "lint": "eslint packages --ignore-pattern=node_modules",
     "lint:fix": "eslint packages --fix --ignore-pattern=node_modules",
     "start": "NODE_ENV=development node --inspect packages/insights-server/app",
-    "000build": "NODE_ENV=production packages/insights-core/node_modules/.bin/webpack --profile --config packages/insights-core/client/webpack.config.js",
+    "build:core": "cd packages/insights-core && yarn run build",
     "build": "echo 'Nothing to build in root repo'",
     "analyze": "NODE_ENV=production ANALYZE_BUNDLE=true packages/insights-core/node_modules/.bin/webpack --config packages/insights-core/client/webpack.config.js",
     "production": "NODE_ENV=production node packages/insights-server/app",
-    "mocha": "mocha test/ --recursive",
-    "prepublish": "npm run build"
+    "mocha": "mocha test/ --recursive"
   },
   "files": [
     "bin",
