@@ -13,6 +13,7 @@
     "email": "marius.andra@gmail.com"
   },
   "contributors": [],
+  "repository": "mariusandra/insights",
   "bugs": {},
   "directories": {
     "lib": "server"
