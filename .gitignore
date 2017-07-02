@@ -111,3 +111,4 @@ $RECYCLE.BIN/
 data/
 
 public/dist/
+packages/insights-core/public/dist/

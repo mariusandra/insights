@@ -72,3 +72,29 @@ Hint: to count rows, select the `id` field and then `count` from the table heade
 * Dashboard item grouping/tabbing
 * Multiple lines from different sources on one chart in the dashboard
 * Polishing
+
+
+## Development
+
+`insights` is built as a monorepo and uses `oao` for package management, at least until yarn workspaces become a thing. `oao` uses yarn internally, so you need to have it installed as well.
+
+If you want to help with development, run these steps:
+
+```sh
+# 1. fork the repo in github
+
+# 2. clone it
+git clone git@github.com:<YOUR_NAME_HERE>/insights.git
+
+# 3. install oao
+npm install -g oao
+
+# 4. install all dependencies
+cd insights
+oao bootstrap
+
+# 5. run the development environment
+yarn start
+
+# 6. open http://localhost:3030/ and hack away
+```

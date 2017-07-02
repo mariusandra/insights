@@ -4,6 +4,7 @@
   "version": "0.0.18",
   "homepage": "",
   "main": "server",
+  "license": "MIT",
   "keywords": [
     "feathers"
   ],
@@ -25,7 +26,8 @@
     "lint": "eslint packages --ignore-pattern=node_modules",
     "lint:fix": "eslint packages --fix --ignore-pattern=node_modules",
     "start": "NODE_ENV=development node --inspect packages/insights-server/app",
-    "build": "NODE_ENV=production packages/insights-core/node_modules/.bin/webpack --profile --config packages/insights-core/client/webpack.config.js",
+    "000build": "NODE_ENV=production packages/insights-core/node_modules/.bin/webpack --profile --config packages/insights-core/client/webpack.config.js",
+    "build": "echo 'Nothing to build in root repo'",
     "analyze": "NODE_ENV=production ANALYZE_BUNDLE=true packages/insights-core/node_modules/.bin/webpack --config packages/insights-core/client/webpack.config.js",
     "production": "NODE_ENV=production node packages/insights-server/app",
     "mocha": "mocha test/ --recursive",
@@ -39,13 +41,13 @@
     "insights": "file:./packages/insights",
     "insights-core": "file:./packages/insights-core",
     "insights-desktop": "file:./packages/insights-desktop",
-    "insights-server": "file:./packages/insights-server",
-    "semver": "^5.3.0"
+    "insights-server": "file:./packages/insights-server"
   },
   "peerDependencies": {
     "webpack": "*"
   },
   "devDependencies": {
-    "oao": "^0.8.5"
+    "oao": "^0.8.5",
+    "semver": "^5.3.0"
   }
 }
