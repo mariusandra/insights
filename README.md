@@ -98,3 +98,21 @@ yarn start
 
 # 6. open http://localhost:3030/ and hack away
 ```
+
+### How to publish new versions
+
+Here's the latest workflow to publish a new version. This may change in the future.
+
+```sh
+# update the versions of the repos under packages/*
+oao all "npm version patch"
+
+# update the version of the root repo
+npm version patch
+
+# sync package.jsons
+oao prepublish
+
+# publish
+oao all "npm publish"
+```

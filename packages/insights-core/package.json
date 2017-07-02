@@ -1,7 +1,7 @@
 {
   "name": "insights-core",
   "description": "Desktop and Self-Hosted \"SQL-not-required\" data analytics and visualisation tool.",
-  "version": "0.0.18",
+  "version": "0.0.20",
   "homepage": "",
   "main": "app",
   "license": "MIT",
