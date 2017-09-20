@@ -6,7 +6,7 @@ Deploying on a new Ubuntu 16.04 for server usage:
 
 3) loosely based on [this guide](https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-16-04)
 
-```
+```sh
 INSIGHTS_DOMAIN=insights.mycompany.com
 
 # general upgrades
@@ -76,6 +76,21 @@ nano /etc/nginx/sites-available/default
 nginx -t
 systemctl reload nginx
 
+# optional: add HTTP basic auth for extra security if slightly paranoid
+apt-get install apache2-utils -y
+htpasswd -c /etc/nginx/.htpasswd insights
+nano /etc/nginx/sites-available/default
+# EDIT
+location / {
+        # ...
+        auth_basic "Private Property";
+        auth_basic_user_file /etc/nginx/.htpasswd;
+}
+# /EDIT
+nginx -t
+systemctl reload nginx
+
+
 # create user for insights
 adduser --disabled-password -q insights
 
@@ -99,8 +114,54 @@ ExecStart=/usr/bin/insights
 # /EDIT
 
 systemctl start insights
+```
 
+4) Make a tunnel from your server
 
+On the insights host:
 
+```sh
+su insights
+mkdir -p ~/.ssh
+nano ~/.ssh/authorized_keys
+# copy here the key (.ssh/id_rsa.pub) from your server with the DB
+```
 
+On the remote server
+
+Add a read only postgres user on the app server
+
+```sh
+su postgres
+psql <YOUR DATABASE NAME HERE>
+```
+
+```sql
+CREATE ROLE insights WITH LOGIN PASSWORD '<SOME GOOD PASSWORD HERE PLEASE>' NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION VALID UNTIL 'infinity';
+
+GRANT CONNECT ON DATABASE <YOUR DATABASE NAME HERE> TO insights;
+GRANT USAGE ON SCHEMA public TO insights;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO insights;
+GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO insights;
+
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO insights;
+```
+
+Add the following connection in insights:
+
+```
+psql://insights:<SOME GOOD PASSWORD HERE PLEASE>@localhost/<YOUR DATABASE NAME HERE>
+```
+
+Tunnel the connection
+
+```sh
+# check that you can connect:
+ssh insights@insigths.mycompany.com
+
+# send our local 5432 to the insights server
+# either this to test:
+ssh -N -R 5432:localhost:5432 insights.mycompany.com
+# or this to keep active:
+autossh -M 20000 -f -N insights.mycompany.com -R 5432:localhost:5432 -C
 ```
