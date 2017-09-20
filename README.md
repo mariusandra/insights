@@ -38,6 +38,8 @@ insights createsecret     # create a new authentication secret at ~/.insights/se
 insights server           # run the server
 ```
 
+Read the [deployment guide](https://github.com/mariusandra/insights/blob/master/docs/deployment.md) if you wish to run this on a fresh Ubuntu 16.04 instance.
+
 ## How does it work
 
 Similar to Looker and their LookML, Insights requires a mapping of your database's structure to function.
