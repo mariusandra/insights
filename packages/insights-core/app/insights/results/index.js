@@ -21,7 +21,8 @@ module.exports = class Results {
   //   facetsColumn: params.facetsColumn,
   //   facetsCount: params.facetsCount.present? ? params.facetsCount.to_i : 6
   //
-  //   graphOnly: false
+  //   graphOnly: false,
+  //   tableOnly: false
   // }
 
   constructor ({ params, adapter, structure }) {
@@ -48,7 +49,9 @@ module.exports = class Results {
     }
 
     // graph
-    await this.getGraph()
+    if (!this.params.tableOnly) {
+      await this.getGraph()
+    }
 
     this.setResponse()
 
@@ -58,7 +61,7 @@ module.exports = class Results {
   resetCache () {
     this.baseModelName = null
     this.columnMetadata = []
-    this.resultsTableColumns = []
+    this.resultsTableColumnMetadata = []
 
     this.commonSqlConditions = {
       having: [],
@@ -232,7 +235,7 @@ module.exports = class Results {
 
           // is this a column that is present in the results table?
           if (columns.includes(column)) {
-            this.resultsTableColumns.push(metadatumObject)
+            this.resultsTableColumnMetadata.push(metadatumObject)
           }
 
           valueCounter += 1
@@ -332,12 +335,12 @@ module.exports = class Results {
   }
 
   setGroup () {
-    const aggregateColumns = this.columnMetadata.filter(v => v.aggregate)
+    const aggregateColumns = this.resultsTableColumnMetadata.filter(v => v.aggregate)
     if (aggregateColumns.length === 0) {
       return
     }
 
-    const groupParts = this.columnMetadata.filter(v => !v.aggregate).map(v => v.sql)
+    const groupParts = this.resultsTableColumnMetadata.filter(v => !v.aggregate).map(v => v.sql)
     if (groupParts.length === 0) {
       return
     }
@@ -409,13 +412,13 @@ module.exports = class Results {
 
   async getResults () {
     // set what to select
-    this.resultsTableSqlParts.select = this.adapter.valueListToSelect(this.resultsTableColumns)
+    this.resultsTableSqlParts.select = this.adapter.valueListToSelect(this.resultsTableColumnMetadata)
 
     // get the results from the database
     const results = await this.adapter.getResults(Object.assign({}, this.commonSqlParts, this.resultsTableSqlParts))
 
     // get the keys used in the results
-    const columnAliases = this.resultsTableColumns.map(v => v.alias)
+    const columnAliases = this.resultsTableColumnMetadata.map(v => v.alias)
 
     // convert to an array
     this.finalResults = results.map(row => columnAliases.map(a => row[a]))
@@ -429,8 +432,8 @@ module.exports = class Results {
     const facetsColumnKey = this.params.facetsColumn
 
     // see what we have to work with
-    let timeColumns = this.resultsTableColumns.filter(v => (v.type === 'time' || v.type === 'date') && !v.aggregate)
-    const aggregateColumns = this.resultsTableColumns.filter(v => v.aggregate)
+    let timeColumns = this.resultsTableColumnMetadata.filter(v => (v.type === 'time' || v.type === 'date') && !v.aggregate)
+    const aggregateColumns = this.resultsTableColumnMetadata.filter(v => v.aggregate)
 
     // must have at least 1 aggregate and exactly 1 time column
     if (aggregateColumns.length < 1 || timeColumns.length !== 1) {
@@ -466,7 +469,7 @@ module.exports = class Results {
     let facetsColumns = []
 
     if (facetsColumnKey) {
-      facetsColumns = this.resultsTableColumns
+      facetsColumns = this.resultsTableColumnMetadata
         .filter(v => ['string', 'boolean'].includes(v.type) && !v.aggregate && v.column === facetsColumnKey)
         .slice(0, 1)
       facetsColumn = facetsColumns[0]
@@ -647,7 +650,7 @@ module.exports = class Results {
     this.response = {
       success: true,
 
-      columns: this.resultsTableColumns.map(v => v.column),
+      columns: this.resultsTableColumnMetadata.map(v => v.column),
       columnsMeta: columnsMeta,
       results: this.finalResults,
       count: this.resultsTableCount,
@@ -697,7 +700,12 @@ function getTimesFromString (timeFilter, smooth = 0, timeGroup = 'day') {
       firstDate = moment(firstDate).add(-(wday === 0 ? 6 : wday - 1), 'days')
     }
     lastDate = moment()
+  } else if (timeFilter.match(/^[0-9]{4}-[0-9]{2}-[0-9]{2}-to-[0-9]{4}-[0-9]{2}-[0-9]{2}$/)) {
+    const parts = timeFilter.split('-to-').map(t => moment(t))
+    firstDate = parts[0]
+    lastDate = parts[1]
   }
+
   return [firstDate.format('YYYY-MM-DD'), lastDate.format('YYYY-MM-DD')]
 }
 
