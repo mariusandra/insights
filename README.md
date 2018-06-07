@@ -88,17 +88,14 @@ If you want to help with development, run these steps:
 # 2. clone it
 git clone git@github.com:<YOUR_NAME_HERE>/insights.git
 
-# 3. install oao
-npm install -g oao
-
-# 4. install all dependencies
+# 3. install all dependencies
 cd insights
-oao bootstrap
+yarn
 
-# 5. run the development environment
+# 4. run the development environment
 yarn start
 
-# 6. open http://localhost:3030/ and hack away
+# 5. open http://localhost:3030/ and hack away
 ```
 
 ### How to publish new versions
@@ -106,6 +103,9 @@ yarn start
 Here's the latest workflow to publish a new version. This may change in the future.
 
 ```sh
+# install oao
+npm install -g oao
+
 # optional: check if the core builds as needed.
 yarn run build:core
 
