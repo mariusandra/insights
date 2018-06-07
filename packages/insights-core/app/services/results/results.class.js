@@ -23,6 +23,10 @@ class Service {
     const results = new Results({ params: params.query, adapter, structure })
     return results.getResponse()
   }
+
+  async create (params) {
+    return this.find(params)
+  }
 }
 
 module.exports = function (options) {
