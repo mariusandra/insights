@@ -24,8 +24,8 @@
     "yarn": ">= 0.18.0"
   },
   "scripts": {
-    "start": "NODE_ENV=development ./node_modules/.bin/electron -i app/electron",
-    "electron": "NODE_ENV=production ./node_modules/.bin/electron app/electron"
+    "start": "NODE_ENV=development ../../node_modules/.bin/electron -i app/electron",
+    "electron": "NODE_ENV=production ../../node_modules/.bin/electron app/electron"
   },
   "bin": {
     "insights-desktop": "./bin/insights-desktop"

@@ -25,6 +25,7 @@
   },
   "scripts": {
     "start": "NODE_ENV=development node --inspect app/",
+    "createsuperuser:dev": "NODE_ENV=development node app/createsuperuser.js",
     "createsuperuser": "NODE_ENV=production node app/createsuperuser.js",
     "production": "NODE_ENV=production node app/"
   },
