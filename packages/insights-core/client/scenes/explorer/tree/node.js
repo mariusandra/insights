@@ -1,6 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'kea/logic'
 
+import OneFilter from '../filter/one-filter'
+
 import getMeta from 'lib/explorer/get-meta'
 
 import explorerLogic from '~/scenes/explorer/logic'
@@ -37,7 +39,8 @@ const connection = {
       'columns',
       'treeState',
       'search',
-      'filterKeys'
+      'filterKeys',
+      'filter'
     ]
   ]
 }
@@ -45,6 +48,7 @@ class Node extends Component {
   static propTypes = {
     path: PropTypes.string,
     model: PropTypes.string,
+    star: PropTypes.bool,
     localSearch: PropTypes.string,
     connection: PropTypes.string
   }
@@ -52,6 +56,7 @@ class Node extends Component {
   shouldComponentUpdate (nextProps, nextState) {
     return nextProps.path !== this.props.path ||
            nextProps.model !== this.props.model ||
+           nextProps.star !== this.props.star ||
            nextProps.connection !== this.props.connection ||
            nextProps.columns !== this.props.columns ||
            nextProps.search !== this.props.search ||
@@ -150,8 +155,9 @@ class Node extends Component {
 
     const collapsed = !treeState[path]
 
-    let firstChildren = []
-    let newChildren = []
+    let starredChildren = []
+    let primaryChildren = []
+    let regularChildren = []
 
     const { links, columns, custom } = structure[model] || {}
 
@@ -160,7 +166,7 @@ class Node extends Component {
         if (links.incoming && links.outgoing) {
           Object.entries(links.outgoing).forEach(([link, linkData]) => {
             if (structure[linkData.model]) {
-              newChildren.push({
+              regularChildren.push({
                 model: linkData.model,
                 connection: link
               })
@@ -168,7 +174,7 @@ class Node extends Component {
           })
           Object.entries(links.incoming).forEach(([link, linkData]) => {
             if (structure[linkData.model]) {
-              newChildren.push({
+              regularChildren.push({
                 model: linkData.model,
                 connection: link
               })
@@ -177,7 +183,7 @@ class Node extends Component {
         } else {
           Object.entries(links).forEach(([link, linkData]) => {
             if (structure[linkData.model]) {
-              newChildren.push({
+              regularChildren.push({
                 model: linkData.model,
                 connection: link
               })
@@ -188,36 +194,53 @@ class Node extends Component {
 
       if (columns) {
         Object.entries(columns).forEach(([column, columnData]) => {
-          const data = {
-            model: null,
-            connection: column
-          }
-          if (columnData.index === 'primary_key') {
-            firstChildren.push(data)
+          if (columnData.star) {
+            starredChildren.push({
+              model: null,
+              connection: column,
+              star: true
+            })
+          } else if (columnData.index === 'primary_key') {
+            primaryChildren.push({
+              model: null,
+              connection: column
+            })
           } else {
-            newChildren.push(data)
+            regularChildren.push({
+              model: null,
+              connection: column
+            })
           }
         })
       }
 
       if (custom) {
-        Object.keys(custom).forEach(key => {
-          newChildren.push({
-            model: null,
-            connection: key
-          })
+        Object.entries(custom).forEach(([key, customData]) => {
+          if (customData.star) {
+            starredChildren.push({
+              model: null,
+              connection: key,
+              star: true
+            })
+          } else {
+            regularChildren.push({
+              model: null,
+              connection: key
+            })
+          }
         })
       }
     }
 
-    firstChildren = firstChildren.sort((a, b) => a.connection.localeCompare(b.connection))
-    newChildren = newChildren.sort((a, b) => a.connection.localeCompare(b.connection))
+    starredChildren = starredChildren.sort((a, b) => a.connection.localeCompare(b.connection))
+    primaryChildren = primaryChildren.sort((a, b) => a.connection.localeCompare(b.connection))
+    regularChildren = regularChildren.sort((a, b) => a.connection.localeCompare(b.connection))
 
-    return firstChildren.concat(newChildren)
+    return starredChildren.concat(primaryChildren).concat(regularChildren)
   }
 
   render () {
-    const { model, path, connection, treeState, localSearch } = this.props
+    const { model, path, connection, treeState, localSearch, star, filterKeys, filter } = this.props
     const { addEmptyFilter } = this.props.actions
 
     const collapsed = !treeState[path]
@@ -225,6 +248,8 @@ class Node extends Component {
     const hasChildNodes = this.getHasChildNodes()
 
     const hasOpenChildNodes = hasChildNodes && Object.keys(treeState).some(k => k.indexOf(`${path}.`) >= 0)
+
+    const filterIndex = filterKeys.indexOf(path)
 
     return (
       <div className='node'>
@@ -237,7 +262,7 @@ class Node extends Component {
           <div className={`node-icon ${hasChildNodes ? 'has-children' : 'no-children'} ${collapsed ? 'collapsed' : 'open'}`}
             onClick={this.toggleCollapse} />
           <div className='node-title' onClick={model ? this.toggleCollapse : this.toggleSelection}>
-            <span className={`${this.isSelected() || path === model ? 'node-selected' : ''} ${this.isFiltered() ? 'node-filtered' : ''}`}>
+            <span className={`${this.isSelected() || path === model ? 'node-selected' : ''} ${this.isFiltered() ? 'node-filtered' : ''} ${star ? 'star' : ''}`}>
               {connection
                 ? model
                   ? (
@@ -253,7 +278,16 @@ class Node extends Component {
           </div>
           {!hasChildNodes ? (
             <div className='node-controls'>
-              <span className='control-button' onClick={() => addEmptyFilter(path)}>Filter</span>
+              <span
+                className='control-button'
+                onClick={() => addEmptyFilter(path)}>
+                <OneFilter
+                  index={filterIndex || -1}
+                  value={filterIndex >= 0 ? filter[filterIndex].value : undefined}
+                  column={path}>
+                  <span>+Filter</span>
+                </OneFilter>
+              </span>
             </div>
           ) : null}
         </div>
@@ -263,6 +297,7 @@ class Node extends Component {
               <ConnectedNode key={child.connection}
                 path={`${path}.${child.connection}`}
                 model={child.model}
+                star={child.star}
                 localSearch={localSearch.split(' ').slice(1).join(' ')}
                 connection={child.connection} />
             ))}
