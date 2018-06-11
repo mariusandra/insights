@@ -83,9 +83,14 @@ class FilterButton extends Component {
             overlay={(
               <div>
                 {filter.map(({ key, value }) => {
+                  if (key !== path) {
+                    i += 1
+                    return null
+                  }
+
                   return (
                     <div key={i} style={{marginBottom: 5}}>
-                      <OneFilter key={i} column={key} value={value} index={i++} placement='right' />
+                      <OneFilter column={key} value={value} index={i++} placement='right' />
                     </div>
                   )
                 })}
