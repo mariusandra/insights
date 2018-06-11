@@ -11,19 +11,10 @@
     .header-text {
       vertical-align: middle;
     }
+
     .filter-preview {
       vertical-align: middle;
       margin-left: 10px;
-      .preview-part {
-        vertical-align: middle;
-        background: #eee;
-        margin-right: 8px;
-        height: 23px;
-        line-height: 23px;
-        padding: 0 5px;
-        display: inline-block;
-        border: 1px solid #ddd;
-      }
     }
   }
 
@@ -32,4 +23,15 @@
     font-style: italic;
     font-weight: 200;
   }
+}
+
+.filter-preview-element {
+  vertical-align: middle;
+  background: #eee;
+  margin-right: 8px;
+  height: 23px;
+  line-height: 23px;
+  padding: 0 5px;
+  display: inline-block;
+  border: 1px solid #ddd;
 }

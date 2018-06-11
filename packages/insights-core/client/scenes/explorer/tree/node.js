@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'kea/logic'
 
-import OneFilter from '../filter/one-filter'
+import FilterButton from './filter-button'
 
 import getMeta from 'lib/explorer/get-meta'
 
@@ -38,9 +38,10 @@ const connection = {
       'structure',
       'columns',
       'treeState',
-      'search',
+      'filter',
       'filterKeys',
-      'filter'
+      'treeNodeFilterOpen',
+      'search'
     ]
   ]
 }
@@ -59,8 +60,10 @@ class Node extends Component {
            nextProps.star !== this.props.star ||
            nextProps.connection !== this.props.connection ||
            nextProps.columns !== this.props.columns ||
+           nextProps.filter !== this.props.filter ||
            nextProps.search !== this.props.search ||
-           nextProps.treeState !== this.props.treeState
+           nextProps.treeState !== this.props.treeState ||
+           (nextProps.treeNodeFilterOpen === nextProps.path) !== (this.props.treeNodeFilterOpen === this.props.path)
   }
 
   isSelected = () => {
@@ -240,8 +243,7 @@ class Node extends Component {
   }
 
   render () {
-    const { model, path, connection, treeState, localSearch, star, filterKeys, filter } = this.props
-    const { addEmptyFilter } = this.props.actions
+    const { model, path, connection, treeState, treeNodeFilterOpen, localSearch, star } = this.props
 
     const collapsed = !treeState[path]
     const childNodes = this.getChildNodes()
@@ -249,11 +251,11 @@ class Node extends Component {
 
     const hasOpenChildNodes = hasChildNodes && Object.keys(treeState).some(k => k.indexOf(`${path}.`) >= 0)
 
-    const filterIndex = filterKeys.indexOf(path)
+    const filterOpen = treeNodeFilterOpen === path
 
     return (
       <div className='node'>
-        <div className='node-entry'>
+        <div className={`node-entry${filterOpen ? ' hover' : ''}`} onMouseOver={this.onMouseOver} onMouseOut={this.onMouseOut}>
           {hasOpenChildNodes ? (
             <div style={{float: 'right', cursor: 'pointer'}} onClick={this.collapseChildren}>
               ⟰
@@ -279,14 +281,8 @@ class Node extends Component {
           {!hasChildNodes ? (
             <div className='node-controls'>
               <span
-                className='control-button'
-                onClick={() => addEmptyFilter(path)}>
-                <OneFilter
-                  index={filterIndex || -1}
-                  value={filterIndex >= 0 ? filter[filterIndex].value : undefined}
-                  column={path}>
-                  <span>+Filter</span>
-                </OneFilter>
+                className={`control-button${filterOpen ? ' hover' : ''}`}>
+                <FilterButton path={path} />
               </span>
             </div>
           ) : null}

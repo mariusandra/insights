@@ -33,18 +33,30 @@ export default class OneFilter extends Component {
   static propTypes = {
     index: PropTypes.number,
     value: PropTypes.string,
-    column: PropTypes.string
+    column: PropTypes.string,
+    placement: PropTypes.string,
+    forceOpen: PropTypes.bool,
+    onClose: PropTypes.func
   }
 
   setFilter = (value) => {
-    const { setFilter, addFilter } = this.props.actions
-    const { index, column } = this.props
+    const { index, column, forceOpen } = this.props
+    const { setFilter, addFilter, removeFilter } = this.props.actions
 
     if (index === -1) {
       addFilter({ key: column, value })
+    } else if (value === '' && forceOpen) {
+      removeFilter(index)
     } else {
-      setFilter(value)
+      setFilter(index, value)
     }
+  }
+
+  addAnotherFilter = () => {
+    const { column } = this.props
+    const { addFilter } = this.props.actions
+
+    addFilter({ key: column, value: '' })
   }
 
   renderBooleanFilter = (meta, columnFilter) => {
@@ -182,14 +194,14 @@ export default class OneFilter extends Component {
   }
 
   renderFilter = (meta) => {
-    const { index, value } = this.props
+    const { index, value, forceOpen } = this.props
     const { removeFilter } = this.props.actions
 
     const columnFilter = value
 
     return (
       <div className='filter-options' style={{minWidth: 100}}>
-        {index && index >= 0 ? (
+        {index >= 0 && !forceOpen ? (
           <span style={{float: 'right', cursor: 'pointer', color: 'red', fontWeight: 'bold'}} onClick={() => removeFilter(index)}>X</span>
         ) : null}
         <div>
@@ -204,13 +216,20 @@ export default class OneFilter extends Component {
         {meta.type === 'boolean' ? this.renderBooleanFilter(meta, columnFilter) : null}
         {meta.type === 'string' ? this.renderStringFilter(meta, columnFilter) : null}
         {meta.type === 'number' ? this.renderNumberFilter(meta, columnFilter) : null}
-        {meta.type === 'time' ? this.renderTimeFilter(meta, columnFilter) : null}
+        {meta.type === 'time' || meta.type === 'date' ? this.renderTimeFilter(meta, columnFilter) : null}
+        {value !== '' && index >= 0 && forceOpen ? (
+          <div
+            onClick={this.addAnotherFilter}
+            style={{paddingTop: 10, marginTop: 10, borderTop: '1px solid green', cursor: 'pointer', color: 'green'}}>
+            Add another filter
+          </div>
+        ) : null}
       </div>
     )
   }
 
   render () {
-    const { column, value, columnsMeta, structure, children } = this.props
+    const { column, value, columnsMeta, structure, placement, forceOpen, children } = this.props
 
     const [ path, transform, aggregate ] = column.split('!')
     const meta = columnsMeta[column] || { ...getMeta(path, structure), transform, aggregate }
@@ -220,9 +239,14 @@ export default class OneFilter extends Component {
     const overlay = this.renderFilter(meta)
 
     return (
-      <Tooltip placement='bottomLeft' trigger={['hover']} overlay={overlay} onVisibleChange={this.handleTooltip}>
+      <Tooltip
+        {...(forceOpen ? { visible: true } : {})}
+        placement={placement || 'bottomLeft'}
+        trigger={['hover']}
+        overlay={overlay}
+        onVisibleChange={this.handleTooltip}>
         {children || (
-          <span className='preview-part'>
+          <span className='filter-preview-element'>
             {localKey}: {value.replace('equals:', '')}
           </span>
         )}

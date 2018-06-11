@@ -56,6 +56,8 @@ export default class ExplorerLogic extends Logic {
 
     setGraphTimeFilter: (graphTimeFilter) => ({ graphTimeFilter }),
 
+    openTreeNodeFilter: (path) => ({ path }),
+
     openTreeNode: (path) => ({ path }),
     closeTreeNode: (path) => ({ path }),
     collapseChildNodes: (path) => ({ path }),
@@ -90,6 +92,9 @@ export default class ExplorerLogic extends Logic {
       [actions.setStructure]: (_, payload) => payload.structure
     }],
     // tree state
+    treeNodeFilterOpen: [null, PropTypes.string, {
+      [actions.openTreeNodeFilter]: (_, payload) => payload.path
+    }],
     treeState: [{}, PropTypes.object, {
       [actions.openTreeNode]: (state, payload) => Object.assign({}, state, { [payload.path]: true }),
       [actions.closeTreeNode]: (state, payload) => {

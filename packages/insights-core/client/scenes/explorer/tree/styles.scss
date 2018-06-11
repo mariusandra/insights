@@ -13,7 +13,7 @@
     .node-entry {
       position: relative;
 
-      &:hover {
+      &:hover, &.hover {
         background: #fafafa;
       }
       .node-icon {
@@ -43,7 +43,7 @@
       .node-title {
         margin-left: 14px;
         cursor: pointer;
-        &:hover {
+        &:hover, &.hover {
           text-decoration: underline;
         }
         .node-selected {
@@ -67,14 +67,14 @@
           padding: 0 5px;
           border-radius: 5px;
           cursor: pointer;
-          &:hover {
+          &:hover, &.hover {
             background: #8eca10;
             border-color: #8eca10;
             color: #fff;
           }
         }
       }
-      &:hover {
+      &:hover, &.hover {
         .node-controls {
           display: block;
         }
