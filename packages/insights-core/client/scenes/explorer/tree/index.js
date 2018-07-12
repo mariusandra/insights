@@ -19,7 +19,8 @@ import explorerLogic from '~/scenes/explorer/logic'
   actions: [
     explorerLogic, [
       'openTreeNode',
-      'setSearch'
+      'setSearch',
+      'addColumn'
     ]
   ],
   props: [
@@ -27,7 +28,8 @@ import explorerLogic from '~/scenes/explorer/logic'
       'search',
       'models',
       'selectedModel',
-      'connections'
+      'connections',
+      'structure'
     ]
   ]
 })
@@ -38,10 +40,18 @@ export default class ExplorerTree extends Component {
   }
 
   openModel = (model) => {
-    const { openTreeNode, setSearch } = this.props.actions
+    const { structure } = this.props
+    const { openTreeNode, setSearch, addColumn } = this.props.actions
 
     openTreeNode(model)
     setSearch('')
+
+    // get the id column for this model
+    const primaryKey = structure[model].primary_key
+
+    // and add it with a count as the default
+    addColumn(`${model}.${primaryKey}!!count`)
+
     this.refs.search.focus()
   }
 
