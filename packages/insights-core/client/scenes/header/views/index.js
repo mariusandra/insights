@@ -69,7 +69,13 @@ export default class Views extends Component {
         <MenuDivider />
 
         {sortedViews.map(view => (
-          <MenuItem key={view._id} icon="th-derived" text={view.name} onClick={() => this.openView(view._id)} />
+          <MenuItem
+            key={view._id}
+            style={{maxWidth: 300}}
+            multiline
+            icon='th-derived'
+            text={view.name}
+            onClick={() => this.openView(view._id)} />
         ))}
       </Menu>
     )
