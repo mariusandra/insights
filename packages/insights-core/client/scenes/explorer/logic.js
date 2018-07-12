@@ -3,6 +3,8 @@ import { PropTypes } from 'react'
 
 import moment from 'moment'
 
+import viewsLogic from '~/scenes/header/views/logic'
+
 @initLogic
 export default class ExplorerLogic extends Logic {
   path = () => ['scenes', 'explorer', 'index']
@@ -295,6 +297,17 @@ export default class ExplorerLogic extends Logic {
         return Object.keys(treeState).length > 0 ? Object.keys(treeState)[0].split('.')[0] : null
       },
       PropTypes.string
+    ],
+
+    savedViews: [
+      () => [selectors.selectedModel, viewsLogic.selectors.sortedViews],
+      (model, sortedViews) => {
+        if (sortedViews) {
+          return sortedViews.filter(view => view.path.indexOf(`&columns=${model}.`) >= 0)
+        }
+        return []
+      },
+      PropTypes.array
     ],
 
     filteredModels: [

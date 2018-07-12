@@ -15,6 +15,7 @@ import Connection from './connection'
 
 // logic
 import explorerLogic from '~/scenes/explorer/logic'
+import viewsLogic from '~/scenes/header/views/logic'
 
 @connect({
   actions: [
@@ -23,6 +24,9 @@ import explorerLogic from '~/scenes/explorer/logic'
       'clear',
       'setSearch',
       'addColumn'
+    ],
+    viewsLogic, [
+      'openView'
     ]
   ],
   props: [
@@ -31,7 +35,8 @@ import explorerLogic from '~/scenes/explorer/logic'
       'filteredModels',
       'selectedModel',
       'connections',
-      'structure'
+      'structure',
+      'savedViews'
     ]
   ]
 })
@@ -80,6 +85,11 @@ export default class ExplorerTree extends Component {
     this.searchInputRef && this.searchInputRef.focus()
   }
 
+  openView = (id) => {
+    const { openView } = this.props.actions
+    openView(id)
+  }
+
   renderModels = () => {
     const { filteredModels, search } = this.props
 
@@ -96,7 +106,7 @@ export default class ExplorerTree extends Component {
   }
 
   renderSelectedModel = () => {
-    const { search, selectedModel } = this.props
+    const { search, selectedModel, savedViews } = this.props
 
     return (
       <div>
@@ -109,8 +119,20 @@ export default class ExplorerTree extends Component {
           <div className='node-entry'>
             <div className='node-icon has-children open' />
             <div className='node-title'>
-              Saved views (0)
+              Saved views ({savedViews.length})
             </div>
+          </div>
+          <div className='node-children'>
+            {savedViews.map(view => (
+              <div key={view._id} className='node'>
+                <div className='node-entry'>
+                  <div className='node-icon no-children' />
+                  <div className='node-title' onClick={() => this.openView(view._id)}>
+                    {view.name}
+                  </div>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
