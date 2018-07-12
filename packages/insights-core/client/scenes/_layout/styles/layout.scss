@@ -2,26 +2,6 @@ $text-font: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
 $text-size: 14px;
 $link-color: #75A23B;
 
-body {
-  background: #fff;
-  font-family: $text-font;
-  font-size: $text-size;
-  color: #222;
-}
-
-* { margin:0; padding:0; }
-
-html, body { height: 100%; }
-
-a {
-  color: $link-color;
-  text-decoration: none;
-  &:hover {
-    color: darken($link-color, 20%);
-    //text-decoration: underline;
-  }
-}
-
 a.button, button, input[type='submit'], input[type='button'] {
   display: inline-block;
   text-decoration: none;

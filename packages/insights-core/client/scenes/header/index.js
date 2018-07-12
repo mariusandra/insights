@@ -69,16 +69,17 @@ export default class HeaderScene extends Component {
                       : 'root'
 
     return (
-      <Navbar style={{ background: '#eeeeee' }}>
+      <Navbar className='bp3-dark' style={{ borderBottom: '1px solid #dbdcdd' }}>
         <Navbar.Group>
           <Tabs
+            className='bp3-dark'
             animate={animate}
             id='navbar'
             large
             onChange={this.openPage}
             selectedTabId={page}>
             <Tab id='connections' title='Connections' />
-            <Tab id='explorer' title='Explorer' />
+            <Tab id='explorer' icon='search-around' title='Explorer' />
             <Tab id='dashboard' title='Dashboard' />
           </Tabs>
         </Navbar.Group>

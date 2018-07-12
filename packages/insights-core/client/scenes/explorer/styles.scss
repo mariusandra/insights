@@ -9,4 +9,21 @@
   .top-pagination {
     float: right;
   }
+
+  .explorer-tree-bar, .explorer-tree-splitter {
+    background: #edf7fe;
+  }
+
+  & > .LayoutSplitter.horizontal {
+    border-left-color: #edf7fe;
+    border-right-color: #edf7fe;
+    opacity: 1;
+    background: #cedfeb;
+    &:hover {
+      border-left-color: #cedfeb;
+      border-right-color: #cedfeb;
+      opacity: 1;
+      background: #394b59;
+    }
+  }
 }

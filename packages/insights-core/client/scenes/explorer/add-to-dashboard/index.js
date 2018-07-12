@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'kea/logic'
 
+import { Button } from "@blueprintjs/core";
 import Tooltip from 'rc-tooltip'
 import Select from 'lib/forms/select'
 
@@ -104,7 +105,7 @@ export default class OneFilter extends Component {
   render () {
     return (
       <Tooltip placement='bottom' trigger={['hover']} overlay={this.renderOverlay()}>
-        <button style={{marginLeft: 5}}>+</button>
+        <Button icon='plus' style={{marginLeft: 5}}>Add to Dashboard</Button>
       </Tooltip>
     )
   }

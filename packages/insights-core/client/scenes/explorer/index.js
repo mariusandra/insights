@@ -6,7 +6,7 @@ import { connect } from 'kea/logic'
 
 // utils
 import { Layout, LayoutSplitter } from 'react-flex-layout'
-import SubmitButton from 'lib/tags/submit-button'
+import { Button } from "@blueprintjs/core";
 
 // components
 import Graph from './graph'
@@ -23,8 +23,7 @@ import explorerLogic from '~/scenes/explorer/logic'
 @connect({
   actions: [
     explorerLogic, [
-      'refreshData',
-      'clear'
+      'refreshData'
     ]
   ],
   props: [
@@ -34,7 +33,6 @@ import explorerLogic from '~/scenes/explorer/logic'
       'graphKeys',
       'isSubmitting',
       'columns',
-      'treeState',
       'filter'
     ]
   ]
@@ -48,19 +46,6 @@ export default class Explorer extends Component {
     }
   }
 
-  handleClear = () => {
-    const { clear } = this.props.actions
-    clear()
-    this.focusSearch()
-  }
-
-  focusSearch = () => {
-    const searchNode = document.getElementById('tree-search')
-    if (searchNode) {
-      searchNode.focus()
-    }
-  }
-
   setFilterHeight = (filterHeight) => {
     if (this.state.filterHeight !== filterHeight) {
       this.setState({ filterHeight })
@@ -68,13 +53,13 @@ export default class Explorer extends Component {
   }
 
   render () {
-    const { graphData, isSubmitting, columns, treeState, graph, graphKeys } = this.props
+    const { graphData, isSubmitting, columns, graph, graphKeys } = this.props
     const { filterHeight } = this.state
     const { refreshData } = this.props.actions
 
     return (
       <Layout className='explorer-scene' ref={ref => { this._layout = ref }}>
-        <Layout layoutWidth={300}>
+        <Layout layoutWidth={300} className='explorer-tree-bar'>
           <Tree />
         </Layout>
         <LayoutSplitter />
@@ -82,21 +67,16 @@ export default class Explorer extends Component {
           <Layout layoutHeight={50}>
             <div style={{padding: 10}}>
               <div className='top-controls'>
-                {columns.length > 0 || Object.keys(treeState).length > 0 ? (
-                  <button onClick={this.handleClear}>
-                    Clear
-                  </button>
-                ) : null}
                 {columns.length > 0 ? (
-                  <SubmitButton isSubmitting={isSubmitting} onClick={refreshData}>
+                  <Button icon='refresh' loading={isSubmitting} onClick={refreshData}>
                     Reload
-                  </SubmitButton>
-                ) : null}
-                {graphData ? (
-                  <TimeFilter />
+                  </Button>
                 ) : null}
                 {graphData ? (
                   <AddToDashboard />
+                ) : null}
+                {graphData ? (
+                  <TimeFilter />
                 ) : null}
               </div>
               <div className='top-pagination'>
