@@ -62,7 +62,7 @@ export default class Views extends Component {
     const overlay = (
       <Menu>
         {pathname.includes('/explorer')
-          ? <MenuItem icon='plus' text='Save this view' onClick={openNew} />
+          ? <MenuItem icon='plus' shouldDismissPopover={false} text='Save this view' onClick={openNew} />
           : <MenuItem icon='plus' disabled text='Open the explorer to save views' onClick={openNew} />
         }
 
