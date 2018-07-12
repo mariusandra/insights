@@ -1,5 +1,11 @@
 .explorer-tree {
-  padding: 10px;
+  .bp3-menu {
+    background: none;
+  }
+
+  &.selected-model {
+    padding: 10px;
+  }
 
   button {
     margin-bottom: 0;

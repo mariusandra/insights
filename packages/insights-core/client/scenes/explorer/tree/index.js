@@ -7,7 +7,7 @@ import { Layout } from 'react-flex-layout'
 
 // utils
 import HighlightText from 'lib/utils/highlight-text'
-import { InputGroup } from "@blueprintjs/core"
+import { InputGroup, Menu, MenuItem } from "@blueprintjs/core"
 
 // components
 import Node from './node'
@@ -27,7 +27,7 @@ import explorerLogic from '~/scenes/explorer/logic'
   props: [
     explorerLogic, [
       'search',
-      'models',
+      'filteredModels',
       'selectedModel',
       'connections',
       'structure'
@@ -71,8 +71,23 @@ export default class ExplorerTree extends Component {
     this.searchInputRef && this.searchInputRef.focus()
   }
 
+  renderModels = () => {
+    const { filteredModels, search } = this.props
+
+    return (
+      <Menu>
+        {filteredModels.map(model => (
+          <MenuItem
+            key={model}
+            onClick={() => this.openModel(model)}
+            text={search ? <HighlightText highlight={search}>{model}</HighlightText> : model} />
+        ))}
+      </Menu>
+    )
+  }
+
   render () {
-    const { models, search, selectedModel, connections } = this.props
+    const { search, selectedModel, connections } = this.props
 
     const showConnections = Object.keys(connections).length > 1
 
@@ -94,7 +109,7 @@ export default class ExplorerTree extends Component {
           </div>
         </Layout>
         <Layout layoutHeight='flex'>
-          <div className='explorer-tree'>
+          <div className={`explorer-tree${selectedModel ? ' selected-model' : ''}`}>
             {selectedModel ? (
               <Node key={selectedModel}
                 path={selectedModel}
@@ -102,17 +117,7 @@ export default class ExplorerTree extends Component {
                 model={selectedModel}
                 focusSearch={this.focusSearch} />
             ) : (
-              models.sort().filter(m => !search || m.toLowerCase().includes(search.toLowerCase())).map(model => (
-                <div className='node' key={model}>
-                  <div className='node-entry'>
-                    <div className='node-icon has-children collapsed'
-                      onClick={() => this.openModel(model)} />
-                    <div className='node-title' onClick={() => this.openModel(model)}>
-                      {search ? <HighlightText highlight={search}>{model}</HighlightText> : model}
-                    </div>
-                  </div>
-                </div>
-              ))
+              this.renderModels()
             )}
           </div>
         </Layout>

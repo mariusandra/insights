@@ -297,6 +297,14 @@ export default class ExplorerLogic extends Logic {
       PropTypes.string
     ],
 
+    filteredModels: [
+      () => [selectors.models, selectors.search],
+      (models, search) => {
+        return models.sort().filter(m => !search || m.toLowerCase().includes(search.toLowerCase()))
+      },
+      PropTypes.array
+    ],
+
     graphKeys: [
       () => [selectors.graph],
       (graph) => {
