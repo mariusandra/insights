@@ -111,6 +111,8 @@ yarn run build:core
 
 # update the versions of the repos under packages/* and the root repo
 oao all "npm version patch"
+git add .
+git commit -m 'update package versions'
 npm version patch
 
 # sync package.jsons
@@ -118,4 +120,6 @@ oao prepublish
 
 # publish
 oao all "npm publish"
+
+# NB! don't run 'npm publish' on its own: there is no need to publish the insights-build package.
 ```
