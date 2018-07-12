@@ -156,7 +156,7 @@ export default class ExplorerSaga extends Saga {
     const { setConnections, setConnection } = this.actions
     yield call(waitUntilLogin)
 
-    window.document.title = 'Explorer - Insights'
+    window.document.title = 'Insights Explorer'
 
     const connections = yield connectionsService.find()
 
@@ -243,6 +243,13 @@ export default class ExplorerSaga extends Saga {
 
     if (action.type !== urlChanged.toString() && `${window.location.pathname}${window.location.search}` !== url) {
       yield put(push(url))
+    }
+
+    if (columns.length > 0) {
+      const model = columns[0].split('.')[0].split('!')[0]
+      window.document.title = `${model} - Insights Explorer`
+    } else {
+      window.document.title = 'Insights Explorer'
     }
 
     if (action.type === openTreeNode.toString() || action.type === closeTreeNode.toString()) {
