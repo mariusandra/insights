@@ -7,7 +7,7 @@ import { Layout } from 'react-flex-layout'
 
 // utils
 import HighlightText from 'lib/utils/highlight-text'
-import { InputGroup, Menu, MenuItem } from "@blueprintjs/core"
+import { H4, Button, InputGroup, Menu, MenuItem } from "@blueprintjs/core"
 
 // components
 import Node from './node'
@@ -20,6 +20,7 @@ import explorerLogic from '~/scenes/explorer/logic'
   actions: [
     explorerLogic, [
       'openTreeNode',
+      'clear',
       'setSearch',
       'addColumn'
     ]
@@ -55,7 +56,15 @@ export default class ExplorerTree extends Component {
       addColumn(`${model}.${primaryKey}!!count`)
     }
 
-    this.searchInputRef && this.searchInputRef.focus()
+    this.focusSearch()
+  }
+
+  closeModel = () => {
+    const { clear, setSearch } = this.props.actions
+
+    clear()
+    setSearch('')
+    this.focusSearch()
   }
 
   setSearchInputRef = (ref) => {
@@ -86,6 +95,43 @@ export default class ExplorerTree extends Component {
     )
   }
 
+  renderSelectedModel = () => {
+    const { search, selectedModel } = this.props
+
+    return (
+      <div>
+        <div>
+          <Button minimal icon='cross' style={{float: 'right'}} onClick={this.closeModel} />
+          <H4 style={{lineHeight: '30px'}}>{selectedModel}</H4>
+        </div>
+
+        <div className='node' style={{marginBottom: 10}}>
+          <div className='node-entry'>
+            <div className='node-icon has-children open' />
+            <div className='node-title'>
+              Saved views (0)
+            </div>
+          </div>
+        </div>
+
+        <div className='node' style={{marginBottom: 10}}>
+          <div className='node-entry'>
+            <div className='node-icon has-children open' />
+            <div className='node-title'>
+              Favourites (0)
+            </div>
+          </div>
+        </div>
+
+        <Node key={selectedModel}
+          path={selectedModel}
+          localSearch={search}
+          model={selectedModel}
+          focusSearch={this.focusSearch} />
+      </div>
+    )
+  }
+
   render () {
     const { search, selectedModel, connections } = this.props
 
@@ -111,11 +157,7 @@ export default class ExplorerTree extends Component {
         <Layout layoutHeight='flex'>
           <div className={`explorer-tree${selectedModel ? ' selected-model' : ''}`}>
             {selectedModel ? (
-              <Node key={selectedModel}
-                path={selectedModel}
-                localSearch={search}
-                model={selectedModel}
-                focusSearch={this.focusSearch} />
+              this.renderSelectedModel()
             ) : (
               this.renderModels()
             )}

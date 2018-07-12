@@ -88,6 +88,9 @@
     }
     .node-children {
       margin-left: 14px;
+      .node-children {
+        background: rgba(57, 75, 89, 0.1);
+      }
     }
   }
 

@@ -33,7 +33,8 @@ import explorerLogic from '~/scenes/explorer/logic'
       'graphKeys',
       'isSubmitting',
       'columns',
-      'filter'
+      'filter',
+      'selectedModel'
     ]
   ]
 })
@@ -53,7 +54,7 @@ export default class Explorer extends Component {
   }
 
   render () {
-    const { graphData, isSubmitting, columns, graph, graphKeys } = this.props
+    const { graphData, isSubmitting, columns, graph, graphKeys, selectedModel } = this.props
     const { filterHeight } = this.state
     const { refreshData } = this.props.actions
 
@@ -85,7 +86,7 @@ export default class Explorer extends Component {
             </div>
           </Layout>
           <Layout layoutHeight={filterHeight}>
-            <Filter setFilterHeight={this.setFilterHeight} />
+            {selectedModel ? <Filter setFilterHeight={this.setFilterHeight} /> : null}
           </Layout>
           {graphData ? (
             <Layout layoutHeight={300}>

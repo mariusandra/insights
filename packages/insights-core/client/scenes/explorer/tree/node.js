@@ -252,42 +252,47 @@ class Node extends Component {
 
     const filterOpen = treeNodeFilterOpen === path
 
+    const showRoot = true // path !== model
+    const rootTitle = 'All fields' // model
+
     return (
-      <div className='node'>
-        <div className={`node-entry${filterOpen ? ' hover' : ''}`} onMouseOver={this.onMouseOver} onMouseOut={this.onMouseOut}>
-          {hasOpenChildNodes ? (
-            <div style={{float: 'right', cursor: 'pointer'}} onClick={this.collapseChildren}>
-              ⟰
-            </div>
-          ) : null}
-          <div className={`node-icon ${hasChildNodes ? 'has-children' : 'no-children'} ${collapsed ? 'collapsed' : 'open'}`}
-            onClick={this.toggleCollapse} />
-          <div className='node-title' onClick={model ? this.toggleCollapse : this.toggleSelection}>
-            <span className={`${this.isSelected() || path === model ? 'node-selected' : ''} ${this.isFiltered() ? 'node-filtered' : ''} ${star ? 'star' : ''}`}>
-              {connection
-                ? model
-                  ? (
-                    <span>
-                      {connection}
-                      {' '}
-                      <span style={{fontWeight: 300}}>{`(${model})`}</span>
-                    </span>
-                  )
-                  : connection
-                : model || '-'}
-            </span>
-          </div>
-          {!hasChildNodes ? (
-            <div className='node-controls'>
-              <span
-                className={`control-button${filterOpen ? ' hover' : ''}`}>
-                <FilterButton path={path} />
+      <div className={showRoot ? 'node' : ''}>
+        {showRoot ? (
+          <div className={`node-entry${filterOpen ? ' hover' : ''}`}>
+            {hasOpenChildNodes ? (
+              <div style={{float: 'right', cursor: 'pointer'}} onClick={this.collapseChildren}>
+                ⟰
+              </div>
+            ) : null}
+            <div className={`node-icon ${hasChildNodes ? 'has-children' : 'no-children'} ${collapsed ? 'collapsed' : 'open'}`}
+              onClick={this.toggleCollapse} />
+            <div className='node-title' onClick={model ? this.toggleCollapse : this.toggleSelection}>
+              <span className={`${this.isSelected() || path === model ? 'node-selected' : ''} ${this.isFiltered() ? 'node-filtered' : ''} ${star ? 'star' : ''}`}>
+                {connection
+                  ? model
+                    ? (
+                      <span>
+                        {connection}
+                        {' '}
+                        <span style={{fontWeight: 300}}>{`(${model})`}</span>
+                      </span>
+                    )
+                    : connection
+                  : rootTitle || '-'}
               </span>
             </div>
-          ) : null}
-        </div>
+            {!hasChildNodes ? (
+              <div className='node-controls'>
+                <span
+                  className={`control-button${filterOpen ? ' hover' : ''}`}>
+                  <FilterButton path={path} />
+                </span>
+              </div>
+            ) : null}
+          </div>
+        ) : null}
         {childNodes.length > 0 ? (
-          <div className='node-children'>
+          <div className={showRoot ? 'node-children' : ''}>
             {childNodes.filter(child => !localSearch || stringIn(localSearch.split(' ')[0], `${path}.${child.connection}`)).map(child => (
               <ConnectedNode key={child.connection}
                 path={`${path}.${child.connection}`}
