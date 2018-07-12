@@ -3,11 +3,12 @@ import './styles.scss'
 // libraries
 import React, { Component } from 'react'
 import { connect } from 'kea/logic'
+import { Alignment, Text, Classes, H3, H5, InputGroup, Navbar, Switch, Tab, TabId, Tabs } from "@blueprintjs/core";
 
 // utils
 
 // components
-import Logout from './logout'
+import User from './user'
 import Views from './views'
 import Share from './share'
 
@@ -49,32 +50,48 @@ export default class HeaderScene extends Component {
     openLocation(this._pathHistory[page] || pathname)
   }
 
+  openPage = (page) => {
+    const { openLocation } = this.props.actions
+    openLocation(this._pathHistory[page] || `/${page}`)
+  }
+
   render () {
     const { user, pathname, runningInElectron } = this.props
 
+    const animate = true
+
+    const page = pathname.indexOf('/explorer') === 0 || pathname === '/'
+                  ? 'explorer'
+                  : pathname.indexOf('/dashboard') === 0
+                    ? 'dashboard'
+                    : pathname.indexOf('/connections') === 0
+                      ? 'connections'
+                      : 'root'
+
     return (
-      <div className='header-scene'>
-        <div className='insights-tab-row'>
-          <div className='tab-row-element'>
-            <button onClick={() => this.openLocation('/connections')} className={pathname.indexOf('/connections') === 0 ? 'button' : 'button white'}>Connections</button>
-          </div>
-          <div className='tab-row-element'>
-            <button onClick={() => this.openLocation('/explorer')} className={pathname.indexOf('/explorer') === 0 || pathname === '/' ? 'button' : 'button white'}>Explorer</button>
-          </div>
-          <div className='tab-row-element'>
-            <button onClick={() => this.openLocation('/dashboard')} className={pathname.indexOf('/dashboard') === 0 ? 'button' : 'button white'}>Dashboard</button>
-          </div>
-          {user ? (
-            <div className='tab-row-element'>
-              {user.email}
-            </div>
-          ) : null}
-          {user ? <Logout /> : null}
-          <div className='tab-row-separator' />
+      <Navbar style={{ background: '#eeeeee' }}>
+        <Navbar.Group>
+          <Tabs
+            animate={animate}
+            id='navbar'
+            large
+            onChange={this.openPage}
+            selectedTabId={page}>
+            <Tab id='connections' title='Connections' />
+            <Tab id='explorer' title='Explorer' />
+            <Tab id='dashboard' title='Dashboard' />
+          </Tabs>
+        </Navbar.Group>
+        {user ? <Navbar.Group align={Alignment.RIGHT}>
+          <User email={user.email} />
+        </Navbar.Group> : null}
+        {!runningInElectron ? <Navbar.Group align={Alignment.RIGHT}>
+          <Share />
+        </Navbar.Group> : null}
+        <Navbar.Group align={Alignment.RIGHT}>
           <Views />
-          {!runningInElectron ? <Share /> : null}
-        </div>
-      </div>
+        </Navbar.Group>
+      </Navbar>
     )
   }
 }

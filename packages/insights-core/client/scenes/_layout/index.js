@@ -1,3 +1,7 @@
+import 'normalize.css/normalize.css'
+import '@blueprintjs/icons/lib/css/blueprint-icons.css'
+import '@blueprintjs/core/lib/css/blueprint.css'
+
 import './styles.scss'
 
 // libraries
@@ -43,7 +47,7 @@ export default class InsightsScene extends Component {
     return (
       <div className='insights-scene' style={{minHeight: '100%'}}>
         <Layout fill='window'>
-          <Layout layoutHeight={40}>
+          <Layout layoutHeight={50}>
             <Header />
           </Layout>
           <Layout layoutHeight='flex'>

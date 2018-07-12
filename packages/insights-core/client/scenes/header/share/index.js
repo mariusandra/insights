@@ -2,6 +2,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
+import { Button, Alignment, Text, Classes, H3, H5, InputGroup, Navbar, Switch, Tab, TabId, Tabs, Popover, Position } from "@blueprintjs/core";
+
 // utils
 import copy from 'copy-to-clipboard'
 import messg from 'messg'
@@ -9,6 +11,41 @@ import messg from 'messg'
 import client from '~/client'
 
 const urlService = client.service('api/url')
+
+class AutoFocusInput extends Component {
+  componentDidMount () {
+    const ref = this._inputRef
+    ref.focus()
+    ref.select()
+  }
+
+  componentDidUpdate () {
+    const ref = this._inputRef
+    ref.focus()
+    ref.select()
+  }
+
+  setRef = (ref) => {
+    this._inputRef = ref
+  }
+
+  handleFocus (event) {
+    event.target.select()
+  }
+
+  render () {
+    return (
+      <input
+        ref={this.setRef}
+        onFocus={this.handleFocus}
+        type='text'
+        value={this.props.url}
+        className='bp3-input'
+        placeholder='Generating URL...'
+        style={{minWidth: 280}} />
+    )
+  }
+}
 
 // logic
 @connect()
@@ -19,6 +56,13 @@ export default class Share extends Component {
       url: '',
       path: ''
     }
+  }
+
+  handleCancel = () => {
+    this.setState({
+      url: '',
+      path: ''
+    })
   }
 
   handleShare = () => {
@@ -43,12 +87,9 @@ export default class Share extends Component {
   render () {
     const { url } = this.state
     return (
-      <div className='tab-row-element'>
-        {url ? (
-          <input type='text' defaultValue={url} className='input-text' style={{margin: 0}} />
-        ) : null}
-        <button key={url ? 'copy-button' : 'generate-button'} className={url ? 'fa fa-clipboard' : 'fa fa-share-alt'} onClick={this.handleShare} style={{marginLeft: 5}} title={url ? 'Copy' : 'Generate URL'} />
-      </div>
+      <Popover minimal onClose={this.handleCancel} content={<AutoFocusInput url={url} />} position={Position.LEFT}>
+        <Button key={url ? 'copy-button' : 'generate-button'} className='bp3-minimal' icon={url ? 'clipboard' : 'link'} onClick={this.handleShare} />
+      </Popover>
     )
   }
 }

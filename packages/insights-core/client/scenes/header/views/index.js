@@ -6,7 +6,7 @@ import { connect } from 'kea/logic'
 
 // utils
 import Tooltip from 'rc-tooltip'
-
+import { Button } from "@blueprintjs/core"
 // components
 
 // logic
@@ -96,11 +96,9 @@ export default class Views extends Component {
     )
 
     return (
-      <div className='tab-row-element'>
-        <Tooltip placement='bottomRight' trigger={['hover']} overlay={overlay} onVisibleChange={this.handleTooltip}>
-          <button className='fa fa-star' title='Saved views' />
-        </Tooltip>
-      </div>
+      <Tooltip placement='bottomRight' trigger={['hover']} overlay={overlay} onVisibleChange={this.handleTooltip}>
+        <Button className='bp3-minimal' icon='star' />
+      </Tooltip>
     )
   }
 }
