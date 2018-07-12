@@ -7,7 +7,7 @@ import { Layout } from 'react-flex-layout'
 
 // utils
 import HighlightText from 'lib/utils/highlight-text'
-import { H4, Button, InputGroup, Menu, MenuItem } from "@blueprintjs/core"
+import { Tag, H4, Button, InputGroup, Menu, MenuItem } from "@blueprintjs/core"
 
 // components
 import Node from './node'
@@ -119,7 +119,7 @@ export default class ExplorerTree extends Component {
           <div className='node-entry'>
             <div className='node-icon has-children open' />
             <div className='node-title'>
-              Saved views ({savedViews.length})
+              Saved views <small className='count-tag'>({savedViews.length})</small>
             </div>
           </div>
           <div className='node-children'>
@@ -140,7 +140,7 @@ export default class ExplorerTree extends Component {
           <div className='node-entry'>
             <div className='node-icon has-children open' />
             <div className='node-title'>
-              Favourites (0)
+              Favourites <small className='count-tag'>(0)</small>
             </div>
           </div>
         </div>
