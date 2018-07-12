@@ -7,6 +7,7 @@ import { Layout } from 'react-flex-layout'
 
 // utils
 import HighlightText from 'lib/utils/highlight-text'
+import { InputGroup } from "@blueprintjs/core"
 
 // components
 import Node from './node'
@@ -50,9 +51,24 @@ export default class ExplorerTree extends Component {
     const primaryKey = structure[model].primary_key
 
     // and add it with a count as the default
-    addColumn(`${model}.${primaryKey}!!count`)
+    if (primaryKey) {
+      addColumn(`${model}.${primaryKey}!!count`)
+    }
 
-    this.refs.search.focus()
+    this.searchInputRef && this.searchInputRef.focus()
+  }
+
+  setSearchInputRef = (ref) => {
+    this.searchInputRef = ref
+    this.focusSearch()
+  }
+
+  componentDidMount () {
+    this.focusSearch()
+  }
+
+  focusSearch = () => {
+    this.searchInputRef && this.searchInputRef.focus()
   }
 
   render () {
@@ -65,16 +81,15 @@ export default class ExplorerTree extends Component {
         <Layout layoutHeight={showConnections ? 90 : 50}>
           <div>
             {showConnections ? <Connection /> : null}
-            <div style={{padding: 10}}>
-              <input ref='search'
+            <div style={{ padding: 10 }}>
+              <InputGroup
+                placeholder='Type to search...'
                 type='search'
-                id='tree-search'
-                autoFocus
+                leftIcon='search'
+                inputRef={this.setSearchInputRef}
                 value={search}
-                className='input-text'
                 onChange={this.handleSearch}
-                style={{width: '100%'}}
-                placeholder='Type to search...' />
+              />
             </div>
           </div>
         </Layout>
@@ -84,7 +99,8 @@ export default class ExplorerTree extends Component {
               <Node key={selectedModel}
                 path={selectedModel}
                 localSearch={search}
-                model={selectedModel} />
+                model={selectedModel}
+                focusSearch={this.focusSearch} />
             ) : (
               models.sort().filter(m => !search || m.toLowerCase().includes(search.toLowerCase())).map(model => (
                 <div className='node' key={model}>

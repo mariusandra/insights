@@ -51,7 +51,8 @@ class Node extends Component {
     model: PropTypes.string,
     star: PropTypes.bool,
     localSearch: PropTypes.string,
-    connection: PropTypes.string
+    connection: PropTypes.string,
+    focusSearch: PropTypes.func
   }
 
   shouldComponentUpdate (nextProps, nextState) {
@@ -63,6 +64,7 @@ class Node extends Component {
            nextProps.filter !== this.props.filter ||
            nextProps.search !== this.props.search ||
            nextProps.treeState !== this.props.treeState ||
+           nextProps.focusSearch !== this.props.focusSearch ||
            (nextProps.treeNodeFilterOpen === nextProps.path) !== (this.props.treeNodeFilterOpen === this.props.path)
   }
 
@@ -128,10 +130,7 @@ class Node extends Component {
   }
 
   focusSearch = () => {
-    const searchNode = document.getElementById('tree-search')
-    if (searchNode) {
-      searchNode.focus()
-    }
+    this.props.focusSearch && this.props.focusSearch()
   }
 
   getHasChildNodes = () => {
@@ -243,7 +242,7 @@ class Node extends Component {
   }
 
   render () {
-    const { model, path, connection, treeState, treeNodeFilterOpen, localSearch, star } = this.props
+    const { model, path, connection, treeState, treeNodeFilterOpen, localSearch, star, focusSearch } = this.props
 
     const collapsed = !treeState[path]
     const childNodes = this.getChildNodes()
@@ -295,7 +294,8 @@ class Node extends Component {
                 model={child.model}
                 star={child.star}
                 localSearch={localSearch.split(' ').slice(1).join(' ')}
-                connection={child.connection} />
+                connection={child.connection}
+                focusSearch={focusSearch} />
             ))}
           </div>
         ) : null}
