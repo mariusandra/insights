@@ -5,8 +5,7 @@ import React, { Component } from 'react'
 import { connect } from 'kea/logic'
 
 // utils
-import Tooltip from 'rc-tooltip'
-import { Button } from "@blueprintjs/core"
+import { AnchorButton, Dialog, Classes, Intent, Button, Popover, Position, Menu, MenuItem, MenuDivider } from "@blueprintjs/core"
 // components
 
 // logic
@@ -61,44 +60,53 @@ export default class Views extends Component {
     const { setNewName, openNew, cancelNew } = this.props.actions
 
     const overlay = (
-      <div className='views-menu'>
-        {pathname.includes('/explorer') ? (
-          <div>
-            {newOpen ? (
+      <Menu>
+        {pathname.includes('/explorer')
+          ? <MenuItem icon='plus' text='Save this view' onClick={openNew} />
+          : <MenuItem icon='plus' disabled text='Open the explorer to save views' onClick={openNew} />
+        }
+
+        <MenuDivider />
+
+        {sortedViews.map(view => (
+          <MenuItem key={view._id} icon="th-derived" text={view.name} onClick={() => this.openView(view._id)} />
+        ))}
+      </Menu>
+    )
+
+    return (
+      <div>
+        <Popover content={overlay} minimal position={Position.RIGHT_BOTTOM}>
+          <Button className='bp3-minimal' icon='star' />
+        </Popover>
+
+        {newOpen ? (
+          <Dialog
+            icon='info-sign'
+            onClose={cancelNew}
+            title='Enter a title'
+            isOpen
+          >
+            <div className='bp3-dialog-body'>
               <form onSubmit={this.saveView}>
-                <input className='input-text full'
+                <input
+                  className='bp3-input bp3-fill'
                   placeholder='Enter a title'
                   onChange={e => setNewName(e.target.value)}
                   value={newName}
                   autoFocus />
-                <button className='save' onClick={this.saveView}>✔</button>
-                <button className='cancel' onClick={cancelNew}>✕</button>
               </form>
-            ) : (
-              <div className='buttons'>
-                <span className='open-new' onClick={openNew}>Save this page</span>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div className='cannot-save-notice'>
-            Open the explorer to save views
-          </div>
-        )}
-        <div className='list'>
-          {sortedViews.map(view => (
-            <div key={view._id} className='list-item' onClick={() => this.openView(view._id)}>
-              {view.name}
             </div>
-          ))}
-        </div>
-      </div>
-    )
+            <div className={Classes.DIALOG_FOOTER}>
+              <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+                <Button onClick={cancelNew}>Cancel</Button>
+                <AnchorButton intent={Intent.PRIMARY} onClick={this.saveView}>Save</AnchorButton>
+              </div>
+            </div>
+          </Dialog>
 
-    return (
-      <Tooltip placement='bottomRight' trigger={['hover']} overlay={overlay} onVisibleChange={this.handleTooltip}>
-        <Button className='bp3-minimal' icon='star' />
-      </Tooltip>
+        ) : null}
+      </div>
     )
   }
 }
