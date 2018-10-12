@@ -36,7 +36,8 @@ import viewsLogic from '~/scenes/header/views/logic'
       'selectedModel',
       'connections',
       'structure',
-      'savedViews'
+      'savedViews',
+      'modelFavourites'
     ]
   ]
 })
@@ -106,7 +107,7 @@ export default class ExplorerTree extends Component {
   }
 
   renderSelectedModel = () => {
-    const { search, selectedModel, savedViews } = this.props
+    const { search, selectedModel, savedViews, modelFavourites } = this.props
 
     return (
       <div>
@@ -140,8 +141,18 @@ export default class ExplorerTree extends Component {
           <div className='node-entry'>
             <div className='node-icon has-children open' />
             <div className='node-title'>
-              Favourites <small className='count-tag'>(0)</small>
+              Favourites <small className='count-tag'>({modelFavourites.length})</small>
             </div>
+          </div>
+          <div className='node-children'>
+            {modelFavourites.map(favourite => (
+              <Node
+                key={favourite}
+                path={favourite}
+                localSearch=''
+                connection={favourite.substring(selectedModel.length + 1)}
+                focusSearch={this.focusSearch} />
+            ))}
           </div>
         </div>
 

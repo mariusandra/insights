@@ -7,6 +7,8 @@ const dashboardItems = require('./dashboard-items/dashboard-items.service.js')
 const users = require('./users/users.service.js')
 const connections = require('./connections/connections.service.js')
 const connectionTest = require('./connection-test/connection-test.service.js')
+const favourites = require('./favourites/favourites.service.js')
+
 module.exports = function () {
   const app = this // eslint-disable-line no-unused-vars
   app.configure(structure)
@@ -18,4 +20,5 @@ module.exports = function () {
   app.configure(users)
   app.configure(connections)
   app.configure(connectionTest)
+  app.configure(favourites)
 }

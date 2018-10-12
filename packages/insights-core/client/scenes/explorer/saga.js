@@ -17,6 +17,7 @@ import client from '~/client'
 const connectionsService = client.service('api/connections')
 const structureService = client.service('api/structure')
 const resultsService = client.service('api/results')
+const favouritesService = client.service('api/favourites')
 const dashboardsService = client.service('api/dashboards')
 const dashboardItemsService = client.service('api/dashboard-items')
 
@@ -111,6 +112,12 @@ export default class ExplorerSaga extends Saga {
       'setPercentages',
       'requestExport',
 
+      'addFavouriteRequest',
+      'addFavouriteSuccess',
+      'removeFavouriteRequest',
+      'removeFavouriteSuccess',
+      'favouritesLoaded',
+
       'dashboardsLoaded',
       'addToDashboard'
     ]
@@ -149,7 +156,9 @@ export default class ExplorerSaga extends Saga {
     [actions.openTreeNode]: this.refreshDataWorker,
     [actions.closeTreeNode]: this.refreshDataWorker,
 
-    [actions.addToDashboard]: this.addToDashboardWorker
+    [actions.addToDashboard]: this.addToDashboardWorker,
+    [actions.addFavouriteRequest]: this.addFavouriteRequestWorker,
+    [actions.removeFavouriteRequest]: this.removeFavouriteRequestWorker
   })
 
   run = function * () {
@@ -180,6 +189,7 @@ export default class ExplorerSaga extends Saga {
     yield put(setConnection(connection))
 
     yield fork(this.loadDashboards)
+    yield fork(this.loadFavourites)
     yield call(this.loadStructure, connection)
 
     yield call(this.urlToStateWorker, { payload: { pathname: window.location.pathname, search: window.location.search, firstLoad: true } })
@@ -190,6 +200,13 @@ export default class ExplorerSaga extends Saga {
 
     const response = yield dashboardsService.find()
     yield put(dashboardsLoaded(response.data))
+  }
+
+  loadFavourites = function * (action) {
+    const { favouritesLoaded } = this.actions
+
+    const response = yield favouritesService.find()
+    yield put(favouritesLoaded(response.data))
   }
 
   loadStructure = function * (keyword) {
@@ -382,5 +399,30 @@ export default class ExplorerSaga extends Saga {
     if (dashboardItem) {
       messg.success('Added!', 2500)
     }
+  }
+
+  addFavouriteRequestWorker = function * (action) {
+    const { addFavouriteSuccess } = this.actions
+    const { path } = action.payload
+
+    const favourite = yield favouritesService.create({ path })
+
+    if (favourite) {
+      yield put(addFavouriteSuccess(path, favourite))
+    }
+  }
+
+  removeFavouriteRequestWorker = function * (action) {
+    const { removeFavouriteSuccess } = this.actions
+    const { path } = action.payload
+    const favourites = yield explorerLogic.get('favourites')
+    console.log(favourites)
+
+    const favourite = favourites[path]
+    console.log(favourite)
+
+    yield favouritesService.remove(favourite._id)
+
+    yield put(removeFavouriteSuccess(path))
   }
 }

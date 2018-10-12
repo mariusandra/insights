@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'kea/logic'
 
 import Tooltip from 'rc-tooltip'
-import OneFilter from '../filter/one-filter'
+import OneFilter from '~/scenes/explorer/filter/one-filter'
 
 import explorerLogic from '~/scenes/explorer/logic'
 

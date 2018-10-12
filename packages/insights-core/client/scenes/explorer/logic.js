@@ -69,7 +69,13 @@ export default class ExplorerLogic extends Logic {
     requestExport: (format) => ({ format }),
 
     addToDashboard: ({ id, name, path }) => ({ id, name, path }),
-    dashboardsLoaded: (dashboards) => ({ dashboards })
+    dashboardsLoaded: (dashboards) => ({ dashboards }),
+
+    addFavouriteRequest: (path) => ({ path }),
+    addFavouriteSuccess: (path, favourite) => ({ path, favourite }),
+    removeFavouriteRequest: (path) => ({ path }),
+    removeFavouriteSuccess: (path) => ({ path }),
+    favouritesLoaded: (favourites) => ({ favourites })
   })
 
   reducers = ({ actions, constants }) => ({
@@ -276,6 +282,26 @@ export default class ExplorerLogic extends Logic {
         })
         return newState
       }
+    }],
+
+    favourites: [{}, PropTypes.object, {
+      [actions.favouritesLoaded]: (_, payload) => {
+        let newState = {}
+        payload.favourites.forEach(favourite => {
+          newState[favourite.path] = favourite
+        })
+        return newState
+      },
+      [actions.addFavouriteSuccess]: (state, payload) => {
+        const { path, favourite } = payload
+        return Object.assign({}, state, { [path]: favourite })
+      },
+      [actions.removeFavouriteSuccess]: (state, payload) => {
+        const { path } = payload
+        let newState = Object.assign({}, state)
+        delete newState[path]
+        return newState
+      }
     }]
   })
 
@@ -297,6 +323,17 @@ export default class ExplorerLogic extends Logic {
         return Object.keys(treeState).length > 0 ? Object.keys(treeState)[0].split('.')[0] : null
       },
       PropTypes.string
+    ],
+
+    modelFavourites: [
+      () => [selectors.selectedModel, selectors.favourites],
+      (model, favourites) => {
+        if (favourites) {
+          return Object.keys(favourites).filter(k => k.indexOf(model + '.') === 0).sort()
+        }
+        return []
+      },
+      PropTypes.array
     ],
 
     savedViews: [

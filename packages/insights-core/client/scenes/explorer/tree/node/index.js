@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import { connect } from 'kea/logic'
 
 import FilterButton from './filter-button'
+import FavouriteStar from './favourite-star'
 
 import getMeta from 'lib/explorer/get-meta'
 
@@ -41,7 +42,8 @@ const connection = {
       'filter',
       'filterKeys',
       'treeNodeFilterOpen',
-      'search'
+      'search',
+      'favourites'
     ]
   ]
 }
@@ -49,7 +51,6 @@ class Node extends Component {
   static propTypes = {
     path: PropTypes.string,
     model: PropTypes.string,
-    star: PropTypes.bool,
     localSearch: PropTypes.string,
     connection: PropTypes.string,
     focusSearch: PropTypes.func
@@ -58,12 +59,12 @@ class Node extends Component {
   shouldComponentUpdate (nextProps, nextState) {
     return nextProps.path !== this.props.path ||
            nextProps.model !== this.props.model ||
-           nextProps.star !== this.props.star ||
            nextProps.connection !== this.props.connection ||
            nextProps.columns !== this.props.columns ||
            nextProps.filter !== this.props.filter ||
            nextProps.search !== this.props.search ||
            nextProps.treeState !== this.props.treeState ||
+           nextProps.favourites[nextProps.path] !== this.props.favourites[this.props.path] ||
            nextProps.focusSearch !== this.props.focusSearch ||
            (nextProps.treeNodeFilterOpen === nextProps.path) !== (this.props.treeNodeFilterOpen === this.props.path)
   }
@@ -157,7 +158,6 @@ class Node extends Component {
 
     const collapsed = !treeState[path]
 
-    let starredChildren = []
     let primaryChildren = []
     let regularChildren = []
 
@@ -196,13 +196,7 @@ class Node extends Component {
 
       if (columns) {
         Object.entries(columns).forEach(([column, columnData]) => {
-          if (columnData.star) {
-            starredChildren.push({
-              model: null,
-              connection: column,
-              star: true
-            })
-          } else if (columnData.index === 'primary_key') {
+          if (columnData.index === 'primary_key') {
             primaryChildren.push({
               model: null,
               connection: column
@@ -218,31 +212,22 @@ class Node extends Component {
 
       if (custom) {
         Object.entries(custom).forEach(([key, customData]) => {
-          if (customData.star) {
-            starredChildren.push({
-              model: null,
-              connection: key,
-              star: true
-            })
-          } else {
-            regularChildren.push({
-              model: null,
-              connection: key
-            })
-          }
+          regularChildren.push({
+            model: null,
+            connection: key
+          })
         })
       }
     }
 
-    starredChildren = starredChildren.sort((a, b) => a.connection.localeCompare(b.connection))
     primaryChildren = primaryChildren.sort((a, b) => a.connection.localeCompare(b.connection))
     regularChildren = regularChildren.sort((a, b) => a.connection.localeCompare(b.connection))
 
-    return starredChildren.concat(primaryChildren).concat(regularChildren)
+    return primaryChildren.concat(regularChildren)
   }
 
   render () {
-    const { model, path, connection, treeState, treeNodeFilterOpen, localSearch, star, focusSearch } = this.props
+    const { model, path, connection, treeState, treeNodeFilterOpen, localSearch, focusSearch } = this.props
 
     const collapsed = !treeState[path]
     const childNodes = this.getChildNodes()
@@ -267,7 +252,7 @@ class Node extends Component {
             <div className={`node-icon ${hasChildNodes ? 'has-children' : 'no-children'} ${collapsed ? 'collapsed' : 'open'}`}
               onClick={this.toggleCollapse} />
             <div className='node-title' onClick={model ? this.toggleCollapse : this.toggleSelection}>
-              <span className={`${this.isSelected() || path === model ? 'node-selected' : ''} ${this.isFiltered() ? 'node-filtered' : ''} ${star ? 'star' : ''}`}>
+              <span className={`${this.isSelected() || path === model ? 'node-selected' : ''} ${this.isFiltered() ? 'node-filtered' : ''}`}>
                 {connection
                   ? model
                     ? (
@@ -284,6 +269,10 @@ class Node extends Component {
             {!hasChildNodes ? (
               <div className='node-controls'>
                 <span
+                  className='control-button'>
+                  <FavouriteStar path={path} />
+                </span>
+                <span
                   className={`control-button${filterOpen ? ' hover' : ''}`}>
                   <FilterButton path={path} />
                 </span>
@@ -297,7 +286,6 @@ class Node extends Component {
               <ConnectedNode key={child.connection}
                 path={`${path}.${child.connection}`}
                 model={child.model}
-                star={child.star}
                 localSearch={localSearch.split(' ').slice(1).join(' ')}
                 connection={child.connection}
                 focusSearch={focusSearch} />
