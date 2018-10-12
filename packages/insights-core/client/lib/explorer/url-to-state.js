@@ -11,7 +11,8 @@ export default function urlToState (path) {
     facetsColumn: null,
     facetsCount: 6,
     graphCumulative: false,
-    percentages: false
+    percentages: false,
+    alphabeticalFacets: false
   };
 
   (search || '').split('&').forEach(k => {
@@ -20,7 +21,7 @@ export default function urlToState (path) {
     if (key && value) {
       if (key === 'columns') {
         values[key] = value.split(',')
-      } else if (key === 'graphCumulative' || key === 'percentages') {
+      } else if (key === 'graphCumulative' || key === 'percentages' || key === 'alphabeticalFacets') {
         values[key] = value === 'true'
       } else if (key === 'treeState') {
         value.split(',').filter(v => v).forEach(v => { values[key][v] = true })

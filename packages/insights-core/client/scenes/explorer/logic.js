@@ -32,6 +32,7 @@ export default class ExplorerLogic extends Logic {
     setFacetsCount: (facetsCount) => ({ facetsCount }),
     setGraphCumulative: (graphCumulative) => ({ graphCumulative }),
     setPercentages: (percentages) => ({ percentages }),
+    setAlphabeticalFacets: (alphabeticalFacets) => ({ alphabeticalFacets }),
     setExportTitle: (exportTitle) => ({ exportTitle }),
     urlChanged: values => (values),
 
@@ -256,6 +257,11 @@ export default class ExplorerLogic extends Logic {
       [actions.urlChanged]: (state, payload) => payload.percentages,
       [actions.setResults]: (state, payload) => payload.results.percentages
     }],
+    alphabeticalFacets: [false, PropTypes.bool, {
+      [actions.setAlphabeticalFacets]: (_, payload) => payload.alphabeticalFacets,
+      [actions.urlChanged]: (state, payload) => payload.alphabeticalFacets,
+      [actions.setResults]: (state, payload) => payload.results.alphabeticalFacets
+    }],
     facetsColumn: [null, PropTypes.string, {
       [actions.setFacetsColumn]: (state, payload) => payload.facetsColumn,
       [actions.urlChanged]: (state, payload) => payload.facetsColumn,
@@ -394,9 +400,10 @@ export default class ExplorerLogic extends Logic {
     url: [
       () => [
         selectors.connection, selectors.columns, selectors.sort, selectors.treeState, selectors.graphTimeFilter,
-        selectors.facetsColumn, selectors.facetsCount, selectors.filter, selectors.graphCumulative, selectors.percentages
+        selectors.facetsColumn, selectors.facetsCount, selectors.filter, selectors.graphCumulative, selectors.percentages,
+        selectors.alphabeticalFacets
       ],
-      (connection, columns, sort, treeState, graphTimeFilter, facetsColumn, facetsCount, filter, graphCumulative, percentages) => {
+      (connection, columns, sort, treeState, graphTimeFilter, facetsColumn, facetsCount, filter, graphCumulative, percentages, alphabeticalFacets) => {
         let url = {
           connection: connection,
           columns: columns.join(','),
@@ -406,7 +413,8 @@ export default class ExplorerLogic extends Logic {
           facetsColumn: facetsColumn || '',
           facetsCount: facetsCount || '',
           graphCumulative: graphCumulative || false,
-          percentages: percentages || false
+          percentages: percentages || false,
+          alphabeticalFacets: alphabeticalFacets || false
         }
 
         let i = 0

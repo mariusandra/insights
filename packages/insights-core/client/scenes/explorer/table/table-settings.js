@@ -14,7 +14,8 @@ import explorerLogic from '~/scenes/explorer/logic'
       'requestExport',
       'setExportTitle',
       'setGraphCumulative',
-      'setPercentages'
+      'setPercentages',
+      'setAlphabeticalFacets'
     ]
   ],
   props: [
@@ -23,7 +24,8 @@ import explorerLogic from '~/scenes/explorer/logic'
       'facetsCount',
       'exportTitle',
       'graphCumulative',
-      'percentages'
+      'percentages',
+      'alphabeticalFacets'
     ]
   ]
 })
@@ -41,8 +43,8 @@ export default class TableSettings extends Component {
   }
 
   render () {
-    const { columnWidths, facetsCount, exportTitle, graphCumulative, percentages } = this.props
-    const { clearColumnWidths, setFacetsCount, requestExport, setExportTitle, setGraphCumulative, setPercentages } = this.props.actions
+    const { columnWidths, facetsCount, exportTitle, graphCumulative, percentages, alphabeticalFacets } = this.props
+    const { clearColumnWidths, setFacetsCount, requestExport, setExportTitle, setGraphCumulative, setPercentages, setAlphabeticalFacets } = this.props.actions
     const { tooltipHover } = this.state
 
     const overlay = (
@@ -71,6 +73,9 @@ export default class TableSettings extends Component {
         </div>
         <div>
           <span onClick={() => setPercentages(!percentages)} style={{fontWeight: percentages ? 'bold' : 'normal', cursor: 'pointer', textDecoration: 'underline'}}>Percentages</span>
+        </div>
+        <div>
+          <span onClick={() => setAlphabeticalFacets(!alphabeticalFacets)} style={{fontWeight: alphabeticalFacets ? 'bold' : 'normal', cursor: 'pointer', textDecoration: 'underline'}}>Alphabetical Facets</span>
         </div>
         <br />
         <div>

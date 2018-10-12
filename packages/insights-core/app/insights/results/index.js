@@ -14,6 +14,7 @@ module.exports = class Results {
   //   svg: params.svg,
   //
   //   percentages: !!params.percentages,
+  //   alphabeticalFacets: !!params.alphabeticalFacets,
   //
   //   graphTimeFilter: params.graphTimeFilter || 'last-60',
   //   graphCumulative: !!params.graphCumulative,
@@ -667,7 +668,8 @@ module.exports = class Results {
       graphTimeFilter: this.params.graphTimeFilter || 'last-60',
       graphCumulative: this.params.graphCumulative,
 
-      percentages: this.params.percentages
+      percentages: this.params.percentages,
+      alphabeticalFacets: this.params.alphabeticalFacets
     }
   }
 }

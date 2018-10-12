@@ -110,6 +110,7 @@ export default class ExplorerSaga extends Saga {
       'setFacetsCount',
       'setGraphCumulative',
       'setPercentages',
+      'setAlphabeticalFacets',
       'requestExport',
 
       'addFavouriteRequest',
@@ -152,6 +153,7 @@ export default class ExplorerSaga extends Saga {
     [actions.setFacetsCount]: this.refreshDataWorker,
     [actions.setGraphCumulative]: this.refreshDataWorker,
     [actions.setPercentages]: this.refreshDataWorker,
+    [actions.setAlphabeticalFacets]: this.refreshDataWorker,
     [actions.requestExport]: this.refreshDataWorker,
     [actions.openTreeNode]: this.refreshDataWorker,
     [actions.closeTreeNode]: this.refreshDataWorker,
@@ -250,8 +252,8 @@ export default class ExplorerSaga extends Saga {
     const {
       connection,
       url, columns, offsetTarget, offset, limitTarget, limit, sort, filter, graphTimeFilter,
-      facetsCount, facetsColumn, exportTitle, graphCumulative, percentages, graphData
-    } = yield explorerLogic.fetch('connection', 'url', 'columns', 'offset', 'limit', 'offsetTarget', 'limitTarget', 'sort', 'filter', 'graphTimeFilter', 'facetsCount', 'facetsColumn', 'exportTitle', 'graphCumulative', 'percentages', 'graphData')
+      facetsCount, facetsColumn, exportTitle, graphCumulative, percentages, alphabeticalFacets, graphData
+    } = yield explorerLogic.fetch('connection', 'url', 'columns', 'offset', 'limit', 'offsetTarget', 'limitTarget', 'sort', 'filter', 'graphTimeFilter', 'facetsCount', 'facetsColumn', 'exportTitle', 'graphCumulative', 'percentages', 'alphabeticalFacets', 'graphData')
 
     // if paginating and fetching what is currently there (horizontal scroll)
     if (action.type === setPagination.toString() && action.payload.offset === offset && action.payload.limit === limit) {
@@ -289,6 +291,7 @@ export default class ExplorerSaga extends Saga {
           graphCumulative,
 
           percentages,
+          alphabeticalFacets,
 
           offset: offsetTarget,
           limit: limitTarget

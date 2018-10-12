@@ -1,5 +1,6 @@
 // libraries
 import React, { Component, PropTypes } from 'react'
+import { connect } from 'kea/logic'
 import { ResponsiveContainer, ComposedChart, Area, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine } from 'recharts'
 import moment from 'moment'
 
@@ -10,6 +11,7 @@ import Dimensions from 'react-dimensions'
 import CustomTooltip from './tooltip'
 
 // logic
+import explorerLogic from '~/scenes/explorer/logic'
 
 export const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
 
@@ -23,6 +25,15 @@ function sharedStart (array) {
   return a1.substring(0, i)
 }
 
+const alphabeticalFacetSorter = (a, b) => a.name.localeCompare(b.name)
+
+@connect({
+  props: [
+    explorerLogic, [
+      'alphabeticalFacets'
+    ]
+  ]
+})
 @Dimensions({ elementResize: true })
 export default class Graph extends Component {
   static propTypes = {
@@ -199,8 +210,7 @@ export default class Graph extends Component {
   }
 
   render () {
-    // const { data, labels, summed, percentages, height, nullLineNeeded, meta: { unit, facets } } = this.props
-    const { graph, graphData, containerHeight } = this.props
+    const { graph, graphData, containerHeight, alphabeticalFacets } = this.props
     const labels = false
     const percentages = false
     const nullLineNeeded = false
@@ -228,6 +238,12 @@ export default class Graph extends Component {
         moment(graphData[graphData.length - 1].time).add(0.5, timeGroup).valueOf()
       ]
     }
+
+    const graphKeysWithMeta = facets
+      ? alphabeticalFacets
+        ? keysWithMeta.sort(alphabeticalFacetSorter)
+        : keysWithMeta.reverse()
+      : keysWithMeta
 
     return (
       <ResponsiveContainer width='100%' height={containerHeight}>
@@ -258,7 +274,7 @@ export default class Graph extends Component {
           {nullLineNeeded ? (
             <ReferenceLine y={0} stroke='red' alwaysShow />
           ) : null}
-          {(facets ? keysWithMeta.reverse() : keysWithMeta).map(key => (
+          {graphKeysWithMeta.map(key => (
             bars ? <Bar {...this.getLineData(key, facets && summed)} />
               : facets && summed ? <Area {...this.getLineData(key, facets && summed)} />
                 : <Line {...this.getLineData(key, facets && summed)} />))}
