@@ -32,7 +32,10 @@ export default (props) => {
   }
 
   if (value && meta && (meta.type === 'time' || meta.type === 'date')) {
-    if (meta.transform === 'day' || (!meta.transform && meta.type === 'date')) {
+    if (meta.transform === 'week') {
+      const endOfWeek = moment(value).add(6, 'days')
+      displayValue = moment(value).format('YYYY-MM-DD') + ' - ' + endOfWeek.format('YYYY-MM-DD')
+    } else if (meta.transform === 'day' || meta.transform === 'week' || (!meta.transform && meta.type === 'date')) {
       displayValue = moment(value).format('YYYY-MM-DD')
     } else if (meta.transform === 'quarter') {
       displayValue = 'Q' + moment(value).format('Q YYYY')

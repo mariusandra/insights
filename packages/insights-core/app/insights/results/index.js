@@ -696,7 +696,7 @@ function getTimesFromString (timeFilter, smooth = 0, timeGroup = 'day') {
     if (timeGroup === 'month') {
       firstDate = moment(firstDate).startOf('month')
     } else if (timeGroup === 'week') {
-      const wday = firstDate.wday()
+      const wday = firstDate.day()
       firstDate = moment(firstDate).add(-(wday === 0 ? 6 : wday - 1), 'days')
     }
     lastDate = moment()
