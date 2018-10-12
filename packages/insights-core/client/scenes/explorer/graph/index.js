@@ -30,7 +30,8 @@ const alphabeticalFacetSorter = (a, b) => a.name.localeCompare(b.name)
 @connect({
   props: [
     explorerLogic, [
-      'alphabeticalFacets'
+      'alphabeticalFacets',
+      'percentages'
     ]
   ]
 })
@@ -150,9 +151,8 @@ export default class Graph extends Component {
   }
 
   getLineData = (key, stacked) => {
-    // const { labels, percentages } = this.props
+    const { percentages } = this.props
     const labels = false
-    const percentages = false
 
     let data = {
       key: `${key.key}${percentages ? '__%' : ''}${key.visible ? '' : '__hidden'}`,
@@ -174,8 +174,7 @@ export default class Graph extends Component {
   }
 
   renderLabel = (props) => {
-    // const { percentages } = this.props
-    const percentages = false
+    const { percentages } = this.props
 
     const { x, y, stroke, value, key } = props
     const displayValue = Array.isArray(value) ? Math.round(value[1] - value[0]) : Math.round(parseFloat(value))
@@ -210,9 +209,8 @@ export default class Graph extends Component {
   }
 
   render () {
-    const { graph, graphData, containerHeight, alphabeticalFacets } = this.props
+    const { graph, graphData, containerHeight, alphabeticalFacets, percentages } = this.props
     const labels = false
-    const percentages = false
     const nullLineNeeded = false
     const unit = ''
     const facets = graph.facets && graph.facets.length > 0
@@ -270,7 +268,7 @@ export default class Graph extends Component {
             tickFormatter={percentages ? (y) => `${Math.round(y)}%` : (y) => `${y.toLocaleString('en')}${unit}`}
             allowDecimals={false} />
           <CartesianGrid />
-          <Tooltip content={<CustomTooltip graph={graph} />} />
+          <Tooltip content={<CustomTooltip graph={graph} />} percentages={percentages} />
           {nullLineNeeded ? (
             <ReferenceLine y={0} stroke='red' alwaysShow />
           ) : null}

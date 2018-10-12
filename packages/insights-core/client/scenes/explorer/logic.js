@@ -373,15 +373,26 @@ export default class ExplorerLogic extends Logic {
     ],
 
     graphData: [
-      () => [selectors.graph, selectors.graphKeys],
-      (graph, graphKeys) => {
+      () => [selectors.graph, selectors.graphKeys, selectors.percentages],
+      (graph, graphKeys, percentages) => {
         if (!graph) {
           return null
         }
 
-        const graphRows = graph.results.map(row => {
-          const time = row.time
-          return Object.assign({}, row, { time: moment(time).valueOf() })
+        const graphRows = graph.results.map(oldRow => {
+          const time = oldRow.time
+          const row = Object.assign({}, oldRow, { time: moment(time).valueOf() })
+
+          if (percentages) {
+            let total = 0
+            for (const key of graphKeys) {
+              total += parseFloat(row[key])
+            }
+            for (const key of graphKeys) {
+              row[key + '__%'] = total !== 0 ? (parseFloat(row[key]) / total * 100) : 0
+            }
+          }
+          return row
         })
 
         return graphRows

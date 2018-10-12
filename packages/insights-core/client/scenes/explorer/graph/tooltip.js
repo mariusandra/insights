@@ -27,20 +27,16 @@ export default class Tooltip extends Component {
   }
 
   render () {
-    const { active, payload, label, graph } = this.props
-    const percentages = false
-    const controls = false
+    const { active, payload, label, graph, percentages } = this.props
     const unit = ''
     const facets = graph.facets && graph.facets.length > 0
-
-    const lightMode = !controls
 
     if (active) {
       const visiblePayload = payload.filter(item => item.dataKey.indexOf('__hidden') < 0)
 
-      const total = visiblePayload.map(item => percentages ? item.payload[item.dataKey.replace('__%', '')] : item.value - 0).reduce((a, b) => a + b, 0)
-      const max = visiblePayload.map(p => p.value).reduce((a, b) => Math.max(a, b), 0)
-      const percentageFrom = facets ? total : max
+      const total = visiblePayload.map(item => percentages ? parseFloat(item.payload[item.dataKey.replace('__%', '')]) : item.value - 0).reduce((a, b) => a + b, 0)
+      const totalPercentage = percentages ? visiblePayload.map(item => parseFloat(item.payload[item.dataKey])).reduce((a, b) => a + b, 0) : 100
+      const percentageFrom = facets ? total : visiblePayload.map(p => p.value).reduce((a, b) => Math.max(a, b), 0)
 
       const localeStringOptions = { minimumFractionDigits: 2, maximumFractionDigits: 2 }
 
@@ -55,24 +51,23 @@ export default class Tooltip extends Component {
                 <tr>
                   <td style={{paddingRight: 5, paddingBottom: 5}}>Total:</td>
                   <td style={{textAlign: 'right'}}>{total.toLocaleString('en', localeStringOptions)}{unit}</td>
+                  {percentages ? (
+                    <td style={{textAlign: 'right'}}>{Math.round(totalPercentage)}%</td>
+                  ) : null}
                 </tr>
               ) : null}
               {visiblePayload.map(item => {
                 const value = (percentages ? item.payload[item.dataKey.replace('__%', '')] : item.value - 0) || 0
-                const displayValue = unit ? value.toLocaleString('en', localeStringOptions) : value
-                const percentage = percentages ? Math.round(item.value) : Math.round(value / percentageFrom * 100)
+                // const displayValue = unit ? value.toLocaleString('en', localeStringOptions) : value
+                const displayValue = value.toLocaleString('en', localeStringOptions)
+                const percentage = percentages ? item.payload[item.dataKey] : Math.round(value / percentageFrom * 100)
 
                 return (
                   <tr key={item.dataKey} className='recharts-tooltip-item' style={{color: item.color}}>
                     <td style={{paddingRight: 10}}>{item.name}:</td>
-                    {!lightMode || !percentages ? (
-                      <td style={{textAlign: 'right'}}>{displayValue}{unit}</td>
-                    ) : null}
-                    {lightMode && percentages ? (
-                      <td style={{textAlign: 'right'}}>{`${percentage}%`}</td>
-                    ) : null}
-                    {!lightMode && visiblePayload.length > 1 ? (
-                      <td style={{textAlign: 'right', paddingLeft: 10}}>{`(${percentage}%)`}</td>
+                    <td style={{textAlign: 'right'}}>{displayValue}{unit}</td>
+                    {percentages ? (
+                      <td style={{textAlign: 'right'}}>{`${Math.round(percentage, 2)}%`}</td>
                     ) : null}
                   </tr>
                 )
