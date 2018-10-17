@@ -1,6 +1,6 @@
 // libraries
 import React, { Component } from 'react'
-import { connect } from 'kea/logic'
+import { connect } from 'kea'
 
 // utils
 import Select from 'lib/forms/select'

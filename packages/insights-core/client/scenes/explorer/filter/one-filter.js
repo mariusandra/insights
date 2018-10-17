@@ -1,5 +1,6 @@
-import React, { Component, PropTypes } from 'react'
-import { connect } from 'kea/logic'
+import React, { Component } from 'react'
+import { connect } from 'kea'
+import PropTypes from 'prop-types'
 import moment from 'moment'
 
 import DateTime from 'react-datetime'
@@ -41,7 +42,7 @@ export default class OneFilter extends Component {
 
   setFilter = (value) => {
     const { index, column, forceOpen } = this.props
-    const { setFilter, addFilter, removeFilter } = this.props.actions
+    const { setFilter, addFilter, removeFilter } = this.actions
 
     if (index === -1) {
       addFilter({ key: column, value })
@@ -54,7 +55,7 @@ export default class OneFilter extends Component {
 
   addAnotherFilter = () => {
     const { column } = this.props
-    const { addFilter } = this.props.actions
+    const { addFilter } = this.actions
 
     addFilter({ key: column, value: '' })
   }
@@ -195,7 +196,7 @@ export default class OneFilter extends Component {
 
   renderFilter = (meta) => {
     const { index, value, forceOpen } = this.props
-    const { removeFilter } = this.props.actions
+    const { removeFilter } = this.actions
 
     const columnFilter = value
 

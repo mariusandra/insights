@@ -6,12 +6,30 @@ import Popup from 'react-popup'
 
 import { Router, browserHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
-import { getRoutes } from 'kea/scene'
-import { FocusStyleManager } from "@blueprintjs/core";
+import { FocusStyleManager } from '@blueprintjs/core'
 
+import store from './store'
 import App from './_layout'
 import routes from './routes'
-import store from './store'
+
+function lazyLoad (store, lazyLoadableModule) {
+  return (location, cb) => {
+    lazyLoadableModule(module => {
+      const component = module.default
+      cb(null, component)
+    })
+  }
+}
+
+export function getRoutes (App, store, routes) {
+  return {
+    component: App,
+    childRoutes: Object.keys(routes).map(route => ({
+      path: route,
+      getComponent: lazyLoad(store, routes[route])
+    }))
+  }
+}
 
 const history = syncHistoryWithStore(browserHistory, store)
 

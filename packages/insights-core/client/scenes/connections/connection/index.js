@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { connect } from 'kea/logic'
+import { connect } from 'kea'
 
 import messg from 'messg'
 
@@ -30,7 +30,7 @@ export default class Connection extends Component {
 
   handleUpdate = (e) => {
     const { connection } = this.props
-    const { editConnection } = this.props.actions
+    const { editConnection } = this.actions
     const { url, structurePath } = this.state
 
     e.preventDefault()
@@ -57,7 +57,7 @@ export default class Connection extends Component {
   }
 
   handleDelete = (e, connection) => {
-    const { removeConnection } = this.props.actions
+    const { removeConnection } = this.actions
     const { _id, keyword } = connection
     e.preventDefault()
 
@@ -67,13 +67,13 @@ export default class Connection extends Component {
   }
 
   handleTest = (e, id) => {
-    const { testConnection } = this.props.actions
+    const { testConnection } = this.actions
     e.preventDefault()
     testConnection(id)
   }
 
   handleViewStructure = (e, id) => {
-    const { viewStructure } = this.props.actions
+    const { viewStructure } = this.actions
     e.preventDefault()
     viewStructure(id)
   }

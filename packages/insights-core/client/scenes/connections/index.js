@@ -2,7 +2,7 @@ import './styles.scss'
 
 // libraries
 import React, { Component } from 'react'
-import { connect } from 'kea/logic'
+import { connect } from 'kea'
 
 // utils
 
@@ -13,6 +13,7 @@ import AddConnection from './add-connection'
 
 // logic
 import connections from '~/scenes/connections/logic'
+import sceneSaga from '~/scenes/connections/saga'
 
 // const { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } = connections.constants
 
@@ -22,6 +23,9 @@ import connections from '~/scenes/connections/logic'
       'isLoading',
       'sortedConnections'
     ]
+  ],
+  sagas: [
+    sceneSaga
   ]
 })
 export default class ConnectionsScene extends Component {

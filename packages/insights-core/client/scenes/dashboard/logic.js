@@ -1,11 +1,10 @@
-import Logic, { initLogic } from 'kea/logic'
-import { PropTypes } from 'react'
+import { kea } from 'kea'
+import PropTypes from 'prop-types'
 
-@initLogic
-export default class DashboardLogic extends Logic {
-  path = () => ['scenes', 'dashboard', 'index']
+export default kea({
+  path: () => ['scenes', 'dashboard', 'index'],
 
-  actions = ({ constants }) => ({
+  actions: ({ constants }) => ({
     addDashboard: true,
     deleteDashboard: (dashboardId) => ({ dashboardId }),
 
@@ -34,9 +33,9 @@ export default class DashboardLogic extends Logic {
 
     renameItem: (dashboardId, itemId, name) => ({ dashboardId, itemId, name }),
     deleteItem: (dashboardId, itemId) => ({ dashboardId, itemId })
-  })
+  }),
 
-  reducers = ({ actions, constants }) => ({
+  reducers: ({ actions, constants }) => ({
     selectedDashboardId: [null, PropTypes.string, {
       [actions.selectDashboard]: (_, payload) => payload.dashboardId
     }],
@@ -177,9 +176,9 @@ export default class DashboardLogic extends Logic {
     currentBreakpoint: ['desktop', PropTypes.string, {
       [actions.setCurrentBreakpoint]: (_, payload) => payload.breakpoint
     }]
-  })
+  }),
 
-  selectors = ({ constants, selectors }) => ({
+  selectors: ({ constants, selectors }) => ({
     dashboard: [
       () => [selectors.dashboards, selectors.dashboardItems, selectors.selectedDashboardId],
       (dashboards, dashboardItems, selectedDashboardId) => {
@@ -254,4 +253,4 @@ export default class DashboardLogic extends Logic {
       PropTypes.array
     ]
   })
-}
+})

@@ -1,22 +1,22 @@
-import Logic from 'kea/logic'
-import { PropTypes } from 'react'
+import { kea } from 'kea'
+import PropTypes from 'prop-types'
 
 import { push, replace } from 'react-router-redux'
-import { put, take } from 'redux-saga/effects'
+import { put, take, call } from 'redux-saga/effects'
 
 import client from '~/client'
 
-class AuthLogic extends Logic {
-  path = () => ['auth']
+export default kea({
+  path: () => ['auth'],
 
-  actions = ({ constants }) => ({
+  actions: () => ({
     loginStarted: true,
     loginSuccess: (token, user) => ({ token, user }),
     loginFailure: true,
     setRunningInElectron: true
-  })
+  }),
 
-  reducers = ({ actions, constants }) => ({
+  reducers: ({ actions }) => ({
     isLoggedIn: [false, PropTypes.bool, {
       [actions.loginStarted]: () => false,
       [actions.loginSuccess]: () => true,
@@ -50,64 +50,67 @@ class AuthLogic extends Logic {
     runningInElectron: [false, PropTypes.bool, {
       [actions.setRunningInElectron]: () => true
     }]
-  })
-}
+  }),
 
-const authLogic = new AuthLogic().init()
-export default authLogic
+  start: function * () {
+    yield call(this.workers.authenticate)
+  },
 
-export function * authenticate (credentials) {
-  const { loginStarted, loginSuccess, loginFailure, setRunningInElectron } = authLogic.actions
+  workers: {
+    authenticate: function * (credentials) {
+      const { loginStarted, loginSuccess, loginFailure, setRunningInElectron } = this.actions
 
-  yield put(loginStarted())
+      yield put(loginStarted())
 
-  let payload = {}
+      let payload = {}
 
-  if (credentials) {
-    payload = Object.assign({ strategy: 'local' }, credentials)
-  }
+      if (credentials) {
+        payload = Object.assign({ strategy: 'local' }, credentials)
+      }
 
-  // do we have the electron token in the URL?
-  if (window.location.search.includes('electron-connect-api-key')) {
-    const search = window.location.search.indexOf('?') === 0 ? window.location.search.substring(1) : window.location.search
-    const key = search.split('&').map(k => k.split('=').map(decodeURIComponent)).filter(k => k[0] === 'electron-connect-api-key')[0][1]
-    payload = { strategy: 'electron-connect-api-key', key }
-  }
+      // do we have the electron token in the URL?
+      if (window.location.search.includes('electron-connect-api-key')) {
+        const search = window.location.search.indexOf('?') === 0 ? window.location.search.substring(1) : window.location.search
+        const key = search.split('&').map(k => k.split('=').map(decodeURIComponent)).filter(k => k[0] === 'electron-connect-api-key')[0][1]
+        payload = { strategy: 'electron-connect-api-key', key }
+      }
 
-  try {
-    const authenticationResponse = yield client.authenticate(payload)
-    const { accessToken, user } = authenticationResponse
+      try {
+        const authenticationResponse = yield client.authenticate(payload)
+        const { accessToken, user } = authenticationResponse
 
-    yield put(loginSuccess(accessToken, user))
+        yield put(loginSuccess(accessToken, user))
 
-    // successful electron login
-    // - remove the token from the URL
-    // - set runningInElectron flag
-    if (payload.strategy === 'electron-connect-api-key') {
-      const search = window.location.search.indexOf('?') === 0 ? window.location.search.substring(1) : window.location.search
-      const filteredParams = search.split('&').filter(k => k.split('=')[0] !== 'electron-connect-api-key').join('&')
-      yield put(setRunningInElectron())
-      yield put(replace(`${window.location.pathname}${filteredParams.length > 0 ? '?' : ''}${filteredParams}`))
+        // successful electron login
+        // - remove the token from the URL
+        // - set runningInElectron flag
+        if (payload.strategy === 'electron-connect-api-key') {
+          const search = window.location.search.indexOf('?') === 0 ? window.location.search.substring(1) : window.location.search
+          const filteredParams = search.split('&').filter(k => k.split('=')[0] !== 'electron-connect-api-key').join('&')
+          yield put(setRunningInElectron())
+          yield put(replace(`${window.location.pathname}${filteredParams.length > 0 ? '?' : ''}${filteredParams}`))
+        }
+
+        return true
+      } catch (error) {
+        const showLogin = yield this.get('showLogin')
+        yield put(loginFailure())
+
+        if (!showLogin && !window.location.pathname.includes('/login')) {
+          yield put(push(`/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`))
+        }
+        return false
+      }
+    },
+
+    waitUntilLogin: function * () {
+      const { loginSuccess } = this.actions
+
+      // wait until we're logged in
+      const isLoggedIn = yield this.get('isLoggedIn')
+      if (!isLoggedIn) {
+        yield take(loginSuccess().type)
+      }
     }
-
-    return true
-  } catch (error) {
-    const showLogin = yield authLogic.get('showLogin')
-    yield put(loginFailure())
-
-    if (!showLogin && !window.location.pathname.includes('/login')) {
-      yield put(push(`/login?redirect=${encodeURIComponent(window.location.pathname + window.location.search)}`))
-    }
-    return false
   }
-}
-
-export function * waitUntilLogin () {
-  const { loginSuccess } = authLogic.actions
-
-  // wait until we're logged in
-  const isLoggedIn = yield authLogic.get('isLoggedIn')
-  if (!isLoggedIn) {
-    yield take(loginSuccess().type)
-  }
-}
+})

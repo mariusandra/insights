@@ -2,7 +2,7 @@ import './styles.scss'
 
 // libraries
 import React, { Component } from 'react'
-import { connect } from 'kea/logic'
+import { connect } from 'kea'
 
 // utils
 import { Layout, LayoutSplitter } from 'react-flex-layout'
@@ -19,6 +19,7 @@ import AddToDashboard from './add-to-dashboard'
 
 // logic
 import explorerLogic from '~/scenes/explorer/logic'
+import explorerSaga from '~/scenes/explorer/saga'
 
 @connect({
   actions: [
@@ -36,6 +37,9 @@ import explorerLogic from '~/scenes/explorer/logic'
       'filter',
       'selectedModel'
     ]
+  ],
+  sagas: [
+    explorerSaga
   ]
 })
 export default class Explorer extends Component {

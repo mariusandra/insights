@@ -1,11 +1,10 @@
-import Logic, { initLogic } from 'kea/logic'
-import { PropTypes } from 'react'
+import { kea } from 'kea'
+import PropTypes from 'prop-types'
 
-@initLogic
-export default class StructureLogic extends Logic {
-  path = () => ['scenes', 'structure', 'index']
+export default kea({
+  path: () => ['scenes', 'structure', 'index'],
 
-  actions = ({ constants }) => ({
+  actions: () => ({
     openConnections: true,
     startLoading: true,
     connectionLoaded: connection => ({ connection }),
@@ -15,9 +14,9 @@ export default class StructureLogic extends Logic {
 
     addChange: (model, column, field, change, original) => ({ model, column, field, change, original }),
     discardChanges: (model, column) => ({ model, column })
-  })
+  }),
 
-  reducers = ({ actions, constants }) => ({
+  reducers: ({ actions }) => ({
     isLoading: [false, PropTypes.bool, {
       [actions.startLoading]: () => true,
       [actions.structureLoaded]: () => false
@@ -70,9 +69,9 @@ export default class StructureLogic extends Logic {
     selectedModel: [null, PropTypes.string, {
       [actions.selectModel]: (_, payload) => payload.model
     }]
-  })
+  }),
 
-  selectors = ({ constants, selectors }) => ({
+  selectors: ({ selectors }) => ({
     models: [
       () => [selectors.structure],
       (structure) => structure ? Object.keys(structure).sort((a, b) => a.localeCompare(b)) : [],
@@ -130,4 +129,4 @@ export default class StructureLogic extends Logic {
       PropTypes.number
     ]
   })
-}
+})

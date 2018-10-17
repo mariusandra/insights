@@ -1,21 +1,14 @@
-import Logic, { initLogic } from 'kea/logic'
-import { PropTypes } from 'react'
+import { kea } from 'kea'
+import PropTypes from 'prop-types'
 
 import moment from 'moment'
 
 import viewsLogic from '~/scenes/header/views/logic'
 
-@initLogic
-export default class ExplorerLogic extends Logic {
-  path = () => ['scenes', 'explorer', 'index']
+export default kea({
+  path: () => ['scenes', 'explorer', 'index'],
 
-  constants = () => [
-    // 'SHOW_ALL',
-    // 'SHOW_ACTIVE',
-    // 'SHOW_COMPLETED'
-  ]
-
-  actions = ({ constants }) => ({
+  actions: () => ({
     setConnections: connections => ({ connections }),
     setConnection: connection => ({ connection }),
 
@@ -77,9 +70,9 @@ export default class ExplorerLogic extends Logic {
     removeFavouriteRequest: (path) => ({ path }),
     removeFavouriteSuccess: (path) => ({ path }),
     favouritesLoaded: (favourites) => ({ favourites })
-  })
+  }),
 
-  reducers = ({ actions, constants }) => ({
+  reducers: ({ actions }) => ({
     search: ['', PropTypes.string, {
       [actions.setSearch]: (_, payload) => payload.search
     }],
@@ -309,9 +302,9 @@ export default class ExplorerLogic extends Logic {
         return newState
       }
     }]
-  })
+  }),
 
-  selectors = ({ constants, selectors }) => ({
+  selectors: ({ selectors }) => ({
     models: [
       () => [selectors.structure],
       (structure) => {
@@ -443,4 +436,4 @@ export default class ExplorerLogic extends Logic {
       PropTypes.string
     ]
   })
-}
+})

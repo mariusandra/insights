@@ -1,11 +1,10 @@
-import Logic, { initLogic } from 'kea/logic'
-import { PropTypes } from 'react'
+import { kea } from 'kea'
+import PropTypes from 'prop-types'
 
-@initLogic
-export default class ConnectionsLogic extends Logic {
-  path = () => ['scenes', 'connections', 'index']
+export default kea({
+  path: () => ['scenes', 'connections', 'index'],
 
-  actions = ({ constants }) => ({
+  actions: ({ constants }) => ({
     loadingConnections: true,
     connectionsLoaded: connections => ({ connections }),
 
@@ -21,9 +20,9 @@ export default class ConnectionsLogic extends Logic {
 
     removeConnection: (id) => ({ id }),
     connectionRemoved: (id) => ({ id })
-  })
+  }),
 
-  reducers = ({ actions, constants }) => ({
+  reducers: ({ actions, constants }) => ({
     isLoading: [false, PropTypes.bool, {
       [actions.loadingConnections]: () => true,
       [actions.connectionsLoaded]: () => false
@@ -48,13 +47,13 @@ export default class ConnectionsLogic extends Logic {
         return rest
       }
     }]
-  })
+  }),
 
-  selectors = ({ constants, selectors }) => ({
+  selectors: ({ constants, selectors }) => ({
     sortedConnections: [
       () => [selectors.connections],
       (connections) => Object.values(connections).sort((a, b) => a.keyword.localeCompare(b.keyword)),
       PropTypes.array
     ]
   })
-}
+})

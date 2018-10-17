@@ -1,11 +1,11 @@
-import Saga from 'kea/saga'
+import { kea } from 'kea'
 import { put, call, fork } from 'redux-saga/effects'
 import messg from 'messg'
 import { LOCATION_CHANGE, push } from 'react-router-redux'
 
 import download from 'downloadjs'
 
-import { waitUntilLogin } from '~/scenes/auth'
+import authLogic from '~/scenes/auth'
 import explorerLogic from '~/scenes/explorer/logic'
 
 import urlToState from 'lib/explorer/url-to-state'
@@ -74,98 +74,102 @@ function fetchSvg () {
 //   document.body.removeChild(downloadLink)
 // }
 
-export default class ExplorerSaga extends Saga {
-  actions = () => ([
-    explorerLogic, [
-      'setConnections',
-      'setConnection',
+export default kea({
+  path: () => ['scenes', 'explorer', 'saga'],
 
-      'setStructure',
+  connect: {
+    actions: [
+      explorerLogic, [
+        'setConnections',
+        'setConnection',
 
-      'refreshData',
-      'setResults',
-      'setColumns',
-      'addColumn',
-      'removeColumn',
-      'removeColumnWithIndex',
-      'removeColumnsWithPath',
-      'setLoading',
-      'clearLoading',
-      'setFilter',
-      'addFilter',
-      'addEmptyFilter',
-      'removeFilter',
-      'removeFiltersByKey',
-      'setPagination',
-      'setSort',
-      'setTransform',
-      'openTreeNode',
-      'closeTreeNode',
-      'urlChanged',
-      'clear',
-      'digDeeper',
-      'setColumnsAndFilter',
-      'setGraphTimeFilter',
-      'setFacetsColumn',
-      'setFacetsCount',
-      'setGraphCumulative',
-      'setPercentages',
-      'setAlphabeticalFacets',
-      'requestExport',
+        'setStructure',
 
-      'addFavouriteRequest',
-      'addFavouriteSuccess',
-      'removeFavouriteRequest',
-      'removeFavouriteSuccess',
-      'favouritesLoaded',
+        'refreshData',
+        'setResults',
+        'setColumns',
+        'addColumn',
+        'removeColumn',
+        'removeColumnWithIndex',
+        'removeColumnsWithPath',
+        'setLoading',
+        'clearLoading',
+        'setFilter',
+        'addFilter',
+        'addEmptyFilter',
+        'removeFilter',
+        'removeFiltersByKey',
+        'setPagination',
+        'setSort',
+        'setTransform',
+        'openTreeNode',
+        'closeTreeNode',
+        'urlChanged',
+        'clear',
+        'digDeeper',
+        'setColumnsAndFilter',
+        'setGraphTimeFilter',
+        'setFacetsColumn',
+        'setFacetsCount',
+        'setGraphCumulative',
+        'setPercentages',
+        'setAlphabeticalFacets',
+        'requestExport',
 
-      'dashboardsLoaded',
-      'addToDashboard'
+        'addFavouriteRequest',
+        'addFavouriteSuccess',
+        'removeFavouriteRequest',
+        'removeFavouriteSuccess',
+        'favouritesLoaded',
+
+        'dashboardsLoaded',
+        'addToDashboard'
+      ]
     ]
-  ])
+  },
 
-  takeEvery = ({ actions }) => ({
-    [LOCATION_CHANGE]: this.urlToStateWorker,
-    [actions.digDeeper]: this.digDeeperWorker,
-    [actions.setConnection]: this.setConnectionWorker
-  })
+  takeEvery: ({ actions, workers }) => ({
+    [LOCATION_CHANGE]: workers.urlToStateWorker,
+    [actions.digDeeper]: workers.digDeeperWorker,
+    [actions.setConnection]: workers.setConnectionWorker
+  }),
 
-  takeLatest = ({ actions }) => ({
-    [actions.clear]: this.refreshDataWorker,
-    [actions.urlChanged]: this.refreshDataWorker,
-    [actions.setColumnsAndFilter]: this.refreshDataWorker,
-    [actions.setColumns]: this.refreshDataWorker,
-    [actions.addColumn]: this.refreshDataWorker,
-    [actions.removeColumn]: this.refreshDataWorker,
-    [actions.removeColumnWithIndex]: this.refreshDataWorker,
-    [actions.removeColumnsWithPath]: this.refreshDataWorker,
-    [actions.refreshData]: this.refreshDataWorker,
-    [actions.setFilter]: this.refreshDataWorker,
-    [actions.addFilter]: this.refreshDataWorker,
-    [actions.addEmptyFilter]: this.refreshDataWorker,
-    [actions.removeFilter]: this.refreshDataWorker,
-    [actions.removeFiltersByKey]: this.refreshDataWorker,
-    [actions.setPagination]: this.refreshDataWorker,
-    [actions.setSort]: this.refreshDataWorker,
-    [actions.setTransform]: this.refreshDataWorker,
-    [actions.setGraphTimeFilter]: this.refreshDataWorker,
-    [actions.setFacetsColumn]: this.refreshDataWorker,
-    [actions.setFacetsCount]: this.refreshDataWorker,
-    [actions.setGraphCumulative]: this.refreshDataWorker,
-    [actions.setPercentages]: this.refreshDataWorker,
-    [actions.setAlphabeticalFacets]: this.refreshDataWorker,
-    [actions.requestExport]: this.refreshDataWorker,
-    [actions.openTreeNode]: this.refreshDataWorker,
-    [actions.closeTreeNode]: this.refreshDataWorker,
+  takeLatest: ({ actions, workers }) => ({
+    [actions.clear]: workers.refreshDataWorker,
+    [actions.urlChanged]: workers.refreshDataWorker,
+    [actions.setColumnsAndFilter]: workers.refreshDataWorker,
+    [actions.setColumns]: workers.refreshDataWorker,
+    [actions.addColumn]: workers.refreshDataWorker,
+    [actions.removeColumn]: workers.refreshDataWorker,
+    [actions.removeColumnWithIndex]: workers.refreshDataWorker,
+    [actions.removeColumnsWithPath]: workers.refreshDataWorker,
+    [actions.refreshData]: workers.refreshDataWorker,
+    [actions.setFilter]: workers.refreshDataWorker,
+    [actions.addFilter]: workers.refreshDataWorker,
+    [actions.addEmptyFilter]: workers.refreshDataWorker,
+    [actions.removeFilter]: workers.refreshDataWorker,
+    [actions.removeFiltersByKey]: workers.refreshDataWorker,
+    [actions.setPagination]: workers.refreshDataWorker,
+    [actions.setSort]: workers.refreshDataWorker,
+    [actions.setTransform]: workers.refreshDataWorker,
+    [actions.setGraphTimeFilter]: workers.refreshDataWorker,
+    [actions.setFacetsColumn]: workers.refreshDataWorker,
+    [actions.setFacetsCount]: workers.refreshDataWorker,
+    [actions.setGraphCumulative]: workers.refreshDataWorker,
+    [actions.setPercentages]: workers.refreshDataWorker,
+    [actions.setAlphabeticalFacets]: workers.refreshDataWorker,
+    [actions.requestExport]: workers.refreshDataWorker,
+    [actions.openTreeNode]: workers.refreshDataWorker,
+    [actions.closeTreeNode]: workers.refreshDataWorker,
 
-    [actions.addToDashboard]: this.addToDashboardWorker,
-    [actions.addFavouriteRequest]: this.addFavouriteRequestWorker,
-    [actions.removeFavouriteRequest]: this.removeFavouriteRequestWorker
-  })
+    [actions.addToDashboard]: workers.addToDashboardWorker,
+    [actions.addFavouriteRequest]: workers.addFavouriteRequestWorker,
+    [actions.removeFavouriteRequest]: workers.removeFavouriteRequestWorker
+  }),
 
-  run = function * () {
+  start: function * () {
     const { setConnections, setConnection } = this.actions
-    yield call(waitUntilLogin)
+    yield call(authLogic.workers.waitUntilLogin)
 
     window.document.title = 'Insights Explorer'
 
@@ -190,242 +194,244 @@ export default class ExplorerSaga extends Saga {
 
     yield put(setConnection(connection))
 
-    yield fork(this.loadDashboards)
-    yield fork(this.loadFavourites)
-    yield call(this.loadStructure, connection)
+    yield fork(this.workers.loadDashboards)
+    yield fork(this.workers.loadFavourites)
+    yield call(this.workers.loadStructure, connection)
 
-    yield call(this.urlToStateWorker, { payload: { pathname: window.location.pathname, search: window.location.search, firstLoad: true } })
-  }
+    yield call(this.workers.urlToStateWorker, { payload: { pathname: window.location.pathname, search: window.location.search, firstLoad: true } })
+  },
 
-  loadDashboards = function * (action) {
-    const { dashboardsLoaded } = this.actions
+  workers: {
+    loadDashboards: function * (action) {
+      const { dashboardsLoaded } = this.actions
 
-    const response = yield dashboardsService.find()
-    yield put(dashboardsLoaded(response.data))
-  }
+      const response = yield dashboardsService.find()
+      yield put(dashboardsLoaded(response.data))
+    },
 
-  loadFavourites = function * (action) {
-    const { favouritesLoaded } = this.actions
+    loadFavourites: function * (action) {
+      const { favouritesLoaded } = this.actions
 
-    const response = yield favouritesService.find()
-    yield put(favouritesLoaded(response.data))
-  }
+      const response = yield favouritesService.find()
+      yield put(favouritesLoaded(response.data))
+    },
 
-  loadStructure = function * (keyword) {
-    const { setStructure } = this.actions
+    loadStructure: function * (keyword) {
+      const { setStructure } = this.actions
 
-    try {
-      const connections = yield explorerLogic.get('connections')
-      const connection = connections[keyword]
+      try {
+        const connections = yield explorerLogic.get('connections')
+        const connection = connections[keyword]
 
-      if (!connection) {
-        messg.error(`Connection "${keyword}" not found!`, 2500)
-        yield put(setStructure({}))
+        if (!connection) {
+          messg.error(`Connection "${keyword}" not found!`, 2500)
+          yield put(setStructure({}))
+          return
+        }
+
+        const structure = yield structureService.get(connection._id)
+        yield put(setStructure(structure))
+      } catch (e) {
+        messg.error('Error loading database structure for connection!', 2500)
+      }
+    },
+
+    setConnectionWorker: function * (action) {
+      const { clear } = this.actions
+      const { connection } = action.payload
+      const urlValues = urlToState(window.location.search)
+
+      if (urlValues.connection !== connection) {
+        yield call(this.workers.loadStructure, connection)
+        yield put(clear())
+      }
+    },
+
+    refreshDataWorker: function * (action) {
+      const { setResults, setPagination, setLoading, clearLoading, openTreeNode, closeTreeNode, urlChanged, requestExport } = this.actions
+
+      if (action.type !== urlChanged.toString()) {
+        yield delay(50) // throttle unless coming from an url change
+      }
+
+      const {
+        connection,
+        url, columns, offsetTarget, offset, limitTarget, limit, sort, filter, graphTimeFilter,
+        facetsCount, facetsColumn, exportTitle, graphCumulative, percentages, alphabeticalFacets, graphData
+      } = yield explorerLogic.fetch('connection', 'url', 'columns', 'offset', 'limit', 'offsetTarget', 'limitTarget', 'sort', 'filter', 'graphTimeFilter', 'facetsCount', 'facetsColumn', 'exportTitle', 'graphCumulative', 'percentages', 'alphabeticalFacets', 'graphData')
+
+      // if paginating and fetching what is currently there (horizontal scroll)
+      if (action.type === setPagination.toString() && action.payload.offset === offset && action.payload.limit === limit) {
         return
       }
 
-      const structure = yield structureService.get(connection._id)
-      yield put(setStructure(structure))
-    } catch (e) {
-      messg.error('Error loading database structure for connection!', 2500)
-    }
-  }
+      if (action.type !== urlChanged.toString() && `${window.location.pathname}${window.location.search}` !== url) {
+        yield put(push(url))
+      }
 
-  setConnectionWorker = function * (action) {
-    const { clear } = this.actions
-    const { connection } = action.payload
-    const urlValues = urlToState(window.location.search)
+      if (columns.length > 0) {
+        const model = columns[0].split('.')[0].split('!')[0]
+        window.document.title = `${model} - Insights Explorer`
+      } else {
+        window.document.title = 'Insights Explorer'
+      }
 
-    if (urlValues.connection !== connection) {
-      yield call(this.loadStructure, connection)
-      yield put(clear())
-    }
-  }
+      if (action.type === openTreeNode.toString() || action.type === closeTreeNode.toString()) {
+        return // nothing to reload
+      }
 
-  refreshDataWorker = function * (action) {
-    const { setResults, setPagination, setLoading, clearLoading, openTreeNode, closeTreeNode, urlChanged, requestExport } = this.actions
+      if (columns.length > 0) {
+        try {
+          const params = {
+            connection,
 
-    if (action.type !== urlChanged.toString()) {
-      yield delay(50) // throttle unless coming from an url change
-    }
+            columns,
+            sort,
+            filter,
 
-    const {
-      connection,
-      url, columns, offsetTarget, offset, limitTarget, limit, sort, filter, graphTimeFilter,
-      facetsCount, facetsColumn, exportTitle, graphCumulative, percentages, alphabeticalFacets, graphData
-    } = yield explorerLogic.fetch('connection', 'url', 'columns', 'offset', 'limit', 'offsetTarget', 'limitTarget', 'sort', 'filter', 'graphTimeFilter', 'facetsCount', 'facetsColumn', 'exportTitle', 'graphCumulative', 'percentages', 'alphabeticalFacets', 'graphData')
+            facetsColumn,
+            facetsCount,
 
-    // if paginating and fetching what is currently there (horizontal scroll)
-    if (action.type === setPagination.toString() && action.payload.offset === offset && action.payload.limit === limit) {
-      return
-    }
+            graphTimeFilter,
+            graphCumulative,
 
-    if (action.type !== urlChanged.toString() && `${window.location.pathname}${window.location.search}` !== url) {
-      yield put(push(url))
-    }
+            percentages,
+            alphabeticalFacets,
 
-    if (columns.length > 0) {
-      const model = columns[0].split('.')[0].split('!')[0]
-      window.document.title = `${model} - Insights Explorer`
-    } else {
-      window.document.title = 'Insights Explorer'
-    }
-
-    if (action.type === openTreeNode.toString() || action.type === closeTreeNode.toString()) {
-      return // nothing to reload
-    }
-
-    if (columns.length > 0) {
-      try {
-        const params = {
-          connection,
-
-          columns,
-          sort,
-          filter,
-
-          facetsColumn,
-          facetsCount,
-
-          graphTimeFilter,
-          graphCumulative,
-
-          percentages,
-          alphabeticalFacets,
-
-          offset: offsetTarget,
-          limit: limitTarget
-        }
-
-        yield put(setLoading())
-
-        let response = null
-
-        if (action.type === requestExport.toString()) {
-          const { format } = action.payload
-          response = yield fetchBlob({
-            ...params,
-            ...(format === 'pdf' && graphData ? { svg: fetchSvg() } : {}),
-            export: format,
-            exportTitle: exportTitle
-          })
-
-          if (response.ok) {
-            const blob = yield response.blob()
-            const disposition = response.headers.get('content-disposition') || ''
-            const match = disposition.match(/filename="([^"]+)"/)
-            download(blob, match[1] || `export.${format}`)
-          } else {
-            messg.error(response.error, 2500)
+            offset: offsetTarget,
+            limit: limitTarget
           }
-          yield put(clearLoading())
-        } else {
-          response = yield resultsService.find({ query: params })
 
-          if (response.success) {
-            // not asking because of a pagination update
-            const resetScrolling = action.type !== setPagination.toString()
+          yield put(setLoading())
 
-            yield put(setResults(response, resetScrolling))
-          } else {
+          let response = null
+
+          if (action.type === requestExport.toString()) {
+            const { format } = action.payload
+            response = yield fetchBlob({
+              ...params,
+              ...(format === 'pdf' && graphData ? { svg: fetchSvg() } : {}),
+              export: format,
+              exportTitle: exportTitle
+            })
+
+            if (response.ok) {
+              const blob = yield response.blob()
+              const disposition = response.headers.get('content-disposition') || ''
+              const match = disposition.match(/filename="([^"]+)"/)
+              download(blob, match[1] || `export.${format}`)
+            } else {
+              messg.error(response.error, 2500)
+            }
             yield put(clearLoading())
-            messg.error(response.error, 2500)
+          } else {
+            response = yield resultsService.find({ query: params })
+
+            if (response.success) {
+              // not asking because of a pagination update
+              const resetScrolling = action.type !== setPagination.toString()
+
+              yield put(setResults(response, resetScrolling))
+            } else {
+              yield put(clearLoading())
+              messg.error(response.error, 2500)
+            }
+          }
+        } catch (e) {
+          console.error(e)
+          yield put(clearLoading())
+          messg.error(`Error: ${e.message}`, 2500)
+        }
+      }
+    },
+
+    urlToStateWorker: function * (action) {
+      const { urlChanged } = this.actions
+      const { search } = action.payload
+
+      const values = urlToState(search)
+
+      // fetch a new structure if the connection changes
+      const oldConnection = yield explorerLogic.get('connection')
+      const newConnection = values.connection
+
+      if (newConnection && newConnection !== oldConnection) {
+        const connections = yield explorerLogic.get('connections')
+        if (connections[newConnection]) {
+          yield call(this.workers.loadStructure, newConnection)
+        } else {
+          messg.error(`Connection "${newConnection}" not found!`, 2500)
+        }
+      }
+
+      yield put(urlChanged(values))
+    },
+
+    digDeeperWorker: function * (action) {
+      const { setColumnsAndFilter } = this.actions
+
+      const { row } = action.payload
+      const { results, columns } = yield explorerLogic.fetch('results', 'columns')
+
+      const resultRow = results[row]
+
+      let newFilter = []
+
+      let newColumns = []
+      let i = 0
+
+      columns.forEach(column => {
+        const [ path, transform, aggregate ] = column.split('!')
+
+        if (aggregate) {
+          newColumns.push(path + (transform ? `!${transform}` : ''))
+        } else {
+          newColumns.push(column)
+          if (resultRow[i] === null) {
+            newFilter.push({ key: column, value: 'null' })
+          } else {
+            newFilter.push({ key: column, value: `equals:${resultRow[i]}` })
           }
         }
-      } catch (e) {
-        console.error(e)
-        yield put(clearLoading())
-        messg.error(`Error: ${e.message}`, 2500)
+        i += 1
+      })
+
+      yield put(setColumnsAndFilter(newColumns, newFilter))
+    },
+
+    addToDashboardWorker: function * (action) {
+      const { id, name, path } = action.payload
+
+      const dashboardItem = yield dashboardItemsService.create({ dashboardId: id, name, path })
+
+      if (dashboardItem) {
+        messg.success('Added!', 2500)
       }
-    }
-  }
+    },
 
-  urlToStateWorker = function * (action) {
-    const { urlChanged } = this.actions
-    const { search } = action.payload
+    addFavouriteRequestWorker: function * (action) {
+      const { addFavouriteSuccess } = this.actions
+      const { path } = action.payload
 
-    const values = urlToState(search)
+      const favourite = yield favouritesService.create({ path })
 
-    // fetch a new structure if the connection changes
-    const oldConnection = yield explorerLogic.get('connection')
-    const newConnection = values.connection
-
-    if (newConnection && newConnection !== oldConnection) {
-      const connections = yield explorerLogic.get('connections')
-      if (connections[newConnection]) {
-        yield call(this.loadStructure, newConnection)
-      } else {
-        messg.error(`Connection "${newConnection}" not found!`, 2500)
+      if (favourite) {
+        yield put(addFavouriteSuccess(path, favourite))
       }
-    }
+    },
 
-    yield put(urlChanged(values))
-  }
+    removeFavouriteRequestWorker: function * (action) {
+      const { removeFavouriteSuccess } = this.actions
+      const { path } = action.payload
+      const favourites = yield explorerLogic.get('favourites')
+      console.log(favourites)
 
-  digDeeperWorker = function * (action) {
-    const { setColumnsAndFilter } = this.actions
+      const favourite = favourites[path]
+      console.log(favourite)
 
-    const { row } = action.payload
-    const { results, columns } = yield explorerLogic.fetch('results', 'columns')
+      yield favouritesService.remove(favourite._id)
 
-    const resultRow = results[row]
-
-    let newFilter = []
-
-    let newColumns = []
-    let i = 0
-
-    columns.forEach(column => {
-      const [ path, transform, aggregate ] = column.split('!')
-
-      if (aggregate) {
-        newColumns.push(path + (transform ? `!${transform}` : ''))
-      } else {
-        newColumns.push(column)
-        if (resultRow[i] === null) {
-          newFilter.push({ key: column, value: 'null' })
-        } else {
-          newFilter.push({ key: column, value: `equals:${resultRow[i]}` })
-        }
-      }
-      i += 1
-    })
-
-    yield put(setColumnsAndFilter(newColumns, newFilter))
-  }
-
-  addToDashboardWorker = function * (action) {
-    const { id, name, path } = action.payload
-
-    const dashboardItem = yield dashboardItemsService.create({ dashboardId: id, name, path })
-
-    if (dashboardItem) {
-      messg.success('Added!', 2500)
+      yield put(removeFavouriteSuccess(path))
     }
   }
-
-  addFavouriteRequestWorker = function * (action) {
-    const { addFavouriteSuccess } = this.actions
-    const { path } = action.payload
-
-    const favourite = yield favouritesService.create({ path })
-
-    if (favourite) {
-      yield put(addFavouriteSuccess(path, favourite))
-    }
-  }
-
-  removeFavouriteRequestWorker = function * (action) {
-    const { removeFavouriteSuccess } = this.actions
-    const { path } = action.payload
-    const favourites = yield explorerLogic.get('favourites')
-    console.log(favourites)
-
-    const favourite = favourites[path]
-    console.log(favourite)
-
-    yield favouritesService.remove(favourite._id)
-
-    yield put(removeFavouriteSuccess(path))
-  }
-}
+})

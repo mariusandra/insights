@@ -1,5 +1,6 @@
 // libraries
-import React, { PropTypes, Component } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 // utils
 import client from '~/client'

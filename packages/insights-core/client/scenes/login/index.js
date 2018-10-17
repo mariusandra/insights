@@ -2,7 +2,7 @@ import './styles.scss'
 
 // libraries
 import React, { Component } from 'react'
-import { connect } from 'kea/logic'
+import { connect } from 'kea'
 
 // utils
 
@@ -11,6 +11,8 @@ import SubmitButton from 'lib/tags/submit-button'
 
 // logic
 import sceneLogic from '~/scenes/login/logic'
+import sceneSaga from '~/scenes/login/saga'
+
 
 @connect({
   actions: [
@@ -27,6 +29,9 @@ import sceneLogic from '~/scenes/login/logic'
       'errors',
       'isSubmitting'
     ]
+  ],
+  sagas: [
+    sceneSaga
   ]
 })
 export default class LoginScene extends Component {

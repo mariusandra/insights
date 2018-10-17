@@ -4,7 +4,7 @@ import './styles.scss'
 
 // libraries
 import React, { Component } from 'react'
-import { connect } from 'kea/logic'
+import { connect } from 'kea'
 import { Responsive, WidthProvider } from 'react-grid-layout'
 import { Layout } from 'react-flex-layout'
 
@@ -16,6 +16,7 @@ import Spinner from 'lib/tags/spinner'
 
 // logic
 import dashboardLogic from '~/scenes/dashboard/logic'
+import sceneSaga from '~/scenes/dashboard/saga'
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive)
 // const { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } = dashboard.constants
@@ -46,6 +47,9 @@ const ResponsiveReactGridLayout = WidthProvider(Responsive)
       'savingDashboard',
       'resizingItem'
     ]
+  ],
+  sagas: [
+    sceneSaga
   ]
 })
 export default class Dashboard extends Component {
@@ -79,18 +83,18 @@ export default class Dashboard extends Component {
   }
 
   handleResizeStart = (layout, oldItem, newItem, placeholder, e, element) => {
-    const { startResizing } = this.props.actions
+    const { startResizing } = this.actions
     startResizing(oldItem.i)
   }
 
   handleResizeStop = (layout, oldItem, newItem, placeholder, e, element) => {
-    const { stopResizing } = this.props.actions
+    const { stopResizing } = this.actions
     stopResizing(oldItem.i)
   }
 
   render () {
     const { layouts, dashboards, selectedDashboardId, layoutsUnsaved, savingDashboard } = this.props
-    const { layoutChanged, selectDashboard, addDashboard, deleteDashboard, setCurrentBreakpoint, saveDashboard, undoDashboard } = this.props.actions
+    const { layoutChanged, selectDashboard, addDashboard, deleteDashboard, setCurrentBreakpoint, saveDashboard, undoDashboard } = this.actions
     const { mounted } = this.state
 
     return (

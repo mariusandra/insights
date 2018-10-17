@@ -1,19 +1,9 @@
-import Logic, { initLogic } from 'kea/logic'
+import { kea } from 'kea'
 
-@initLogic
-export default class HeaderLogic extends Logic {
-  path = () => ['scenes', 'header', 'index']
+export default kea({
+  path: () => ['scenes', 'header', 'index'],
 
-  constants = () => [
-  ]
-
-  actions = ({ constants }) => ({
+  actions: () => ({
     openLocation: (location) => ({ location })
   })
-
-  reducers = ({ actions, constants }) => ({
-  })
-
-  selectors = ({ constants, selectors }) => ({
-  })
-}
+})

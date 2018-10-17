@@ -1,7 +1,7 @@
 import './styles.scss'
 
 import React, { Component } from 'react'
-import { connect } from 'kea/logic'
+import { connect } from 'kea'
 
 import Select from 'lib/forms/select'
 

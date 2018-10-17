@@ -1,11 +1,10 @@
-import Logic, { initLogic } from 'kea/logic'
-import { PropTypes } from 'react'
+import { kea } from 'kea'
+import PropTypes from 'prop-types'
 
-@initLogic
-export default class ViewsLogic extends Logic {
-  path = () => ['scenes', 'header', 'views']
+export default kea({
+  path: () => ['scenes', 'header', 'views'],
 
-  actions = ({ constants }) => ({
+  actions: () => ({
     openNew: true,
     cancelNew: true,
 
@@ -16,9 +15,9 @@ export default class ViewsLogic extends Logic {
     saveView: true,
     viewSaved: (view) => ({ view }),
     viewsLoaded: (views) => ({ views })
-  })
+  }),
 
-  reducers = ({ actions, constants }) => ({
+  reducers: ({ actions }) => ({
     newOpen: [false, PropTypes.bool, {
       [actions.openNew]: () => true,
       [actions.cancelNew]: () => false,
@@ -41,13 +40,13 @@ export default class ViewsLogic extends Logic {
       },
       [actions.viewSaved]: (state, payload) => Object.assign({}, state, { [payload.view._id]: payload.view })
     }]
-  })
+  }),
 
-  selectors = ({ constants, selectors }) => ({
+  selectors: ({ selectors }) => ({
     sortedViews: [
       () => [selectors.views],
       (views) => Object.values(views).sort((a, b) => a.name.localeCompare(b.name)),
       PropTypes.array
     ]
   })
-}
+})

@@ -1,6 +1,8 @@
+import React from 'react'
+import PropTypes from 'prop-types'
+
 import mergeRanges from 'merge-ranges'
 import {remove} from 'diacritics'
-import React, { PropTypes } from 'react'
 
 function allIndexesOf (str, word) {
   const indexes = []

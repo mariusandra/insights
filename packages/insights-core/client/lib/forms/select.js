@@ -1,5 +1,6 @@
 /* global window */
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 
 export default class Select extends Component {
   static propTypes = {

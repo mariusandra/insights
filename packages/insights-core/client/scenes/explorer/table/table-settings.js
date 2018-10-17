@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { connect } from 'kea/logic'
+import { connect } from 'kea'
 
 import Tooltip from 'rc-tooltip'
 import range from 'lib/utils/range'

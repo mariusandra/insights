@@ -1,6 +1,8 @@
 // libraries
-import React, { Component, PropTypes } from 'react'
-import { connect } from 'kea/logic'
+import React, { Component } from 'react'
+import { connect } from 'kea'
+import PropTypes from 'prop-types'
+
 import { ResponsiveContainer, ComposedChart, Area, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine } from 'recharts'
 import moment from 'moment'
 

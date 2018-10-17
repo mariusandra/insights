@@ -2,7 +2,7 @@ import './styles.scss'
 
 // libraries
 import React, { Component } from 'react'
-import { connect } from 'kea/logic'
+import { connect } from 'kea'
 import { Alignment, Text, Classes, H3, H5, InputGroup, Navbar, Switch, Tab, TabId, Tabs } from "@blueprintjs/core";
 
 // utils
@@ -15,6 +15,8 @@ import Share from './share'
 // logic
 import authLogic from '~/scenes/auth'
 import headerLogic from '~/scenes/header/logic'
+import sceneSaga from '~/scenes/header/saga'
+import viewsSaga from '~/scenes/header/views/saga'
 
 @connect({
   actions: [
@@ -31,6 +33,10 @@ import headerLogic from '~/scenes/header/logic'
       'user',
       'runningInElectron'
     ]
+  ],
+  sagas: [
+    sceneSaga,
+    viewsSaga
   ]
 })
 export default class HeaderScene extends Component {

@@ -9,7 +9,7 @@ import React, { Component } from 'react'
 
 // utils
 import { Layout } from 'react-flex-layout'
-import { connect } from 'kea/logic'
+import { connect } from 'kea'
 
 // components
 import Header from '~/scenes/header'

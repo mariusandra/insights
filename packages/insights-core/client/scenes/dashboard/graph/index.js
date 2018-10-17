@@ -1,6 +1,8 @@
 // libraries
-import React, { Component, PropTypes } from 'react'
-import { connect } from 'kea/logic'
+import React, { Component } from 'react'
+import { connect } from 'kea'
+import PropTypes from 'prop-types'
+
 import Dimensions from 'react-dimensions'
 import moment from 'moment'
 
@@ -101,7 +103,7 @@ export default class DashboardGraph extends Component {
 
   handleEdit = () => {
     const { name, itemId, dashboardId } = this.props
-    const { renameItem } = this.props.actions
+    const { renameItem } = this.actions
 
     promptPopup('Please enter a new name', name).then(newName => {
       if (newName !== null && newName !== name) {
@@ -112,7 +114,7 @@ export default class DashboardGraph extends Component {
 
   handleDelete = () => {
     const { itemId, dashboardId } = this.props
-    const { deleteItem } = this.props.actions
+    const { deleteItem } = this.actions
 
     deleteItem(dashboardId, itemId)
   }
@@ -120,7 +122,7 @@ export default class DashboardGraph extends Component {
   render () {
     const { name, path, containerWidth, containerHeight } = this.props
     const { loaded, graph, graphKeys, graphData, isResizing } = this.state
-    const { openLocation } = this.props.actions
+    const { openLocation } = this.actions
 
     return (
       <div style={{ width: containerWidth, height: containerHeight }}>

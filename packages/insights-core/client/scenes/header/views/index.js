@@ -2,7 +2,7 @@ import './styles.scss'
 
 // libraries
 import React, { Component } from 'react'
-import { connect } from 'kea/logic'
+import { connect } from 'kea'
 
 // utils
 import { AnchorButton, Dialog, Classes, Intent, Button, Popover, Position, Menu, MenuItem, MenuDivider } from "@blueprintjs/core"

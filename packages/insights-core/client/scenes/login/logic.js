@@ -1,11 +1,10 @@
-import Logic, { initLogic } from 'kea/logic'
-import { PropTypes } from 'react'
+import { kea } from 'kea'
+import PropTypes from 'prop-types'
 
-@initLogic
-export default class LoginLogic extends Logic {
-  path = () => ['scenes', 'login', 'index']
+export default kea({
+  path: () => ['scenes', 'login', 'index'],
 
-  actions = ({ constants }) => ({
+  actions: () => ({
     setEmail: email => ({ email }),
     setPassword: password => ({ password }),
     setErrors: errors => ({ errors }),
@@ -15,9 +14,9 @@ export default class LoginLogic extends Logic {
     loginFailure: errors => ({ errors }),
 
     performLogin: true
-  })
+  }),
 
-  reducers = ({ actions, constants }) => ({
+  reducers: ({ actions }) => ({
     email: ['', PropTypes.string, {
       [actions.setEmail]: (_, payload) => payload.email
     }],
@@ -36,4 +35,4 @@ export default class LoginLogic extends Logic {
       [actions.loginFailure]: () => false
     }]
   })
-}
+})

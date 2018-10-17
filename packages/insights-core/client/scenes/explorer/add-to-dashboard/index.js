@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { connect } from 'kea/logic'
+import { connect } from 'kea'
 
 import { Button } from "@blueprintjs/core";
 import Tooltip from 'rc-tooltip'
@@ -39,7 +39,7 @@ export default class OneFilter extends Component {
   }
 
   handleAdd = (e) => {
-    const { addToDashboard } = this.props.actions
+    const { addToDashboard } = this.actions
     const { dashboard, name } = this.state
 
     e.preventDefault()
@@ -51,7 +51,7 @@ export default class OneFilter extends Component {
 
   handleOpen = () => {
     const { dashboard } = this.state
-    const { openLocation } = this.props.actions
+    const { openLocation } = this.actions
     openLocation(`/dashboard/${dashboard}`)
   }
 

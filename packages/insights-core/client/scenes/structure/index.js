@@ -2,7 +2,7 @@ import './styles.scss'
 
 // libraries
 import React, { Component } from 'react'
-import { connect } from 'kea/logic'
+import { connect } from 'kea'
 
 // utils
 import { Layout, LayoutSplitter } from 'react-flex-layout'
@@ -13,6 +13,7 @@ import StructureModel from './model'
 
 // logic
 import structure from '~/scenes/structure/logic'
+import sceneSaga from '~/scenes/structure/saga'
 
 @connect({
   actions: [
@@ -31,6 +32,9 @@ import structure from '~/scenes/structure/logic'
       'selectedModel',
       'numberOfChanges'
     ]
+  ],
+  sagas: [
+    sceneSaga
   ]
 })
 export default class StructureScene extends Component {

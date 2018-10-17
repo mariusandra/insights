@@ -1,6 +1,6 @@
 // libraries
 import React, { Component } from 'react'
-import { connect } from 'kea/logic'
+import { connect } from 'kea'
 
 import { Table, Column, Cell } from 'fixed-data-table-2'
 

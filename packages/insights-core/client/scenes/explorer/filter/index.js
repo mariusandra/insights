@@ -2,7 +2,8 @@ import './styles.scss'
 
 // libraries
 import React, { Component } from 'react'
-import { connect } from 'kea/logic'
+import PropTypes from 'prop-types'
+import { connect } from 'kea'
 
 // utils
 import Dimensions from 'react-dimensions'
@@ -14,10 +15,6 @@ import OneFilter from './one-filter'
 import explorerLogic from '~/scenes/explorer/logic'
 
 @connect({
-  actions: [
-    explorerLogic, [
-    ]
-  ],
   props: [
     explorerLogic, [
       'filter'
@@ -27,7 +24,7 @@ import explorerLogic from '~/scenes/explorer/logic'
 @Dimensions({ elementResize: true })
 export default class Filter extends Component {
   static propTypes = {
-    setFilterHeight: React.PropTypes.func
+    setFilterHeight: PropTypes.func
   }
 
   componentDidUpdate () {

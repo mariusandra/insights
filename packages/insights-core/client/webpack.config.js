@@ -24,7 +24,7 @@ let config = {
       'babel-polyfill',
       'font-awesome/css/font-awesome.css',
       './client/scenes/index.js',
-      './client/scenes/explorer/scene.js'
+      './client/scenes/explorer/index.js'
     ]
   },
   output: {

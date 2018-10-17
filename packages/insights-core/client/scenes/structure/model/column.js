@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import Select from 'lib/forms/select'
 
 const groupTypes = ['column', 'custom', 'link']
