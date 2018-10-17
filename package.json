@@ -40,6 +40,7 @@
   ],
   "dependencies": {
     "insights": "file:./packages/insights",
+    "insights-charts": "file:./packages/insights-charts",
     "insights-core": "file:./packages/insights-core",
     "insights-desktop": "file:./packages/insights-desktop",
     "insights-server": "file:./packages/insights-server"

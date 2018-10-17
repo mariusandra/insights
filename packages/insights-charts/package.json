@@ -1,0 +1,86 @@
+{
+  "name": "insights-charts",
+  "description": "Desktop and Self-Hosted \"SQL-not-required\" data analytics and visualisation tool.",
+  "version": "0.0.1",
+  "homepage": "",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "jsnext:main": "es/index.js",
+  "esnext": "src/index.js",
+  "keywords": [
+    "insights"
+  ],
+  "author": {
+    "name": "Marius Andra",
+    "email": "marius.andra@gmail.com"
+  },
+  "contributors": [],
+  "repository": "mariusandra/insights",
+  "bugs": {},
+  "directories": {
+    "lib": "app"
+  },
+  "engines": {
+    "node": ">= 7.6.0",
+    "yarn": ">= 0.18.0"
+  },
+  "scripts": {
+    "build": "npm run lint && concurrently \"npm run build:cjs\" \"npm run build:es\"",
+    "build:cjs": "cross-env BABEL_ENV=cjs babel src --out-dir lib",
+    "build:es": "cross-env BABEL_ENV=es babel src --out-dir es",
+    "start": "concurrently --kill-others \"npm run start:cjs\" \"npm run start:es\"",
+    "start:cjs": "cross-env BABEL_ENV=cjs babel -w src --out-dir lib",
+    "start:es": "cross-env BABEL_ENV=es babel -w src --out-dir es",
+    "size": "size-limit",
+    "test": "jest",
+    "lint": "eslint src/**",
+    "prepublish": "npm run build"
+  },
+  "files": [
+    "es",
+    "lib",
+    "src"
+  ],
+  "peerDependencies": {
+    "moment": "*",
+    "recharts": "*",
+    "react": "*",
+    "prop-types": "*"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^7.2.3",
+    "babel-jest": "^21.0.2",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-0": "6.24.1",
+    "concurrently": "^3.5.0",
+    "cross-env": "^5.1.0",
+    "enzyme": "^2.9.1",
+    "eslint": "^4.6.1",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-react": "^7.3.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "jest": "^21.0.2",
+    "jest-environment-node-debug": "^2.0.0",
+    "jsdom": "^11.2.0",
+    "moment": "2.18.1",
+    "prop-types": "^15.5.10",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-redux": "^5.0.6",
+    "react-test-renderer": "^15.6.1",
+    "recharts": "0.21.2",
+    "redux": "^3.7.2",
+    "redux-saga": "^0.15.6",
+    "reselect": "^3.0.1",
+    "size-limit": "^0.11.3"
+  }
+}

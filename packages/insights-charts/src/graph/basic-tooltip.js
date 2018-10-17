@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
 
-export default class Tooltip extends Component {
+export default class BasicTooltip extends Component {
   static propTypes = {
     graph: PropTypes.object
   }

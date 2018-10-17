@@ -112,3 +112,5 @@ data/
 
 public/dist/
 packages/insights-core/public/dist/
+packages/insights-charts/lib/
+packages/insights-charts/es/
