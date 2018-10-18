@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { connect } from 'kea'
 
 import Tooltip from 'rc-tooltip'
-import range from 'lib/utils/range'
 
 import explorerLogic from '~/scenes/explorer/logic'
 
@@ -37,8 +36,8 @@ export default class TableSettings extends Component {
   }
 
   render () {
-    const { columnWidths, facetsCount, exportTitle } = this.props
-    const { clearColumnWidths, setFacetsCount, requestExport, setExportTitle } = this.props.actions
+    const { columnWidths, exportTitle } = this.props
+    const { clearColumnWidths, requestExport, setExportTitle } = this.props.actions
     const { tooltipHover } = this.state
 
     const overlay = (
@@ -53,15 +52,6 @@ export default class TableSettings extends Component {
           </span>
         )}
 
-        <div className='filter-with-inputs'>
-          <span>Facets count:</span>
-          {' '}
-          <select value={facetsCount} onChange={(e) => setFacetsCount(parseInt(e.target.value) || 0)} style={{display: 'inline-block', margin: 0}}>
-            {range(1, 20).map(i => (
-              <option value={i} key={i}>{i}</option>
-            ))}
-          </select>
-        </div>
         <br />
         <div>
           Export:

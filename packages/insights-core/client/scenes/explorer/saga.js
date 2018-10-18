@@ -111,9 +111,7 @@ export default kea({
         'setGraphTimeFilter',
         'setFacetsColumn',
         'setFacetsCount',
-        'setGraphCumulative',
-        'setPercentages',
-        'setAlphabeticalFacets',
+        'setGraphControls',
         'requestExport',
 
         'addFavouriteRequest',
@@ -155,9 +153,7 @@ export default kea({
     [actions.setGraphTimeFilter]: workers.refreshDataWorker,
     [actions.setFacetsColumn]: workers.refreshDataWorker,
     [actions.setFacetsCount]: workers.refreshDataWorker,
-    [actions.setGraphCumulative]: workers.refreshDataWorker,
-    [actions.setPercentages]: workers.refreshDataWorker,
-    [actions.setAlphabeticalFacets]: workers.refreshDataWorker,
+    [actions.setGraphControls]: workers.refreshDataWorker,
     [actions.requestExport]: workers.refreshDataWorker,
     [actions.openTreeNode]: workers.refreshDataWorker,
     [actions.closeTreeNode]: workers.refreshDataWorker,
@@ -257,8 +253,8 @@ export default kea({
       const {
         connection,
         url, columns, offsetTarget, offset, limitTarget, limit, sort, filter, graphTimeFilter,
-        facetsCount, facetsColumn, exportTitle, graphCumulative, percentages, alphabeticalFacets, graphData
-      } = yield explorerLogic.fetch('connection', 'url', 'columns', 'offset', 'limit', 'offsetTarget', 'limitTarget', 'sort', 'filter', 'graphTimeFilter', 'facetsCount', 'facetsColumn', 'exportTitle', 'graphCumulative', 'percentages', 'alphabeticalFacets', 'graphData')
+        facetsCount, facetsColumn, exportTitle, graphControls, graphData
+      } = yield explorerLogic.fetch('connection', 'url', 'columns', 'offset', 'limit', 'offsetTarget', 'limitTarget', 'sort', 'filter', 'graphTimeFilter', 'facetsCount', 'facetsColumn', 'exportTitle', 'graphControls', 'graphData')
 
       // if paginating and fetching what is currently there (horizontal scroll)
       if (action.type === setPagination.toString() && action.payload.offset === offset && action.payload.limit === limit) {
@@ -293,10 +289,7 @@ export default kea({
             facetsCount,
 
             graphTimeFilter,
-            graphCumulative,
-
-            percentages,
-            alphabeticalFacets,
+            graphControls,
 
             offset: offsetTarget,
             limit: limitTarget

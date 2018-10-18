@@ -10,9 +10,13 @@ export default function urlToState (path) {
     sort: null,
     facetsColumn: null,
     facetsCount: 6,
-    graphCumulative: false,
-    percentages: false,
-    alphabeticalFacets: false
+    graphControls: {
+      type: 'bar',
+      sort: '123',
+      cumulative: false,
+      percentages: false,
+      labels: false
+    }
   };
 
   (search || '').split('&').forEach(k => {
@@ -21,10 +25,10 @@ export default function urlToState (path) {
     if (key && value) {
       if (key === 'columns') {
         values[key] = value.split(',')
-      } else if (key === 'graphCumulative' || key === 'percentages' || key === 'alphabeticalFacets') {
-        values[key] = value === 'true'
       } else if (key === 'treeState') {
         value.split(',').filter(v => v).forEach(v => { values[key][v] = true })
+      } else if (key === 'graphControls') {
+        values.graphControls = JSON.parse(value)
       } else if (key === 'facetsCount') {
         values.facetsCount = parseInt(value)
       } else if (key === 'filter[]' || key.match(/^filter\[[0-9]+]$/)) {

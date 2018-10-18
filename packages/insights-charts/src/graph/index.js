@@ -38,13 +38,10 @@ export class Graph extends Component {
       cumulative: PropTypes.bool,
       percentages: PropTypes.bool,
       labels: PropTypes.bool
-    })
+    }).isRequired
   }
 
   static defaultProps = {
-    type: 'bar',
-    alphabeticalFacets: false,
-    percentages: false,
     tooltip: BasicTooltip
   }
 

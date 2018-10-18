@@ -23,9 +23,9 @@ export default kea({
     setTransform: (index, transform, aggregate) => ({ index, transform, aggregate }),
     setFacetsColumn: (facetsColumn) => ({ facetsColumn }),
     setFacetsCount: (facetsCount) => ({ facetsCount }),
-    setGraphCumulative: (graphCumulative) => ({ graphCumulative }),
-    setPercentages: (percentages) => ({ percentages }),
-    setAlphabeticalFacets: (alphabeticalFacets) => ({ alphabeticalFacets }),
+
+    setGraphControls: (graphControls) => ({ graphControls }),
+
     setExportTitle: (exportTitle) => ({ exportTitle }),
     urlChanged: values => (values),
 
@@ -240,20 +240,22 @@ export default kea({
       [actions.urlChanged]: (state, payload) => payload.graphTimeFilter || state,
       [actions.setResults]: (state, payload) => payload.results.graphTimeFilter || state
     }],
-    graphCumulative: [false, PropTypes.bool, {
-      [actions.setGraphCumulative]: (_, payload) => payload.graphCumulative,
-      [actions.urlChanged]: (state, payload) => payload.graphCumulative,
-      [actions.setResults]: (state, payload) => payload.results.graphCumulative
-    }],
-    percentages: [false, PropTypes.bool, {
-      [actions.setPercentages]: (_, payload) => payload.percentages,
-      [actions.urlChanged]: (state, payload) => payload.percentages,
-      [actions.setResults]: (state, payload) => payload.results.percentages
-    }],
-    alphabeticalFacets: [false, PropTypes.bool, {
-      [actions.setAlphabeticalFacets]: (_, payload) => payload.alphabeticalFacets,
-      [actions.urlChanged]: (state, payload) => payload.alphabeticalFacets,
-      [actions.setResults]: (state, payload) => payload.results.alphabeticalFacets
+    graphControls: [{
+      type: 'bar',
+      sort: '123',
+      cumulative: false,
+      percentages: false,
+      labels: false
+    }, PropTypes.shape({
+      type: PropTypes.oneOf(['bar', 'line']).isRequired,
+      sort: PropTypes.oneOf(['abc', '123']).isRequired,
+      cumulative: PropTypes.bool,
+      percentages: PropTypes.bool,
+      labels: PropTypes.bool
+    }), {
+      [actions.setGraphControls]: (state, payload) => Object.assign({}, state, payload.graphControls),
+      [actions.urlChanged]: (_, payload) => payload.graphControls,
+      [actions.setResults]: (_, payload) => payload.results.graphControls
     }],
     facetsColumn: [null, PropTypes.string, {
       [actions.setFacetsColumn]: (state, payload) => payload.facetsColumn,
@@ -366,8 +368,8 @@ export default kea({
     ],
 
     graphData: [
-      () => [selectors.graph, selectors.graphKeys, selectors.percentages],
-      (graph, graphKeys, percentages) => {
+      () => [selectors.graph, selectors.graphKeys, selectors.graphControls],
+      (graph, graphKeys, { percentages }) => {
         if (!graph) {
           return null
         }
@@ -404,10 +406,9 @@ export default kea({
     url: [
       () => [
         selectors.connection, selectors.columns, selectors.sort, selectors.treeState, selectors.graphTimeFilter,
-        selectors.facetsColumn, selectors.facetsCount, selectors.filter, selectors.graphCumulative, selectors.percentages,
-        selectors.alphabeticalFacets
+        selectors.facetsColumn, selectors.facetsCount, selectors.filter, selectors.graphControls
       ],
-      (connection, columns, sort, treeState, graphTimeFilter, facetsColumn, facetsCount, filter, graphCumulative, percentages, alphabeticalFacets) => {
+      (connection, columns, sort, treeState, graphTimeFilter, facetsColumn, facetsCount, filter, graphControls) => {
         let url = {
           connection: connection,
           columns: columns.join(','),
@@ -416,9 +417,7 @@ export default kea({
           graphTimeFilter: graphTimeFilter || '',
           facetsColumn: facetsColumn || '',
           facetsCount: facetsCount || '',
-          graphCumulative: graphCumulative || false,
-          percentages: percentages || false,
-          alphabeticalFacets: alphabeticalFacets || false
+          graphControls: JSON.stringify(graphControls)
         }
 
         let i = 0

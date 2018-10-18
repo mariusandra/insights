@@ -3,6 +3,7 @@ import { connect } from 'kea'
 import PropTypes from 'prop-types'
 
 import 'react-datetime/css/react-datetime.css'
+import range from 'lib/utils/range'
 
 import getMeta from 'lib/explorer/get-meta'
 
@@ -17,7 +18,8 @@ import explorerLogic from '~/scenes/explorer/logic'
       'addEmptyFilter',
       'removeFiltersByKey',
       'setTransform',
-      'setFacetsColumn'
+      'setFacetsColumn',
+      'setFacetsCount'
     ]
   ],
   props: [
@@ -26,7 +28,8 @@ import explorerLogic from '~/scenes/explorer/logic'
       'filter',
       'columnsMeta',
       'structure',
-      'facetsColumn'
+      'facetsColumn',
+      'facetsCount'
     ]
   ]
 })
@@ -113,8 +116,8 @@ export default class TableHeader extends Component {
   }
 
   renderFacets (meta) {
-    const { facetsColumn, column } = this.props
-    const { setFacetsColumn } = this.props.actions
+    const { facetsColumn, column, facetsCount } = this.props
+    const { setFacetsColumn, setFacetsCount } = this.props.actions
 
     if (meta.type !== 'string' && meta.type !== 'boolean') {
       return null
@@ -123,7 +126,19 @@ export default class TableHeader extends Component {
     return (
       <div className='filter-options'>
         <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: facetsColumn === column ? 'bold' : 'normal'}}
-          onClick={() => setFacetsColumn(facetsColumn === column ? null : column)}>Facet by this column</span>
+          onClick={() => setFacetsColumn(facetsColumn === column ? null : column)}>Split by this column</span>
+
+        {facetsColumn === column && (
+          <div>
+            <span>Split count:</span>
+            {' '}
+            <select value={facetsCount} onChange={(e) => setFacetsCount(parseInt(e.target.value) || 0)} style={{display: 'inline-block', margin: 0}}>
+              {range(1, 20).map(i => (
+                <option value={i} key={i}>{i}</option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
     )
   }

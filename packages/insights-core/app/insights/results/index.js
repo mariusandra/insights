@@ -13,11 +13,15 @@ module.exports = class Results {
   //   exportTitle: params.exportTitle,
   //   svg: params.svg,
   //
-  //   percentages: !!params.percentages,
-  //   alphabeticalFacets: !!params.alphabeticalFacets,
+  //   graphControls: {
+  //     type: 'bar',
+  //     sort: '123',
+  //     cumulative: false,
+  //     percentages: false,
+  //     labels: false
+  //   }}
   //
   //   graphTimeFilter: params.graphTimeFilter || 'last-60',
-  //   graphCumulative: !!params.graphCumulative,
   //
   //   facetsColumn: params.facetsColumn,
   //   facetsCount: params.facetsCount.present? ? params.facetsCount.to_i : 6
@@ -427,7 +431,7 @@ module.exports = class Results {
 
   async getGraph () {
     const graphTimeFilter = this.params.graphTimeFilter || 'last-60'
-    const graphCumulative = this.params.graphCumulative
+    const cumulative = this.params.graphControls.cumulative
 
     const facetsCount = parseInt(this.params.facetsCount) || 6
     const facetsColumnKey = this.params.facetsColumn
@@ -615,7 +619,7 @@ module.exports = class Results {
     }
 
     // if we're asking for a cumulative response, sum all the values
-    if (graphCumulative) {
+    if (cumulative) {
       let countHash = {}
       allKeys.forEach(k => {
         countHash[k] = 0
@@ -666,10 +670,8 @@ module.exports = class Results {
       facetsColumn: this.params.facetsColumn || null,
       facetsCount: this.params.facetsCount,
       graphTimeFilter: this.params.graphTimeFilter || 'last-60',
-      graphCumulative: this.params.graphCumulative,
 
-      percentages: this.params.percentages,
-      alphabeticalFacets: this.params.alphabeticalFacets
+      graphControls: this.params.graphControls
     }
   }
 }
