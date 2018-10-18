@@ -191,7 +191,7 @@
       color: blue;
     }
     &.facets {
-      text-decoration: underline;
+      // text-decoration: underline;
     }
   }
   .cell-body {
@@ -209,6 +209,10 @@
   }
   .filter-aggregate {
     color: red;
+    margin-right: 5px;
+  }
+  .filter-split {
+    color: #8f8827;
     margin-right: 5px;
   }
 

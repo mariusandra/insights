@@ -89,12 +89,15 @@ export default class TableHeader extends Component {
       <Tooltip placement='bottomLeft' trigger={['hover']} overlay={overlay} onVisibleChange={this.handleTooltip}>
         <div className={className}
           onClick={this.handleSort}>
-          {meta && meta.aggregate ? (
+          {meta && meta.aggregate && (
             <span className='filter-aggregate'>{meta.aggregate}</span>
-          ) : null}
-          {meta && meta.transform ? (
+          )}
+          {meta && meta.transform && (
             <span className='filter-transform'>{meta.transform}</span>
-          ) : null}
+          )}
+          {facetsColumn === column && (
+            <span className='filter-split'>split</span>
+          )}
           {localPath}
         </div>
       </Tooltip>
