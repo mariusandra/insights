@@ -153,8 +153,7 @@ export class Graph extends Component {
   }
 
   getLineData = (key, stacked) => {
-    const { percentages } = this.props.controls
-    const labels = false
+    const { percentages, labels } = this.props.controls
 
     let data = {
       key: `${key.key}${percentages ? '__%' : ''}${key.visible ? '' : '__hidden'}`,
@@ -211,8 +210,7 @@ export class Graph extends Component {
   }
 
   render () {
-    const { graph, graphData, controls: { sort, percentages, type }, tooltip: TooltipProp } = this.props
-    const labels = false
+    const { graph, graphData, controls: { sort, percentages, type, labels }, tooltip: TooltipProp } = this.props
     const nullLineNeeded = false
     const unit = ''
     const facets = graph.facets && graph.facets.length > 0
