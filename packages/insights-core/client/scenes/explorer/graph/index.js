@@ -37,7 +37,17 @@ export default class GraphView extends Component {
     return (
       <div className='graph-and-controls'>
         <div className='graph'>
-          <Graph {...this.props} />
+          <Graph
+            graph={this.props.graph}
+            graphKeys={this.props.graphKeys}
+            graphData={this.props.graphData}
+            controls={{
+              type: 'bar',
+              sort: alphabeticalFacets ? 'abc' : '123',
+              cumulative: graphCumulative,
+              percentages: percentages,
+              labels: false
+            }} />
         </div>
         <div className='controls'>
           <div className='right'>

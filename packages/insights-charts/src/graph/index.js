@@ -32,10 +32,13 @@ export class Graph extends Component {
     graphKeys: PropTypes.array,
     graphData: PropTypes.array,
 
-    type: PropTypes.oneOf(['bar', 'line']),
-    alphabeticalFacets: PropTypes.bool,
-    percentages: PropTypes.bool,
-    tooltip: PropTypes.func
+    controls: PropTypes.shape({
+      type: PropTypes.oneOf(['bar', 'line']).isRequired,
+      sort: PropTypes.oneOf(['abc', '123']).isRequired,
+      cumulative: PropTypes.bool,
+      percentages: PropTypes.bool,
+      labels: PropTypes.bool
+    })
   }
 
   static defaultProps = {
@@ -153,7 +156,7 @@ export class Graph extends Component {
   }
 
   getLineData = (key, stacked) => {
-    const { percentages } = this.props
+    const { percentages } = this.props.controls
     const labels = false
 
     let data = {
@@ -176,7 +179,7 @@ export class Graph extends Component {
   }
 
   renderLabel = (props) => {
-    const { percentages } = this.props
+    const { percentages } = this.props.controls
 
     const { x, y, stroke, value, key } = props
     const displayValue = Array.isArray(value) ? Math.round(value[1] - value[0]) : Math.round(parseFloat(value))
@@ -211,7 +214,7 @@ export class Graph extends Component {
   }
 
   render () {
-    const { graph, graphData, alphabeticalFacets, percentages, type, tooltip: TooltipProp } = this.props
+    const { graph, graphData, controls: { sort, percentages, type }, tooltip: TooltipProp } = this.props
     const labels = false
     const nullLineNeeded = false
     const unit = ''
@@ -236,7 +239,7 @@ export class Graph extends Component {
     }
 
     const graphKeysWithMeta = facets
-      ? alphabeticalFacets
+      ? sort === 'abc'
         ? keysWithMeta.sort(alphabeticalFacetSorter)
         : keysWithMeta.reverse()
       : keysWithMeta
