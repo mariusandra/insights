@@ -93,7 +93,7 @@ export default class Explorer extends Component {
             {selectedModel ? <Filter setFilterHeight={this.setFilterHeight} /> : null}
           </Layout>
           {graphData ? (
-            <Layout layoutHeight={300}>
+            <Layout layoutHeight={300} className='visible-overflow'>
               <Graph graph={graph} graphKeys={graphKeys} graphData={graphData} />
             </Layout>
           ) : <div />}
