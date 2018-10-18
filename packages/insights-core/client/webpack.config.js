@@ -36,8 +36,7 @@ let config = {
     extensions: ['.webpack.js', '.web.js', '.js', '.jsx', '.scss', '.css', 'config.js'],
     alias: {
       '~': path.join(__dirname),
-      lib: path.join(__dirname, 'lib'),
-      'insights-charts': path.join(__dirname, '..', '..', 'insights-charts', 'es')
+      lib: path.join(__dirname, 'lib')
     }
   },
   plugins: [

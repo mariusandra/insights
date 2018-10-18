@@ -31,12 +31,15 @@ export class Graph extends Component {
     graph: PropTypes.object,
     graphKeys: PropTypes.array,
     graphData: PropTypes.array,
+
+    type: PropTypes.oneOf(['bar', 'line']),
     alphabeticalFacets: PropTypes.bool,
     percentages: PropTypes.bool,
-    tooltip: PropTypes.element
+    tooltip: PropTypes.func
   }
 
   static defaultProps = {
+    type: 'bar',
     alphabeticalFacets: false,
     percentages: false,
     tooltip: BasicTooltip
@@ -208,7 +211,7 @@ export class Graph extends Component {
   }
 
   render () {
-    const { graph, graphData, containerHeight, alphabeticalFacets, percentages, tooltip: TooltipProp } = this.props
+    const { graph, graphData, alphabeticalFacets, percentages, type, tooltip: TooltipProp } = this.props
     const labels = false
     const nullLineNeeded = false
     const unit = ''
@@ -223,13 +226,9 @@ export class Graph extends Component {
 
     const { ticks, tickFormatter } = this.getTicks()
 
-    // const ComposedChart = facets && summed ? AreaChart : LineChart
-
-    const bars = true
-
     let xDomain = ['dataMin', 'dataMax']
 
-    if (bars && graphData.length > 0) {
+    if (type === 'bar' && graphData.length > 0) {
       xDomain = [
         moment(graphData[0].time).add(-0.5, timeGroup).valueOf(),
         moment(graphData[graphData.length - 1].time).add(0.5, timeGroup).valueOf()
@@ -243,12 +242,13 @@ export class Graph extends Component {
       : keysWithMeta
 
     return (
-      <ResponsiveContainer width='100%' height={containerHeight}>
-        <ComposedChart data={graphData}
+      <ResponsiveContainer>
+        <ComposedChart
+          data={graphData}
           key={key}
-          ref='lineChart'
-          margin={{top: 5, right: 10, left: 0, bottom: 5}}>
-          <Legend verticalAlign='top'
+          margin={{top: 0, right: 10, left: 0, bottom: 0}}>
+          <Legend
+            verticalAlign='top'
             align='right'
             height={25}
             iconSize={10}
@@ -256,12 +256,13 @@ export class Graph extends Component {
             onClick={this.handleClick}
             onMouseOver={this.handleMouseEnter}
             onMouseOut={this.handleMouseLeave} />
-          <XAxis type='number'
+          <XAxis
+            type='number'
             dataKey='time'
             domain={xDomain}
             tickFormatter={tickFormatter}
             ticks={ticks} />
-          <YAxis tickCount={Math.floor(containerHeight / 30)}
+          <YAxis
             domain={percentages ? [0, 100] : ['auto', 'auto']}
             interval={0}
             tickFormatter={percentages ? (y) => `${Math.round(y)}%` : (y) => `${y.toLocaleString('en')}${unit}`}
@@ -272,7 +273,7 @@ export class Graph extends Component {
             <ReferenceLine y={0} stroke='red' alwaysShow />
           ) : null}
           {graphKeysWithMeta.map(key => (
-            bars ? <Bar {...this.getLineData(key, facets && summed)} />
+            type === 'bar' ? <Bar {...this.getLineData(key, facets && summed)} />
               : facets && summed ? <Area {...this.getLineData(key, facets && summed)} />
                 : <Line {...this.getLineData(key, facets && summed)} />))}
         </ComposedChart>

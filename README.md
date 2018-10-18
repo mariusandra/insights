@@ -123,3 +123,12 @@ oao all "npm publish"
 
 # NB! don't run 'npm publish' on its own: there is no need to publish the insights-build package.
 ```
+
+At this beta moment you need to do:
+
+```sh
+cd packages/insights-charts
+yarn link
+cd ../../packages/insights-core
+yarn link insights-charts
+```

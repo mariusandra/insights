@@ -1,0 +1,32 @@
+.graph-and-controls {
+  .graph {
+    height: calc(100% - 20px);
+  }
+
+  .controls {
+    height: 20px;
+    background: #fff;
+
+    .right {
+      float: right;
+      margin-right: 10px;
+    }
+
+    .control {
+      cursor: pointer;
+      color: #333;
+      border: 1px solid #aaa;
+      background: #eee;
+      border-radius: 3px;
+      padding: 0 5px;
+      display: inline-block;
+      text-align: center;
+
+      &.selected {
+        color: #f5f8fa;
+        background: #384b5a;
+        border-color: #384b5a;
+      }
+    }
+  }
+}
