@@ -10,6 +10,9 @@
     .right {
       float: right;
       margin-right: 10px;
+      > .control, .control-group {
+        margin-left: 8px;
+      }
     }
 
     .control {
@@ -26,6 +29,20 @@
         color: #f5f8fa;
         background: #384b5a;
         border-color: #384b5a;
+      }
+    }
+    .control-group {
+      cursor: pointer;
+      display: inline-block;
+      .control:first-child {
+        border-right: none;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+      .control:last-child {
+        border-left: none;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
       }
     }
   }

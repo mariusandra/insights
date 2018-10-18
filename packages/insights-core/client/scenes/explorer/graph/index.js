@@ -33,7 +33,7 @@ export default class GraphView extends Component {
   render () {
     const { graphCumulative, percentages, alphabeticalFacets } = this.props
     const { setGraphCumulative, setPercentages, setAlphabeticalFacets } = this.actions
-
+    const type = 'bar'
     return (
       <div className='graph-and-controls'>
         <div className='graph'>
@@ -56,17 +56,29 @@ export default class GraphView extends Component {
               onClick={() => setGraphCumulative(!graphCumulative)}>
               +
             </span>
-            {' '}
+
             <span
               className={percentages ? 'control selected' : 'control'}
               onClick={() => setPercentages(!percentages)}>
               %
             </span>
-            {' '}
-            <span
-              className={alphabeticalFacets ? 'control selected' : 'control'}
-              onClick={() => setAlphabeticalFacets(!alphabeticalFacets)}>
-              ABC
+
+            <span className='control-group' onClick={() => setAlphabeticalFacets(!alphabeticalFacets)}>
+              <span className={alphabeticalFacets ? 'control selected' : 'control'}>
+                abc
+              </span>
+              <span className={!alphabeticalFacets ? 'control selected' : 'control'}>
+                123
+              </span>
+            </span>
+
+            <span className='control-group' onClick={() => {}}>
+              <span className={type === 'bar' ? 'control selected' : 'control'}>
+                bar
+              </span>
+              <span className={type === 'line' ? 'control selected' : 'control'}>
+                line
+              </span>
             </span>
           </div>
         </div>
