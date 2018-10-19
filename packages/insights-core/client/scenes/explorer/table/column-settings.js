@@ -13,7 +13,6 @@ import explorerLogic from '~/scenes/explorer/logic'
   actions: [
     explorerLogic, [
       'setSort',
-      'addColumn',
       'removeColumnWithIndex',
       'addEmptyFilter',
       'removeFiltersByKey',
@@ -41,7 +40,7 @@ export default class TableHeader extends Component {
 
   handleSort = () => {
     const { sort, column } = this.props
-    const { setSort } = this.props.actions
+    const { setSort } = this.actions
 
     if (sort === column) {
       setSort(`-${column}`)
@@ -50,18 +49,15 @@ export default class TableHeader extends Component {
     }
   }
 
-  handleAdd = () => {
-    const { column } = this.props
-    const { addColumn } = this.props.actions
-
-    addColumn(column)
-  }
-
   handleRemove = () => {
-    const { index } = this.props
-    const { removeColumnWithIndex } = this.props.actions
+    const { index, facetsColumn, column } = this.props
+    const { removeColumnWithIndex, setFacetsColumn } = this.actions
 
     removeColumnWithIndex(index)
+
+    if (facetsColumn === column) {
+      setFacetsColumn(null)
+    }
   }
 
   renderSort = () => {
@@ -82,7 +78,7 @@ export default class TableHeader extends Component {
 
   renderTransform (meta) {
     const { index, column } = this.props
-    const { setTransform } = this.props.actions
+    const { setTransform } = this.actions
 
     const [ , transform, aggregate ] = column.split('!')
 
@@ -117,7 +113,7 @@ export default class TableHeader extends Component {
 
   renderFacets (meta) {
     const { facetsColumn, column, facetsCount } = this.props
-    const { setFacetsColumn, setFacetsCount } = this.props.actions
+    const { setFacetsColumn, setFacetsCount } = this.actions
 
     if (meta.type !== 'string' && meta.type !== 'boolean') {
       return null
@@ -145,7 +141,7 @@ export default class TableHeader extends Component {
 
   renderAggregate (meta) {
     const { index, column } = this.props
-    const { setTransform } = this.props.actions
+    const { setTransform } = this.actions
 
     const [ , transform, aggregate ] = column.split('!')
 
@@ -187,7 +183,7 @@ export default class TableHeader extends Component {
 
   renderFilter (meta) {
     const { filter, column } = this.props
-    const { removeFiltersByKey, addEmptyFilter } = this.props.actions
+    const { removeFiltersByKey, addEmptyFilter } = this.actions
 
     const filterInUse = filter.some(({ key, value }) => key === column)
 
@@ -227,10 +223,6 @@ export default class TableHeader extends Component {
         <div>
           <span style={{textDecoration: 'underline', cursor: 'pointer'}} onClick={this.handleRemove}>
             Remove
-          </span>
-          {' - '}
-          <span style={{textDecoration: 'underline', cursor: 'pointer'}} onClick={this.handleAdd}>
-            Clone
           </span>
         </div>
         {meta ? (

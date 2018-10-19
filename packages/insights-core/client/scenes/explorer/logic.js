@@ -17,7 +17,6 @@ export default kea({
     setColumnsAndFilter: (columns, filter) => ({ columns, filter }),
     setColumns: columns => ({ columns }),
     addColumn: column => ({ column }),
-    removeColumn: column => ({ column }),
     removeColumnWithIndex: index => ({ index }),
     removeColumnsWithPath: path => ({ path }),
     setTransform: (index, transform, aggregate) => ({ index, transform, aggregate }),
@@ -123,7 +122,6 @@ export default kea({
       [actions.setColumnsAndFilter]: (state, payload) => payload.columns,
       [actions.setColumns]: (state, payload) => payload.columns,
       [actions.addColumn]: (state, payload) => state.concat([payload.column]),
-      [actions.removeColumn]: (state, payload) => state.filter(column => column !== payload.column),
       [actions.removeColumnWithIndex]: (state, payload) => {
         let i = 0
         return state.filter(column => i++ !== payload.index)
@@ -180,7 +178,6 @@ export default kea({
       [actions.setColumns]: () => [],
       [actions.setColumnsAndFilter]: () => [],
       [actions.addColumn]: () => [],
-      [actions.removeColumn]: () => [],
       [actions.setResults]: (_, payload) => payload.results.results,
       [actions.clear]: () => []
     }],
@@ -192,7 +189,6 @@ export default kea({
       [actions.setColumns]: () => 0,
       [actions.setColumnsAndFilter]: () => 0,
       [actions.addColumn]: () => 0,
-      [actions.removeColumn]: () => 0,
       [actions.clear]: () => 0
     }],
     limitTarget: [100, PropTypes.number, {
@@ -262,6 +258,7 @@ export default kea({
       [actions.setFacetsColumn]: (state, payload) => payload.facetsColumn,
       [actions.urlChanged]: (state, payload) => payload.facetsColumn,
       [actions.setResults]: (state, payload) => payload.results.facetsColumn,
+      [actions.removeColumnsWithPath]: (state, payload) => state && payload.path === state.split('!')[0] ? null : state,
       [actions.clear]: () => null
     }],
     facetsCount: [null, PropTypes.number, {

@@ -8,6 +8,7 @@ import download from 'downloadjs'
 import authLogic from '~/scenes/auth'
 import explorerLogic from '~/scenes/explorer/logic'
 
+import getMeta from 'lib/explorer/get-meta'
 import urlToState from 'lib/explorer/url-to-state'
 
 import delay from 'lib/utils/delay'
@@ -89,7 +90,6 @@ export default kea({
         'setResults',
         'setColumns',
         'addColumn',
-        'removeColumn',
         'removeColumnWithIndex',
         'removeColumnsWithPath',
         'setLoading',
@@ -135,12 +135,12 @@ export default kea({
   }),
 
   takeLatest: ({ actions, workers }) => ({
+    [actions.addColumn]: workers.addColumn,
+
     [actions.clear]: workers.refreshData,
     [actions.urlChanged]: workers.refreshData,
     [actions.setColumnsAndFilter]: workers.refreshData,
     [actions.setColumns]: workers.refreshData,
-    [actions.addColumn]: workers.refreshData,
-    [actions.removeColumn]: workers.refreshData,
     [actions.removeColumnWithIndex]: workers.refreshData,
     [actions.removeColumnsWithPath]: workers.refreshData,
     [actions.refreshData]: workers.refreshData,
@@ -422,11 +422,9 @@ export default kea({
     removeFavouriteRequest: function * (action) {
       const { removeFavouriteSuccess } = this.actions
       const { path } = action.payload
-      const favourites = yield explorerLogic.get('favourites')
-      console.log(favourites)
 
+      const favourites = yield explorerLogic.get('favourites')
       const favourite = favourites[path]
-      console.log(favourite)
 
       yield favouritesService.remove(favourite._id)
 
@@ -448,6 +446,28 @@ export default kea({
           yield put(setTransform(index, graphTimeGroup, null))
         }
       }
+    },
+
+    addColumn: function * (action) {
+      const { refreshData, setFacetsColumn } = this.actions
+      const { column } = action.payload
+
+      const columns = yield explorerLogic.get('columns')
+      const facetsColumn = yield explorerLogic.get('facetsColumn')
+
+      console.log(columns, facetsColumn)
+
+      if (!facetsColumn || columns.indexOf(facetsColumn) < 0) {
+        const structure = yield explorerLogic.get('structure')
+        const columnMeta = getMeta(column, structure)
+
+        if (columnMeta && columnMeta.type === 'string') {
+          yield put(setFacetsColumn(column)) // will trigger refreshData via takeLatest
+          return
+        }
+      }
+
+      yield put(refreshData())
     }
   }
 })
