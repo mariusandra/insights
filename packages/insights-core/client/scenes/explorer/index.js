@@ -30,8 +30,6 @@ import explorerSaga from '~/scenes/explorer/saga'
   props: [
     explorerLogic, [
       'graph',
-      'graphData',
-      'graphKeys',
       'isSubmitting',
       'columns',
       'filter',
@@ -58,9 +56,11 @@ export default class Explorer extends Component {
   }
 
   render () {
-    const { graphData, isSubmitting, columns, graph, graphKeys, selectedModel } = this.props
+    const { isSubmitting, columns, graph, selectedModel } = this.props
     const { filterHeight } = this.state
     const { refreshData } = this.props.actions
+
+    const hasGraph = graph && graph.results
 
     return (
       <Layout className='explorer-scene' ref={ref => { this._layout = ref }}>
@@ -77,10 +77,10 @@ export default class Explorer extends Component {
                     Reload
                   </Button>
                 ) : null}
-                {graphData ? (
+                {hasGraph ? (
                   <AddToDashboard />
                 ) : null}
-                {graphData ? (
+                {hasGraph ? (
                   <TimeFilter />
                 ) : null}
               </div>
@@ -92,12 +92,12 @@ export default class Explorer extends Component {
           <Layout layoutHeight={filterHeight}>
             {selectedModel ? <Filter setFilterHeight={this.setFilterHeight} /> : null}
           </Layout>
-          {graphData ? (
+          {hasGraph ? (
             <Layout layoutHeight={300} className='visible-overflow'>
-              <Graph graph={graph} graphKeys={graphKeys} graphData={graphData} />
+              <Graph />
             </Layout>
           ) : <div />}
-          {graphData ? <LayoutSplitter /> : <div />}
+          {hasGraph ? <LayoutSplitter /> : <div />}
           <Layout layoutHeight='flex'>
             <Table />
           </Layout>

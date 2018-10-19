@@ -17,21 +17,20 @@ export const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#
 @connect({
   props: [
     explorerLogic, [
+      'graph',
       'graphControls'
     ]
   ]
 })
 export default class GraphView extends Component {
   render () {
-    const { graphControls, containerHeight } = this.props
+    const { graph, graphControls, containerHeight } = this.props
 
     return (
       <div className='graph-and-controls'>
         <div className='graph' style={{ height: containerHeight - 20 }}>
           <Graph
-            graph={this.props.graph}
-            graphKeys={this.props.graphKeys}
-            graphData={this.props.graphData}
+            graph={graph}
             controls={graphControls} />
         </div>
         <div className='controls'>

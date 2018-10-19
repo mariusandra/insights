@@ -257,8 +257,8 @@ export default kea({
       const {
         connection,
         url, columns, offsetTarget, offset, limitTarget, limit, sort, filter, graphTimeFilter,
-        facetsCount, facetsColumn, exportTitle, graphControls, graphData
-      } = yield explorerLogic.fetch('connection', 'url', 'columns', 'offset', 'limit', 'offsetTarget', 'limitTarget', 'sort', 'filter', 'graphTimeFilter', 'facetsCount', 'facetsColumn', 'exportTitle', 'graphControls', 'graphData')
+        facetsCount, facetsColumn, exportTitle, graphControls, graph
+      } = yield explorerLogic.fetch('connection', 'url', 'columns', 'offset', 'limit', 'offsetTarget', 'limitTarget', 'sort', 'filter', 'graphTimeFilter', 'facetsCount', 'facetsColumn', 'exportTitle', 'graphControls', 'graph')
 
       // if paginating and fetching what is currently there (horizontal scroll)
       if (action.type === setPagination.toString() && action.payload.offset === offset && action.payload.limit === limit) {
@@ -307,7 +307,7 @@ export default kea({
             const { format } = action.payload
             response = yield fetchBlob({
               ...params,
-              ...(format === 'pdf' && graphData ? { svg: fetchSvg() } : {}),
+              ...(format === 'pdf' && graph.results ? { svg: fetchSvg() } : {}),
               export: format,
               exportTitle: exportTitle
             })
