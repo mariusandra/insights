@@ -7,6 +7,14 @@
     height: 20px;
     background: #fff;
 
+    .left {
+      float: left;
+      margin-left: 10px;
+      > .control, .control-group {
+        margin-right: 8px;
+      }
+    }
+
     .right {
       float: right;
       margin-right: 10px;
@@ -30,19 +38,29 @@
         background: #384b5a;
         border-color: #384b5a;
       }
+
+      &:hover {
+        background: #ddd;
+      }
     }
+
     .control-group {
       cursor: pointer;
       display: inline-block;
+      .control {
+        border-radius: 0;
+        border-left-width: 0px;
+      }
       .control:first-child {
         border-right: none;
-        border-top-right-radius: 0;
-        border-bottom-right-radius: 0;
+        border-left-width: 1px;
+        border-top-left-radius: 3px;
+        border-bottom-left-radius: 3px;
       }
       .control:last-child {
         border-left: none;
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
       }
     }
   }

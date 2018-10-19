@@ -11,7 +11,7 @@ export default function urlToState (path) {
     facetsColumn: null,
     facetsCount: 6,
     graphControls: {
-      type: 'bar',
+      type: 'area',
       sort: '123',
       cumulative: false,
       percentages: false,

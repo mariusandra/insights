@@ -23,6 +23,7 @@ export default kea({
     setTransform: (index, transform, aggregate) => ({ index, transform, aggregate }),
     setFacetsColumn: (facetsColumn) => ({ facetsColumn }),
     setFacetsCount: (facetsCount) => ({ facetsCount }),
+    setGraphTimeGroup: (graphTimeGroup) => ({ graphTimeGroup }),
 
     setGraphControls: (graphControls) => ({ graphControls }),
 
@@ -241,14 +242,14 @@ export default kea({
       [actions.setResults]: (state, payload) => payload.results.graphTimeFilter || state
     }],
     graphControls: [{
-      type: 'bar',
+      type: 'area',
       sort: '123',
       cumulative: false,
       percentages: false,
       labels: false
     }, PropTypes.shape({
-      type: PropTypes.oneOf(['bar', 'line']).isRequired,
-      sort: PropTypes.oneOf(['abc', '123']).isRequired,
+      type: PropTypes.oneOf(['area', 'bar', 'line']).isRequired,
+      sort: PropTypes.oneOf(['123', 'abc']).isRequired,
       cumulative: PropTypes.bool,
       percentages: PropTypes.bool,
       labels: PropTypes.bool
@@ -365,6 +366,17 @@ export default kea({
         return graph.keys // .map(k => k.type === 'time' ? null : k.column.replace(/!/g, ' ').replace(/^[^.]+\./, ''))
       },
       PropTypes.array
+    ],
+
+    graphTimeGroup: [
+      () => [selectors.graph],
+      (graph) => {
+        if (!graph) {
+          return null
+        }
+        return graph.timeGroup
+      },
+      PropTypes.oneOf(['day', 'week', 'month', 'quarter', 'year'])
     ],
 
     graphData: [

@@ -6,30 +6,24 @@ import { connect } from 'kea'
 import Dimensions from 'react-dimensions'
 import { Graph } from 'insights-charts'
 
+import ControlsLeft from './controls-left'
+import ControlsRight from './controls-right'
+
 import explorerLogic from '~/scenes/explorer/logic'
 
 export const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
 
 @Dimensions({ elementResize: true })
 @connect({
-  actions: [
-    explorerLogic, [
-      'setGraphControls'
-    ]
-  ],
   props: [
     explorerLogic, [
-      'graphControls',
-      'facetsColumn'
+      'graphControls'
     ]
   ]
 })
 export default class GraphView extends Component {
   render () {
     const { graphControls, containerHeight } = this.props
-    const { setGraphControls } = this.props.actions
-
-    const { cumulative, percentages, sort, type, labels } = graphControls
 
     return (
       <div className='graph-and-controls'>
@@ -41,43 +35,8 @@ export default class GraphView extends Component {
             controls={graphControls} />
         </div>
         <div className='controls'>
-          <div className='right'>
-            <span
-              className={cumulative ? 'control selected' : 'control'}
-              onClick={() => setGraphControls({ cumulative: !cumulative })}>
-              +
-            </span>
-
-            <span
-              className={percentages ? 'control selected' : 'control'}
-              onClick={() => setGraphControls({ percentages: !percentages })}>
-              %
-            </span>
-
-            <span
-              className={labels ? 'control selected' : 'control'}
-              onClick={() => setGraphControls({ labels: !labels })}>
-              labels
-            </span>
-
-            <span className='control-group' onClick={() => setGraphControls({ sort: sort === 'abc' ? '123' : 'abc' })}>
-              <span className={sort === 'abc' ? 'control selected' : 'control'}>
-                abc
-              </span>
-              <span className={sort === '123' ? 'control selected' : 'control'}>
-                123
-              </span>
-            </span>
-
-            <span className='control-group' onClick={() => setGraphControls({ type: type === 'bar' ? 'line' : 'bar' })}>
-              <span className={type === 'bar' ? 'control selected' : 'control'}>
-                bar
-              </span>
-              <span className={type === 'line' ? 'control selected' : 'control'}>
-                line
-              </span>
-            </span>
-          </div>
+          <ControlsLeft />
+          <ControlsRight />
         </div>
       </div>
     )

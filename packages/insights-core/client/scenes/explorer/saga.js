@@ -121,46 +121,50 @@ export default kea({
         'favouritesLoaded',
 
         'dashboardsLoaded',
-        'addToDashboard'
+        'addToDashboard',
+
+        'setGraphTimeGroup'
       ]
     ]
   },
 
   takeEvery: ({ actions, workers }) => ({
-    [LOCATION_CHANGE]: workers.urlToStateWorker,
-    [actions.digDeeper]: workers.digDeeperWorker,
-    [actions.setConnection]: workers.setConnectionWorker
+    [LOCATION_CHANGE]: workers.urlToState,
+    [actions.digDeeper]: workers.digDeeper,
+    [actions.setConnection]: workers.setConnection
   }),
 
   takeLatest: ({ actions, workers }) => ({
-    [actions.clear]: workers.refreshDataWorker,
-    [actions.urlChanged]: workers.refreshDataWorker,
-    [actions.setColumnsAndFilter]: workers.refreshDataWorker,
-    [actions.setColumns]: workers.refreshDataWorker,
-    [actions.addColumn]: workers.refreshDataWorker,
-    [actions.removeColumn]: workers.refreshDataWorker,
-    [actions.removeColumnWithIndex]: workers.refreshDataWorker,
-    [actions.removeColumnsWithPath]: workers.refreshDataWorker,
-    [actions.refreshData]: workers.refreshDataWorker,
-    [actions.setFilter]: workers.refreshDataWorker,
-    [actions.addFilter]: workers.refreshDataWorker,
-    [actions.addEmptyFilter]: workers.refreshDataWorker,
-    [actions.removeFilter]: workers.refreshDataWorker,
-    [actions.removeFiltersByKey]: workers.refreshDataWorker,
-    [actions.setPagination]: workers.refreshDataWorker,
-    [actions.setSort]: workers.refreshDataWorker,
-    [actions.setTransform]: workers.refreshDataWorker,
-    [actions.setGraphTimeFilter]: workers.refreshDataWorker,
-    [actions.setFacetsColumn]: workers.refreshDataWorker,
-    [actions.setFacetsCount]: workers.refreshDataWorker,
-    [actions.setGraphControls]: workers.refreshDataWorker,
-    [actions.requestExport]: workers.refreshDataWorker,
-    [actions.openTreeNode]: workers.refreshDataWorker,
-    [actions.closeTreeNode]: workers.refreshDataWorker,
+    [actions.clear]: workers.refreshData,
+    [actions.urlChanged]: workers.refreshData,
+    [actions.setColumnsAndFilter]: workers.refreshData,
+    [actions.setColumns]: workers.refreshData,
+    [actions.addColumn]: workers.refreshData,
+    [actions.removeColumn]: workers.refreshData,
+    [actions.removeColumnWithIndex]: workers.refreshData,
+    [actions.removeColumnsWithPath]: workers.refreshData,
+    [actions.refreshData]: workers.refreshData,
+    [actions.setFilter]: workers.refreshData,
+    [actions.addFilter]: workers.refreshData,
+    [actions.addEmptyFilter]: workers.refreshData,
+    [actions.removeFilter]: workers.refreshData,
+    [actions.removeFiltersByKey]: workers.refreshData,
+    [actions.setPagination]: workers.refreshData,
+    [actions.setSort]: workers.refreshData,
+    [actions.setTransform]: workers.refreshData,
+    [actions.setGraphTimeFilter]: workers.refreshData,
+    [actions.setFacetsColumn]: workers.refreshData,
+    [actions.setFacetsCount]: workers.refreshData,
+    [actions.setGraphControls]: workers.refreshData,
+    [actions.requestExport]: workers.refreshData,
+    [actions.openTreeNode]: workers.refreshData,
+    [actions.closeTreeNode]: workers.refreshData,
 
-    [actions.addToDashboard]: workers.addToDashboardWorker,
-    [actions.addFavouriteRequest]: workers.addFavouriteRequestWorker,
-    [actions.removeFavouriteRequest]: workers.removeFavouriteRequestWorker
+    [actions.addToDashboard]: workers.addToDashboard,
+    [actions.addFavouriteRequest]: workers.addFavouriteRequest,
+    [actions.removeFavouriteRequest]: workers.removeFavouriteRequest,
+
+    [actions.setGraphTimeGroup]: workers.setGraphTimeGroup
   }),
 
   start: function * () {
@@ -194,7 +198,7 @@ export default kea({
     yield fork(this.workers.loadFavourites)
     yield call(this.workers.loadStructure, connection)
 
-    yield call(this.workers.urlToStateWorker, { payload: { pathname: window.location.pathname, search: window.location.search, firstLoad: true } })
+    yield call(this.workers.urlToState, { payload: { pathname: window.location.pathname, search: window.location.search, firstLoad: true } })
   },
 
   workers: {
@@ -232,7 +236,7 @@ export default kea({
       }
     },
 
-    setConnectionWorker: function * (action) {
+    setConnection: function * (action) {
       const { clear } = this.actions
       const { connection } = action.payload
       const urlValues = urlToState(window.location.search)
@@ -243,7 +247,7 @@ export default kea({
       }
     },
 
-    refreshDataWorker: function * (action) {
+    refreshData: function * (action) {
       const { setResults, setPagination, setLoading, clearLoading, openTreeNode, closeTreeNode, urlChanged, requestExport } = this.actions
 
       if (action.type !== urlChanged.toString()) {
@@ -320,6 +324,8 @@ export default kea({
           } else {
             response = yield resultsService.find({ query: params })
 
+            // console.log({ params, response })
+
             if (response.success) {
               // not asking because of a pagination update
               const resetScrolling = action.type !== setPagination.toString()
@@ -338,7 +344,7 @@ export default kea({
       }
     },
 
-    urlToStateWorker: function * (action) {
+    urlToState: function * (action) {
       const { urlChanged } = this.actions
       const { search } = action.payload
 
@@ -360,7 +366,7 @@ export default kea({
       yield put(urlChanged(values))
     },
 
-    digDeeperWorker: function * (action) {
+    digDeeper: function * (action) {
       const { setColumnsAndFilter } = this.actions
 
       const { row } = action.payload
@@ -392,7 +398,7 @@ export default kea({
       yield put(setColumnsAndFilter(newColumns, newFilter))
     },
 
-    addToDashboardWorker: function * (action) {
+    addToDashboard: function * (action) {
       const { id, name, path } = action.payload
 
       const dashboardItem = yield dashboardItemsService.create({ dashboardId: id, name, path })
@@ -402,7 +408,7 @@ export default kea({
       }
     },
 
-    addFavouriteRequestWorker: function * (action) {
+    addFavouriteRequest: function * (action) {
       const { addFavouriteSuccess } = this.actions
       const { path } = action.payload
 
@@ -413,7 +419,7 @@ export default kea({
       }
     },
 
-    removeFavouriteRequestWorker: function * (action) {
+    removeFavouriteRequest: function * (action) {
       const { removeFavouriteSuccess } = this.actions
       const { path } = action.payload
       const favourites = yield explorerLogic.get('favourites')
@@ -425,6 +431,23 @@ export default kea({
       yield favouritesService.remove(favourite._id)
 
       yield put(removeFavouriteSuccess(path))
+    },
+
+    setGraphTimeGroup: function * (action) {
+      const { graphTimeGroup } = action.payload
+      const { setTransform } = this.actions
+
+      const columns = yield explorerLogic.get('columns')
+      const { meta } = yield explorerLogic.get('graph')
+      const timeMeta = meta.filter(m => m.type === 'time')[0]
+
+      if (timeMeta) {
+        const index = columns.indexOf(timeMeta.column)
+
+        if (index) {
+          yield put(setTransform(index, graphTimeGroup, null))
+        }
+      }
     }
   }
 })

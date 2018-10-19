@@ -87,8 +87,7 @@ export default class TableHeader extends Component {
 
     return (
       <Tooltip placement='bottomLeft' trigger={['hover']} overlay={overlay} onVisibleChange={this.handleTooltip}>
-        <div className={className}
-          onClick={this.handleSort}>
+        <div className={className} onClick={this.handleSort}>
           {meta && meta.aggregate && (
             <span className='filter-aggregate'>{meta.aggregate}</span>
           )}

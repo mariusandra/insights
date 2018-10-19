@@ -41,6 +41,8 @@ export default (props) => {
       displayValue = 'Q' + moment(value).format('Q YYYY')
     } else if (meta.transform === 'month') {
       displayValue = moment(value).format('YYYY-MM')
+    } else if (meta.transform === 'year') {
+      displayValue = moment(value).format('YYYY')
     }
   }
 

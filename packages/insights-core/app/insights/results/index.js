@@ -14,7 +14,7 @@ module.exports = class Results {
   //   svg: params.svg,
   //
   //   graphControls: {
-  //     type: 'bar',
+  //     type: 'area',
   //     sort: '123',
   //     cumulative: false,
   //     percentages: false,

@@ -33,8 +33,8 @@ export class Graph extends Component {
     graphData: PropTypes.array,
 
     controls: PropTypes.shape({
-      type: PropTypes.oneOf(['bar', 'line']).isRequired,
-      sort: PropTypes.oneOf(['abc', '123']).isRequired,
+      type: PropTypes.oneOf(['area', 'bar', 'line']).isRequired,
+      sort: PropTypes.oneOf(['123', 'abc']).isRequired,
       cumulative: PropTypes.bool,
       percentages: PropTypes.bool,
       labels: PropTypes.bool
@@ -214,13 +214,13 @@ export class Graph extends Component {
     const nullLineNeeded = false
     const unit = ''
     const facets = graph.facets && graph.facets.length > 0
-    const summed = facets
     const { timeGroup } = graph
 
     const keysWithMeta = this.getKeysWithMeta()
 
     // change the key on visibilty changes so the lines would update
-    const key = keysWithMeta.map(k => `${k.visible}`).join(',') + (labels ? '-labels' : '') + (summed ? '-summed' : '')
+    // changing this triggers the chart to be torn down and re-rendered
+    const key = keysWithMeta.map(k => `${k.visible}`).join(',') + (labels ? '-labels' : '') + (type === 'line' ? '-line' : '')
 
     const { ticks, tickFormatter } = this.getTicks()
 
@@ -271,9 +271,11 @@ export class Graph extends Component {
             <ReferenceLine y={0} stroke='red' alwaysShow />
           ) : null}
           {graphKeysWithMeta.map(key => (
-            type === 'bar' ? <Bar {...this.getLineData(key, facets && summed)} />
-              : facets && summed ? <Area {...this.getLineData(key, facets && summed)} />
-                : <Line {...this.getLineData(key, facets && summed)} />))}
+            type === 'area'
+              ? <Area {...this.getLineData(key, facets)} />
+              : type === 'bar'
+                ? <Bar {...this.getLineData(key, facets)} />
+                : <Line {...this.getLineData(key, facets)} />))}
         </ComposedChart>
       </ResponsiveContainer>
     )

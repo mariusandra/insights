@@ -126,7 +126,7 @@ export default class TableHeader extends Component {
     return (
       <div className='filter-options'>
         <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: facetsColumn === column ? 'bold' : 'normal'}}
-          onClick={() => setFacetsColumn(facetsColumn === column ? null : column)}>Split by this column</span>
+          onClick={() => setFacetsColumn(facetsColumn === column ? null : column)}>Split the graph by this column</span>
 
         {facetsColumn === column && (
           <div>
