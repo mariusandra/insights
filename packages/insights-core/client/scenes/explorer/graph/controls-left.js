@@ -33,7 +33,7 @@ export const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#
     }]
   })
 })
-export default class GraphView extends Component {
+export default class ControlsLeft extends Component {
   render () {
     const { graphTimeGroup, moreShown } = this.props
     const { setGraphTimeGroup, showMore } = this.actions
