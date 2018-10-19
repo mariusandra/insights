@@ -1,1 +1,1 @@
-export { Graph } from './graph'
+export { Graph } from './graph/data-ui'

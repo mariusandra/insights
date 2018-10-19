@@ -43,13 +43,17 @@
     "src"
   ],
   "peerDependencies": {
+    "@data-ui/xy-chart": "*",
     "moment": "*",
     "prop-types": "*",
     "react": "*",
     "recharts": "*"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@vx/legend": "^0.0.179"
+  },
   "devDependencies": {
+    "@data-ui/xy-chart": "^0.0.69",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^7.2.3",

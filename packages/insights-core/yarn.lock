@@ -2,6 +2,20 @@
 # yarn lockfile v1
 
 
+"@babel/helper-module-imports@^7.0.0-beta.49":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@babel/helper-module-imports/-/helper-module-imports-7.0.0.tgz#96081b7111e486da4d2cd971ad1a4fe216cc2e3d"
+  dependencies:
+    "@babel/types" "^7.0.0"
+
+"@babel/types@^7.0.0", "@babel/types@^7.0.0-beta.49":
+  version "7.1.3"
+  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.1.3.tgz#3a767004567060c2f40fca49a304712c525ee37d"
+  dependencies:
+    esutils "^2.0.2"
+    lodash "^4.17.10"
+    to-fast-properties "^2.0.0"
+
 "@blueprintjs/core@^3.0.1":
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/@blueprintjs/core/-/core-3.0.1.tgz#65d4d8b0e97cf12ff1ddc4bda073ccd02622505f"
@@ -23,6 +37,52 @@
   dependencies:
     classnames "^2.2"
     tslib "^1.9.0"
+
+"@data-ui/shared@^0.0.69":
+  version "0.0.69"
+  resolved "https://registry.yarnpkg.com/@data-ui/shared/-/shared-0.0.69.tgz#1a1ee44efea0f35cf8b7bdc0adfce7b8b37122cd"
+  dependencies:
+    "@data-ui/theme" "^0.0.69"
+    "@vx/event" "^0.0.165"
+    "@vx/group" "^0.0.165"
+    "@vx/shape" "^0.0.168"
+    "@vx/tooltip" "0.0.165"
+    babel-runtime "^6.26.0"
+    d3-array "^1.2.1"
+    prop-types "^15.5.10"
+
+"@data-ui/theme@^0.0.69":
+  version "0.0.69"
+  resolved "https://registry.yarnpkg.com/@data-ui/theme/-/theme-0.0.69.tgz#f9c92f8bbd0711aecf89ea4f597dffc38472e387"
+  dependencies:
+    babel-runtime "^6.26.0"
+
+"@data-ui/xy-chart@^0.0.69":
+  version "0.0.69"
+  resolved "https://registry.yarnpkg.com/@data-ui/xy-chart/-/xy-chart-0.0.69.tgz#f0844fe2f6458f14a80a031e960d377d7cd358c7"
+  dependencies:
+    "@data-ui/shared" "^0.0.69"
+    "@data-ui/theme" "^0.0.69"
+    "@vx/axis" "^0.0.168"
+    "@vx/curve" "^0.0.165"
+    "@vx/event" "^0.0.165"
+    "@vx/glyph" "^0.0.165"
+    "@vx/gradient" "^0.0.165"
+    "@vx/grid" "^0.0.169"
+    "@vx/group" "^0.0.165"
+    "@vx/pattern" "^0.0.165"
+    "@vx/point" "^0.0.165"
+    "@vx/responsive" "^0.0.165"
+    "@vx/scale" "^0.0.165"
+    "@vx/shape" "^0.0.165"
+    "@vx/stats" "^0.0.165"
+    "@vx/text" "0.0.165"
+    "@vx/threshold" "0.0.170"
+    "@vx/tooltip" "^0.0.165"
+    "@vx/voronoi" "^0.0.165"
+    babel-runtime "^6.26.0"
+    d3-array "^1.2.0"
+    prop-types "^15.5.10"
 
 "@feathersjs/commons@^1.3.0":
   version "1.4.4"
@@ -71,6 +131,180 @@
   resolved "https://registry.yarnpkg.com/@types/socket.io/-/socket.io-1.4.29.tgz#86a6b3a9ab78cf9a900ceef85b9b68b6bea86712"
   dependencies:
     "@types/node" "*"
+
+"@vx/axis@^0.0.168":
+  version "0.0.168"
+  resolved "https://registry.yarnpkg.com/@vx/axis/-/axis-0.0.168.tgz#fd8c88a2b584b314aaf1ce2023eaebad05304188"
+  dependencies:
+    "@vx/group" "0.0.165"
+    "@vx/point" "0.0.165"
+    "@vx/shape" "0.0.168"
+    "@vx/text" "0.0.165"
+    classnames "^2.2.5"
+    prop-types "^15.6.0"
+
+"@vx/bounds@0.0.165":
+  version "0.0.165"
+  resolved "https://registry.yarnpkg.com/@vx/bounds/-/bounds-0.0.165.tgz#75f107a6deb58223c6878db5053382eff3174567"
+  dependencies:
+    prop-types "^15.5.10"
+
+"@vx/clip-path@0.0.165":
+  version "0.0.165"
+  resolved "https://registry.yarnpkg.com/@vx/clip-path/-/clip-path-0.0.165.tgz#93cd65cc6a35319c7e403ce7b973ac1c8045b741"
+
+"@vx/curve@0.0.165", "@vx/curve@^0.0.165":
+  version "0.0.165"
+  resolved "https://registry.yarnpkg.com/@vx/curve/-/curve-0.0.165.tgz#330d1512dceae0af43dd3eb4c85523132030a3a0"
+  dependencies:
+    d3-shape "^1.0.6"
+
+"@vx/event@^0.0.165":
+  version "0.0.165"
+  resolved "https://registry.yarnpkg.com/@vx/event/-/event-0.0.165.tgz#675d89fdfdc08d0c99c36ff1a381ea50fccfba2e"
+  dependencies:
+    "@vx/point" "0.0.165"
+
+"@vx/glyph@^0.0.165":
+  version "0.0.165"
+  resolved "https://registry.yarnpkg.com/@vx/glyph/-/glyph-0.0.165.tgz#ba6fe31700dae852c60468e00dd732fa7521d1fc"
+  dependencies:
+    "@vx/group" "0.0.165"
+    classnames "^2.2.5"
+    d3-shape "^1.2.0"
+
+"@vx/gradient@^0.0.165":
+  version "0.0.165"
+  resolved "https://registry.yarnpkg.com/@vx/gradient/-/gradient-0.0.165.tgz#0cc0fe873e6acded4943fa274f68601ad5a50a38"
+  dependencies:
+    classnames "^2.2.5"
+    prop-types "^15.5.7"
+
+"@vx/grid@^0.0.169":
+  version "0.0.169"
+  resolved "https://registry.yarnpkg.com/@vx/grid/-/grid-0.0.169.tgz#241b9edb3894394af2e142a1280a05f6ccfd2163"
+  dependencies:
+    "@vx/group" "0.0.165"
+    "@vx/point" "0.0.165"
+    "@vx/shape" "0.0.168"
+    classnames "^2.2.5"
+
+"@vx/group@0.0.165", "@vx/group@^0.0.165":
+  version "0.0.165"
+  resolved "https://registry.yarnpkg.com/@vx/group/-/group-0.0.165.tgz#2342523225de94859b5be49c3072dc6bb6795e78"
+  dependencies:
+    classnames "^2.2.5"
+
+"@vx/group@0.0.170":
+  version "0.0.170"
+  resolved "https://registry.yarnpkg.com/@vx/group/-/group-0.0.170.tgz#8b30b3ea07c348fe22253812fe7cb6d4200d725d"
+  dependencies:
+    classnames "^2.2.5"
+
+"@vx/pattern@^0.0.165":
+  version "0.0.165"
+  resolved "https://registry.yarnpkg.com/@vx/pattern/-/pattern-0.0.165.tgz#0d317cb9a13205e35691f702442739ff0256711d"
+  dependencies:
+    classnames "^2.2.5"
+    prop-types "^15.5.10"
+
+"@vx/point@0.0.165", "@vx/point@^0.0.165":
+  version "0.0.165"
+  resolved "https://registry.yarnpkg.com/@vx/point/-/point-0.0.165.tgz#7ebde5da3d86954fe31a56f923f31550f0b4b867"
+
+"@vx/responsive@^0.0.165":
+  version "0.0.165"
+  resolved "https://registry.yarnpkg.com/@vx/responsive/-/responsive-0.0.165.tgz#04b17a52be102a75fc036a8ed3f5db1efd4e8ee5"
+  dependencies:
+    lodash "^4.17.10"
+    prop-types "^15.6.1"
+    resize-observer-polyfill "1.5.0"
+
+"@vx/scale@0.0.165", "@vx/scale@^0.0.165":
+  version "0.0.165"
+  resolved "https://registry.yarnpkg.com/@vx/scale/-/scale-0.0.165.tgz#8575880c48296a80c0e9459057f826e8f903bc07"
+  dependencies:
+    d3-scale "^2.0.0"
+
+"@vx/shape@0.0.168", "@vx/shape@^0.0.168":
+  version "0.0.168"
+  resolved "https://registry.yarnpkg.com/@vx/shape/-/shape-0.0.168.tgz#172bc1cf4dade47076018efd559e0ecc4e959aec"
+  dependencies:
+    "@vx/curve" "0.0.165"
+    "@vx/group" "0.0.165"
+    "@vx/point" "0.0.165"
+    classnames "^2.2.5"
+    d3-path "^1.0.5"
+    d3-shape "^1.2.0"
+    prop-types "^15.5.10"
+
+"@vx/shape@0.0.170":
+  version "0.0.170"
+  resolved "https://registry.yarnpkg.com/@vx/shape/-/shape-0.0.170.tgz#55cf5968f7a6465484aac1a5541275b4813bb9a2"
+  dependencies:
+    "@vx/curve" "0.0.165"
+    "@vx/group" "0.0.170"
+    "@vx/point" "0.0.165"
+    classnames "^2.2.5"
+    d3-path "^1.0.5"
+    d3-shape "^1.2.0"
+    prop-types "^15.5.10"
+
+"@vx/shape@^0.0.165":
+  version "0.0.165"
+  resolved "https://registry.yarnpkg.com/@vx/shape/-/shape-0.0.165.tgz#3424121f45d83dd8e7ba62b6adf8b0aea2fb9cf8"
+  dependencies:
+    "@vx/curve" "0.0.165"
+    "@vx/group" "0.0.165"
+    "@vx/point" "0.0.165"
+    classnames "^2.2.5"
+    d3-path "^1.0.5"
+    d3-shape "^1.2.0"
+    prop-types "^15.5.10"
+
+"@vx/stats@^0.0.165":
+  version "0.0.165"
+  resolved "https://registry.yarnpkg.com/@vx/stats/-/stats-0.0.165.tgz#32413a144383367e51628bbea61b3b0ce980f1fd"
+  dependencies:
+    "@vx/group" "0.0.165"
+    "@vx/scale" "0.0.165"
+    classnames "^2.2.5"
+    d3-shape "^1.2.0"
+
+"@vx/text@0.0.165":
+  version "0.0.165"
+  resolved "https://registry.yarnpkg.com/@vx/text/-/text-0.0.165.tgz#e7f22979a1e744216be1a535414752c2ceb2f97a"
+  dependencies:
+    babel-plugin-lodash "^3.3.2"
+    classnames "^2.2.5"
+    lodash "^4.17.4"
+    reduce-css-calc "^1.3.0"
+
+"@vx/threshold@0.0.170":
+  version "0.0.170"
+  resolved "https://registry.yarnpkg.com/@vx/threshold/-/threshold-0.0.170.tgz#59baeabc7e1687042cf4955130fc7a72704030f7"
+  dependencies:
+    "@vx/clip-path" "0.0.165"
+    "@vx/shape" "0.0.170"
+    classnames "^2.2.5"
+    prop-types "^15.5.10"
+
+"@vx/tooltip@0.0.165", "@vx/tooltip@^0.0.165":
+  version "0.0.165"
+  resolved "https://registry.yarnpkg.com/@vx/tooltip/-/tooltip-0.0.165.tgz#0d17a1b445a7bc70d7840e36593b780a6e7b40e2"
+  dependencies:
+    "@vx/bounds" "0.0.165"
+    classnames "^2.2.5"
+    prop-types "^15.5.10"
+
+"@vx/voronoi@^0.0.165":
+  version "0.0.165"
+  resolved "https://registry.yarnpkg.com/@vx/voronoi/-/voronoi-0.0.165.tgz#11ab585199b0dccf403544a6ad378a505bfb913b"
+  dependencies:
+    "@vx/group" "0.0.165"
+    classnames "^2.2.5"
+    d3-voronoi "^1.1.2"
+    prop-types "^15.6.1"
 
 abbrev@1:
   version "1.1.0"
@@ -566,6 +800,16 @@ babel-plugin-check-es2015-constants@^6.22.0:
   resolved "https://registry.yarnpkg.com/babel-plugin-check-es2015-constants/-/babel-plugin-check-es2015-constants-6.22.0.tgz#35157b101426fd2ffd3da3f75c7d1e91835bbf8a"
   dependencies:
     babel-runtime "^6.22.0"
+
+babel-plugin-lodash@^3.3.2:
+  version "3.3.4"
+  resolved "https://registry.yarnpkg.com/babel-plugin-lodash/-/babel-plugin-lodash-3.3.4.tgz#4f6844358a1340baed182adbeffa8df9967bc196"
+  dependencies:
+    "@babel/helper-module-imports" "^7.0.0-beta.49"
+    "@babel/types" "^7.0.0-beta.49"
+    glob "^7.1.1"
+    lodash "^4.17.10"
+    require-package-name "^2.0.1"
 
 babel-plugin-react-transform@2.0.2:
   version "2.0.2"
@@ -1939,7 +2183,7 @@ cycle@1.0.x:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/cycle/-/cycle-1.0.3.tgz#21e80b2be8580f98b468f379430662b046c34ad2"
 
-d3-array@^1.2.0:
+d3-array@^1.2.0, d3-array@^1.2.1:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-1.2.4.tgz#635ce4d5eea759f6f605863dbcfc30edc737f71f"
 
@@ -1971,7 +2215,11 @@ d3-path@1:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/d3-path/-/d3-path-1.0.5.tgz#241eb1849bd9e9e8021c0d0a799f8a0e8e441764"
 
-d3-scale@~2.1.0:
+d3-path@^1.0.5:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/d3-path/-/d3-path-1.0.7.tgz#8de7cd693a75ac0b5480d3abaccd94793e58aae8"
+
+d3-scale@^2.0.0, d3-scale@~2.1.0:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/d3-scale/-/d3-scale-2.1.2.tgz#4e932b7b60182aee9073ede8764c98423e5f9a94"
   dependencies:
@@ -1982,7 +2230,7 @@ d3-scale@~2.1.0:
     d3-time "1"
     d3-time-format "2"
 
-d3-shape@~1.2.0:
+d3-shape@^1.0.6, d3-shape@^1.2.0, d3-shape@~1.2.0:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/d3-shape/-/d3-shape-1.2.2.tgz#f9dba3777a5825f9a8ce8bc928da08c17679e9a7"
   dependencies:
@@ -1997,6 +2245,10 @@ d3-time-format@2:
 d3-time@1:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/d3-time/-/d3-time-1.0.7.tgz#94caf6edbb7879bb809d0d1f7572bc48482f7270"
+
+d3-voronoi@^1.1.2:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/d3-voronoi/-/d3-voronoi-1.1.4.tgz#dd3c78d7653d2bb359284ae478645d95944c8297"
 
 d@1:
   version "1.0.0"
@@ -3215,6 +3467,17 @@ glob@^7.0.0, glob@^7.0.3, glob@^7.0.5, glob@^7.1.2:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
+glob@^7.1.1:
+  version "7.1.3"
+  resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.3.tgz#3960832d3f1574108342dafd3a67b332c0969df1"
+  dependencies:
+    fs.realpath "^1.0.0"
+    inflight "^1.0.4"
+    inherits "2"
+    minimatch "^3.0.4"
+    once "^1.3.0"
+    path-is-absolute "^1.0.0"
+
 global@^4.3.0:
   version "4.3.2"
   resolved "https://registry.yarnpkg.com/global/-/global-4.3.2.tgz#e76989268a6c74c38908b1305b10fc0e394e9d0f"
@@ -4254,7 +4517,7 @@ lodash@^4.0.0, lodash@^4.13.1, lodash@^4.14.0, lodash@^4.17.2, lodash@^4.17.4, l
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
-lodash@^4.17.5:
+lodash@^4.17.10, lodash@^4.17.5:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
 
@@ -6067,7 +6330,7 @@ redent@^1.0.0:
     indent-string "^2.1.0"
     strip-indent "^1.0.1"
 
-reduce-css-calc@^1.2.6, reduce-css-calc@~1.3.0:
+reduce-css-calc@^1.2.6, reduce-css-calc@^1.3.0, reduce-css-calc@~1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/reduce-css-calc/-/reduce-css-calc-1.3.0.tgz#747c914e049614a4c9cfbba629871ad1d2927716"
   dependencies:
@@ -6221,6 +6484,10 @@ require-main-filename@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/require-main-filename/-/require-main-filename-1.0.1.tgz#97f717b69d48784f5f526a6c5aa8ffdda055a4d1"
 
+require-package-name@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/require-package-name/-/require-package-name-2.0.1.tgz#c11e97276b65b8e2923f75dabf5fb2ef0c3841b9"
+
 require-uncached@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/require-uncached/-/require-uncached-1.0.3.tgz#4e0d56d6c9662fd31e43011c4b95aa49955421d3"
@@ -6236,7 +6503,7 @@ reselect@2.5.4:
   version "2.5.4"
   resolved "https://registry.yarnpkg.com/reselect/-/reselect-2.5.4.tgz#b7d23fdf00b83fa7ad0279546f8dbbbd765c7047"
 
-resize-observer-polyfill@^1.5.0:
+resize-observer-polyfill@1.5.0, resize-observer-polyfill@^1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/resize-observer-polyfill/-/resize-observer-polyfill-1.5.0.tgz#660ff1d9712a2382baa2cad450a4716209f9ca69"
 
@@ -6860,6 +7127,10 @@ to-arraybuffer@^1.0.0:
 to-fast-properties@^1.0.1:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/to-fast-properties/-/to-fast-properties-1.0.3.tgz#b83571fa4d8c25b82e231b06e3a3055de4ca1a47"
+
+to-fast-properties@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/to-fast-properties/-/to-fast-properties-2.0.0.tgz#dc5e698cbd079265bc73e0377681a4e4e83f616e"
 
 toggle-selection@^1.0.3:
   version "1.0.5"
