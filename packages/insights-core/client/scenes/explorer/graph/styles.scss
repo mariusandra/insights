@@ -48,17 +48,15 @@
       cursor: pointer;
       display: inline-block;
       .control {
-        border-radius: 0;
         border-left-width: 0px;
+        border-radius: 0;
       }
       .control:first-child {
-        border-right: none;
         border-left-width: 1px;
         border-top-left-radius: 3px;
         border-bottom-left-radius: 3px;
       }
       .control:last-child {
-        border-left: none;
         border-top-right-radius: 3px;
         border-bottom-right-radius: 3px;
       }
