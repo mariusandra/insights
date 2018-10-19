@@ -1,7 +1,7 @@
 {
   "name": "insights-charts",
   "description": "Desktop and Self-Hosted \"SQL-not-required\" data analytics and visualisation tool.",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "homepage": "",
   "license": "MIT",
   "main": "lib/index.js",

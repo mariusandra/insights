@@ -1,7 +1,7 @@
 {
   "name": "insights-server",
   "description": "Desktop and Self-Hosted \"SQL-not-required\" data analytics and visualisation tool.",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "homepage": "",
   "main": "app",
   "license": "MIT",
