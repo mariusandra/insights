@@ -253,7 +253,7 @@ export class Graph extends Component {
 
     // change the key on visibilty changes so the lines would update
     // changing this triggers the chart to be torn down and re-rendered
-    const key = keysWithMeta.map(k => `${k.visible}`).join(',') + (labels ? '-labels' : '') + (type === 'line' ? '-line' : '')
+    const key = keysWithMeta.map(k => `${k.visible}`).join(',') + `${labels ? '-labels' : ''}${type === 'line' ? '-line' : ''}-${sort}`
 
     const { ticks, tickFormatter } = this.getTicks()
 
@@ -266,7 +266,7 @@ export class Graph extends Component {
       ]
     }
 
-    const graphKeysWithMeta = facets
+    const sortedKeysWithMeta = facets
       ? sort === 'abc'
         ? keysWithMeta.sort(alphabeticalFacetSorter)
         : keysWithMeta.reverse()
@@ -303,7 +303,7 @@ export class Graph extends Component {
           {nullLineNeeded ? (
             <ReferenceLine y={0} stroke='red' alwaysShow />
           ) : null}
-          {graphKeysWithMeta.map(key => (
+          {sortedKeysWithMeta.map(key => (
             type === 'area'
               ? <Area {...this.getLineData(key, facets)} />
               : type === 'bar'
