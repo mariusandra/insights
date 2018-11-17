@@ -23,7 +23,8 @@ import viewsLogic from '~/scenes/header/views/logic'
       'openTreeNode',
       'clear',
       'setSearch',
-      'addColumn'
+      'addColumn',
+      'openUrl'
     ],
     viewsLogic, [
       'openView'
@@ -37,19 +38,20 @@ import viewsLogic from '~/scenes/header/views/logic'
       'connections',
       'structure',
       'savedViews',
-      'modelFavourites'
+      'modelFavourites',
+      'recommendedViews'
     ]
   ]
 })
 export default class ExplorerTree extends Component {
   handleSearch = (e) => {
-    const { setSearch } = this.props.actions
+    const { setSearch } = this.actions
     setSearch(e.target.value)
   }
 
   openModel = (model) => {
     const { structure } = this.props
-    const { openTreeNode, setSearch, addColumn } = this.props.actions
+    const { openTreeNode, setSearch, addColumn } = this.actions
 
     openTreeNode(model)
     setSearch('')
@@ -66,7 +68,7 @@ export default class ExplorerTree extends Component {
   }
 
   closeModel = () => {
-    const { clear, setSearch } = this.props.actions
+    const { clear, setSearch } = this.actions
 
     clear()
     setSearch('')
@@ -86,11 +88,6 @@ export default class ExplorerTree extends Component {
     this.searchInputRef && this.searchInputRef.focus()
   }
 
-  openView = (id) => {
-    const { openView } = this.props.actions
-    openView(id)
-  }
-
   renderModels = () => {
     const { filteredModels, search } = this.props
 
@@ -107,13 +104,35 @@ export default class ExplorerTree extends Component {
   }
 
   renderSelectedModel = () => {
-    const { search, selectedModel, savedViews, modelFavourites } = this.props
+    const { search, selectedModel, savedViews, recommendedViews, modelFavourites } = this.props
+    const { openView, openUrl } = this.actions
 
     return (
       <div>
         <div>
           <Button minimal icon='cross' style={{float: 'right'}} onClick={this.closeModel} />
           <H4 style={{lineHeight: '30px'}}>{selectedModel}</H4>
+        </div>
+
+        <div className='node' style={{marginBottom: 10}}>
+          <div className='node-entry'>
+            <div className='node-icon has-children open' />
+            <div className='node-title'>
+              Recommended views <small className='count-tag'>({recommendedViews.length})</small>
+            </div>
+          </div>
+          <div className='node-children'>
+            {recommendedViews.map(view => (
+              <div key={view.key} className='node'>
+                <div className='node-entry'>
+                  <div className='node-icon no-children' />
+                  <div className='node-title' onClick={() => openUrl(view.url)}>
+                    {view.name}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className='node' style={{marginBottom: 10}}>
@@ -128,7 +147,7 @@ export default class ExplorerTree extends Component {
               <div key={view._id} className='node'>
                 <div className='node-entry'>
                   <div className='node-icon no-children' />
-                  <div className='node-title' onClick={() => this.openView(view._id)}>
+                  <div className='node-title' onClick={() => openView(view._id)}>
                     {view.name}
                   </div>
                 </div>
@@ -141,7 +160,7 @@ export default class ExplorerTree extends Component {
           <div className='node-entry'>
             <div className='node-icon has-children open' />
             <div className='node-title'>
-              Favourites <small className='count-tag'>({modelFavourites.length})</small>
+              Favourite fields <small className='count-tag'>({modelFavourites.length})</small>
             </div>
           </div>
           <div className='node-children'>

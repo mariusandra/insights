@@ -1,9 +1,11 @@
 import { kea } from 'kea'
+import { put } from 'redux-saga/effects'
 import PropTypes from 'prop-types'
 
-import moment from 'moment'
+import { push } from 'react-router-redux'
 
 import viewsLogic from '~/scenes/header/views/logic'
+import stateToUrl from 'lib/explorer/state-to-url'
 
 export default kea({
   path: () => ['scenes', 'explorer', 'index'],
@@ -69,7 +71,9 @@ export default kea({
     addFavouriteSuccess: (path, favourite) => ({ path, favourite }),
     removeFavouriteRequest: (path) => ({ path }),
     removeFavouriteSuccess: (path) => ({ path }),
-    favouritesLoaded: (favourites) => ({ favourites })
+    favouritesLoaded: (favourites) => ({ favourites }),
+
+    openUrl: (url) => ({ url })
   }),
 
   reducers: ({ actions }) => ({
@@ -379,7 +383,7 @@ export default kea({
         selectors.facetsColumn, selectors.facetsCount, selectors.filter, selectors.graphControls
       ],
       (connection, columns, sort, treeState, graphTimeFilter, facetsColumn, facetsCount, filter, graphControls) => {
-        let url = {
+        return stateToUrl({
           connection: connection,
           columns: columns.join(','),
           sort: sort || '',
@@ -387,22 +391,84 @@ export default kea({
           graphTimeFilter: graphTimeFilter || '',
           facetsColumn: facetsColumn || '',
           facetsCount: facetsCount || '',
-          graphControls: JSON.stringify(graphControls)
-        }
-
-        let i = 0
-        filter.forEach(({ key, value }) => {
-          url[`filter[${i++}]`] = `${key}=${value}`
+          graphControls: graphControls,
+          filter: filter
         })
-
-        const anythingSelected = Object.values(url).filter(v => v).length > 0
-
-        const pathname = '/explorer'
-        const search = anythingSelected ? '?' + Object.entries(url).map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`).join('&') : ''
-
-        return `${pathname}${search}`
       },
       PropTypes.string
+    ],
+
+    recommendedViews: [
+      () => [selectors.connection, selectors.selectedModel, selectors.structure],
+      (connection, selectedModel, structure) => {
+        if (!selectedModel) {
+          return []
+        }
+
+        const modelStructure = structure[selectedModel]
+        const primaryKeyField = modelStructure.primary_key
+
+        console.log(modelStructure)
+
+        const urls = []
+
+        urls.push({
+          key: 'ids',
+          name: 'count',
+          url: stateToUrl({
+            connection: connection,
+            columns: `${selectedModel}.${primaryKeyField}!!count`,
+            sort: '',
+            treeState: `${selectedModel}`,
+            graphTimeFilter: 'last-365',
+            facetsColumn: '',
+            facetsCount: 6,
+            filter: [],
+            graphControls: {
+              type: 'area',
+              sort: '123',
+              cumulative: false,
+              percentages: false,
+              labels: false
+            }
+          })
+        })
+
+        const createdAt = modelStructure.columns && modelStructure.columns.created_at
+        if (createdAt) {
+          urls.push({
+            key: 'created_at',
+            name: 'new last year',
+            url: stateToUrl({
+              connection: connection,
+              columns: `${selectedModel}.${primaryKeyField}!!count,${selectedModel}.created_at!day`,
+              sort: '',
+              treeState: `${selectedModel}`,
+              graphTimeFilter: 'last-365',
+              facetsColumn: '',
+              facetsCount: 6,
+              filter: [],
+              graphControls: {
+                type: 'bar',
+                sort: '123',
+                cumulative: false,
+                percentages: false,
+                labels: false
+              }
+            })
+          })
+        }
+
+        return urls
+      },
+      PropTypes.array
     ]
+  }),
+
+  takeEvery: ({ actions }) => ({
+    * [actions.openUrl] (action) {
+      const { url } = action.payload
+      yield put(push(url))
+    }
   })
 })

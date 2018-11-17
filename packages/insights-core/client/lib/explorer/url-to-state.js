@@ -28,7 +28,11 @@ export default function urlToState (path) {
       } else if (key === 'treeState') {
         value.split(',').filter(v => v).forEach(v => { values[key][v] = true })
       } else if (key === 'graphControls') {
-        values.graphControls = JSON.parse(value)
+        try {
+          values.graphControls = JSON.parse(value)
+        } catch (e) {
+          // ignoring... ?
+        }
       } else if (key === 'facetsCount') {
         values.facetsCount = parseInt(value)
       } else if (key === 'filter[]' || key.match(/^filter\[[0-9]+]$/)) {
