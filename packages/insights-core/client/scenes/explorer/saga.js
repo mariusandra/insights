@@ -442,7 +442,7 @@ export default kea({
       if (timeMeta) {
         const index = columns.indexOf(timeMeta.column)
 
-        if (index) {
+        if (index >= 0) {
           yield put(setTransform(index, graphTimeGroup, null))
         }
       }
