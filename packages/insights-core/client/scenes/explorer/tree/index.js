@@ -40,6 +40,10 @@ import viewsLogic from '~/scenes/header/views/logic'
       'savedViews',
       'modelFavourites',
       'recommendedViews'
+    ],
+    state => state.routing.locationBeforeTransitions, [
+      'pathname as urlPath',
+      'search as urlSearch'
     ]
   ]
 })
@@ -104,8 +108,10 @@ export default class ExplorerTree extends Component {
   }
 
   renderSelectedModel = () => {
-    const { search, selectedModel, savedViews, recommendedViews, modelFavourites } = this.props
+    const { search, selectedModel, savedViews, recommendedViews, modelFavourites, urlPath, urlSearch } = this.props
     const { openView, openUrl } = this.actions
+
+    const url = urlPath + urlSearch
 
     return (
       <div>
@@ -126,7 +132,10 @@ export default class ExplorerTree extends Component {
               <div key={view.key} className='node'>
                 <div className='node-entry'>
                   <div className='node-icon no-children' />
-                  <div className='node-title' onClick={() => openUrl(view.url)}>
+                  <div
+                    className='node-title'
+                    onClick={() => openUrl(view.url)}
+                    style={{ fontWeight: url === view.url ? 'bold' : 'normal' }}>
                     {view.name}
                   </div>
                 </div>
@@ -147,7 +156,10 @@ export default class ExplorerTree extends Component {
               <div key={view._id} className='node'>
                 <div className='node-entry'>
                   <div className='node-icon no-children' />
-                  <div className='node-title' onClick={() => openView(view._id)}>
+                  <div
+                    className='node-title'
+                    onClick={() => openView(view._id)}
+                    style={{ fontWeight: url === view.path ? 'bold' : 'normal' }}>
                     {view.name}
                   </div>
                 </div>
