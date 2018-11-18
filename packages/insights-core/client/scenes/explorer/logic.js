@@ -236,7 +236,7 @@ export default kea({
       [actions.setResults]: (_, payload) => payload.results.graph,
       [actions.clear]: () => null
     }],
-    graphTimeFilter: ['last-60', PropTypes.string, {
+    graphTimeFilter: ['last-365', PropTypes.string, {
       [actions.setGraphTimeFilter]: (_, payload) => payload.graphTimeFilter,
       [actions.urlChanged]: (state, payload) => payload.graphTimeFilter || state,
       [actions.setResults]: (state, payload) => payload.results.graphTimeFilter || state
@@ -434,11 +434,33 @@ export default kea({
           })
         })
 
+        urls.push({
+          key: 'all',
+          name: 'all rows',
+          url: stateToUrl({
+            connection: connection,
+            columns: `${selectedModel}.${primaryKeyField}`,
+            sort: `-${selectedModel}.${primaryKeyField}`,
+            treeState: `${selectedModel}`,
+            graphTimeFilter: 'last-365',
+            facetsColumn: '',
+            facetsCount: 6,
+            filter: [],
+            graphControls: {
+              type: 'area',
+              sort: '123',
+              cumulative: false,
+              percentages: false,
+              labels: false
+            }
+          })
+        })
+
         const createdAt = modelStructure.columns && modelStructure.columns.created_at
         if (createdAt) {
           urls.push({
             key: 'created_at',
-            name: 'new last year',
+            name: 'last 365 days',
             url: stateToUrl({
               connection: connection,
               columns: `${selectedModel}.${primaryKeyField}!!count,${selectedModel}.created_at!day`,
