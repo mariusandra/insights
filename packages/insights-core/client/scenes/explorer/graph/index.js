@@ -7,6 +7,7 @@ import Dimensions from 'react-dimensions'
 import { Graph } from 'insights-charts'
 
 import ControlsLeft from './controls-left'
+import CompareWith from './compare-with'
 import ControlsRight from './controls-right'
 
 import explorerLogic from '~/scenes/explorer/logic'
@@ -18,13 +19,14 @@ export const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#
   props: [
     explorerLogic, [
       'graph',
-      'graphControls'
+      'graphControls',
+      'graphTimeGroup'
     ]
   ]
 })
 export default class GraphView extends Component {
   render () {
-    const { graph, graphControls, containerHeight } = this.props
+    const { graph, graphControls, graphTimeGroup, containerHeight } = this.props
 
     return (
       <div className='graph-and-controls'>
@@ -35,6 +37,7 @@ export default class GraphView extends Component {
         </div>
         <div className='controls'>
           <ControlsLeft />
+          {graphTimeGroup === 'month' && <CompareWith />}
           <ControlsRight />
         </div>
       </div>

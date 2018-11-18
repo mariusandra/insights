@@ -27,8 +27,8 @@ function sharedStart (array) {
 const alphabeticalFacetSorter = (a, b) => a.name.localeCompare(b.name)
 
 function getGraphData (graph, controls) {
-  const { results, keys } = graph
-  const { percentages } = controls
+  const { results, keys, timeGroup } = graph
+  const { percentages, compareWith, type } = controls
 
   const graphData = results.map(oldRow => {
     const time = oldRow.time
@@ -46,7 +46,31 @@ function getGraphData (graph, controls) {
     return row
   })
 
-  return graphData
+  if (compareWith && timeGroup === 'month' && type === 'bar') {
+    let graphByDate = {}
+    graphData.forEach(data => {
+      graphByDate[data.time] = data
+    })
+
+    const newGraphData = graphData.map(data => {
+      let newObject = Object.assign({}, data)
+
+      const compareTime = moment(data.time).subtract(compareWith === 'quarter' ? 3 : 1, compareWith === 'quarter' ? 'month' : compareWith).valueOf()
+      const compareObject = graphByDate[compareTime]
+
+      if (compareObject) {
+        for (const key of keys) {
+          newObject[key + '-compare'] = compareObject[key]
+        }
+      }
+
+      return newObject
+    })
+
+    return newGraphData
+  } else {
+    return graphData
+  }
 }
 
 export class Graph extends Component {
@@ -58,7 +82,8 @@ export class Graph extends Component {
       sort: PropTypes.oneOf(['123', 'abc']).isRequired,
       cumulative: PropTypes.bool,
       percentages: PropTypes.bool,
-      labels: PropTypes.bool
+      labels: PropTypes.bool,
+      compareWith: PropTypes.string
     }).isRequired
   }
 
@@ -183,23 +208,25 @@ export class Graph extends Component {
     })
   }
 
-  getLineData = (key, stacked) => {
+  getLineData = (key, stacked, compareWith = null) => {
     const { percentages, labels } = this.props.controls
 
     let data = {
-      key: `${key.key}${percentages ? '__%' : ''}${key.visible ? '' : '__hidden'}`,
+      key: `${key.key}${percentages ? '__%' : ''}${key.visible ? '' : '__hidden'}${compareWith ? '-compare' : ''}`,
       type: 'linear',
-      dataKey: `${key.key}${percentages ? '__%' : ''}${key.visible ? '' : '__hidden'}`,
+      dataKey: `${key.key}${percentages ? '__%' : ''}${key.visible ? '' : '__hidden'}${compareWith ? '-compare' : ''}`,
       name: key.name,
       stroke: key.color,
-      fill: key.color,
+      strokeOpacity: compareWith ? 0.5 : 1,
       strokeWidth: 1,
+      fill: key.color,
+      fillOpacity: compareWith ? 0.5 : 1,
       legendType: 'circle',
       label: labels ? this.renderLabel : false,
       dot: {r: 2, fill: key.color, fillOpacity: 0.5},
       activeDot: {r: 6},
       isAnimationActive: false,
-      stackId: stacked ? (key.key.indexOf('$$') > 0 ? key.key.split('$$')[0] : '1') : key.key
+      stackId: (stacked ? (key.key.indexOf('$$') > 0 ? key.key.split('$$')[0] : '1') : key.key) + (compareWith ? '-compare' : '')
     }
 
     return data
@@ -241,7 +268,7 @@ export class Graph extends Component {
   }
 
   render () {
-    const { graph, controls: { sort, percentages, type, labels }, tooltip: TooltipProp } = this.props
+    const { graph, controls: { sort, percentages, type, labels, compareWith }, tooltip: TooltipProp } = this.props
     const { graphData } = this.state
 
     const nullLineNeeded = false
@@ -303,6 +330,7 @@ export class Graph extends Component {
           {nullLineNeeded ? (
             <ReferenceLine y={0} stroke='red' alwaysShow />
           ) : null}
+          {compareWith && timeGroup === 'month' && type === 'bar' && sortedKeysWithMeta.map(key => <Bar {...this.getLineData(key, facets, compareWith)} />)}
           {sortedKeysWithMeta.map(key => (
             type === 'area'
               ? <Area {...this.getLineData(key, facets)} />
