@@ -209,10 +209,13 @@ export class Graph extends Component {
       fillOpacity: type === 'bar' ? (compareWith ? 0.5 : 0.9) : 0.6,
       legendType: 'circle',
       label: labels ? this.renderLabel : false,
-      dot: { r: 2, fill: key.color, fillOpacity: 0.5 },
-      activeDot: {r: 6},
       isAnimationActive: false,
       stackId: (compareWith ? 'compareWith::' : '') + (stacked ? (key.key.indexOf('$$') > 0 ? key.key.split('$$')[0] : '1') : key.key)
+    }
+
+    if (type !== 'bar') {
+      data.dot = { r: 2, fill: key.color, fillOpacity: 0.5 }
+      data.activeDot = { r: 6 }
     }
 
     return data
