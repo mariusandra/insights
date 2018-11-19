@@ -37,7 +37,7 @@ export default class GraphView extends Component {
         </div>
         <div className='controls'>
           <ControlsLeft />
-          {graphTimeGroup === 'month' && <CompareWith />}
+          <CompareWith />
           <ControlsRight />
         </div>
       </div>

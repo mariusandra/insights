@@ -4,9 +4,19 @@ import React, { Component } from 'react'
 import { kea } from 'kea'
 import PropTypes from 'prop-types'
 
+import range from 'lib/utils/range'
+
 import explorerLogic from '~/scenes/explorer/logic'
 
 export const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
+
+const compareWithForTimeGroup = {
+  year: [0, 1, 2, 3, 4],
+  quarter: [0, 1, 2, 4],
+  month: [0, 1, 3, 6, 12, 24],
+  week: [0, 1, 4, 12, 52],
+  day: [0, 1, 7, 28, 364, 365]
+}
 
 @kea({
   connect: {
@@ -17,55 +27,48 @@ export const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#
     ],
     props: [
       explorerLogic, [
-        'graphControls'
+        'graphControls',
+        'graphTimeGroup'
       ]
     ]
   },
 
   actions: () => ({
-    showMore: true
+    showMore: true,
+    showLess: true
   }),
 
   reducers: ({ actions }) => ({
     moreShown: [false, PropTypes.bool, {
       [actions.showMore]: () => true,
+      [actions.showLess]: () => false,
       [actions.setGraphControls]: () => false
     }]
   })
 })
 export default class ControlsLeft extends Component {
   render () {
-    const { graphControls, moreShown } = this.props
-    const { setGraphControls, showMore } = this.actions
+    const { graphControls, moreShown, graphTimeGroup } = this.props
+    const { setGraphControls, showMore, showLess } = this.actions
 
     const { compareWith } = graphControls
+
+    const options = compareWithForTimeGroup[graphTimeGroup]
 
     return (
       <div className='left'>
         <span className='control-group'>
-          <span className='control' onClick={() => setGraphControls({ compareWith: null })}>
+          <span className='control' onClick={() => moreShown ? showLess() : showMore()}>
             Compare with
           </span>
-          {(moreShown || compareWith === 'year') && (
-            <span className={compareWith === 'year' ? 'control selected' : 'control'} onClick={() => setGraphControls({ compareWith: compareWith === 'year' ? null : 'year' })}>
-              last year
+          {(moreShown ? options : compareWith ? [compareWith] : []).map(option => (
+            <span
+              key={option}
+              className={compareWith === option ? 'control selected' : 'control'}
+              onClick={() => moreShown ? setGraphControls({ compareWith: compareWith === option ? 0 : option }) : showMore()}>
+              {option}
             </span>
-          )}
-          {(moreShown || compareWith === 'quarter') && (
-            <span className={compareWith === 'quarter' ? 'control selected' : 'control'} onClick={() => setGraphControls({ compareWith: compareWith === 'quarter' ? null : 'quarter' })}>
-              last quarter
-            </span>
-          )}
-          {(moreShown || compareWith === 'month') && (
-            <span className={compareWith === 'month' ? 'control selected' : 'control'} onClick={() => setGraphControls({ compareWith: compareWith === 'month' ? null : 'month' })}>
-              last month
-            </span>
-          )}
-          {!moreShown && (
-            <span className='control' onClick={showMore}>
-              ...
-            </span>
-          )}
+          ))}
         </span>
       </div>
     )

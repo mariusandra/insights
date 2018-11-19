@@ -27,8 +27,8 @@ function sharedStart (array) {
 const alphabeticalFacetSorter = (a, b) => a.name.localeCompare(b.name)
 
 function getGraphData (graph, controls) {
-  const { results, keys, timeGroup } = graph
-  const { percentages, compareWith, type } = controls
+  const { results, keys } = graph
+  const { percentages, compareWith } = controls
 
   const graphData = results.map(oldRow => {
     const time = oldRow.time
@@ -37,40 +37,26 @@ function getGraphData (graph, controls) {
     if (percentages) {
       let total = 0
       for (const key of keys) {
-        total += parseFloat(row[key])
+        total += parseFloat(row[key] || 0)
       }
       for (const key of keys) {
         row[key + '__%'] = total !== 0 ? (parseFloat(row[key]) / total * 100) : 0
+      }
+
+      if (compareWith) {
+        let compareWithTotal = 0
+        for (const key of keys) {
+          compareWithTotal += parseFloat(row['compareWith::' + key] || 0)
+        }
+        for (const key of keys) {
+          row['compareWith::' + key + '__%'] = compareWithTotal !== 0 ? (parseFloat(row['compareWith::' + key]) / compareWithTotal * 100) : 0
+        }
       }
     }
     return row
   })
 
-  if (compareWith && timeGroup === 'month' && type === 'bar') {
-    let graphByDate = {}
-    graphData.forEach(data => {
-      graphByDate[data.time] = data
-    })
-
-    const newGraphData = graphData.map(data => {
-      let newObject = Object.assign({}, data)
-
-      const compareTime = moment(data.time).subtract(compareWith === 'quarter' ? 3 : 1, compareWith === 'quarter' ? 'month' : compareWith).valueOf()
-      const compareObject = graphByDate[compareTime]
-
-      if (compareObject) {
-        for (const key of keys) {
-          newObject[key + '-compare'] = compareObject[key]
-        }
-      }
-
-      return newObject
-    })
-
-    return newGraphData
-  } else {
-    return graphData
-  }
+  return graphData
 }
 
 export class Graph extends Component {
@@ -83,7 +69,7 @@ export class Graph extends Component {
       cumulative: PropTypes.bool,
       percentages: PropTypes.bool,
       labels: PropTypes.bool,
-      compareWith: PropTypes.string
+      compareWith: PropTypes.number
     }).isRequired
   }
 
@@ -212,9 +198,9 @@ export class Graph extends Component {
     const { percentages, labels } = this.props.controls
 
     let data = {
-      key: `${key.key}${percentages ? '__%' : ''}${key.visible ? '' : '__hidden'}${compareWith ? '-compare' : ''}`,
+      key: `${compareWith ? 'compareWith::' : ''}${key.key}${percentages ? '__%' : ''}${key.visible ? '' : '__hidden'}`,
       type: 'linear',
-      dataKey: `${key.key}${percentages ? '__%' : ''}${key.visible ? '' : '__hidden'}${compareWith ? '-compare' : ''}`,
+      dataKey: `${compareWith ? 'compareWith::' : ''}${key.key}${percentages ? '__%' : ''}${key.visible ? '' : '__hidden'}`,
       name: key.name,
       stroke: key.color,
       strokeOpacity: compareWith ? 0.5 : 1,
@@ -226,7 +212,7 @@ export class Graph extends Component {
       dot: {r: 2, fill: key.color, fillOpacity: 0.5},
       activeDot: {r: 6},
       isAnimationActive: false,
-      stackId: (stacked ? (key.key.indexOf('$$') > 0 ? key.key.split('$$')[0] : '1') : key.key) + (compareWith ? '-compare' : '')
+      stackId: (compareWith ? 'compareWith::' : '') + (stacked ? (key.key.indexOf('$$') > 0 ? key.key.split('$$')[0] : '1') : key.key)
     }
 
     return data
@@ -268,8 +254,9 @@ export class Graph extends Component {
   }
 
   render () {
-    const { graph, controls: { sort, percentages, type, labels, compareWith }, tooltip: TooltipProp } = this.props
+    const { graph, controls, tooltip: TooltipProp } = this.props
     const { graphData } = this.state
+    const { sort, percentages, type, labels, compareWith } = controls
 
     const nullLineNeeded = false
     const unit = ''
@@ -326,11 +313,11 @@ export class Graph extends Component {
             tickFormatter={percentages ? (y) => `${Math.round(y)}%` : (y) => `${y.toLocaleString('en')}${unit}`}
             allowDecimals={false} />
           <CartesianGrid />
-          <Tooltip content={<TooltipProp graph={graph} />} percentages={percentages} />
+          <Tooltip content={<TooltipProp graph={graph} controls={controls} />} />
           {nullLineNeeded ? (
             <ReferenceLine y={0} stroke='red' alwaysShow />
           ) : null}
-          {compareWith && timeGroup === 'month' && type === 'bar' && sortedKeysWithMeta.map(key => <Bar {...this.getLineData(key, facets, compareWith)} />)}
+          {compareWith && sortedKeysWithMeta.map(key => <Bar {...this.getLineData(key, facets, compareWith)} />)}
           {sortedKeysWithMeta.map(key => (
             type === 'area'
               ? <Area {...this.getLineData(key, facets)} />

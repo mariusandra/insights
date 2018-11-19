@@ -18,7 +18,8 @@ module.exports = class Results {
   //     sort: '123',
   //     cumulative: false,
   //     percentages: false,
-  //     labels: false
+  //     labels: false,
+  //     compareWith: 0
   //   }}
   //
   //   graphTimeFilter: params.graphTimeFilter || 'last-60',
@@ -448,8 +449,20 @@ module.exports = class Results {
     // day? week? month?
     const timeGroup = timeColumns[0].transform || 'day'
 
+    const compareWith = this.params.graphControls.compareWith || 0
+
     // start and end of the graph timeline (or nil)
     let [firstDate, lastDate] = getTimesFromString(graphTimeFilter, 0, timeGroup)
+
+    let compareWithFirstDate
+    let compareWithLastDate
+
+    if (compareWith) {
+      compareWithFirstDate = moment(firstDate).subtract(compareWith, timeGroup).startOf(timeGroup).format('YYYY-MM-DD')
+      compareWithLastDate = moment(lastDate).subtract(compareWith, timeGroup).endOf(timeGroup).format('YYYY-MM-DD')
+    }
+
+    // let [firstDate, lastDate] = getTimesFromString(graphTimeFilter, 0, timeGroup)
 
     // add the date truncation transform to the columns if none present
     timeColumns = timeColumns.map(v => (
@@ -468,6 +481,16 @@ module.exports = class Results {
       graphWhereConditions = graphWhereConditions.concat(this.adapter.filterDateRange(timeColumn.sql, `${firstDate}:${lastDate}`))
     }
     const graphWhereSql = this.adapter.where(graphWhereConditions)
+
+    let compareWithWhereSql
+
+    if (compareWith) {
+      let compareWithWhereConditions = this.commonSqlConditions.where.slice(0)
+      if (compareWithFirstDate && compareWithLastDate) {
+        compareWithWhereConditions = compareWithWhereConditions.concat(this.adapter.filterDateRange(timeColumn.sql, `${compareWithFirstDate}:${compareWithLastDate}`))
+      }
+      compareWithWhereSql = this.adapter.where(compareWithWhereConditions)
+    }
 
     // facets column
     let facetsColumn = null
@@ -535,26 +558,61 @@ module.exports = class Results {
       offset: 0
     })
 
+    let compareWithHash = {}
+
+    if (compareWith) {
+      const compareWithResults = await this.adapter.getResults({
+        select: graphSelectSql,
+        fromAndJoins: this.commonSqlParts.fromAndJoins,
+        where: compareWithWhereSql,
+        group: graphGroupSql,
+        having: this.commonSqlParts.having,
+        sort: graphSortSql,
+        limit: 10000,
+        offset: 0
+      })
+
+      compareWithResults.forEach(result => {
+        // TODO: should we do someting special with columns that have no date?
+        if (!result[timeColumn.alias]) {
+          return
+        }
+
+        let date = moment(result[timeColumn.alias]).format('YYYY-MM-DD')
+        if (!compareWithHash[date]) {
+          compareWithHash[date] = {}
+        }
+
+        aggregateColumns.forEach(aggregateColumn => {
+          let key = `compareWith::${aggregateColumn.column}`
+          facetsColumns.forEach(column => {
+            key += `$$${result[column.alias]}`
+          })
+          compareWithHash[date][key] = result[aggregateColumn.alias]
+        })
+      })
+    }
+
     // save the results in a hash with dates as keys... and all aggregate columns with facets as values
     let resultHash = {}
 
-    graphResults.forEach(r => {
+    graphResults.forEach(result => {
       // TODO: should we do someting special with columns that have no date?
-      if (!r[timeColumn.alias]) {
+      if (!result[timeColumn.alias]) {
         return
       }
 
-      let date = moment(r[timeColumn.alias]).format('YYYY-MM-DD')
+      let date = moment(result[timeColumn.alias]).format('YYYY-MM-DD')
       if (!resultHash[date]) {
         resultHash[date] = { time: date }
       }
 
       aggregateColumns.forEach(aggregateColumn => {
         let key = aggregateColumn.column
-        facetsColumns.forEach(c => {
-          key += `$$${r[c.alias]}`
+        facetsColumns.forEach(column => {
+          key += `$$${result[column.alias]}`
         })
-        resultHash[date][key] = r[aggregateColumn.alias]
+        resultHash[date][key] = result[aggregateColumn.alias]
       })
     })
 
@@ -609,8 +667,8 @@ module.exports = class Results {
     // make sure all the dates have all the values present (as 0 if nil)
     if (allDates.length > 0) {
       let emptyHash = {}
-      allKeys.forEach(k => {
-        emptyHash[k] = 0
+      allKeys.forEach(key => {
+        emptyHash[key] = 0
       })
 
       allDates.forEach(date => {
@@ -618,37 +676,59 @@ module.exports = class Results {
       })
     }
 
+    if (compareWith) {
+      Object.keys(resultHash).forEach(date => {
+        const compareWithDate = moment(date).subtract(compareWith, timeGroup).format('YYYY-MM-DD')
+        const compareWithResult = compareWithHash[compareWithDate]
+
+        if (compareWithResult) {
+          resultHash[date] = Object.assign({}, resultHash[date], compareWithResult)
+        }
+      })
+    }
+
     // if we're asking for a cumulative response, sum all the values
     if (cumulative) {
       let countHash = {}
-      allKeys.forEach(k => {
-        countHash[k] = 0
+      allKeys.forEach(key => {
+        countHash[key] = 0
+
+        if (compareWith) {
+          const compareWithKey = `compareWith::${key}`
+          countHash[compareWithKey] = 0
+        }
       })
 
       allDates.forEach(date => {
         allKeys.forEach(key => {
           countHash[key] += parseFloat(resultHash[date][key]) || 0
           resultHash[date][key] = countHash[key]
+
+          if (compareWith) {
+            const compareWithKey = `compareWith::${key}`
+            countHash[compareWithKey] += parseFloat(resultHash[date][compareWithKey]) || 0
+            resultHash[date][compareWithKey] = countHash[compareWithKey]
+          }
         })
       })
     }
 
     this.graphResponse = {
-      meta: graphSelectValues.map(v => {
-        const { column, path, type, url, key, model, aggregate, transform, index } = v
+      meta: graphSelectValues.map(values => {
+        const { column, path, type, url, key, model, aggregate, transform, index } = values
         return { column, path, type, url, key, model, aggregate, transform, index }
       }),
       keys: allKeys,
       facets: facetValues,
-      results: Object.keys(resultHash).sort().map(k => resultHash[k]),
+      results: Object.keys(resultHash).sort().map(key => resultHash[key]),
       timeGroup: timeGroup
     }
   }
 
   setResponse () {
     let columnsMeta = {}
-    this.columnMetadata.forEach(v => {
-      const { column, path, type, url, key, model, aggregate, transform, index } = v
+    this.columnMetadata.forEach(values => {
+      const { column, path, type, url, key, model, aggregate, transform, index } = values
       columnsMeta[column] = { column, path, type, url, key, model, aggregate, transform, index }
     })
 
