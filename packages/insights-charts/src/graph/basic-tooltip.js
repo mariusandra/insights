@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
 
+export const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
+
 const diffInPercentage = (oldValue, newValue) => {
   if (!oldValue && !newValue) {
     return <span style={{ color: 'gray' }}>0</span>
@@ -50,7 +52,7 @@ export default class BasicTooltip extends Component {
 
   render () {
     const { active, payload, label, graph, controls } = this.props
-    const { timeGroup } = graph
+    const { timeGroup, keys } = graph
     const { compareWith, percentages } = controls
     const facets = graph.facets && graph.facets.length > 0
     const unit = ''
@@ -137,14 +139,17 @@ export default class BasicTooltip extends Component {
                   }
                 }
 
+                const color = item.color
+                const compareColor = showCompare && keys.length === 1 ? colors[1] : color
+
                 return (
-                  <tr key={item.dataKey} className='recharts-tooltip-item' style={{color: item.color}}>
+                  <tr key={item.dataKey} className='recharts-tooltip-item' style={{color: color}}>
                     <td style={{paddingRight: 10}}>{item.name}:</td>
                     {showCompare && (
-                      <td style={{textAlign: 'right'}}>{compareWithDisplayValue}{unit}</td>
+                      <td style={{textAlign: 'right', color: compareColor}}>{compareWithDisplayValue}{unit}</td>
                     )}
                     {showCompare && percentages && (
-                      <td style={{textAlign: 'right'}}>{`${Math.round(compareWithPercentage)}%`}</td>
+                      <td style={{textAlign: 'right', color: compareColor}}>{`${Math.round(compareWithPercentage)}%`}</td>
                     )}
 
                     <td style={{textAlign: 'right'}}>{displayValue}{unit}</td>

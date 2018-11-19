@@ -65,6 +65,7 @@ export default class ControlsLeft extends Component {
               className={compareWith === option ? 'control selected' : 'control'}
               onClick={() => moreShown ? setGraphControls({ compareWith: compareWith === option ? 0 : option, type: 'bar' }) : showMore()}>
               {option}
+              {compareWith === option ? ` ${graphTimeGroup} ago` : ''}
             </span>
           ))}
         </span>

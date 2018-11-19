@@ -195,17 +195,20 @@ export class Graph extends Component {
   }
 
   getLineData = (key, stacked, compareWith = null) => {
+    const { keys, timeGroup } = this.props.graph
     const { percentages, labels, type } = this.props.controls
+
+    const color = compareWith && keys.length === 1 ? colors[1] : key.color
 
     let data = {
       key: `${compareWith ? 'compareWith::' : ''}${key.key}${percentages ? '__%' : ''}${key.visible ? '' : '__hidden'}`,
       type: 'linear',
       dataKey: `${compareWith ? 'compareWith::' : ''}${key.key}${percentages ? '__%' : ''}${key.visible ? '' : '__hidden'}`,
-      name: key.name,
-      stroke: key.color,
+      name: key.name + (compareWith ? ` (${compareWith} ${timeGroup}${compareWith === 1 ? '' : 's'} ago)` : ''),
+      stroke: color,
       strokeOpacity: compareWith ? 0.5 : 1,
       strokeWidth: 1,
-      fill: key.color,
+      fill: color,
       fillOpacity: type === 'bar' ? (compareWith ? 0.5 : 0.9) : 0.6,
       legendType: 'circle',
       label: labels ? this.renderLabel : false,
