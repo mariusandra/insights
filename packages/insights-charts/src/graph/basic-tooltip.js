@@ -133,7 +133,7 @@ export default class BasicTooltip extends Component {
                   if (compareWithItem) {
                     compareWithValue = (percentages ? parseFloat(compareWithItem.payload[compareWithItem.dataKey.replace('__%', '')] || 0) : compareWithItem.value - 0) || 0
                     compareWithDisplayValue = compareWithValue.toLocaleString('en', localeStringOptions)
-                    compareWithPercentage = percentages ? item.payload[item.dataKey] : Math.round(compareWithValue / compareWithPercentageFrom * 100)
+                    compareWithPercentage = percentages ? compareWithItem.payload[compareWithItem.dataKey] : Math.round(compareWithValue / compareWithPercentageFrom * 100)
                   }
                 }
 
