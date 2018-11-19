@@ -195,7 +195,7 @@ export class Graph extends Component {
   }
 
   getLineData = (key, stacked, compareWith = null) => {
-    const { percentages, labels } = this.props.controls
+    const { percentages, labels, type } = this.props.controls
 
     let data = {
       key: `${compareWith ? 'compareWith::' : ''}${key.key}${percentages ? '__%' : ''}${key.visible ? '' : '__hidden'}`,
@@ -206,10 +206,10 @@ export class Graph extends Component {
       strokeOpacity: compareWith ? 0.5 : 1,
       strokeWidth: 1,
       fill: key.color,
-      fillOpacity: compareWith ? 0.5 : 1,
+      fillOpacity: type === 'bar' ? (compareWith ? 0.5 : 0.9) : 0.6,
       legendType: 'circle',
       label: labels ? this.renderLabel : false,
-      dot: {r: 2, fill: key.color, fillOpacity: 0.5},
+      dot: { r: 2, fill: key.color, fillOpacity: 0.5 },
       activeDot: {r: 6},
       isAnimationActive: false,
       stackId: (compareWith ? 'compareWith::' : '') + (stacked ? (key.key.indexOf('$$') > 0 ? key.key.split('$$')[0] : '1') : key.key)

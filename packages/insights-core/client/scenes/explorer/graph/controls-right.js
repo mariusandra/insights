@@ -57,13 +57,13 @@ export default class ControlsRight extends Component {
         </span>
 
         <span className='control-group'>
-          <span className={type === 'area' ? 'control selected' : 'control'} onClick={() => setGraphControls({ type: 'area' })}>
+          <span className={type === 'area' ? 'control selected' : 'control'} onClick={() => setGraphControls({ type: 'area', compareWith: 0 })}>
             area
           </span>
           <span className={type === 'bar' ? 'control selected' : 'control'} onClick={() => setGraphControls({ type: 'bar' })}>
             bar
           </span>
-          <span className={type === 'line' ? 'control selected' : 'control'} onClick={() => setGraphControls({ type: 'line' })}>
+          <span className={type === 'line' ? 'control selected' : 'control'} onClick={() => setGraphControls({ type: 'line', compareWith: 0 })}>
             line
           </span>
         </span>
