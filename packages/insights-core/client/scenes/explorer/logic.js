@@ -429,7 +429,8 @@ export default kea({
               sort: '123',
               cumulative: false,
               percentages: false,
-              labels: false
+              labels: false,
+              compareWith: 0
             }
           })
         })
@@ -451,7 +452,8 @@ export default kea({
               sort: '123',
               cumulative: false,
               percentages: false,
-              labels: false
+              labels: false,
+              compareWith: 0
             }
           })
         })
@@ -475,7 +477,31 @@ export default kea({
                 sort: '123',
                 cumulative: false,
                 percentages: false,
-                labels: false
+                labels: false,
+                compareWith: 0
+              }
+            })
+          })
+
+          urls.push({
+            key: 'yoy_12',
+            name: '12 month y-o-y',
+            url: stateToUrl({
+              connection: connection,
+              columns: `${selectedModel}.${primaryKeyField}!!count,${selectedModel}.created_at!month`,
+              sort: '',
+              treeState: `${selectedModel}`,
+              graphTimeFilter: 'last-365',
+              facetsColumn: '',
+              facetsCount: 6,
+              filter: [],
+              graphControls: {
+                type: 'bar',
+                sort: '123',
+                cumulative: false,
+                percentages: false,
+                labels: false,
+                compareWith: 12
               }
             })
           })
