@@ -645,7 +645,7 @@ module.exports = class Results {
     if (firstDate && lastDate) {
       let lastTime = moment(lastDate)
 
-      for (let date = moment(firstDate); date < lastTime; date = date.add(1, 'day')) {
+      for (let date = moment(firstDate); date <= lastTime; date = date.add(1, 'day')) {
         // could be optimised... but whatever, it's not going to be a huge loop
         if (timeGroup === 'year' && (date.date() !== 1 || date.month() !== 0)) {
           continue
