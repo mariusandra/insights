@@ -11,6 +11,7 @@ import { Alignment, Text, Classes, H3, H5, InputGroup, Navbar, Switch, Tab, TabI
 import User from './user'
 import Views from './views'
 import Share from './share'
+import CopyQuery from './copy-query'
 
 // logic
 import authLogic from '~/scenes/auth'
@@ -91,6 +92,9 @@ export default class HeaderScene extends Component {
         </Navbar.Group>
         {user ? <Navbar.Group align={Alignment.RIGHT}>
           <User email={user.email} />
+        </Navbar.Group> : null}
+        {page === 'explorer' && !runningInElectron ? <Navbar.Group align={Alignment.RIGHT}>
+          <CopyQuery />
         </Navbar.Group> : null}
         {!runningInElectron ? <Navbar.Group align={Alignment.RIGHT}>
           <Share />
