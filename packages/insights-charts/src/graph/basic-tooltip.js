@@ -60,7 +60,7 @@ export default class BasicTooltip extends Component {
     const showCompare = !!compareWith && compareWith !== 0 && compareWith !== '0'
 
     if (active) {
-      const visiblePayload = payload.filter(item => item.dataKey.indexOf('__hidden') < 0).filter(i => i.dataKey.indexOf('compareWith::') < 0)
+      const visiblePayload = payload.filter(item => item.dataKey.indexOf('__hidden') < 0).filter(i => i.dataKey.indexOf('compareWith:') < 0)
       const compareWithPayload = showCompare ? payload.filter(item => item.dataKey.indexOf('__hidden') < 0).filter(i => i.dataKey.indexOf('compareWith::') === 0) : []
 
       const total = visiblePayload.map(item => percentages ? parseFloat(item.payload[item.dataKey.replace('__%', '')] || 0) : item.value - 0).reduce((a, b) => a + b, 0)
@@ -135,7 +135,7 @@ export default class BasicTooltip extends Component {
                   if (compareWithItem) {
                     compareWithValue = (percentages ? parseFloat(compareWithItem.payload[compareWithItem.dataKey.replace('__%', '')] || 0) : compareWithItem.value - 0) || 0
                     compareWithDisplayValue = compareWithValue.toLocaleString('en', localeStringOptions)
-                    compareWithPercentage = percentages ? compareWithItem.payload[compareWithItem.dataKey] : Math.round(compareWithValue / compareWithPercentageFrom * 100)
+                    compareWithPercentage = percentages ? compareWithItem.payload[compareWithItem.dataKey] : compareWithValue ? Math.round(compareWithValue / compareWithPercentageFrom * 100) : 0
                   }
                 }
 

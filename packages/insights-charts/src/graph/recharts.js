@@ -14,6 +14,8 @@ import BasicTooltip from './basic-tooltip'
 
 export const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
 
+const compareWithPercentageLine = true
+
 function sharedStart (array) {
   let A = array.concat().sort()
   let a1 = A[0]
@@ -34,13 +36,15 @@ function getGraphData (graph, controls) {
     const time = oldRow.time
     const row = Object.assign({}, oldRow, { time: moment(time).valueOf() })
 
-    if (percentages) {
+    if (percentages || (compareWith && compareWithPercentageLine)) {
       let total = 0
       for (const key of keys) {
         total += parseFloat(row[key] || 0)
       }
-      for (const key of keys) {
-        row[key + '__%'] = total !== 0 ? (parseFloat(row[key]) / total * 100) : 0
+      if (percentages) {
+        for (const key of keys) {
+          row[key + '__%'] = total !== 0 ? (parseFloat(row[key]) / total * 100) : 0
+        }
       }
 
       if (compareWith) {
@@ -48,8 +52,15 @@ function getGraphData (graph, controls) {
         for (const key of keys) {
           compareWithTotal += parseFloat(row['compareWith::' + key] || 0)
         }
-        for (const key of keys) {
-          row['compareWith::' + key + '__%'] = compareWithTotal !== 0 ? (parseFloat(row['compareWith::' + key]) / compareWithTotal * 100) : 0
+
+        if (percentages) {
+          for (const key of keys) {
+            row['compareWith::' + key + '__%'] = compareWithTotal !== 0 ? (parseFloat(row['compareWith::' + key]) / compareWithTotal * 100) : 0
+          }
+        }
+
+        if (compareWithPercentageLine && compareWithTotal !== 0) {
+          row['compareWith:percentageLine'] = (total - compareWithTotal) / compareWithTotal * 100
         }
       }
     }
@@ -224,6 +235,32 @@ export class Graph extends Component {
     return data
   }
 
+  compareWithPercentageLine = (key) => {
+    const { labels } = this.props.controls
+
+    let data = {
+      key: 'compareWith:percentageLine',
+      type: 'linear',
+      dataKey: 'compareWith:percentageLine',
+      name: 'old vs new',
+      stroke: colors[1],
+      strokeOpacity: 1,
+      strokeWidth: 2,
+      style: {
+        filter: 'drop-shadow( 0 0 4px #fff )'
+      },
+      legendType: 'circle',
+      label: labels ? this.renderLabel : false,
+      isAnimationActive: false,
+      stackId: 'compareWith:percentageLine',
+      dot: { r: 2, fill: colors[1], fillOpacity: 0.5 },
+      activeDot: { r: 6 },
+      yAxisId: 'percentageLine'
+    }
+
+    return data
+  }
+
   renderLabel = (props) => {
     const { percentages } = this.props.controls
 
@@ -297,7 +334,7 @@ export class Graph extends Component {
         <ComposedChart
           data={graphData}
           key={key}
-          margin={{top: 0, right: 10, left: 0, bottom: 0}}>
+          margin={{top: 0, right: 10, left: 10, bottom: 0}}>
           <Legend
             verticalAlign='top'
             align='right'
@@ -316,6 +353,7 @@ export class Graph extends Component {
           <YAxis
             domain={percentages ? [0, 100] : ['auto', 'auto']}
             interval={0}
+            orientation='right'
             tickFormatter={percentages ? (y) => `${Math.round(y)}%` : (y) => `${y.toLocaleString('en')}${unit}`}
             allowDecimals={false} />
           <CartesianGrid />
@@ -330,6 +368,17 @@ export class Graph extends Component {
               : type === 'bar'
                 ? <Bar {...this.getLineData(key, facets)} />
                 : <Line {...this.getLineData(key, facets)} />))}
+          {compareWith && compareWithPercentageLine && (
+            <Line {...this.compareWithPercentageLine()} />
+          )}
+          {compareWith && compareWithPercentageLine && (
+            <YAxis
+              yAxisId='percentageLine'
+              orientation='left'
+              tickFormatter={(y) => `${y > 0 ? '+' : ''}${Math.round(y)}%`}
+              domain={[dataMin => Math.min(0, dataMin), dataMax => Math.min(100, Math.max(dataMax, 0))]}
+            />
+          )}
         </ComposedChart>
       </ResponsiveContainer>
     )
