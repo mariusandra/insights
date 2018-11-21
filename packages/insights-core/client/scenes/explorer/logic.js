@@ -7,6 +7,18 @@ import { push } from 'react-router-redux'
 import viewsLogic from '~/scenes/header/views/logic'
 import stateToUrl from 'lib/explorer/state-to-url'
 
+const arrayUniq = (array) => {
+  const cache = {}
+  let newArray = []
+  for (var elem of array) {
+    if (!cache[elem]) {
+      newArray.push(elem)
+    }
+    cache[elem] = true
+  }
+  return newArray
+}
+
 export default kea({
   path: () => ['scenes', 'explorer', 'index'],
 
@@ -399,8 +411,8 @@ export default kea({
     ],
 
     recommendedViews: [
-      () => [selectors.connection, selectors.selectedModel, selectors.structure],
-      (connection, selectedModel, structure) => {
+      () => [selectors.connection, selectors.selectedModel, selectors.structure, selectors.modelFavourites],
+      (connection, selectedModel, structure, modelFavourites) => {
         if (!selectedModel) {
           return []
         }
@@ -438,10 +450,10 @@ export default kea({
 
         urls.push({
           key: 'all',
-          name: 'all rows',
+          name: 'all rows with favourite columns',
           url: stateToUrl({
             connection: connection,
-            columns: `${selectedModel}.${primaryKeyField}`,
+            columns: arrayUniq([`${selectedModel}.${primaryKeyField}`].concat(modelFavourites || [])).join(','),
             sort: `-${selectedModel}.${primaryKeyField}`,
             treeState: `${selectedModel}`,
             graphTimeFilter: 'last-365',
