@@ -335,7 +335,7 @@ export class Graph extends Component {
           margin={{top: 0, right: 10, left: 10, bottom: 0}}>
           <Legend
             verticalAlign='top'
-            align='right'
+            align='left'
             height={25}
             iconSize={10}
             wrapperStyle={{fontSize: 12, marginRight: -10}}
