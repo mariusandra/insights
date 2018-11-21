@@ -374,7 +374,7 @@ export class Graph extends Component {
               yAxisId='percentageLine'
               orientation='left'
               tickFormatter={(y) => `${y > 0 ? '+' : ''}${Math.round(y)}%`}
-              domain={[dataMin => Math.min(0, dataMin), dataMax => Math.min(100, Math.max(dataMax, 0))]}
+              domain={[dataMin => Math.min(0, dataMin || 0), dataMax => Math.min(100, Math.max(dataMax || 0, 0))]}
             />
           )}
         </ComposedChart>

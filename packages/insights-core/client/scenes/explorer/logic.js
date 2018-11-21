@@ -450,7 +450,7 @@ export default kea({
 
         urls.push({
           key: 'all',
-          name: 'all rows with favourite columns',
+          name: 'all rows with favourites',
           url: stateToUrl({
             connection: connection,
             columns: arrayUniq([`${selectedModel}.${primaryKeyField}`].concat(modelFavourites || [])).join(','),
