@@ -430,7 +430,8 @@ export default kea({
               cumulative: false,
               percentages: false,
               labels: false,
-              compareWith: 0
+              compareWith: 0,
+              compareWithPercentageLine: true
             }
           })
         })
@@ -453,7 +454,8 @@ export default kea({
               cumulative: false,
               percentages: false,
               labels: false,
-              compareWith: 0
+              compareWith: 0,
+              compareWithPercentageLine: true
             }
           })
         })
@@ -478,7 +480,8 @@ export default kea({
                 cumulative: false,
                 percentages: false,
                 labels: false,
-                compareWith: 0
+                compareWith: 0,
+                compareWithPercentageLine: true
               }
             })
           })
@@ -501,7 +504,8 @@ export default kea({
                 cumulative: false,
                 percentages: false,
                 labels: false,
-                compareWith: 12
+                compareWith: 12,
+                compareWithPercentageLine: true
               }
             })
           })

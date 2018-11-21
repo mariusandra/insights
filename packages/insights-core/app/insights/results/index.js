@@ -19,7 +19,8 @@ module.exports = class Results {
   //     cumulative: false,
   //     percentages: false,
   //     labels: false,
-  //     compareWith: 0
+  //     compareWith: 0,
+  //     compareWithPercentageLine: false
   //   }}
   //
   //   graphTimeFilter: params.graphTimeFilter || 'last-60',

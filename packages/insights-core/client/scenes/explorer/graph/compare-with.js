@@ -49,7 +49,7 @@ export default class ControlsLeft extends Component {
     const { graphControls, moreShown, graphTimeGroup } = this.props
     const { setGraphControls, showMore, showLess } = this.actions
 
-    const { compareWith } = graphControls
+    const { compareWith, compareWithPercentageLine } = graphControls
 
     const options = compareWithForTimeGroup[graphTimeGroup]
 
@@ -68,6 +68,13 @@ export default class ControlsLeft extends Component {
               {compareWith === option ? ` ${graphTimeGroup} ago` : ''}
             </span>
           ))}
+          {!!compareWith && compareWith !== 0 && (
+            <span
+              className={compareWithPercentageLine ? 'control selected' : 'control'}
+              onClick={() => setGraphControls({ compareWithPercentageLine: !compareWithPercentageLine })}>
+              {'%'}
+            </span>
+          )}
         </span>
       </div>
     )

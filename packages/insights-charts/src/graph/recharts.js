@@ -14,8 +14,6 @@ import BasicTooltip from './basic-tooltip'
 
 export const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
 
-const compareWithPercentageLine = true
-
 function sharedStart (array) {
   let A = array.concat().sort()
   let a1 = A[0]
@@ -30,13 +28,13 @@ const alphabeticalFacetSorter = (a, b) => a.name.localeCompare(b.name)
 
 function getGraphData (graph, controls) {
   const { results, keys } = graph
-  const { percentages, compareWith } = controls
+  const { percentages, compareWith, compareWithPercentageLine } = controls
 
   const graphData = results.map(oldRow => {
     const time = oldRow.time
     const row = Object.assign({}, oldRow, { time: moment(time).valueOf() })
 
-    if (percentages || (compareWith && compareWithPercentageLine)) {
+    if (percentages || (compareWith)) {
       let total = 0
       for (const key of keys) {
         total += parseFloat(row[key] || 0)
@@ -235,7 +233,7 @@ export class Graph extends Component {
     return data
   }
 
-  compareWithPercentageLine = (key) => {
+  getCompareWithPercentageLine = (key) => {
     const { labels } = this.props.controls
 
     let data = {
@@ -299,7 +297,7 @@ export class Graph extends Component {
   render () {
     const { graph, controls, tooltip: TooltipProp } = this.props
     const { graphData } = this.state
-    const { sort, percentages, type, labels, compareWith } = controls
+    const { sort, percentages, type, labels, compareWith, compareWithPercentageLine } = controls
 
     const nullLineNeeded = false
     const unit = ''
@@ -369,7 +367,7 @@ export class Graph extends Component {
                 ? <Bar {...this.getLineData(key, facets)} />
                 : <Line {...this.getLineData(key, facets)} />))}
           {compareWith && compareWithPercentageLine && (
-            <Line {...this.compareWithPercentageLine()} />
+            <Line {...this.getCompareWithPercentageLine()} />
           )}
           {compareWith && compareWithPercentageLine && (
             <YAxis
