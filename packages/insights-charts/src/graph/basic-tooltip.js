@@ -8,7 +8,7 @@ const diffInPercentage = (oldValue, newValue) => {
   if (!oldValue && !newValue) {
     return <span style={{ color: 'gray' }}>0</span>
   } else if (!oldValue && newValue) {
-    return <span style={{ color: 'green' }}>+∞</span>
+    return <span style={{ color: 'green' }}>+∞%</span>
   } else if (oldValue && !newValue) {
     return <span style={{ color: 'red' }}>-100%</span>
   } else if (oldValue > newValue) {
