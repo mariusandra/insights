@@ -769,6 +769,12 @@ function getTimesFromString (timeFilter, smooth = 0, timeGroup = 'day') {
   } else if (timeFilter === 'this-month-so-far') {
     firstDate = moment().startOf('month')
     lastDate = moment()
+  } else if (timeFilter === 'today') {
+    firstDate = moment()
+    lastDate = moment()
+  } else if (timeFilter === 'yesterday') {
+    firstDate = moment().add(-1, 'day')
+    lastDate = moment().add(-1, 'day')
   } else if (timeFilter === 'this-month') {
     firstDate = moment().startOf('month')
     lastDate = moment().endOf('month')
