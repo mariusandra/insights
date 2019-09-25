@@ -1,49 +1,73 @@
 {
   "name": "insights-server",
-  "description": "Desktop and Self-Hosted \"SQL-not-required\" data analytics and visualisation tool.",
-  "version": "0.0.31",
+  "description": "",
+  "version": "0.0.0",
   "homepage": "",
-  "main": "app",
-  "license": "MIT",
+  "main": "src",
   "keywords": [
-    "feathers",
-    "insights"
+    "feathers"
   ],
   "author": {
     "name": "Marius Andra",
     "email": "marius.andra@gmail.com"
   },
   "contributors": [],
-  "repository": "mariusandra/insights",
   "bugs": {},
   "directories": {
-    "lib": "app"
+    "lib": "src",
+    "test": "test/",
+    "config": "config/"
   },
   "engines": {
-    "node": ">= 7.6.0",
+    "node": ">= 8.0.0",
     "yarn": ">= 0.18.0"
   },
   "scripts": {
-    "start": "NODE_ENV=development node --inspect app/",
-    "createsuperuser:dev": "NODE_ENV=development node app/createsuperuser.js",
-    "createsuperuser": "NODE_ENV=production node app/createsuperuser.js",
-    "production": "NODE_ENV=production node app/"
+    "test": "yarn run compile && yarn run jest",
+    "dev": "ts-node-dev --no-notify src/",
+    "start": "yarn run compile && node lib/",
+    "jest": "jest  --forceExit",
+    "compile": "shx rm -rf lib/ && tsc"
   },
-  "bin": {
-    "insights-server": "./bin/insights-server",
-    "insights-createsecret": "./bin/insights-createsecret",
-    "insights-createsuperuser": "./bin/insights-createsuperuser"
-  },
-  "files": [
-    "app",
-    "bin"
-  ],
-  "peerDependencies": {
-    "insights-core": "*"
-  },
+  "types": "lib/",
   "dependencies": {
-    "commander": "^2.10.0",
-    "prompt-promise": "1.0.3",
-    "winston": "2.3.1"
+    "@feathersjs/authentication": "^4.3.0",
+    "@feathersjs/authentication-local": "^4.3.0",
+    "@feathersjs/authentication-oauth": "^4.3.0",
+    "@feathersjs/configuration": "^4.3.0",
+    "@feathersjs/errors": "^4.3.0",
+    "@feathersjs/express": "^4.3.0",
+    "@feathersjs/feathers": "^4.3.0",
+    "@feathersjs/socketio": "^4.3.0",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "feathers-nedb": "^5.0.1",
+    "helmet": "^3.20.0",
+    "nedb": "^1.8.0",
+    "pg": "^7.12.1",
+    "pg-connection-string": "^2.1.0",
+    "pg-escape": "^0.2.0",
+    "pg-structure": "^4.2.2",
+    "serve-favicon": "^2.5.0",
+    "winston": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/compression": "^1.0.1",
+    "@types/cors": "^2.8.6",
+    "@types/helmet": "^0.0.44",
+    "@types/jest": "^24.0.18",
+    "@types/jsonwebtoken": "^8.3.4",
+    "@types/nedb": "^1.8.9",
+    "@types/pg": "^7.11.1",
+    "@types/pg-escape": "^0.2.0",
+    "@types/serve-favicon": "^2.2.31",
+    "axios": "^0.19.0",
+    "jest": "^24.9.0",
+    "nodemon": "^1.19.1",
+    "shx": "^0.3.2",
+    "ts-jest": "^24.1.0",
+    "ts-node-dev": "^1.0.0-pre.43",
+    "tslint": "^5.19.0",
+    "typescript": "^3.5.3"
   }
 }

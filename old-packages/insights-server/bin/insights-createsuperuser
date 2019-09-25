@@ -4,7 +4,7 @@ var path = require('path')
 var program = require('commander')
 var root = path.join(__dirname, '..')
 var pkg = require(path.join(root, 'package.json'))
-var randomString = require('insights-core/app/lib/random-string')
+var randomString = require('insights-core/src/lib/random-string')
 
 program.version(pkg.version)
   .usage('[options]')

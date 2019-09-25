@@ -1,0 +1,49 @@
+{
+  "name": "insights-server",
+  "description": "Desktop and Self-Hosted \"SQL-not-required\" data analytics and visualisation tool.",
+  "version": "0.0.31",
+  "homepage": "",
+  "main": "app",
+  "license": "MIT",
+  "keywords": [
+    "feathers",
+    "insights"
+  ],
+  "author": {
+    "name": "Marius Andra",
+    "email": "marius.andra@gmail.com"
+  },
+  "contributors": [],
+  "repository": "mariusandra/insights",
+  "bugs": {},
+  "directories": {
+    "lib": "app"
+  },
+  "engines": {
+    "node": ">= 7.6.0",
+    "yarn": ">= 0.18.0"
+  },
+  "scripts": {
+    "start": "NODE_ENV=development node --inspect app/",
+    "createsuperuser:dev": "NODE_ENV=development node app/createsuperuser.js",
+    "createsuperuser": "NODE_ENV=production node app/createsuperuser.js",
+    "production": "NODE_ENV=production node app/"
+  },
+  "bin": {
+    "insights-server": "./bin/insights-server",
+    "insights-createsecret": "./bin/insights-createsecret",
+    "insights-createsuperuser": "./bin/insights-createsuperuser"
+  },
+  "files": [
+    "app",
+    "bin"
+  ],
+  "peerDependencies": {
+    "insights-core": "*"
+  },
+  "dependencies": {
+    "commander": "^2.10.0",
+    "prompt-promise": "1.0.3",
+    "winston": "2.3.1"
+  }
+}

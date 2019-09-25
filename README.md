@@ -27,10 +27,6 @@ It's a work in progress and you're brave for checking it out! Cheers!
 To install, make sure you have Node 7.6+ installed and then run:
 
 ```
-# desktop (electron) version
-npm install -g insights insights-core insights-desktop
-insights desktop          # run the desktop/electron version
-
 # server version
 npm install -g insights insights-core insights-server
 insights createsuperuser  # create an admin user to access the server

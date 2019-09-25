@@ -2,7 +2,7 @@
   "name": "insights-build",
   "private": true,
   "workspaces": ["packages/*"],
-  "description": "Desktop and Self-Hosted \"SQL-not-required\" data analytics and visualisation tool.",
+  "description": "Self-Hosted \"SQL-not-required\" data analytics and visualisation tool.",
   "version": "0.0.31",
   "homepage": "",
   "main": "server",
@@ -26,29 +26,15 @@
     "yarn": ">= 0.18.0"
   },
   "scripts": {
-    "test": "npm run eslint && npm run mocha",
-    "lint": "eslint packages --ignore-pattern=node_modules",
-    "lint:fix": "eslint packages --fix --ignore-pattern=node_modules",
-    "start": "NODE_ENV=development node --inspect packages/insights-server/app",
-    "build:core": "cd packages/insights-core && yarn run build",
-    "build": "echo 'Nothing to build in root repo'",
-    "analyze": "NODE_ENV=production ANALYZE_BUNDLE=true packages/insights-core/node_modules/.bin/webpack --config packages/insights-core/client/webpack.config.js",
-    "production": "NODE_ENV=production node packages/insights-server/app",
-    "mocha": "mocha test/ --recursive"
+    "start": "cd packages/insights-server/ && NODE_ENV=development ts-node-dev --no-notify src"
   },
   "files": [
     "bin",
     "README.md"
   ],
   "dependencies": {
-    "insights": "file:./packages/insights",
-    "insights-charts": "file:./packages/insights-charts",
-    "insights-core": "file:./packages/insights-core",
-    "insights-desktop": "file:./packages/insights-desktop",
-    "insights-server": "file:./packages/insights-server"
   },
   "peerDependencies": {
-    "webpack": "*"
   },
   "devDependencies": {
     "oao": "^0.8.5",

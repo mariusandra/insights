@@ -6,7 +6,6 @@ console.log(insightsVersion)
 const jsons = {
   'insights': require('../packages/insights/package.json'),
   'insights-core': require('../packages/insights-core/package.json'),
-  'insights-desktop': require('../packages/insights-desktop/package.json'),
   'insights-server': require('../packages/insights-server/package.json')
 }
 
