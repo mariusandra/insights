@@ -28,7 +28,7 @@
   "scripts": {
     "start": "yarn run start-api",
     "start-api": "cd packages/insights-api && yarn run dev",
-    "start-client": "cd packages/insights-client && yarn start"
+    "start-web": "cd packages/insights-web && yarn start"
   },
   "files": [
     "bin",
@@ -38,7 +38,7 @@
     "insights-api": "*",
     "insights-charts": "*",
     "insights-cli": "*",
-    "insights-client": "*"
+    "insights-web": "*"
   },
   "peerDependencies": {
   },
