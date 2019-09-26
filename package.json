@@ -4,7 +4,7 @@
   "workspaces": ["packages/*"],
   "description": "Self-Hosted \"SQL-not-required\" data analytics and visualisation tool.",
   "version": "0.0.31",
-  "homepage": "",
+  "homepage": "https://github.com/mariusandra/insights",
   "main": "server",
   "license": "MIT",
   "keywords": [
@@ -22,21 +22,22 @@
     "lib": "server"
   },
   "engines": {
-    "node": ">= 7.6.0",
+    "node": ">= 8.0.0",
     "yarn": ">= 0.18.0"
   },
   "scripts": {
-    "start": "cd packages/insights-server/ && NODE_ENV=development ts-node-dev --no-notify src"
+    "start": "yarn run start-api",
+    "start-api": "cd packages/insights-api/ && NODE_ENV=development ts-node-dev --no-notify src"
   },
   "files": [
     "bin",
     "README.md"
   ],
   "dependencies": {
+    "insights-api": "*",
     "insights-charts": "*",
     "insights-cli": "*",
-    "insights-client": "*",
-    "insights-server": "*"
+    "insights-client": "*"
   },
   "peerDependencies": {
   },
