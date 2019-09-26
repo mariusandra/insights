@@ -1,5 +1,5 @@
 {
-  "name": "insights",
+  "name": "insights-cli",
   "description": "Desktop and Self-Hosted \"SQL-not-required\" data analytics and visualisation tool.",
   "version": "0.0.31",
   "homepage": "",

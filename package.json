@@ -1,5 +1,5 @@
 {
-  "name": "insights-build",
+  "name": "insights",
   "private": true,
   "workspaces": ["packages/*"],
   "description": "Self-Hosted \"SQL-not-required\" data analytics and visualisation tool.",
@@ -33,6 +33,10 @@
     "README.md"
   ],
   "dependencies": {
+    "insights-charts": "*",
+    "insights-cli": "*",
+    "insights-client": "*",
+    "insights-server": "*"
   },
   "peerDependencies": {
   },
