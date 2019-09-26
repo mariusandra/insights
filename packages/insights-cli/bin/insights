@@ -7,11 +7,10 @@ var pkg = require(path.join(root, 'package.json'))
 
 program.version(pkg.version)
   .usage('<command> [options]')
-  .description('Run insights dekstop app, server or helper commands')
+  .description('Run insights server or helper commands')
 
 program
-  .command('desktop', 'run the desktop/electron app [default]', { isDefault: true })
-  .command('server', 'run as a server')
+  .command('start', 'run as a server')
   .command('createsecret', 'create a new authentication secret')
   .command('createsuperuser', 'create a new admin user')
 

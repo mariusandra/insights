@@ -16,6 +16,12 @@
   "contributors": [],
   "repository": "mariusandra/insights",
   "bugs": {},
+  "bin": {
+    "insights": "./bin/insights",
+    "insights-start": "./bin/insights-start",
+    "insights-createsecret": "./bin/insights-createsecret",
+    "insights-createsuperuser": "./bin/insights-createsuperuser"
+  },
   "directories": {
     "lib": "app"
   },
@@ -24,9 +30,6 @@
     "yarn": ">= 0.18.0"
   },
   "scripts": {},
-  "bin": {
-    "insights": "./bin/insights"
-  },
   "files": [
     "bin"
   ],
