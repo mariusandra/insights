@@ -1,15 +1,17 @@
-import { routerReducer, routerMiddleware } from 'react-router-redux'
-import { browserHistory } from 'react-router'
+import { connectRouter, routerMiddleware } from 'connected-react-router'
+import { createBrowserHistory } from 'history'
 import { getStore } from 'kea'
 import sagaPlugin from 'kea-saga'
+
+export const history = createBrowserHistory()
 
 export default getStore({
   paths: ['kea', 'scenes', 'auth'],
   reducers: {
-    routing: routerReducer
+    router: connectRouter(history)
   },
   middleware: [
-    routerMiddleware(browserHistory)
+    routerMiddleware(history)
   ],
   plugins: [
     sagaPlugin

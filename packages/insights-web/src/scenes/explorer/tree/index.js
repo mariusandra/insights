@@ -41,7 +41,7 @@ const logic = connect({
       'modelFavourites',
       'recommendedViews'
     ],
-    state => state.routing.locationBeforeTransitions, [
+    state => state.router.location, [
       'pathname as urlPath',
       'search as urlSearch'
     ]

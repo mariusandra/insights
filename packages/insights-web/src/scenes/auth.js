@@ -1,7 +1,7 @@
 import { kea } from 'kea'
 import PropTypes from 'prop-types'
 
-import { push, replace } from 'react-router-redux'
+import { push, replace } from 'connected-react-router'
 import { put, take, call } from 'redux-saga/effects'
 
 import client from 'lib/client'

@@ -1,6 +1,6 @@
 import { kea } from 'kea'
 import { put, call } from 'redux-saga/effects'
-import { LOCATION_CHANGE, push } from 'react-router-redux'
+import { LOCATION_CHANGE, push } from 'connected-react-router'
 
 import authLogic from 'scenes/auth'
 

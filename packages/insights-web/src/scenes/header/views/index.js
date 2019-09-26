@@ -27,7 +27,7 @@ const logic = connect({
       'newOpen',
       'sortedViews'
     ],
-    state => state.routing.locationBeforeTransitions, [
+    state => state.router.location, [
       'pathname'
     ]
   ]

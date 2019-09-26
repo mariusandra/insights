@@ -18,7 +18,7 @@ const logic = connect({
     ]
   ],
   props: [
-    state => state.routing.locationBeforeTransitions, [
+    state => state.router.location, [
       'pathname',
       'search'
     ],

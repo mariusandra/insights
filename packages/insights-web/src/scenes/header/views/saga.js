@@ -1,6 +1,6 @@
 import { kea } from 'kea'
 import { put, call } from 'redux-saga/effects'
-import { push } from 'react-router-redux'
+import { push } from 'connected-react-router'
 
 import authLogic from 'scenes/auth'
 import viewsLogic from 'scenes/header/views/logic'

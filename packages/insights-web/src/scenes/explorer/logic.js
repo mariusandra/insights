@@ -2,7 +2,7 @@ import { kea } from 'kea'
 import { put } from 'redux-saga/effects'
 import PropTypes from 'prop-types'
 
-import { push } from 'react-router-redux'
+import { push } from 'connected-react-router'
 
 import viewsLogic from 'scenes/header/views/logic'
 import stateToUrl from 'lib/explorer/state-to-url'

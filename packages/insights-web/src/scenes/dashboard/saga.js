@@ -1,6 +1,6 @@
 import { kea } from 'kea'
 import { all, put, fork, call } from 'redux-saga/effects'
-import { LOCATION_CHANGE, push } from 'react-router-redux'
+import { LOCATION_CHANGE, push } from 'connected-react-router'
 
 import messg from 'messg'
 
