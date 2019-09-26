@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
 // utils
-import client from '~/client'
+import client from 'lib/client'
 import { Button, Popover, Position, Menu, MenuItem, MenuDivider } from "@blueprintjs/core"
 
 // logic

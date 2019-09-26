@@ -5,8 +5,8 @@ import { Button } from "@blueprintjs/core";
 import Tooltip from 'rc-tooltip'
 import Select from 'lib/forms/select'
 
-import explorerLogic from '~/scenes/explorer/logic'
-import headerLogic from '~/scenes/header/logic'
+import explorerLogic from 'scenes/explorer/logic'
+import headerLogic from 'scenes/header/logic'
 
 const logic = connect({
   actions: [

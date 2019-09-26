@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 import { push } from 'react-router-redux'
 
-import viewsLogic from '~/scenes/header/views/logic'
+import viewsLogic from 'scenes/header/views/logic'
 import stateToUrl from 'lib/explorer/state-to-url'
 
 const arrayUniq = (array) => {

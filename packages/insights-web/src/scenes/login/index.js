@@ -10,8 +10,8 @@ import { connect } from 'kea'
 import SubmitButton from 'lib/tags/submit-button'
 
 // logic
-import sceneLogic from '~/scenes/login/logic'
-import sceneSaga from '~/scenes/login/saga'
+import sceneLogic from 'scenes/login/logic'
+import sceneSaga from 'scenes/login/saga'
 
 
 const logic = connect({

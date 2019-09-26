@@ -12,8 +12,8 @@ import Spinner from 'lib/tags/spinner'
 import StructureModel from './model'
 
 // logic
-import structure from '~/scenes/structure/logic'
-import sceneSaga from '~/scenes/structure/saga'
+import structure from 'scenes/structure/logic'
+import sceneSaga from 'scenes/structure/saga'
 
 const logic = connect({
   actions: [

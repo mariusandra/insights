@@ -9,7 +9,7 @@ import { AnchorButton, Dialog, Classes, Intent, Button, Popover, Position, Menu,
 // components
 
 // logic
-import viewsLogic from '~/scenes/header/views/logic'
+import viewsLogic from 'scenes/header/views/logic'
 
 const logic = connect({
   actions: [

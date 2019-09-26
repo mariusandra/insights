@@ -4,10 +4,10 @@ import { push } from 'react-router-redux'
 
 import messg from 'messg'
 
-import authLogic from '~/scenes/auth'
-import connectionsLogic from '~/scenes/connections/logic'
+import authLogic from 'scenes/auth'
+import connectionsLogic from 'scenes/connections/logic'
 
-import client from '~/client'
+import client from 'lib/client'
 
 const connectionsService = client.service('api/connections')
 const connectionTestService = client.service('api/connection-test')

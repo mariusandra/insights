@@ -7,7 +7,7 @@ import { connect } from 'kea'
 // components
 import Column from './column'
 
-import structure from '~/scenes/structure/logic'
+import structure from 'scenes/structure/logic'
 
 const logic = connect({
   actions: [

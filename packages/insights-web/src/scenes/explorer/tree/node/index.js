@@ -7,7 +7,7 @@ import FavouriteStar from './favourite-star'
 
 import getMeta from 'lib/explorer/get-meta'
 
-import explorerLogic from '~/scenes/explorer/logic'
+import explorerLogic from 'scenes/explorer/logic'
 
 const stringIn = (search, string) => {
   let i = 0

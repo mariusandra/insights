@@ -2,11 +2,11 @@ import { kea } from 'kea'
 import { put, call } from 'redux-saga/effects'
 import { LOCATION_CHANGE, push } from 'react-router-redux'
 
-import authLogic from '~/scenes/auth'
+import authLogic from 'scenes/auth'
 
-import client from '~/client'
+import client from 'lib/client'
 
-import structureLogic from '~/scenes/structure/logic'
+import structureLogic from 'scenes/structure/logic'
 
 const connectionsService = client.service('api/connections')
 const structureService = client.service('api/structure')

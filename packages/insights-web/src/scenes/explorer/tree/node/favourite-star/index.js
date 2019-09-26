@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'kea'
 import PropTypes from 'prop-types'
 
-import explorerLogic from '~/scenes/explorer/logic'
+import explorerLogic from 'scenes/explorer/logic'
 
 const connection = {
   actions: [

@@ -18,8 +18,8 @@ import Filter from './filter'
 import AddToDashboard from './add-to-dashboard'
 
 // logic
-import explorerLogic from '~/scenes/explorer/logic'
-import explorerSaga from '~/scenes/explorer/saga'
+import explorerLogic from 'scenes/explorer/logic'
+import explorerSaga from 'scenes/explorer/saga'
 
 const logic = connect({
   actions: [

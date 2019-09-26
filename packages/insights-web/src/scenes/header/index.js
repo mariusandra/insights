@@ -14,10 +14,10 @@ import Share from './share'
 import CopyQuery from './copy-query'
 
 // logic
-import authLogic from '~/scenes/auth'
-import headerLogic from '~/scenes/header/logic'
-import sceneSaga from '~/scenes/header/saga'
-import viewsSaga from '~/scenes/header/views/saga'
+import authLogic from 'scenes/auth'
+import headerLogic from 'scenes/header/logic'
+import sceneSaga from 'scenes/header/saga'
+import viewsSaga from 'scenes/header/views/saga'
 
 const logic = connect({
   actions: [

@@ -3,9 +3,9 @@ import { connect } from 'kea'
 import PropTypes from 'prop-types'
 
 import Tooltip from 'rc-tooltip'
-import OneFilter from '~/scenes/explorer/filter/one-filter'
+import OneFilter from 'scenes/explorer/filter/one-filter'
 
-import explorerLogic from '~/scenes/explorer/logic'
+import explorerLogic from 'scenes/explorer/logic'
 
 const connection = {
   actions: [

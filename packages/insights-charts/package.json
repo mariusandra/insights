@@ -26,7 +26,7 @@
     "yarn": ">= 0.18.0"
   },
   "scripts": {
-    "build": "npm run lint && concurrently \"npm run build:cjs\" \"npm run build:es\"",
+    "build": "concurrently \"npm run build:cjs\" \"npm run build:es\"",
     "build:cjs": "cross-env BABEL_ENV=cjs babel src --out-dir lib",
     "build:es": "cross-env BABEL_ENV=es babel src --out-dir es",
     "start": "concurrently --kill-others \"npm run start:cjs\" \"npm run start:es\"",

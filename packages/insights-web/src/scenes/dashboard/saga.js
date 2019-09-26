@@ -7,10 +7,10 @@ import messg from 'messg'
 import promptPopup from 'lib/popups/prompt'
 import deletePopup from 'lib/popups/delete'
 
-import authLogic from '~/scenes/auth'
-import dashboardLogic from '~/scenes/dashboard/logic'
+import authLogic from 'scenes/auth'
+import dashboardLogic from 'scenes/dashboard/logic'
 
-import client from '~/client'
+import client from 'lib/client'
 
 const dashboardsService = client.service('api/dashboards')
 const dashboardItemsService = client.service('api/dashboard-items')

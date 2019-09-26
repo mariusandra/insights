@@ -14,8 +14,8 @@ import Node from './node'
 import Connection from './connection'
 
 // logic
-import explorerLogic from '~/scenes/explorer/logic'
-import viewsLogic from '~/scenes/header/views/logic'
+import explorerLogic from 'scenes/explorer/logic'
+import viewsLogic from 'scenes/header/views/logic'
 
 const logic = connect({
   actions: [

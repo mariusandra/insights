@@ -5,15 +5,15 @@ import { LOCATION_CHANGE, push } from 'react-router-redux'
 
 import download from 'downloadjs'
 
-import authLogic from '~/scenes/auth'
-import explorerLogic from '~/scenes/explorer/logic'
+import authLogic from 'scenes/auth'
+import explorerLogic from 'scenes/explorer/logic'
 
 import getMeta from 'lib/explorer/get-meta'
 import urlToState from 'lib/explorer/url-to-state'
 
 import delay from 'lib/utils/delay'
 
-import client from '~/client'
+import client from 'lib/client'
 
 const connectionsService = client.service('api/connections')
 const structureService = client.service('api/structure')

@@ -3,7 +3,7 @@ import { connect } from 'kea'
 
 import messg from 'messg'
 
-import connectionsLogic from '~/scenes/connections/logic'
+import connectionsLogic from 'scenes/connections/logic'
 
 const logic = connect({
   actions: [

@@ -1,7 +1,9 @@
 {
   "name": "insights",
   "private": true,
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "description": "Self-Hosted \"SQL-not-required\" data analytics and visualisation tool.",
   "version": "0.0.31",
   "homepage": "https://github.com/mariusandra/insights",
@@ -28,7 +30,8 @@
   "scripts": {
     "start": "yarn run start-api",
     "start-api": "cd packages/insights-api && yarn run dev",
-    "start-web": "cd packages/insights-web && yarn start"
+    "start-web": "cd packages/insights-web && yarn start",
+    "build-charts": "cd packages/insights-charts && yarn run build"
   },
   "files": [
     "bin",
@@ -40,9 +43,9 @@
     "insights-cli": "*",
     "insights-web": "*"
   },
-  "peerDependencies": {
-  },
+  "peerDependencies": {},
   "devDependencies": {
+    "eslint-config-standard-react": "^9.2.0",
     "oao": "^0.8.5",
     "semver": "^5.3.0"
   }

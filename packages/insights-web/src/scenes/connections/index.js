@@ -12,8 +12,8 @@ import Connection from './connection'
 import AddConnection from './add-connection'
 
 // logic
-import connections from '~/scenes/connections/logic'
-import sceneSaga from '~/scenes/connections/saga'
+import connections from 'scenes/connections/logic'
+import sceneSaga from 'scenes/connections/saga'
 
 // const { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } = connections.constants
 

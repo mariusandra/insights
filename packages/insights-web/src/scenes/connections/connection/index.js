@@ -5,7 +5,7 @@ import messg from 'messg'
 
 import deletePopup from 'lib/popups/delete'
 
-import connectionsLogic from '~/scenes/connections/logic'
+import connectionsLogic from 'scenes/connections/logic'
 
 const logic = connect({
   actions: [

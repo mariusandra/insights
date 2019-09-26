@@ -2,12 +2,12 @@ import { kea } from 'kea'
 import { put, call } from 'redux-saga/effects'
 import { push } from 'react-router-redux'
 
-import authLogic from '~/scenes/auth'
-import viewsLogic from '~/scenes/header/views/logic'
+import authLogic from 'scenes/auth'
+import viewsLogic from 'scenes/header/views/logic'
 
 import messg from 'messg'
 
-import client from '~/client'
+import client from 'lib/client'
 
 // import controller from './controller.rb'
 const viewsService = client.service('api/views')

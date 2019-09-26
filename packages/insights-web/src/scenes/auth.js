@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { push, replace } from 'react-router-redux'
 import { put, take, call } from 'redux-saga/effects'
 
-import client from '~/client'
+import client from 'lib/client'
 
 export default kea({
   path: () => ['auth'],

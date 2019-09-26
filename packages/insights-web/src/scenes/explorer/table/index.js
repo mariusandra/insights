@@ -17,7 +17,7 @@ import TableHeader from './table-header'
 import TableSettings from './table-settings'
 
 // logic
-import explorerLogic from '~/scenes/explorer/logic'
+import explorerLogic from 'scenes/explorer/logic'
 
 const defaultColumnWidth = (meta) => {
   if (meta) {

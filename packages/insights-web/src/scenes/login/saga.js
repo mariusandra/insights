@@ -4,8 +4,8 @@ import { push } from 'react-router-redux'
 
 import messg from 'messg'
 
-import authLogic from '~/scenes/auth'
-import loginLogic from '~/scenes/login/logic'
+import authLogic from 'scenes/auth'
+import loginLogic from 'scenes/login/logic'
 
 import delay from 'lib/utils/delay'
 

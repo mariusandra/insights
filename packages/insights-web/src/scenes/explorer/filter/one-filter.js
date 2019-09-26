@@ -9,7 +9,7 @@ import 'react-datetime/css/react-datetime.css'
 import Tooltip from 'rc-tooltip'
 import getMeta from 'lib/explorer/get-meta'
 
-import explorerLogic from '~/scenes/explorer/logic'
+import explorerLogic from 'scenes/explorer/logic'
 
 const sanitizeNumber = (str) => str.replace(/[^0-9.]/g, '')
 const sanitizeListNumber = (str) => str.replace(/[^0-9., ]/g, '')

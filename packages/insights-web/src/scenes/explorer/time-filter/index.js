@@ -8,7 +8,7 @@ import Select from 'lib/forms/select'
 // components
 
 // logic
-import explorerLogic from '~/scenes/explorer/logic'
+import explorerLogic from 'scenes/explorer/logic'
 
 const logic = connect({
   actions: [

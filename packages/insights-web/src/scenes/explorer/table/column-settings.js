@@ -7,7 +7,7 @@ import range from 'lib/utils/range'
 
 import getMeta from 'lib/explorer/get-meta'
 
-import explorerLogic from '~/scenes/explorer/logic'
+import explorerLogic from 'scenes/explorer/logic'
 
 const logic = connect({
   actions: [

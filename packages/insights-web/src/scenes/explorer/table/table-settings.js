@@ -3,7 +3,7 @@ import { connect } from 'kea'
 
 import Tooltip from 'rc-tooltip'
 
-import explorerLogic from '~/scenes/explorer/logic'
+import explorerLogic from 'scenes/explorer/logic'
 
 const logic = connect({
   actions: [

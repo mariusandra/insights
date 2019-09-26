@@ -11,14 +11,14 @@ import urlToState from 'lib/explorer/url-to-state'
 import promptPopup from 'lib/popups/prompt'
 
 // components
-import ExplorerGraph from '~/scenes/explorer/graph'
+import ExplorerGraph from 'scenes/explorer/graph'
 import Spinner from 'lib/tags/spinner'
 
 // logic
-import dashboardLogic from '~/scenes/dashboard/logic'
-import headerLogic from '~/scenes/header/logic'
+import dashboardLogic from 'scenes/dashboard/logic'
+import headerLogic from 'scenes/header/logic'
 
-import client from '~/client'
+import client from 'lib/client'
 const resultsService = client.service('api/results')
 
 const logic = connect({

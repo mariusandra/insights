@@ -7,7 +7,7 @@ import { connect } from 'kea'
 // components
 
 // logic
-import explorerLogic from '~/scenes/explorer/logic'
+import explorerLogic from 'scenes/explorer/logic'
 
 const logic = connect({
   actions: [

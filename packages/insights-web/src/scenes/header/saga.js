@@ -2,7 +2,7 @@ import { kea } from 'kea'
 import { put } from 'redux-saga/effects'
 import { push } from 'react-router-redux'
 
-import headerLogic from '~/scenes/header/logic'
+import headerLogic from 'scenes/header/logic'
 
 export default kea({
   path: () => ['scenes', 'header', 'saga'],

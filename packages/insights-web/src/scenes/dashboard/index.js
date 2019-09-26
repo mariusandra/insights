@@ -11,12 +11,12 @@ import { Layout } from 'react-flex-layout'
 // utils
 
 // components
-import Graph from '~/scenes/dashboard/graph'
+import Graph from 'scenes/dashboard/graph'
 import Spinner from 'lib/tags/spinner'
 
 // logic
-import dashboardLogic from '~/scenes/dashboard/logic'
-import sceneSaga from '~/scenes/dashboard/saga'
+import dashboardLogic from 'scenes/dashboard/logic'
+import sceneSaga from 'scenes/dashboard/saga'
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive)
 // const { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } = dashboard.constants

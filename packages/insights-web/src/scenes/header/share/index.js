@@ -8,7 +8,7 @@ import { Button, Alignment, Text, Classes, H3, H5, InputGroup, Navbar, Switch, T
 import copy from 'copy-to-clipboard'
 import messg from 'messg'
 
-import client from '~/client'
+import client from 'lib/client'
 
 const urlService = client.service('api/url')
 
