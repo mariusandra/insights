@@ -27,7 +27,8 @@
   },
   "scripts": {
     "start": "yarn run start-api",
-    "start-api": "cd packages/insights-api/ && NODE_ENV=development ts-node-dev --no-notify src"
+    "start-api": "cd packages/insights-api && yarn run dev",
+    "start-client": "cd packages/insights-client && yarn start"
   },
   "files": [
     "bin",
