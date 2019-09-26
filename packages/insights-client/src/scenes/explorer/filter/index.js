@@ -14,15 +14,15 @@ import OneFilter from './one-filter'
 // logic
 import explorerLogic from '~/scenes/explorer/logic'
 
-@connect({
+const logic = connect({
   props: [
     explorerLogic, [
       'filter'
     ]
   ]
 })
-@Dimensions({ elementResize: true })
-export default class Filter extends Component {
+
+class Filter extends Component {
   static propTypes = {
     setFilterHeight: PropTypes.func
   }
@@ -60,3 +60,5 @@ export default class Filter extends Component {
     )
   }
 }
+
+export default logic(Dimensions({ elementResize: true })(Filter))

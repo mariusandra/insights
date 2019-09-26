@@ -10,7 +10,7 @@ import Select from 'lib/forms/select'
 // logic
 import explorerLogic from '~/scenes/explorer/logic'
 
-@connect({
+const logic = connect({
   actions: [
     explorerLogic, [
       'setGraphTimeFilter'
@@ -22,7 +22,8 @@ import explorerLogic from '~/scenes/explorer/logic'
     ]
   ]
 })
-export default class TimeFilter extends Component {
+
+class TimeFilter extends Component {
   render () {
     const { graphTimeFilter } = this.props
     const { setGraphTimeFilter } = this.props.actions
@@ -56,3 +57,5 @@ export default class TimeFilter extends Component {
     )
   }
 }
+
+export default logic(TimeFilter)

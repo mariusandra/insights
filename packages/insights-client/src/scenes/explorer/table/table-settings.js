@@ -5,7 +5,7 @@ import Tooltip from 'rc-tooltip'
 
 import explorerLogic from '~/scenes/explorer/logic'
 
-@connect({
+const logic = connect({
   actions: [
     explorerLogic, [
       'clearColumnWidths',
@@ -22,7 +22,8 @@ import explorerLogic from '~/scenes/explorer/logic'
     ]
   ]
 })
-export default class TableSettings extends Component {
+
+class TableSettings extends Component {
   constructor (props) {
     super(props)
 
@@ -83,3 +84,5 @@ export default class TableSettings extends Component {
     )
   }
 }
+
+export default logic(TableSettings)

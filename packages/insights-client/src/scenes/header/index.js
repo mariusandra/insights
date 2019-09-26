@@ -19,7 +19,7 @@ import headerLogic from '~/scenes/header/logic'
 import sceneSaga from '~/scenes/header/saga'
 import viewsSaga from '~/scenes/header/views/saga'
 
-@connect({
+const logic = connect({
   actions: [
     headerLogic, [
       'openLocation'
@@ -40,7 +40,8 @@ import viewsSaga from '~/scenes/header/views/saga'
     viewsSaga
   ]
 })
-export default class HeaderScene extends Component {
+
+class HeaderScene extends Component {
   constructor (props) {
     super(props)
     this._pathHistory = {}
@@ -106,3 +107,5 @@ export default class HeaderScene extends Component {
     )
   }
 }
+
+export default logic(HeaderScene)

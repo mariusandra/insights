@@ -21,7 +21,7 @@ import headerLogic from '~/scenes/header/logic'
 import client from '~/client'
 const resultsService = client.service('api/results')
 
-@connect({
+const logic = connect({
   actions: [
     headerLogic, [
       'openLocation'
@@ -37,8 +37,8 @@ const resultsService = client.service('api/results')
     ]
   ]
 })
-@Dimensions({ elementResize: true })
-export default class DashboardGraph extends Component {
+
+class DashboardGraph extends Component {
   static propTypes = {
     name: PropTypes.string,
     path: PropTypes.string,
@@ -158,3 +158,5 @@ export default class DashboardGraph extends Component {
     )
   }
 }
+
+export default logic(Dimensions({ elementResize: true })(DashboardGraph))

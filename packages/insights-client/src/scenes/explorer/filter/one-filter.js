@@ -14,7 +14,7 @@ import explorerLogic from '~/scenes/explorer/logic'
 const sanitizeNumber = (str) => str.replace(/[^0-9.]/g, '')
 const sanitizeListNumber = (str) => str.replace(/[^0-9., ]/g, '')
 
-@connect({
+const logic = connect({
   actions: [
     explorerLogic, [
       'addFilter',
@@ -30,7 +30,8 @@ const sanitizeListNumber = (str) => str.replace(/[^0-9., ]/g, '')
     ]
   ]
 })
-export default class OneFilter extends Component {
+
+class OneFilter extends Component {
   static propTypes = {
     index: PropTypes.number,
     value: PropTypes.string,
@@ -255,3 +256,5 @@ export default class OneFilter extends Component {
     )
   }
 }
+
+export default logic(OneFilter)

@@ -39,7 +39,7 @@ const defaultColumnWidth = (meta) => {
   }
 }
 
-@connect({
+const logic = connect({
   actions: [
     explorerLogic, [
       'setPagination',
@@ -62,8 +62,8 @@ const defaultColumnWidth = (meta) => {
     ]
   ]
 })
-@Dimensions({ elementResize: true })
-export default class ExplorerTable extends Component {
+
+class ExplorerTable extends Component {
   constructor (props) {
     super(props)
     this.state = { scrollToRow: null }
@@ -181,3 +181,5 @@ export default class ExplorerTable extends Component {
     )
   }
 }
+
+export default logic(Dimensions({ elementResize: true })(ExplorerTable))

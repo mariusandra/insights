@@ -17,7 +17,7 @@ import sceneSaga from '~/scenes/connections/saga'
 
 // const { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } = connections.constants
 
-@connect({
+const logic = connect({
   props: [
     connections, [
       'isLoading',
@@ -28,7 +28,8 @@ import sceneSaga from '~/scenes/connections/saga'
     sceneSaga
   ]
 })
-export default class ConnectionsScene extends Component {
+
+class ConnectionsScene extends Component {
   render () {
     const { isLoading, sortedConnections } = this.props
 
@@ -54,3 +55,5 @@ export default class ConnectionsScene extends Component {
     )
   }
 }
+
+export default logic(ConnectionsScene)

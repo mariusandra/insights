@@ -7,7 +7,7 @@ import deletePopup from 'lib/popups/delete'
 
 import connectionsLogic from '~/scenes/connections/logic'
 
-@connect({
+const logic = connect({
   actions: [
     connectionsLogic, [
       'editConnection',
@@ -17,7 +17,8 @@ import connectionsLogic from '~/scenes/connections/logic'
     ]
   ]
 })
-export default class Connection extends Component {
+
+class Connection extends Component {
   constructor (props) {
     super(props)
 
@@ -130,3 +131,5 @@ export default class Connection extends Component {
     )
   }
 }
+
+export default logic(Connection)

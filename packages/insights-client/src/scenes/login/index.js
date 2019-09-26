@@ -14,7 +14,7 @@ import sceneLogic from '~/scenes/login/logic'
 import sceneSaga from '~/scenes/login/saga'
 
 
-@connect({
+const logic = connect({
   actions: [
     sceneLogic, [
       'setEmail',
@@ -34,7 +34,8 @@ import sceneSaga from '~/scenes/login/saga'
     sceneSaga
   ]
 })
-export default class LoginScene extends Component {
+
+class LoginScene extends Component {
   handleFormSubmit = (e) => {
     const { performLogin } = this.props.actions
     e.preventDefault()
@@ -74,3 +75,5 @@ export default class LoginScene extends Component {
     )
   }
 }
+
+export default logic(LoginScene)

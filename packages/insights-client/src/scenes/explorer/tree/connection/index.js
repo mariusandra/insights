@@ -7,7 +7,7 @@ import Select from 'lib/forms/select'
 
 import explorerLogic from '~/scenes/explorer/logic'
 
-@connect({
+const logic = connect({
   actions: [
     explorerLogic, [
       'setConnection'
@@ -20,7 +20,8 @@ import explorerLogic from '~/scenes/explorer/logic'
     ]
   ]
 })
-export default class Connection extends Component {
+
+class Connection extends Component {
   render () {
     const { connections, connection } = this.props
     const { setConnection } = this.props.actions
@@ -34,3 +35,5 @@ export default class Connection extends Component {
     )
   }
 }
+
+export default logic(Connection)

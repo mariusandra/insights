@@ -45,8 +45,6 @@ class AutoFocusInput extends Component {
   }
 }
 
-// logic
-@connect()
 export default class Share extends Component {
   constructor (props) {
     super(props)

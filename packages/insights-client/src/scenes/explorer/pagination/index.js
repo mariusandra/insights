@@ -9,7 +9,7 @@ import { connect } from 'kea'
 // logic
 import explorerLogic from '~/scenes/explorer/logic'
 
-@connect({
+const logic = connect({
   actions: [
     explorerLogic, [
     ]
@@ -22,7 +22,8 @@ import explorerLogic from '~/scenes/explorer/logic'
     ]
   ]
 })
-export default class Pagination extends Component {
+
+class Pagination extends Component {
   render () {
     const { count, visibleStart, visibleEnd } = this.props
 
@@ -39,3 +40,5 @@ export default class Pagination extends Component {
     )
   }
 }
+
+export default logic(Pagination)

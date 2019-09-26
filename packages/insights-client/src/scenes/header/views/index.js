@@ -11,7 +11,7 @@ import { AnchorButton, Dialog, Classes, Intent, Button, Popover, Position, Menu,
 // logic
 import viewsLogic from '~/scenes/header/views/logic'
 
-@connect({
+const logic = connect({
   actions: [
     viewsLogic, [
       'setNewName',
@@ -32,7 +32,8 @@ import viewsLogic from '~/scenes/header/views/logic'
     ]
   ]
 })
-export default class Views extends Component {
+
+class Views extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -116,3 +117,5 @@ export default class Views extends Component {
     )
   }
 }
+
+export default logic(Views)

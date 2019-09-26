@@ -5,14 +5,15 @@ import messg from 'messg'
 
 import connectionsLogic from '~/scenes/connections/logic'
 
-@connect({
+const logic = connect({
   actions: [
     connectionsLogic, [
       'addConnection'
     ]
   ]
 })
-export default class AddConnection extends Component {
+
+class AddConnection extends Component {
   constructor (props) {
     super(props)
 
@@ -91,3 +92,5 @@ export default class AddConnection extends Component {
     )
   }
 }
+
+export default logic(AddConnection)

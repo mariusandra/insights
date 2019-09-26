@@ -10,7 +10,7 @@ import getMeta from 'lib/explorer/get-meta'
 
 import explorerLogic from '~/scenes/explorer/logic'
 
-@connect({
+const logic = connect({
   actions: [
     explorerLogic, [
       'setSort'
@@ -26,7 +26,8 @@ import explorerLogic from '~/scenes/explorer/logic'
     ]
   ]
 })
-export default class TableHeader extends Component {
+
+class TableHeader extends Component {
   static propTypes = {
     column: PropTypes.string
   }
@@ -103,3 +104,5 @@ export default class TableHeader extends Component {
     )
   }
 }
+
+export default logic(TableHeader)

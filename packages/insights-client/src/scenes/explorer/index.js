@@ -21,7 +21,7 @@ import AddToDashboard from './add-to-dashboard'
 import explorerLogic from '~/scenes/explorer/logic'
 import explorerSaga from '~/scenes/explorer/saga'
 
-@connect({
+const logic = connect({
   actions: [
     explorerLogic, [
       'refreshData'
@@ -40,7 +40,8 @@ import explorerSaga from '~/scenes/explorer/saga'
     explorerSaga
   ]
 })
-export default class Explorer extends Component {
+
+class Explorer extends Component {
   constructor (props) {
     super(props)
 
@@ -106,3 +107,5 @@ export default class Explorer extends Component {
     )
   }
 }
+
+export default logic(Explorer)

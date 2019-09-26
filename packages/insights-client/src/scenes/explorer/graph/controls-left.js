@@ -8,7 +8,7 @@ import explorerLogic from '~/scenes/explorer/logic'
 
 export const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
 
-@kea({
+const logic = kea({
   connect: {
     actions: [
       explorerLogic, [
@@ -34,7 +34,8 @@ export const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#
     }]
   })
 })
-export default class ControlsLeft extends Component {
+
+class ControlsLeft extends Component {
   setGraphTimeGroup = (graphTimeGroup) => {
     const { setGraphTimeGroup, setGraphControls } = this.actions
     setGraphTimeGroup(graphTimeGroup)
@@ -77,3 +78,5 @@ export default class ControlsLeft extends Component {
     )
   }
 }
+
+export default logic(ControlsLeft)

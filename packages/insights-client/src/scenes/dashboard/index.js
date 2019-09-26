@@ -21,7 +21,7 @@ import sceneSaga from '~/scenes/dashboard/saga'
 const ResponsiveReactGridLayout = WidthProvider(Responsive)
 // const { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } = dashboard.constants
 
-@connect({
+const logic = connect({
   actions: [
     dashboardLogic, [
       'layoutChanged',
@@ -52,7 +52,8 @@ const ResponsiveReactGridLayout = WidthProvider(Responsive)
     sceneSaga
   ]
 })
-export default class Dashboard extends Component {
+
+class Dashboard extends Component {
   state = {
     mounted: false
   }
@@ -139,3 +140,5 @@ export default class Dashboard extends Component {
     )
   }
 }
+
+export default logic(Dashboard)

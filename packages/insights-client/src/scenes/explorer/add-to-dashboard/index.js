@@ -8,7 +8,7 @@ import Select from 'lib/forms/select'
 import explorerLogic from '~/scenes/explorer/logic'
 import headerLogic from '~/scenes/header/logic'
 
-@connect({
+const logic = connect({
   actions: [
     explorerLogic, [
       'addToDashboard'
@@ -27,7 +27,8 @@ import headerLogic from '~/scenes/header/logic'
     ]
   ]
 })
-export default class OneFilter extends Component {
+
+class OneFilter extends Component {
   constructor (props) {
     super(props)
 
@@ -110,3 +111,5 @@ export default class OneFilter extends Component {
     )
   }
 }
+
+export default logic(OneFilter)

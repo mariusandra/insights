@@ -17,7 +17,7 @@ import Connection from './connection'
 import explorerLogic from '~/scenes/explorer/logic'
 import viewsLogic from '~/scenes/header/views/logic'
 
-@connect({
+const logic = connect({
   actions: [
     explorerLogic, [
       'openTreeNode',
@@ -47,7 +47,8 @@ import viewsLogic from '~/scenes/header/views/logic'
     ]
   ]
 })
-export default class ExplorerTree extends Component {
+
+class ExplorerTree extends Component {
   handleSearch = (e) => {
     const { setSearch } = this.actions
     setSearch(e.target.value)
@@ -231,3 +232,5 @@ export default class ExplorerTree extends Component {
     )
   }
 }
+
+export default logic(ExplorerTree)

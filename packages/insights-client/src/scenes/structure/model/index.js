@@ -9,7 +9,7 @@ import Column from './column'
 
 import structure from '~/scenes/structure/logic'
 
-@connect({
+const logic = connect({
   actions: [
     structure, [
       'addChange',
@@ -26,7 +26,8 @@ import structure from '~/scenes/structure/logic'
     ]
   ]
 })
-export default class StructureModel extends Component {
+
+class StructureModel extends Component {
   getStructure = () => {
     const { combinedStructure, selectedModel } = this.props
     return combinedStructure[selectedModel]
@@ -71,3 +72,5 @@ export default class StructureModel extends Component {
     )
   }
 }
+
+export default logic(StructureModel)

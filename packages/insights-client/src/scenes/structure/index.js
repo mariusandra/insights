@@ -15,7 +15,7 @@ import StructureModel from './model'
 import structure from '~/scenes/structure/logic'
 import sceneSaga from '~/scenes/structure/saga'
 
-@connect({
+const logic = connect({
   actions: [
     structure, [
       'openConnections',
@@ -37,7 +37,8 @@ import sceneSaga from '~/scenes/structure/saga'
     sceneSaga
   ]
 })
-export default class StructureScene extends Component {
+
+class StructureScene extends Component {
   handleOpenConnections = (e) => {
     const { openConnections } = this.props.actions
 
@@ -108,3 +109,5 @@ export default class StructureScene extends Component {
     )
   }
 }
+
+export default logic(StructureScene)

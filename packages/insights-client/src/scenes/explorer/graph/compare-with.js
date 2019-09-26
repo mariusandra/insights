@@ -16,7 +16,7 @@ const compareWithForTimeGroup = {
   day: [0, 1, 7, 28, 364, 365]
 }
 
-@kea({
+const logic = kea({
   connect: {
     actions: [
       explorerLogic, [
@@ -44,7 +44,8 @@ const compareWithForTimeGroup = {
     }]
   })
 })
-export default class ControlsLeft extends Component {
+
+class CompareWith extends Component {
   render () {
     const { graphControls, moreShown, graphTimeGroup } = this.props
     const { setGraphControls, showMore, showLess } = this.actions
@@ -80,3 +81,5 @@ export default class ControlsLeft extends Component {
     )
   }
 }
+
+export default logic(CompareWith)

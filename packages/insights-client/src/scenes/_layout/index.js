@@ -18,7 +18,7 @@ import Spinner from 'lib/tags/spinner'
 // logic
 import authLogic from '~/scenes/auth'
 
-@connect({
+const logic = connect({
   props: [
     authLogic, [
       'showLogin',
@@ -26,7 +26,8 @@ import authLogic from '~/scenes/auth'
     ]
   ]
 })
-export default class InsightsScene extends Component {
+
+class InsightsScene extends Component {
   render () {
     const { showLogin, showApp } = this.props
 
@@ -58,3 +59,5 @@ export default class InsightsScene extends Component {
     )
   }
 }
+
+export default logic(InsightsScene)
