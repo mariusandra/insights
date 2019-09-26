@@ -9,8 +9,7 @@ import messg from 'messg'
 
 import client from 'lib/client'
 
-// import controller from './controller.rb'
-const viewsService = client.service('api/views')
+const viewsService = client.service('views')
 
 export default kea({
   path: () => ['scenes', 'header', 'viewsSaga'],

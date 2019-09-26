@@ -8,8 +8,8 @@ import client from 'lib/client'
 
 import structureLogic from 'scenes/structure/logic'
 
-const connectionsService = client.service('api/connections')
-const structureService = client.service('api/structure')
+const connectionsService = client.service('connections')
+const structureService = client.service('structure')
 
 export default kea({
   path: () => ['scenes', 'structure', 'saga'],

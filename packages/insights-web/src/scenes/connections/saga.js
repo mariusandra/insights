@@ -9,8 +9,8 @@ import connectionsLogic from 'scenes/connections/logic'
 
 import client from 'lib/client'
 
-const connectionsService = client.service('api/connections')
-const connectionTestService = client.service('api/connection-test')
+const connectionsService = client.service('connections')
+const connectionTestService = client.service('connection-test')
 
 export default kea({
   path: () => ['scenes', 'connections', 'saga'],

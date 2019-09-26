@@ -15,12 +15,12 @@ import delay from 'lib/utils/delay'
 
 import client from 'lib/client'
 
-const connectionsService = client.service('api/connections')
-const structureService = client.service('api/structure')
-const resultsService = client.service('api/results')
-const favouritesService = client.service('api/favourites')
-const dashboardsService = client.service('api/dashboards')
-const dashboardItemsService = client.service('api/dashboard-items')
+const connectionsService = client.service('connections')
+const structureService = client.service('structure')
+const resultsService = client.service('results')
+const favouritesService = client.service('favourites')
+const dashboardsService = client.service('dashboards')
+const dashboardItemsService = client.service('dashboard-items')
 
 function fetchBlob (params) {
   var qs = document.querySelector('meta[name=csrf-token]')

@@ -12,8 +12,8 @@ import dashboardLogic from 'scenes/dashboard/logic'
 
 import client from 'lib/client'
 
-const dashboardsService = client.service('api/dashboards')
-const dashboardItemsService = client.service('api/dashboard-items')
+const dashboardsService = client.service('dashboards')
+const dashboardItemsService = client.service('dashboard-items')
 
 export default kea({
   path: () => ['scenes', 'dashboard', 'saga'],

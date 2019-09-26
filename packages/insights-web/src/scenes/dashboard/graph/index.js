@@ -19,7 +19,7 @@ import dashboardLogic from 'scenes/dashboard/logic'
 import headerLogic from 'scenes/header/logic'
 
 import client from 'lib/client'
-const resultsService = client.service('api/results')
+const resultsService = client.service('results')
 
 const logic = connect({
   actions: [
