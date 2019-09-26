@@ -14,7 +14,7 @@ const otherMetaFields = {
 const noop = () => {}
 
 export default class ModelColumn extends Component {
-  static PropTypes = {
+  static propTypes = {
     model: PropTypes.string,
     models: PropTypes.array,
     column: PropTypes.string,

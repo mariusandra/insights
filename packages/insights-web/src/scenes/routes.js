@@ -13,11 +13,11 @@ export function combineScenesAndRoutes (scenes, routes) {
 }
 
 const scenes = {
-  connections: require('bundle-loader?lazy&name=insights!./connections/index.js'),
-  structure: require('bundle-loader?lazy&name=insights!./structure/index.js'),
-  dashboard: require('bundle-loader?lazy&name=insights!./dashboard/index.js'),
-  explorer: require('bundle-loader?lazy&name=insights!./explorer/index.js'),
-  login: require('bundle-loader?lazy&name=insights!./login/index.js')
+  connections: require('./connections/index.js'),
+  structure: require('./structure/index.js'),
+  dashboard: require('./dashboard/index.js'),
+  explorer: require('./explorer/index.js'),
+  login: require('./login/index.js')
 }
 
 const routes = {

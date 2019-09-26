@@ -1,12 +1,8 @@
 import { Provider } from 'react-redux'
-import ReactDOM from 'react-dom'
 import React from 'react'
-
-import Popup from 'react-popup'
 
 import { Router, browserHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
-import { FocusStyleManager } from '@blueprintjs/core'
 
 import store from './store'
 import App from './_layout'
@@ -33,16 +29,10 @@ export function getRoutes (App, store, routes) {
 
 const history = syncHistoryWithStore(browserHistory, store)
 
-FocusStyleManager.onlyShowFocusOnTabs()
-
-ReactDOM.render(
-  <Provider store={store}>
-    <Router history={history} routes={getRoutes(App, store, routes)} />
-  </Provider>,
-  document.getElementById('root')
-)
-
-ReactDOM.render(
-  <Popup />,
-  document.getElementById('popupContainer')
-)
+export default function Scenes() {
+  return (
+    <Provider store={store}>
+      <Router history={history} routes={getRoutes(App, store, routes)} />
+    </Provider>
+  )
+}
