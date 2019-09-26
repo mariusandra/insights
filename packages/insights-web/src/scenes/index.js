@@ -15,7 +15,7 @@ export default function Scenes() {
         <App>
           <Switch>
             {Object.entries(routes).map(([path, Component]) => (
-              <Route exact path={path} render={() => <Component />} />
+              <Route key={path} exact path={path} render={() => <Component />} />
             ))}
           </Switch>
         </App>
