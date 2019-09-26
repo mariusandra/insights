@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@blueprintjs/core": "^3.0.1",
+    "@feathersjs/client": "^4.3.3",
     "@types/jest": "24.0.18",
     "@types/node": "12.7.5",
     "@types/react": "16.9.2",
@@ -36,6 +37,7 @@
     "redux": "4.0.1",
     "redux-saga": "0.16.2",
     "reselect": "2.5.4",
+    "socket.io-client": "^2.3.0",
     "typescript": "3.6.3"
   },
   "scripts": {

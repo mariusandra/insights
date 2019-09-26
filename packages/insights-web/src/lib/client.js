@@ -1,15 +1,12 @@
-import feathers from 'feathers/client'
-import socketio from 'feathers-socketio/client'
-import hooks from 'feathers-hooks'
 import io from 'socket.io-client'
-import authentication from 'feathers-authentication-client'
+import feathers from '@feathersjs/client'
 
 const socket = io('http://localhost:3030')
-const app = feathers()
-  .configure(hooks())
-  .configure(socketio(socket))
-  .configure(authentication({
-    storage: window.localStorage
-  }))
+const client = feathers()
 
-export default app
+client.configure(feathers.socketio(socket))
+client.configure(feathers.authentication({
+  storage: window.localStorage
+}))
+
+export default client
