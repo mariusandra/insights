@@ -52,6 +52,7 @@
     "winston": "^3.0.0"
   },
   "devDependencies": {
+    "@feathersjs/cli": "^4.2.1",
     "@types/compression": "^1.0.1",
     "@types/cors": "^2.8.6",
     "@types/helmet": "^0.0.44",
