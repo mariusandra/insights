@@ -4,7 +4,7 @@
     "module": "commonjs",
     "baseUrl": "./src",
     "outDir": "./lib",
-    "strict": true,
+    "strict": false,
     "esModuleInterop": true
   },
   "exclude": [

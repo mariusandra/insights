@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env ts-node
 
 // Thanks to https://github.com/mysamai/mysam/blob/master/bin/mysam for this script!
 

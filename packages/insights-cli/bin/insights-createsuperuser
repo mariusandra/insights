@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+#!/usr/bin/env ts-node
 
 var path = require('path')
 var program = require('commander')
@@ -15,8 +15,7 @@ program.version(pkg.version)
   .option('-d --develop', 'Run in development mode')
   .parse(process.argv)
 
-process.env.NODE_ENV = program.develop ? 'development' : 'production'
-process.env.NODE_CONFIG_DIR = path.join(__dirname, '..', 'config')
+process.env.NODE_CONFIG_DIR = path.join(__dirname, '..', '..', 'insights-api', 'config')
 process.env.INSIGHTS_DATA = program.data || path.join(require('os').homedir(), '.insights', 'data')
 
 if (program.email) {

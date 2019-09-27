@@ -2,9 +2,9 @@
 // - INSIGHTS_SUPERUSER_EMAIL
 // - INSIGHTS_SUPERUSER_PASSWORD
 
-const app = require('insights-api/src')
-const prompt = require('prompt-promise')
-const randomString = require('../lib/random-string')
+import app from '../../insights-api/src/app'
+import prompt from 'prompt-promise'
+import randomString from '../lib/random-string'
 
 const azAZ09 = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
@@ -40,7 +40,7 @@ async function main () {
   }
 
   try {
-    await app.service('api/users').create({
+    await app.service('users').create({
       email: email,
       password: password,
       roles: ['superuser']
