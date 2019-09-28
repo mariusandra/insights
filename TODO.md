@@ -1,4 +1,4 @@
-make /url/:code paths work
+1. Make /url/:code paths work
 
 ```js
   app.get('/url/:code', async function (req, res) {
@@ -11,3 +11,6 @@ make /url/:code paths work
     }
   })
 ```
+
+2. Check that you can't just CREATE users on the service
+

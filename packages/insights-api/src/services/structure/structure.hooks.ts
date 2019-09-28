@@ -1,8 +1,9 @@
-// Application hooks that run for every service
-const logger = require('./hooks/logger')
-const { authenticate } = require('feathers-authentication').hooks
+import * as authentication from '@feathersjs/authentication';
+// Don't remove this comment. It's needed to format import lines nicely.
 
-module.exports = {
+const { authenticate } = authentication.hooks;
+
+export default {
   before: {
     all: [ authenticate('jwt') ],
     find: [],
@@ -14,7 +15,7 @@ module.exports = {
   },
 
   after: {
-    all: [ logger() ],
+    all: [],
     find: [],
     get: [],
     create: [],
@@ -24,7 +25,7 @@ module.exports = {
   },
 
   error: {
-    all: [ logger() ],
+    all: [],
     find: [],
     get: [],
     create: [],
@@ -32,4 +33,4 @@ module.exports = {
     patch: [],
     remove: []
   }
-}
+};
