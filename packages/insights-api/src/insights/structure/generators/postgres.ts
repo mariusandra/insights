@@ -3,7 +3,7 @@ import { parse } from 'pg-connection-string'
 import changeCase from 'change-case'
 import { singular } from 'pluralize'
 
-export default async function postgresGenerator (database) {
+export default async function postgresGenerator (database: string) {
   const dbConfig = parse(database)
   const db = await pgStructure(dbConfig, ['public'])
   const tablesArray = db.get('public').tables

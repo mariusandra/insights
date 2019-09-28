@@ -1,36 +1,38 @@
 import moment from 'moment'
 
+interface Params {
+  sort?: string
+  columns?: string[]
+  filter?: { key: string, value: string }[]
+
+  offset?: number // 0
+  limit?: number // 25
+
+  export?: 'xlsx' | 'pdf',
+  exportTitle?: string,
+
+  graphControls?: GraphControls
+
+  graphTimeFilter?: string // last-60
+  facetsColumn?: string
+  facetsCount?: number
+
+  graphOnly?: boolean
+  tableOnly?: boolean
+}
+
+interface GraphControls {
+  type?: string // 'area'
+  sort?: string // '123'
+  cumulative?: boolean
+  percentages?: boolean
+  labels?: boolean
+  compareWith?: number
+  compareWithPercentageLine?: boolean
+}
+
 export default class Results {
-  // params = {
-  //   sort: params.sort,
-  //   columns: params.columns,
-  //   filter: params.filter || [], # [{ key, value }]
-  //
-  //   offset: params.offset.try(:to_i) || 0,
-  //   limit: params.limit.try(:to_i) || 25,
-  //
-  //   export: params.export,
-  //   exportTitle: params.exportTitle,
-  //   svg: params.svg,
-  //
-  //   graphControls: {
-  //     type: 'area',
-  //     sort: '123',
-  //     cumulative: false,
-  //     percentages: false,
-  //     labels: false,
-  //     compareWith: 0,
-  //     compareWithPercentageLine: false
-  //   }}
-  //
-  //   graphTimeFilter: params.graphTimeFilter || 'last-60',
-  //
-  //   facetsColumn: params.facetsColumn,
-  //   facetsCount: params.facetsCount.present? ? params.facetsCount.to_i : 6
-  //
-  //   graphOnly: false,
-  //   tableOnly: false
-  // }
+  params: Params
 
   constructor ({ params, adapter, structure }) {
     this.params = params
