@@ -39,6 +39,7 @@
     "@feathersjs/express": "^4.3.0",
     "@feathersjs/feathers": "^4.3.0",
     "@feathersjs/socketio": "^4.3.0",
+    "change-case": "^3.1.0",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "feathers-nedb": "^5.0.1",

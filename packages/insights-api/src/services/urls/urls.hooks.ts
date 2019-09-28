@@ -1,6 +1,6 @@
 import * as authentication from '@feathersjs/authentication';
 import { HookContext } from '@feathersjs/feathers'
-import randomString from '../../lib/random-string'
+import randomString from '../../utils/random-string'
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const { authenticate } = authentication.hooks;
