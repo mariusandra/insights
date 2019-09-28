@@ -5,10 +5,10 @@ import generator from './generators'
 
 let structureCache = {}
 
-module.exports = async function (configPath, database) {
+export default async function (configPath?: string, database?: string) {
   if (configPath) {
     return getConfigStructure(configPath)
-  } else if (structureCache[database]) {
+  } else if (database && structureCache[database]) {
     return structureCache[database]
   } else {
     const strucutre = await generator(database)
@@ -17,7 +17,7 @@ module.exports = async function (configPath, database) {
   }
 }
 
-function getConfigStructure (configPath) {
+function getConfigStructure (configPath: string) {
   const structure = yaml.safeLoad(fs.readFileSync(configPath, 'utf8'))
 
   Object.keys(structure).forEach(model => {

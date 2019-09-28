@@ -4,6 +4,7 @@ import connections from './connections/connections.service';
 import views from './views/views.service';
 import urls from './urls/urls.service';
 import favourites from './favourites/favourites.service';
+import connectionTest from './connection-test/connection-test.service';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 export default function (app: Application) {
@@ -12,4 +13,5 @@ export default function (app: Application) {
   app.configure(views);
   app.configure(urls);
   app.configure(favourites);
+  app.configure(connectionTest);
 }
