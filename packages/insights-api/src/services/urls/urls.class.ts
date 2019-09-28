@@ -1,14 +1,13 @@
 import { Service, NedbServiceOptions } from 'feathers-nedb';
 import { Application } from '../../declarations';
 
-interface ConnectionData {
+interface UrlData {
   _id?: string;
-  keyword: string;
-  url: string;
-  structurePath: string;
+  code: string;
+  path: string;
 }
 
-export class Connections extends Service<ConnectionData> {
+export class Urls extends Service<UrlData> {
   constructor(options: Partial<NedbServiceOptions>, app: Application) {
     super(options);
   }

@@ -19,8 +19,6 @@ const connectionsService = client.service('connections')
 const structureService = client.service('structure')
 const resultsService = client.service('results')
 const favouritesService = client.service('favourites')
-const dashboardsService = client.service('dashboards')
-const dashboardItemsService = client.service('dashboard-items')
 
 function fetchBlob (params) {
   var qs = document.querySelector('meta[name=csrf-token]')
@@ -120,9 +118,6 @@ export default kea({
         'removeFavouriteSuccess',
         'favouritesLoaded',
 
-        'dashboardsLoaded',
-        'addToDashboard',
-
         'setGraphTimeGroup'
       ]
     ]
@@ -160,7 +155,6 @@ export default kea({
     [actions.openTreeNode]: workers.refreshData,
     [actions.closeTreeNode]: workers.refreshData,
 
-    [actions.addToDashboard]: workers.addToDashboard,
     [actions.addFavouriteRequest]: workers.addFavouriteRequest,
     [actions.removeFavouriteRequest]: workers.removeFavouriteRequest,
 
@@ -194,7 +188,6 @@ export default kea({
 
     yield put(setConnection(connection))
 
-    yield fork(this.workers.loadDashboards)
     yield fork(this.workers.loadFavourites)
     yield call(this.workers.loadStructure, connection)
 
@@ -202,13 +195,6 @@ export default kea({
   },
 
   workers: {
-    loadDashboards: function * (action) {
-      const { dashboardsLoaded } = this.actions
-
-      const response = yield dashboardsService.find()
-      yield put(dashboardsLoaded(response.data))
-    },
-
     loadFavourites: function * (action) {
       const { favouritesLoaded } = this.actions
 
@@ -396,16 +382,6 @@ export default kea({
       })
 
       yield put(setColumnsAndFilter(newColumns, newFilter))
-    },
-
-    addToDashboard: function * (action) {
-      const { id, name, path } = action.payload
-
-      const dashboardItem = yield dashboardItemsService.create({ dashboardId: id, name, path })
-
-      if (dashboardItem) {
-        messg.success('Added!', 2500)
-      }
     },
 
     addFavouriteRequest: function * (action) {

@@ -70,11 +70,9 @@ class HeaderScene extends Component {
 
     const page = pathname.indexOf('/explorer') === 0 || pathname === '/'
                   ? 'explorer'
-                  : pathname.indexOf('/dashboard') === 0
-                    ? 'dashboard'
-                    : pathname.indexOf('/connections') === 0
-                      ? 'connections'
-                      : 'root'
+                  : pathname.indexOf('/connections') === 0
+                    ? 'connections'
+                    : 'root'
 
     return (
       <Navbar className='bp3-dark' style={{ borderBottom: '1px solid #dbdcdd' }}>
@@ -88,7 +86,6 @@ class HeaderScene extends Component {
             selectedTabId={page}>
             <Tab id='connections' title='Connections' />
             <Tab id='explorer' icon='search-around' title='Explorer' />
-            <Tab id='dashboard' title='Dashboard' />
           </Tabs>
         </Navbar.Group>
         {user ? <Navbar.Group align={Alignment.RIGHT}>

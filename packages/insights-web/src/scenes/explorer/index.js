@@ -15,7 +15,6 @@ import Pagination from './pagination'
 import Tree from './tree'
 import Table from './table'
 import Filter from './filter'
-import AddToDashboard from './add-to-dashboard'
 
 // logic
 import explorerLogic from 'scenes/explorer/logic'
@@ -77,9 +76,6 @@ class Explorer extends Component {
                   <Button icon='refresh' loading={isSubmitting} onClick={refreshData}>
                     Reload
                   </Button>
-                ) : null}
-                {hasGraph ? (
-                  <AddToDashboard />
                 ) : null}
                 {hasGraph ? (
                   <TimeFilter />

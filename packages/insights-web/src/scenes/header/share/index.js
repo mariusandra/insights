@@ -10,7 +10,7 @@ import messg from 'messg'
 
 import client from 'lib/client'
 
-const urlService = client.service('url')
+const urlService = client.service('urls')
 
 class AutoFocusInput extends Component {
   componentDidMount () {

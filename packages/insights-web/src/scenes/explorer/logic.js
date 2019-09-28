@@ -76,9 +76,6 @@ export default kea({
 
     requestExport: (format) => ({ format }),
 
-    addToDashboard: ({ id, name, path }) => ({ id, name, path }),
-    dashboardsLoaded: (dashboards) => ({ dashboards }),
-
     addFavouriteRequest: (path) => ({ path }),
     addFavouriteSuccess: (path, favourite) => ({ path, favourite }),
     removeFavouriteRequest: (path) => ({ path }),
@@ -286,17 +283,6 @@ export default kea({
     exportTitle: ['', PropTypes.string, {
       [actions.setExportTitle]: (state, payload) => payload.exportTitle,
       [actions.clear]: () => ''
-    }],
-
-    // { 1: { layout: [{x,y,w,h,path,name}], name: .. } }
-    dashboards: [{}, PropTypes.object, {
-      [actions.dashboardsLoaded]: (_, payload) => {
-        let newState = {}
-        payload.dashboards.forEach(dashboard => {
-          newState[dashboard._id] = dashboard
-        })
-        return newState
-      }
     }],
 
     favourites: [{}, PropTypes.object, {
