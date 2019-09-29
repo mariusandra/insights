@@ -20,7 +20,7 @@ export interface StructureModel {
 
 export interface StructureColumn {
   type: ColumnType
-  index?: 'primary_key' 
+  index?: 'primary_key'
 }
 
 export interface StructureCustom {
@@ -34,6 +34,8 @@ export interface StructureLink {
 }
 
 export interface ResultsParams {
+  connection: string
+  
   sort: string
   columns: string[]
   filter: { key: string, value: string }[]
@@ -72,20 +74,27 @@ export interface GraphResponse {
 
 }
 
-export type ColumnType = 'string' | 'boolean'
-export type AggregrationType = 'count' | 'sum' | 'min' | 'max' | 'avg'
+export type ColumnType = 'string' | 'boolean' | 'time' | 'date'
+export type AggregationType = 'count' | 'sum' | 'min' | 'max' | 'avg'
 export type TruncationType = 'hour' | 'day' | 'week' | 'month' | 'quarter' | 'year'
 
 export interface ColumnMetadata {
-  column: string,
-  path: string,
-  type: string,
-  url: string,
-  key: string,
-  model: string,
-  aggregate: string,
-  transform: string,
-  index: string,
-  sql: string,
+  column: string
+  path: string
+  type: ColumnType
+  url: string
+  key: string
+  model: string
+  aggregate: AggregationType
+  transform: TruncationType
+  index: string
+  sql: string
+  sqlBeforeTransform: string
   alias: string
+}
+
+export interface SqlQueryResponse {
+  rows: {
+    [column: string]: any;
+  }[]
 }

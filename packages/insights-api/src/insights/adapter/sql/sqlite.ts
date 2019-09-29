@@ -8,7 +8,7 @@ export default class SQLite extends SQL {
   }
 
   truncateDate (sql: string, truncation: TruncationType) {
-    if (!this.allowedDateTruncations.includes(truncation)) {
+    if (!this.allowedDateTruncations().includes(truncation)) {
       throw new Error(`Bad date truncation '${truncation}'`)
     }
 

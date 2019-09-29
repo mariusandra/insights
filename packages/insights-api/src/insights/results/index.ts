@@ -1,4 +1,4 @@
-import { Structure, ColumnMetadata, ResultsParams, GraphResponse, ResultsResponse } from '../definitions.d'
+import { Structure, ColumnMetadata, ResultsParams, GraphResponse, ResultsResponse, TruncationType } from '../definitions.d'
 import SQL from '../adapter/sql'
 
 import moment from 'moment'
@@ -30,8 +30,8 @@ export default class Results {
     select: string
     group: string
     sort: string
-    limit: string
-    offset: string
+    limit: number
+    offset: number
   }
   finalResults: any[]
   graphResponse: GraphResponse | null
@@ -42,7 +42,7 @@ export default class Results {
     this.structure = structure
   }
 
-  async getResponse () {
+  async getResponse () : Promise<ResultsResponse> {
     this.resetCache()
 
     // common
@@ -91,8 +91,8 @@ export default class Results {
       select: '',
       group: '',
       sort: '',
-      limit: '',
-      offset: ''
+      limit: 25,
+      offset: 0
     }
 
     this.finalResults = []
@@ -376,7 +376,7 @@ export default class Results {
     // also add the primary key of the base model to the list, to keep the results table stable
     // otherwise when scrolling things can shift around annoyingly
     const baseTableAlias = '$T0' // hardcoded for now
-    const firstPrimary = (Object.entries(this.structure[this.baseModelName]['columns']).filter(([k, v]) => v['index'] === 'primary')[0] || [])[0]
+    const firstPrimary = (Object.entries(this.structure[this.baseModelName]['columns']).filter(([k, v]) => v['index'] === 'primary_key')[0] || [])[0]
     const noAggregate = this.columnMetadata.filter(v => v.aggregate).length === 0
 
     if (firstPrimary && noAggregate) {
@@ -392,8 +392,8 @@ export default class Results {
   }
 
   setLimit () {
-    this.resultsTableSqlParts.offset = parseInt(this.params.offset) || 0
-    this.resultsTableSqlParts.limit = parseInt(this.params.limit) || 25
+    this.resultsTableSqlParts.offset = this.params.offset || 0
+    this.resultsTableSqlParts.limit = this.params.limit || 25
 
     if (this.params.export === 'xlsx') {
       this.resultsTableSqlParts.offset = 0
@@ -434,7 +434,7 @@ export default class Results {
     const graphTimeFilter = this.params.graphTimeFilter || 'last-60'
     const cumulative = this.params.graphControls.cumulative
 
-    const facetsCount = parseInt(this.params.facetsCount) || 6
+    const facetsCount = this.params.facetsCount || 6
     const facetsColumnKey = this.params.facetsColumn
 
     // see what we have to work with
@@ -447,7 +447,7 @@ export default class Results {
     }
 
     // day? week? month?
-    const timeGroup = timeColumns[0].transform || 'day'
+    const timeGroup: TruncationType = timeColumns[0].transform || 'day'
 
     const compareWith = this.params.graphControls.compareWith || 0
 
@@ -511,7 +511,7 @@ export default class Results {
 
     // if we're faceting, see if we need to limit the facets
     if (facetsColumn) {
-      const [facetValuesInner, hasOther] = await this.adapter.getFacetValuesAndHasOther({
+      const { values: facetValuesInner, hasOther } = await this.adapter.getFacetValuesAndHasOther({
         column: facetsColumn.sql,
         fromAndJoins: this.commonSqlParts.fromAndJoins,
         where: graphWhereSql,

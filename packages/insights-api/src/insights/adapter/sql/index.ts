@@ -1,8 +1,10 @@
-import { ColumnType, AggregrationType, ColumnMetadata } from '../../definitions.d'
+import { ColumnType, TruncationType, AggregationType, ColumnMetadata, SqlQueryResponse } from '../../definitions.d'
 
 import moment from 'moment'
 
 export default class SQL {
+  connection: string
+
   constructor (connection) {
     this.connection = connection
   }
@@ -16,7 +18,7 @@ export default class SQL {
     return `"${string}"`
   }
 
-  execute (sql: string) {
+  execute (sql: string) : Promise<SqlQueryResponse> {
     throw new Error('execute(sql) needs to be overridden!')
   }
 
@@ -48,14 +50,14 @@ export default class SQL {
     return sql
   }
 
-  truncateDate (sql: string, truncation: string) {
-    if (!this.allowedDateTruncations.includes(truncation)) {
+  truncateDate (sql: string, truncation: TruncationType) {
+    if (!this.allowedDateTruncations().includes(truncation)) {
       throw new Error(`Bad date truncation '${truncation}'`)
     }
     return sql
   }
 
-  addAggregation (sql: string, aggregation: AggregrationType) {
+  addAggregation (sql: string, aggregation: AggregationType) {
     if (!this.allowedAggregations().includes(aggregation)) {
       throw new Error(`Bad aggregation function '${aggregation}'`)
     }
@@ -197,7 +199,7 @@ export default class SQL {
     return parseInt(countResults.rows[0]['count'])
   }
 
-  async getResults ({ select = '', fromAndJoins = '', where = '', group = '', having = '', sort = '', limit = '', offset = '' }) {
+  async getResults ({ select = '', fromAndJoins = '', where = '', group = '', having = '', sort = '', limit = 25, offset = 0 }) {
     const limitSql = limit ? `LIMIT ${limit}` : ''
     const offsetSql = offset ? `OFFSET ${offset}` : ''
     const resultsSql = `SELECT ${select} ${fromAndJoins} ${where} ${group} ${having} ${sort} ${limitSql} ${offsetSql}`
@@ -221,7 +223,7 @@ export default class SQL {
     const valuesToReturn = facetValues.slice(0, limit)
     const hasOther = facetValues.length > limit
 
-    return [valuesToReturn, hasOther]
+    return { values: valuesToReturn, hasOther }
   }
 
   facetedValuesOrOther (columnSql: string, facetValues: string[], otherValue: string) {

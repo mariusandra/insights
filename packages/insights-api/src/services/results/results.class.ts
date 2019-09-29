@@ -1,3 +1,4 @@
+import { ResultsParams, ResultsResponse } from '../../insights/definitions'
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 
@@ -5,11 +6,12 @@ import getStructure from '../../insights/structure'
 import createAdapter from '../../insights/adapter'
 import FindResults from '../../insights/results'
 
-interface Data {}
-
 interface ServiceOptions {}
+interface ResultsServiceParams extends Params {
+  query: ResultsParams
+}
 
-export class Results implements Partial<ServiceMethods<Data>> {
+export class Results implements Partial<ServiceMethods<ResultsResponse>> {
   app: Application;
   options: ServiceOptions;
 
@@ -18,8 +20,8 @@ export class Results implements Partial<ServiceMethods<Data>> {
     this.app = app;
   }
 
-  async find (params?: Params): Promise<Data[] | Paginated<Data>> {
-    const { connection } = params.query || {}
+  async find (params?: ResultsServiceParams): Promise<ResultsResponse> {
+    const { connection } = params.query
     const connectionsResult = await this.app.service('connections').find({ query: { keyword: connection } })
 
     const { structurePath, url } = connectionsResult.data[0]
