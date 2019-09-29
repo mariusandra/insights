@@ -1,4 +1,6 @@
-import SQL, { TruncationType, ColumnType } from './index'
+import { ColumnType, TruncationType } from '../../definitions.d'
+
+import SQL from './index'
 
 export default class SQLite extends SQL {
   allowedDateTruncations () {

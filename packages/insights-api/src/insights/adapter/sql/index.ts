@@ -1,22 +1,6 @@
+import { ColumnType, AggregrationType, ColumnMetadata } from '../../definitions.d'
+
 import moment from 'moment'
-
-export type ColumnType = 'string' | 'boolean'
-export type AggregrationType = 'count' | 'sum' | 'min' | 'max' | 'avg'
-export type TruncationType = 'hour' | 'day' | 'week' | 'month' | 'quarter' | 'year'
-
-export interface ColumnMetadata {
-  column: string,
-  path: string,
-  type: string,
-  url: string,
-  key: string,
-  model: string,
-  aggregate: string,
-  transform: string,
-  index: string,
-  sql: string,
-  alias: string
-}
 
 export default class SQL {
   constructor (connection) {

@@ -1,14 +1,16 @@
+import { Structure, StructureColumn } from '../../definitions'
+
 import pgStructure from 'pg-structure'
 import { parse } from 'pg-connection-string'
 import changeCase from 'change-case'
 import { singular } from 'pluralize'
 
-export default async function postgresGenerator (database: string) {
+export default async function postgresGenerator (database: string): Promise<Structure> {
   const dbConfig = parse(database)
   const db = await pgStructure(dbConfig, ['public'])
   const tablesArray = db.get('public').tables
 
-  let structure = {}
+  let structure: Structure = {}
   let multiples = {}
 
   tablesArray.forEach(table => {
@@ -70,7 +72,7 @@ export default async function postgresGenerator (database: string) {
           }
         })
       } else {
-        let columnObject = {
+        let columnObject: StructureColumn = {
           type: convertPgType(type)
         }
 

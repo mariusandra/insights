@@ -1,0 +1,91 @@
+export interface Structure {
+  [model: string]: StructureModel
+}
+
+export interface StructureModel {
+  enabled: boolean
+  model: string
+  table_name: string
+  primary_key?: string
+  columns: {
+    [name: string]: StructureColumn
+  }
+  custom: {
+    [name: string]: StructureCustom
+  }
+  links: {
+    [name: string]: StructureLink
+  }
+}
+
+export interface StructureColumn {
+  type: ColumnType
+  index?: 'primary_key' 
+}
+
+export interface StructureCustom {
+  sql: string
+}
+
+export interface StructureLink {
+  model: string
+  model_key: string
+  my_key: string
+}
+
+export interface ResultsParams {
+  sort: string
+  columns: string[]
+  filter: { key: string, value: string }[]
+
+  offset: number // 0
+  limit: number // 25
+
+  export: 'xlsx' | 'pdf',
+  exportTitle: string,
+
+  graphControls: Partial<GraphControls>
+
+  graphTimeFilter: string // last-60
+  facetsColumn: string
+  facetsCount: number
+
+  graphOnly: boolean
+  tableOnly: boolean
+}
+
+export interface GraphControls {
+  type: string // 'area'
+  sort: string // '123'
+  cumulative: boolean
+  percentages: boolean
+  labels: boolean
+  compareWith: number
+  compareWithPercentageLine: boolean
+}
+
+export interface ResultsResponse {
+
+}
+
+export interface GraphResponse {
+
+}
+
+export type ColumnType = 'string' | 'boolean'
+export type AggregrationType = 'count' | 'sum' | 'min' | 'max' | 'avg'
+export type TruncationType = 'hour' | 'day' | 'week' | 'month' | 'quarter' | 'year'
+
+export interface ColumnMetadata {
+  column: string,
+  path: string,
+  type: string,
+  url: string,
+  key: string,
+  model: string,
+  aggregate: string,
+  transform: string,
+  index: string,
+  sql: string,
+  alias: string
+}

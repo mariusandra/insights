@@ -1,3 +1,5 @@
+import { Structure } from '../definitions'
+
 import yaml from 'js-yaml'
 import fs from 'fs'
 
@@ -5,7 +7,7 @@ import generator from './generators'
 
 let structureCache = {}
 
-export default async function (configPath?: string, database?: string) {
+export default async function (configPath?: string, database?: string) : Promise<Structure> {
   if (configPath) {
     return getConfigStructure(configPath)
   } else if (database && structureCache[database]) {
@@ -17,7 +19,7 @@ export default async function (configPath?: string, database?: string) {
   }
 }
 
-function getConfigStructure (configPath: string) {
+function getConfigStructure (configPath: string) : Structure {
   const structure = yaml.safeLoad(fs.readFileSync(configPath, 'utf8'))
 
   Object.keys(structure).forEach(model => {

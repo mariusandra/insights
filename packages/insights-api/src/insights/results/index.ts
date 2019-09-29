@@ -1,38 +1,40 @@
+import { Structure, ColumnMetadata, ResultsParams, GraphResponse, ResultsResponse } from '../definitions.d'
+import SQL from '../adapter/sql'
+
 import moment from 'moment'
 
-interface Params {
-  sort?: string
-  columns?: string[]
-  filter?: { key: string, value: string }[]
-
-  offset?: number // 0
-  limit?: number // 25
-
-  export?: 'xlsx' | 'pdf',
-  exportTitle?: string,
-
-  graphControls?: GraphControls
-
-  graphTimeFilter?: string // last-60
-  facetsColumn?: string
-  facetsCount?: number
-
-  graphOnly?: boolean
-  tableOnly?: boolean
-}
-
-interface GraphControls {
-  type?: string // 'area'
-  sort?: string // '123'
-  cumulative?: boolean
-  percentages?: boolean
-  labels?: boolean
-  compareWith?: number
-  compareWithPercentageLine?: boolean
-}
-
 export default class Results {
-  params: Params
+  params: Partial<ResultsParams>
+  structure: Structure
+  adapter: SQL
+  response: ResultsResponse
+
+  baseModelName: string | null
+  columnMetadata: ColumnMetadata[]
+  resultsTableColumnMetadata: ColumnMetadata[]
+
+  commonSqlConditions: {
+    having: string[]
+    where: string[]
+  }
+
+  commonSqlParts: {
+    fromAndJoins: string
+    where: string
+    having: string
+  }
+
+  resultsTableCount: number
+
+  resultsTableSqlParts: {
+    select: string
+    group: string
+    sort: string
+    limit: string
+    offset: string
+  }
+  finalResults: any[]
+  graphResponse: GraphResponse | null
 
   constructor ({ params, adapter, structure }) {
     this.params = params
@@ -150,11 +152,6 @@ export default class Results {
       // always starting the traverse from the base model
       let node = this.structure[this.baseModelName]
       let tableAlias = baseTableAlias
-
-      // merge the links if using the old deprecated links: { incoming: {}, outgoing: {} } this.structure
-      if (Object.keys(node.links).sort().join(' ') === 'incoming outgoing') {
-        node.links = Object.assign({}, node.links.incoming, node.links.outgoing)
-      }
 
       // log of how far we have gotten. empty at first
       let traversedPath = [this.baseModelName]

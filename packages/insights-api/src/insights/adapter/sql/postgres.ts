@@ -1,7 +1,9 @@
+import { TruncationType } from '../../definitions.d'
+
 import { Pool } from 'pg'
 import escape from 'pg-escape'
 
-import SQL, { TruncationType } from './index'
+import SQL from './index'
 
 import { timezone } from '../../../../config/insights'
 
