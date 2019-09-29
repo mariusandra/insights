@@ -74,7 +74,7 @@ export interface GraphResponse {
 
 }
 
-export type ColumnType = 'string' | 'boolean' | 'time' | 'date'
+export type ColumnType = 'string' | 'boolean' | 'time' | 'date' | 'number' | 'unknown'
 export type AggregationType = 'count' | 'sum' | 'min' | 'max' | 'avg'
 export type TruncationType = 'hour' | 'day' | 'week' | 'month' | 'quarter' | 'year'
 

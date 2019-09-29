@@ -7,24 +7,32 @@ export default class Results {
   params: Partial<ResultsParams>
   structure: Structure
   adapter: SQL
-  response: ResultsResponse
 
-  baseModelName: string | null
-  columnMetadata: ColumnMetadata[]
-  resultsTableColumnMetadata: ColumnMetadata[]
+  response: ResultsResponse | null = null
+
+  baseModelName: string | null = null
+  columnMetadata: ColumnMetadata[] = []
+  resultsTableColumnMetadata: ColumnMetadata[] = []
 
   commonSqlConditions: {
     having: string[]
     where: string[]
+  } = {
+    having: [],
+    where: []
   }
 
   commonSqlParts: {
     fromAndJoins: string
     where: string
     having: string
+  } = {
+    fromAndJoins: '',
+    where: '',
+    having: ''
   }
 
-  resultsTableCount: number
+  resultsTableCount: number = 1
 
   resultsTableSqlParts: {
     select: string
@@ -32,11 +40,22 @@ export default class Results {
     sort: string
     limit: number
     offset: number
+  } = {
+    select: '',
+    group: '',
+    sort: '',
+    limit: 25,
+    offset: 0
   }
-  finalResults: any[]
-  graphResponse: GraphResponse | null
 
-  constructor ({ params, adapter, structure }) {
+  finalResults: any[] = []
+  graphResponse: GraphResponse | null = null
+
+  constructor ({ params, adapter, structure } : { 
+    params: Partial<ResultsParams>, 
+    adapter: SQL
+    structure: Structure
+  }) {
     this.params = params
     this.adapter = adapter
     this.structure = structure

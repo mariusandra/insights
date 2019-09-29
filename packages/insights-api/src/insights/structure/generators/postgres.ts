@@ -1,4 +1,4 @@
-import { Structure, StructureColumn } from '../../definitions'
+import { Structure, StructureColumn, ColumnType } from '../../definitions'
 
 import pgStructure from 'pg-structure'
 import { parse } from 'pg-connection-string'
@@ -93,7 +93,7 @@ export default async function postgresGenerator (database: string): Promise<Stru
   return structure
 }
 
-function convertPgType (type) {
+function convertPgType (type: string) : ColumnType {
   switch (type) {
   case 'integer':
   case 'bigint':
@@ -113,7 +113,7 @@ function convertPgType (type) {
   case 'boolean':
     return 'boolean'
   default:
-    console.warn('Unknown Postgres Type:', type)
-    return type
+    console.error('Unknown Postgres Type:', type)
+    return 'unknown'
   }
 }

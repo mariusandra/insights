@@ -5,17 +5,20 @@ import fs from 'fs'
 
 import generator from './generators'
 
-let structureCache = {}
+type StructureCache = { [database: string]: Structure }
+let structureCache: StructureCache = {}
 
 export default async function (configPath?: string, database?: string) : Promise<Structure> {
   if (configPath) {
     return getConfigStructure(configPath)
   } else if (database && structureCache[database]) {
     return structureCache[database]
-  } else {
+  } else if (database) {
     const strucutre = await generator(database)
     structureCache[database] = strucutre
     return strucutre
+  } else {
+    throw new Error('Must specify insights.yml path or database string')
   }
 }
 

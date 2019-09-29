@@ -5,7 +5,7 @@ import moment from 'moment'
 export default class SQL {
   connection: string
 
-  constructor (connection) {
+  constructor (connection: string) {
     this.connection = connection
   }
 
