@@ -50,7 +50,7 @@ class CompareWith extends Component {
     const { graphControls, moreShown, graphTimeGroup } = this.props
     const { setGraphControls, showMore, showLess } = this.actions
 
-    const { compareWith, compareWithPercentageLine } = graphControls
+    const { compareWith, compareWithPercentageLine, compareWithPartialPercentage } = graphControls
 
     const options = compareWithForTimeGroup[graphTimeGroup]
 
@@ -74,6 +74,13 @@ class CompareWith extends Component {
               className={compareWithPercentageLine ? 'control selected' : 'control'}
               onClick={() => setGraphControls({ compareWithPercentageLine: !compareWithPercentageLine })}>
               {'%'}
+            </span>
+          )}
+          {!!compareWith && compareWith !== 0 && (
+            <span
+              className={compareWithPartialPercentage ? 'control selected' : 'control'}
+              onClick={() => setGraphControls({ compareWithPartialPercentage: !compareWithPartialPercentage })}>
+              {'[..%] * 0.x'}
             </span>
           )}
         </span>

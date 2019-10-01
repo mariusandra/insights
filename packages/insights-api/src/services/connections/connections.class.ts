@@ -1,7 +1,7 @@
 import { Service, NedbServiceOptions } from 'feathers-nedb';
 import { Application } from '../../declarations';
 
-interface ConnectionData {
+export interface ConnectionData {
   _id?: string;
   keyword: string;
   url: string;

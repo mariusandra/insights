@@ -5,7 +5,7 @@ import escape from 'pg-escape'
 
 import SQL from './index'
 
-import { timezone } from '../../../../config/insights'
+import { timezone } from '../../../config'
 
 export default class Postgres extends SQL {
   pool: Pool

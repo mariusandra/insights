@@ -1,7 +1,7 @@
 import { ResultsParams, ResultsResponse } from '../../insights/definitions'
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
-
+import { ConnectionData } from '../connections/connections.class'
 import getStructure from '../../insights/structure'
 import createAdapter from '../../insights/adapter'
 import FindResults from '../../insights/results'
@@ -24,7 +24,7 @@ export class Results implements Partial<ServiceMethods<ResultsResponse>> {
     const { connection } = params.query
     const connectionsResult = await this.app.service('connections').find({ query: { keyword: connection } })
 
-    const { structurePath, url } = connectionsResult.data[0]
+    const { structurePath, url } = (connectionsResult as Paginated<ConnectionData>).data[0]
 
     const structure = await getStructure(structurePath, url)
     const adapter = createAdapter(url)

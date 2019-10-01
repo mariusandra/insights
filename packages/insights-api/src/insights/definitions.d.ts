@@ -35,7 +35,7 @@ export interface StructureLink {
 
 export interface ResultsParams {
   connection: string
-  
+
   sort: string
   columns: string[]
   filter: { key: string, value: string }[]
@@ -64,6 +64,7 @@ export interface GraphControls {
   labels: boolean
   compareWith: number
   compareWithPercentageLine: boolean
+  compareWithPartialPercentage: boolean
 }
 
 export interface ResultsResponse {

@@ -27,8 +27,8 @@ function sharedStart (array) {
 const alphabeticalFacetSorter = (a, b) => a.name.localeCompare(b.name)
 
 function getGraphData (graph, controls) {
-  const { results, keys } = graph
-  const { percentages, compareWith, compareWithPercentageLine } = controls
+  const { results, keys, timeGroup } = graph
+  const { percentages, compareWith, compareWithPercentageLine, compareWithPartialPercentage } = controls
 
   const graphData = results.map(oldRow => {
     const time = oldRow.time
@@ -58,7 +58,18 @@ function getGraphData (graph, controls) {
         }
 
         if (compareWithPercentageLine && compareWithTotal !== 0) {
-          row['compareWith:percentageLine'] = (total - compareWithTotal) / compareWithTotal * 100
+          let totalToCompareWith = compareWithTotal
+
+          if (compareWithPartialPercentage) {
+            if (moment().startOf(timeGroup).format('YYYY-MM-DD') === time) {
+              const fullTime = moment().endOf(timeGroup).unix() - moment().startOf(timeGroup).unix()
+              const elapsedTime = moment().unix() - moment().startOf(timeGroup).unix()
+
+              totalToCompareWith = totalToCompareWith * elapsedTime / fullTime
+            }
+          }
+
+          row['compareWith:percentageLine'] = (total - totalToCompareWith) / totalToCompareWith * 100
         }
       }
     }
@@ -78,7 +89,9 @@ export class Graph extends Component {
       cumulative: PropTypes.bool,
       percentages: PropTypes.bool,
       labels: PropTypes.bool,
-      compareWith: PropTypes.number
+      compareWith: PropTypes.number,
+      compareWithPercentageLine: PropTypes.bool,
+      compareWithPartialPercentage: PropTypes.bool
     }).isRequired
   }
 
@@ -271,23 +284,27 @@ export class Graph extends Component {
 
     return (
       <g key={key}>
-        <text x={x}
+        <text
+          x={x}
           y={y}
           dy={-5}
-          fill={'#fff'}
-          stroke={'#fff'}
+          fill='#fff'
+          stroke='#fff'
           strokeWidth={3}
           strokeOpacity={0.9}
           fontSize={10}
-          textAnchor='middle'>
+          textAnchor='middle'
+        >
           {displayValue}{percentages ? '%' : ''}
         </text>
-        <text x={x}
+        <text
+          x={x}
           y={y}
           dy={-5}
           fill={stroke}
           fontSize={10}
-          textAnchor='middle'>
+          textAnchor='middle'
+        >
           {displayValue}{percentages ? '%' : ''}
         </text>
       </g>
@@ -332,7 +349,8 @@ export class Graph extends Component {
         <ComposedChart
           data={graphData}
           key={key}
-          margin={{top: 0, right: 10, left: 10, bottom: 0}}>
+          margin={{top: 0, right: 10, left: 10, bottom: 0}}
+        >
           <Legend
             verticalAlign='top'
             align='left'
@@ -341,19 +359,22 @@ export class Graph extends Component {
             wrapperStyle={{fontSize: 12, marginRight: -10}}
             onClick={this.handleClick}
             onMouseOver={this.handleMouseEnter}
-            onMouseOut={this.handleMouseLeave} />
+            onMouseOut={this.handleMouseLeave}
+          />
           <XAxis
             type='number'
             dataKey='time'
             domain={xDomain}
             tickFormatter={tickFormatter}
-            ticks={ticks} />
+            ticks={ticks}
+          />
           <YAxis
             domain={percentages ? [0, 100] : ['auto', 'auto']}
             interval={0}
             orientation='right'
             tickFormatter={percentages ? (y) => `${Math.round(y)}%` : (y) => `${y.toLocaleString('en')}${unit}`}
-            allowDecimals={false} />
+            allowDecimals={false}
+          />
           <CartesianGrid />
           <Tooltip content={<TooltipProp graph={graph} controls={controls} />} />
           {nullLineNeeded ? (
