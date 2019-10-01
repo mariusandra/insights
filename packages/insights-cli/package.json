@@ -35,7 +35,7 @@
   ],
   "peerDependencies": {},
   "dependencies": {
-    "commander": "^2.10.0",
+    "commander": "^3.0.2",
     "prompt-promise": "^1.0.3"
   },
   "devDependencies": {
