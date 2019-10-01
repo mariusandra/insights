@@ -29,10 +29,11 @@
   },
   "scripts": {
     "start": "yarn run start-api",
-    "start-api": "cd packages/insights-api && yarn run dev",
+    "start-api": "cd packages/insights-api && INSIGHTS_DATA=~/.insights/data yarn run dev",
     "start-web": "cd packages/insights-web && yarn start",
     "build-api": "cd packages/insights-api && yarn run compile",
-    "build-charts": "cd packages/insights-charts && yarn run build"
+    "build-charts": "cd packages/insights-charts && yarn run build",
+    "createsuperuser": "cd packages/insights-cli && ./bin/insights-createsuperuser"
   },
   "files": [
     "bin",
