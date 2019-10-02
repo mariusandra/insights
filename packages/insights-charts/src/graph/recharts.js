@@ -61,9 +61,9 @@ function getGraphData (graph, controls) {
           let totalToCompareWith = compareWithTotal
 
           if (prediction) {
-            if (moment().startOf(timeGroup).format('YYYY-MM-DD') === time) {
-              const fullTime = moment().endOf(timeGroup).unix() - moment().startOf(timeGroup).unix()
-              const elapsedTime = moment().unix() - moment().startOf(timeGroup).unix()
+            if (moment().startOf(timeGroup === 'week' ? 'isoWeek' : timeGroup).format('YYYY-MM-DD') === time) {
+              const fullTime = moment().endOf(timeGroup === 'week' ? 'isoWeek' : timeGroup).unix() - moment().startOf(timeGroup === 'week' ? 'isoWeek' : timeGroup).unix()
+              const elapsedTime = moment().unix() - moment().startOf(timeGroup === 'week' ? 'isoWeek' : timeGroup).unix()
 
               totalToCompareWith = totalToCompareWith * elapsedTime / fullTime
             }

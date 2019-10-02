@@ -70,7 +70,7 @@ export default class BasicTooltip extends Component {
     const time = moment(label).format('YYYY-MM-DD')
     const showPercentages = percentages && facets
     const showCompare = !!compareWith && compareWith !== 0 && compareWith !== '0'
-    const showPrediction = prediction && moment().startOf(timeGroup).format('YYYY-MM-DD') === time
+    const showPrediction = prediction && moment().startOf(timeGroup === 'week' ? 'isoWeek' : timeGroup).format('YYYY-MM-DD') === time
 
     if (active) {
       const visiblePayload = payload.filter(item => item.dataKey.indexOf('__hidden') < 0).filter(i => i.dataKey.indexOf('compareWith:') < 0)
@@ -97,8 +97,8 @@ export default class BasicTooltip extends Component {
         compareWithPercentageFrom = facets ? compareWithTotal : compareWithPayload.map(p => p.value).reduce((a, b) => Math.max(a, b), 0)
       }
 
-      const fullTime = showPrediction ? moment().endOf(timeGroup).unix() - moment().startOf(timeGroup).unix() : 1
-      const elapsedTime = showPrediction ? moment().unix() - moment().startOf(timeGroup).unix() : 1
+      const fullTime = showPrediction ? moment().endOf(timeGroup === 'week' ? 'isoWeek' : timeGroup).unix() - moment().startOf(timeGroup === 'week' ? 'isoWeek' : timeGroup).unix() : 1
+      const elapsedTime = showPrediction ? moment().unix() - moment().startOf(timeGroup === 'week' ? 'isoWeek' : timeGroup).unix() : 1
       const elapsedRatio = fullTime > 0 && elapsedTime > 0 ? elapsedTime / fullTime : 1
 
       return (
