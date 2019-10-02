@@ -404,9 +404,12 @@ export default kea({
         }
 
         const modelStructure = structure[selectedModel]
-        const primaryKeyField = modelStructure.primary_key
 
-        console.log(modelStructure)
+        if (!modelStructure) {
+          return []
+        }
+
+        const primaryKeyField = modelStructure.primary_key
 
         const urls = []
 

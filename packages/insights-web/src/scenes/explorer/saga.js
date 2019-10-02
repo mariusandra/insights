@@ -1,5 +1,5 @@
 import { kea } from 'kea'
-import { put, call, fork } from 'redux-saga/effects'
+import { put, call, fork, take } from 'redux-saga/effects'
 import messg from 'messg'
 import { LOCATION_CHANGE, push } from 'connected-react-router'
 
@@ -77,6 +77,11 @@ export default kea({
   path: () => ['scenes', 'explorer', 'saga'],
 
   connect: {
+    props: [
+      explorerLogic, [
+        'connections'
+      ]
+    ],
     actions: [
       explorerLogic, [
         'setConnections',
@@ -333,6 +338,10 @@ export default kea({
     urlToState: function * (action) {
       const { urlChanged } = this.actions
       const { search } = action.payload.location || action.payload
+
+      if (Object.keys(yield explorerLogic.get('connections')).length === 0) {
+        yield take(this.actions.setConnections)
+      }
 
       const values = urlToState(search)
 
