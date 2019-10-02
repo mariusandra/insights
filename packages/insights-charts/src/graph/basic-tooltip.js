@@ -147,9 +147,9 @@ export default class BasicTooltip extends Component {
                   {showCompare && <td style={{textAlign: 'right'}}>{diffInCount(compareWithTotal, total, localeStringOptions)}</td>}
                   {showCompare && <td style={{textAlign: 'right'}}>{diffInPercentage(compareWithTotal, total)}</td>}
 
-                  {showPrediction && <td style={{textAlign: 'right'}}>{(total / elapsedTime).toLocaleString('en', localeStringOptions)}{unit}</td>}
-                  {showPrediction && showCompare && <td style={{textAlign: 'right'}}>{diffInCount(compareWithTotal, (total / elapsedTime), localeStringOptions)}</td>}
-                  {showPrediction && showCompare && <td style={{textAlign: 'right'}}>{diffInPercentage(compareWithTotal, (total / elapsedTime))}</td>}
+                  {showPrediction && <td style={{textAlign: 'right'}}>{(total / elapsedRatio).toLocaleString('en', localeStringOptions)}{unit}</td>}
+                  {showPrediction && showCompare && <td style={{textAlign: 'right'}}>{diffInCount(compareWithTotal, (total / elapsedRatio), localeStringOptions)}</td>}
+                  {showPrediction && showCompare && <td style={{textAlign: 'right'}}>{diffInPercentage(compareWithTotal, (total / elapsedRatio))}</td>}
                 </tr>
               ) : null}
               {visiblePayload.map(item => {
