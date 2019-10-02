@@ -63,14 +63,14 @@ export default class BasicTooltip extends Component {
   render () {
     const { active, payload, label, graph, controls } = this.props
     const { timeGroup, keys } = graph
-    const { compareWith, percentages, compareWithPartialPercentage } = controls
+    const { compareWith, percentages, prediction } = controls
     const facets = graph.facets && graph.facets.length > 0
     const unit = ''
 
     const time = moment(label).format('YYYY-MM-DD')
     const showPercentages = percentages && facets
     const showCompare = !!compareWith && compareWith !== 0 && compareWith !== '0'
-    const showPrediction = compareWithPartialPercentage && moment().startOf(timeGroup).format('YYYY-MM-DD') === time
+    const showPrediction = prediction && moment().startOf(timeGroup).format('YYYY-MM-DD') === time
 
     if (active) {
       const visiblePayload = payload.filter(item => item.dataKey.indexOf('__hidden') < 0).filter(i => i.dataKey.indexOf('compareWith:') < 0)

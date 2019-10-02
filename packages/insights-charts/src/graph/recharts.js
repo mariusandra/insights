@@ -28,7 +28,7 @@ const alphabeticalFacetSorter = (a, b) => a.name.localeCompare(b.name)
 
 function getGraphData (graph, controls) {
   const { results, keys, timeGroup } = graph
-  const { percentages, compareWith, compareWithPercentageLine, compareWithPartialPercentage } = controls
+  const { percentages, compareWith, compareWithPercentageLine, prediction } = controls
 
   const graphData = results.map(oldRow => {
     const time = oldRow.time
@@ -60,7 +60,7 @@ function getGraphData (graph, controls) {
         if (compareWithPercentageLine && compareWithTotal !== 0) {
           let totalToCompareWith = compareWithTotal
 
-          if (compareWithPartialPercentage) {
+          if (prediction) {
             if (moment().startOf(timeGroup).format('YYYY-MM-DD') === time) {
               const fullTime = moment().endOf(timeGroup).unix() - moment().startOf(timeGroup).unix()
               const elapsedTime = moment().unix() - moment().startOf(timeGroup).unix()
@@ -91,7 +91,7 @@ export class Graph extends Component {
       labels: PropTypes.bool,
       compareWith: PropTypes.number,
       compareWithPercentageLine: PropTypes.bool,
-      compareWithPartialPercentage: PropTypes.bool
+      prediction: PropTypes.bool
     }).isRequired
   }
 

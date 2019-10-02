@@ -16,17 +16,18 @@ const logic = connect({
   props: [
     explorerLogic, [
       'graphControls',
-      'facetsColumn'
+      'facetsColumn',
+      'graphTimeGroup'
     ]
   ]
 })
 
 class ControlsRight extends Component {
   render () {
-    const { graphControls } = this.props
+    const { graphControls, graphTimeGroup } = this.props
     const { setGraphControls } = this.actions
 
-    const { cumulative, percentages, sort, type, labels } = graphControls
+    const { cumulative, percentages, sort, type, labels, prediction } = graphControls
 
     return (
       <div className='right'>
@@ -40,6 +41,13 @@ class ControlsRight extends Component {
           className={percentages ? 'control selected' : 'control'}
           onClick={() => setGraphControls({ percentages: !percentages })}>
           %
+        </span>
+
+        <span
+          className={prediction ? 'control selected' : 'control'}
+          title={`Show prediction for the last ${graphTimeGroup}`}
+          onClick={() => setGraphControls({ prediction: !prediction })}>
+          **#
         </span>
 
         <span
