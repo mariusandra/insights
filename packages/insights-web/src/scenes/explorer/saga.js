@@ -332,7 +332,7 @@ export default kea({
 
     urlToState: function * (action) {
       const { urlChanged } = this.actions
-      const { search } = action.payload
+      const { search } = action.payload.location || action.payload
 
       const values = urlToState(search)
 
