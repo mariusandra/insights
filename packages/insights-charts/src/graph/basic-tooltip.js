@@ -67,7 +67,10 @@ export default class BasicTooltip extends Component {
     const facets = graph.facets && graph.facets.length > 0
     const unit = ''
 
+    const time = moment(label).format('YYYY-MM-DD')
+    const showPercentages = percentages && facets
     const showCompare = !!compareWith && compareWith !== 0 && compareWith !== '0'
+    const showPrediction = compareWithPartialPercentage && moment().startOf(timeGroup).format('YYYY-MM-DD') === time
 
     if (active) {
       const visiblePayload = payload.filter(item => item.dataKey.indexOf('__hidden') < 0).filter(i => i.dataKey.indexOf('compareWith:') < 0)
@@ -89,8 +92,6 @@ export default class BasicTooltip extends Component {
         compareWithPercentageFrom = facets ? compareWithTotal : compareWithPayload.map(p => p.value).reduce((a, b) => Math.max(a, b), 0)
       }
 
-      const time = moment(label).format('YYYY-MM-DD')
-      const showPrediction = compareWithPartialPercentage && moment().startOf(timeGroup).format('YYYY-MM-DD') === time
       const fullTime = showPrediction ? moment().endOf(timeGroup).unix() - moment().startOf(timeGroup).unix() : 1
       const elapsedTime = showPrediction ? moment().unix() - moment().startOf(timeGroup).unix() : 1
       const elapsedRatio = fullTime > 0 && elapsedTime > 0 ? elapsedTime / fullTime : 1
@@ -104,11 +105,11 @@ export default class BasicTooltip extends Component {
                 {showCompare && (
                   <th>{this.labelFormatter(moment(label).subtract(compareWith, timeGroup))}</th>
                 )}
-                {showCompare && percentages && (
+                {showCompare && showPercentages && (
                   <th>%</th>
                 )}
                 <th>{this.labelFormatter(label)}</th>
-                {percentages && (
+                {showPercentages && (
                   <th>%</th>
                 )}
                 {showCompare && (
@@ -133,10 +134,10 @@ export default class BasicTooltip extends Component {
                 <tr>
                   <td style={{paddingRight: 5, paddingBottom: 5}}>Total:</td>
                   {showCompare && <td style={{textAlign: 'right'}}>{compareWithTotal.toLocaleString('en', localeStringOptions)}{unit}</td>}
-                  {showCompare && percentages && <td style={{textAlign: 'right'}}>{Math.round(compareWithTotalPercentage)}%</td>}
+                  {showCompare && showPercentages && <td style={{textAlign: 'right'}}>{Math.round(compareWithTotalPercentage)}%</td>}
 
                   <td style={{textAlign: 'right'}}>{total.toLocaleString('en', localeStringOptions)}{unit}</td>
-                  {percentages && <td style={{textAlign: 'right'}}>{Math.round(totalPercentage)}%</td>}
+                  {showPercentages && <td style={{textAlign: 'right'}}>{Math.round(totalPercentage)}%</td>}
 
                   {showCompare && <td style={{textAlign: 'right'}}>{diffInCount(compareWithTotal, total)}</td>}
                   {showCompare && <td style={{textAlign: 'right'}}>{diffInPercentage(compareWithTotal, total)}</td>}
@@ -179,10 +180,10 @@ export default class BasicTooltip extends Component {
                   <tr key={item.dataKey} className='recharts-tooltip-item' style={{color: color}}>
                     <td style={{paddingRight: 10}}>{item.name}:</td>
                     {showCompare && <td style={{textAlign: 'right', color: compareColor}}>{compareWithDisplayValue}{unit}</td>}
-                    {showCompare && percentages && <td style={{textAlign: 'right', color: compareColor}}>{`${Math.round(compareWithPercentage)}%`}</td>}
+                    {showCompare && showPercentages && <td style={{textAlign: 'right', color: compareColor}}>{`${Math.round(compareWithPercentage)}%`}</td>}
 
                     <td style={{textAlign: 'right'}}>{displayValue}{unit}</td>
-                    {percentages && <td style={{textAlign: 'right'}}>{`${Math.round(percentage)}%`}</td>}
+                    {showPercentages && <td style={{textAlign: 'right'}}>{`${Math.round(percentage)}%`}</td>}
                     {showCompare && <td style={{textAlign: 'right'}}>{diffInCount(compareWithValue, value)}</td>}
                     {showCompare && <td style={{textAlign: 'right'}}>{diffInPercentage(compareWithValue, value)}</td>}
 
