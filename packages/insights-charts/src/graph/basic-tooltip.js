@@ -20,13 +20,13 @@ const diffInPercentage = (oldValue, newValue) => {
   }
 }
 
-const diffInCount = (oldValue, newValue) => {
+const diffInCount = (oldValue, newValue, localeStringOptions) => {
   if ((!oldValue && !newValue) || oldValue === newValue) {
     return <span style={{ color: 'gray' }}>0</span>
   } else if (oldValue < newValue) {
-    return <span style={{ color: 'green' }}>+{Math.round(newValue - oldValue)}</span>
+    return <span style={{ color: 'green' }}>+{Math.round(newValue - oldValue).toLocaleString('en', localeStringOptions)}</span>
   } else if (oldValue > newValue) {
-    return <span style={{ color: 'red' }}>-{Math.round(oldValue - newValue)}</span>
+    return <span style={{ color: 'red' }}>-{Math.round(oldValue - newValue).toLocaleString('en', localeStringOptions)}</span>
   }
 }
 
@@ -80,7 +80,12 @@ export default class BasicTooltip extends Component {
       const totalPercentage = percentages ? visiblePayload.map(item => parseFloat(item.payload[item.dataKey])).reduce((a, b) => a + b, 0) : 100
       const percentageFrom = facets ? total : visiblePayload.map(p => p.value).reduce((a, b) => Math.max(a, b), 0)
 
-      const localeStringOptions = { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+      const visibleValues = visiblePayload.map(item => percentages ? item.payload[item.dataKey.replace('__%', '')] : item.value)
+      const compareWithValues = compareWithPayload.map(item => percentages ? item.payload[item.dataKey.replace('__%', '')] : item.value)
+
+      const showFloat = visibleValues.concat(compareWithValues).some(v => v && v.toString().includes('.') && !v.toString().match(/\.0+$/))
+
+      const localeStringOptions = { minimumFractionDigits: showFloat ? 2 : 0, maximumFractionDigits: showFloat ? 2 : 0 }
 
       let compareWithTotal
       let compareWithTotalPercentage
@@ -139,18 +144,18 @@ export default class BasicTooltip extends Component {
                   <td style={{textAlign: 'right'}}>{total.toLocaleString('en', localeStringOptions)}{unit}</td>
                   {showPercentages && <td style={{textAlign: 'right'}}>{Math.round(totalPercentage)}%</td>}
 
-                  {showCompare && <td style={{textAlign: 'right'}}>{diffInCount(compareWithTotal, total)}</td>}
+                  {showCompare && <td style={{textAlign: 'right'}}>{diffInCount(compareWithTotal, total, localeStringOptions)}</td>}
                   {showCompare && <td style={{textAlign: 'right'}}>{diffInPercentage(compareWithTotal, total)}</td>}
 
                   {showPrediction && <td style={{textAlign: 'right'}}>{(total / elapsedTime).toLocaleString('en', localeStringOptions)}{unit}</td>}
-                  {showPrediction && showCompare && <td style={{textAlign: 'right'}}>{diffInCount(compareWithTotal, (total / elapsedTime))}</td>}
+                  {showPrediction && showCompare && <td style={{textAlign: 'right'}}>{diffInCount(compareWithTotal, (total / elapsedTime), localeStringOptions)}</td>}
                   {showPrediction && showCompare && <td style={{textAlign: 'right'}}>{diffInPercentage(compareWithTotal, (total / elapsedTime))}</td>}
                 </tr>
               ) : null}
               {visiblePayload.map(item => {
                 const value = (percentages ? parseFloat(item.payload[item.dataKey.replace('__%', '')] || 0) : item.value - 0) || 0
                 const displayValue = value.toLocaleString('en', localeStringOptions)
-                const percentage = percentages ? item.payload[item.dataKey] : Math.round(value / percentageFrom * 100)
+                const percentage = percentages ? item.payload[item.dataKey] || 0 : Math.round(value / percentageFrom * 100)
 
                 let compareWithValue
                 let compareWithDisplayValue
@@ -184,11 +189,11 @@ export default class BasicTooltip extends Component {
 
                     <td style={{textAlign: 'right'}}>{displayValue}{unit}</td>
                     {showPercentages && <td style={{textAlign: 'right'}}>{`${Math.round(percentage)}%`}</td>}
-                    {showCompare && <td style={{textAlign: 'right'}}>{diffInCount(compareWithValue, value)}</td>}
+                    {showCompare && <td style={{textAlign: 'right'}}>{diffInCount(compareWithValue, value, localeStringOptions)}</td>}
                     {showCompare && <td style={{textAlign: 'right'}}>{diffInPercentage(compareWithValue, value)}</td>}
 
                     {showPrediction && <td style={{textAlign: 'right'}}>{predictionDisplayValue}{unit}</td>}
-                    {showPrediction && showCompare && <td style={{textAlign: 'right'}}>{diffInCount(compareWithValue, predictionValue)}</td>}
+                    {showPrediction && showCompare && <td style={{textAlign: 'right'}}>{diffInCount(compareWithValue, predictionValue, localeStringOptions)}</td>}
                     {showPrediction && showCompare && <td style={{textAlign: 'right'}}>{diffInPercentage(compareWithValue, predictionValue)}</td>}
                   </tr>
                 )
