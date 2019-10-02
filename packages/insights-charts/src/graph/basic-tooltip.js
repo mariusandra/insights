@@ -170,12 +170,12 @@ export default class BasicTooltip extends Component {
                     compareWithValue = (percentages ? parseFloat(compareWithItem.payload[compareWithItem.dataKey.replace('__%', '')] || 0) : compareWithItem.value - 0) || 0
                     compareWithDisplayValue = compareWithValue.toLocaleString('en', localeStringOptions)
                     compareWithPercentage = percentages ? compareWithItem.payload[compareWithItem.dataKey] : compareWithValue ? Math.round(compareWithValue / compareWithPercentageFrom * 100) : 0
-
-                    if (showPrediction) {
-                      predictionValue = value / elapsedRatio
-                      predictionDisplayValue = predictionValue.toLocaleString('en', localeStringOptions)
-                    }
                   }
+                }
+
+                if (showPrediction) {
+                  predictionValue = value / elapsedRatio
+                  predictionDisplayValue = predictionValue.toLocaleString('en', localeStringOptions)
                 }
 
                 const color = item.color
