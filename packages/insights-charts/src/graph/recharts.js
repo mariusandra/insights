@@ -170,11 +170,11 @@ export class Graph extends Component {
     let unit = 'month'
 
     if (timeGroup === 'month' || timeGroup === 'year' || timeGroup === 'quarter') {
-      unit = timeGroup
+      unit = timeGroup === 'week' ? 'isoWeek' : timeGroup
     } else if (timeEnd - timeStart < 32 * day && timeGroup !== 'week') {
       unit = 'day'
     } else if (timeEnd - timeStart < 365 * day) {
-      unit = 'week'
+      unit = 'isoWeek'
     }
 
     let time = moment(timeStart).startOf(unit)
