@@ -20,6 +20,10 @@ export class Results implements Partial<ServiceMethods<ResultsResponse>> {
     this.app = app;
   }
 
+  async create (params: ResultsServiceParams): Promise<ResultsResponse> {
+    return await this.find(params)
+  }
+
   async find (params: ResultsServiceParams): Promise<ResultsResponse> {
     const { connection } = params.query
     const connectionsResult = await this.app.service('connections').find({ query: { keyword: connection } })
