@@ -312,7 +312,7 @@ export class Graph extends Component {
   }
 
   render () {
-    const { graph, controls, tooltip: TooltipProp } = this.props
+    const { graph, controls, tooltip: TooltipProp, children } = this.props
     const { graphData } = this.state
     const { sort, percentages, type, labels, compareWith, compareWithPercentageLine, compareWithPercentageLineDomain } = controls
 
@@ -398,6 +398,7 @@ export class Graph extends Component {
               domain={compareWithPercentageLineDomain || [dataMin => Math.floor(Math.min(0, dataMin || 0)), dataMax => Math.ceil(Math.max(dataMax || 0, 0) / 25) * 25]}
             />
           )}
+          {children}
         </ComposedChart>
       </ResponsiveContainer>
     )
