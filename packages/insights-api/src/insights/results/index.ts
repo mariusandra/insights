@@ -51,8 +51,8 @@ export default class Results {
   finalResults: any[] = []
   graphResponse: GraphResponse | null = null
 
-  constructor ({ params, adapter, structure } : { 
-    params: Partial<ResultsParams>, 
+  constructor ({ params, adapter, structure } : {
+    params: Partial<ResultsParams>,
     adapter: SQL
     structure: Structure
   }) {
@@ -451,7 +451,7 @@ export default class Results {
 
   async getGraph () {
     const graphTimeFilter = this.params.graphTimeFilter || 'last-60'
-    const cumulative = this.params.graphControls.cumulative
+    const { cumulative, prediction } = this.params.graphControls
 
     const facetsCount = this.params.facetsCount || 6
     const facetsColumnKey = this.params.facetsColumn
@@ -481,7 +481,27 @@ export default class Results {
       compareWithLastDate = moment(lastDate).subtract(compareWith, timeGroup).endOf(timeGroup).format('YYYY-MM-DD')
     }
 
-    // let [firstDate, lastDate] = getTimesFromString(graphTimeFilter, 0, timeGroup)
+    let predictionFirstDate
+    let predictionLastDate
+
+    const rightNow = new Date()
+
+    // prediction enabled and we are showing the last month of the time period
+    if (compareWith && prediction && moment(lastDate).startOf(timeGroup).isBefore(rightNow) && moment(lastDate).endOf(timeGroup).isAfter(rightNow)) {
+      const startOf = moment(rightNow).startOf(timeGroup).valueOf()
+      const endOf = moment(rightNow).endOf(timeGroup).valueOf()
+      const current = moment(rightNow).valueOf()
+
+      const percentage = (current - startOf) / (endOf - startOf)
+
+      const predictionStart = moment(compareWithLastDate).startOf(timeGroup).valueOf()
+      const predictionEnd = moment(compareWithLastDate).endOf(timeGroup).valueOf()
+
+      const predictionCurrent = moment(percentage * (predictionEnd - predictionStart) + predictionStart)
+
+      predictionFirstDate = moment(predictionStart).format('YYYY-MM-DD')
+      predictionLastDate = moment(predictionCurrent).format('YYYY-MM-DD')
+    }
 
     // add the date truncation transform to the columns if none present
     timeColumns = timeColumns.map(v => (
@@ -509,6 +529,16 @@ export default class Results {
         compareWithWhereConditions = compareWithWhereConditions.concat(this.adapter.filterDateRange(timeColumn.sql, `${compareWithFirstDate}:${compareWithLastDate}`))
       }
       compareWithWhereSql = this.adapter.where(compareWithWhereConditions)
+    }
+
+    let predictionWhereSql
+
+    if (predictionFirstDate && predictionLastDate) {
+      let predictionWhereConditions = this.commonSqlConditions.where.slice(0)
+      if (predictionFirstDate && predictionLastDate) {
+        predictionWhereConditions = predictionWhereConditions.concat(this.adapter.filterDateRange(timeColumn.sql, `${predictionFirstDate}:${predictionLastDate}`))
+      }
+      predictionWhereSql = this.adapter.where(predictionWhereConditions)
     }
 
     // facets column
@@ -610,6 +640,39 @@ export default class Results {
           compareWithHash[date][key] = result[aggregateColumn.alias]
         })
       })
+
+      if (predictionWhereSql) {
+        const predictionResults = await this.adapter.getResults({
+          select: graphSelectSql,
+          fromAndJoins: this.commonSqlParts.fromAndJoins,
+          where: predictionWhereSql,
+          group: graphGroupSql,
+          having: this.commonSqlParts.having,
+          sort: graphSortSql,
+          limit: 10000,
+          offset: 0
+        })
+
+        predictionResults.forEach(result => {
+          if (!result[timeColumn.alias]) {
+            return
+          }
+
+          let date = moment(result[timeColumn.alias]).format('YYYY-MM-DD')
+          if (!compareWithHash[date]) {
+            compareWithHash[date] = {}
+          }
+
+          aggregateColumns.forEach(aggregateColumn => {
+            compareWithHash[date]['__hasCompareWithPartial'] = true
+            let key = `compareWithPartial::${aggregateColumn.column}`
+            facetsColumns.forEach(column => {
+              key += `$$${result[column.alias]}`
+            })
+            compareWithHash[date][key] = result[aggregateColumn.alias]
+          })
+        })
+      }
     }
 
     // save the results in a hash with dates as keys... and all aggregate columns with facets as values
