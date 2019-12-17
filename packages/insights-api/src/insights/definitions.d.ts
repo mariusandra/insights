@@ -64,6 +64,7 @@ export interface GraphControls {
   labels: boolean
   compareWith: number
   compareWithPercentageLine: boolean
+  compareWithPercentageLineDomain: [number, number]
   prediction: boolean
 }
 
