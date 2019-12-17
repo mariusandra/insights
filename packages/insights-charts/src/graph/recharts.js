@@ -314,7 +314,7 @@ export class Graph extends Component {
   render () {
     const { graph, controls, tooltip: TooltipProp } = this.props
     const { graphData } = this.state
-    const { sort, percentages, type, labels, compareWith, compareWithPercentageLine } = controls
+    const { sort, percentages, type, labels, compareWith, compareWithPercentageLine, compareWithPercentageLineDomain } = controls
 
     const nullLineNeeded = false
     const unit = ''
@@ -395,7 +395,7 @@ export class Graph extends Component {
               yAxisId='percentageLine'
               orientation='left'
               tickFormatter={(y) => `${y > 0 ? '+' : ''}${Math.round(y)}%`}
-              domain={[dataMin => Math.min(0, dataMin || 0), dataMax => Math.ceil(Math.min(100, Math.max(dataMax || 0, 0)) / 25) * 25]}
+              domain={compareWithPercentageLineDomain || [dataMin => Math.floor(Math.min(0, dataMin || 0)), dataMax => Math.ceil(Math.max(dataMax || 0, 0) / 25) * 25]}
             />
           )}
         </ComposedChart>
