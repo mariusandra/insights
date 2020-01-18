@@ -28,9 +28,10 @@
     "yarn": ">= 0.18.0"
   },
   "scripts": {
-    "start": "yarn run start-api",
+    "start": "concurrently --kill-others \"yarn run start-api\" \"yarn run start-web\" \"yarn run start-charts\"",
     "start-api": "cd packages/insights-api && INSIGHTS_DATA=~/.insights/data yarn run dev",
     "start-web": "cd packages/insights-web && yarn start",
+    "start-charts": "cd packages/insights-charts && yarn start",
     "build-api": "cd packages/insights-api && yarn run compile",
     "build-charts": "cd packages/insights-charts && yarn run build",
     "createsuperuser": "cd packages/insights-cli && ./bin/insights-createsuperuser"
@@ -47,6 +48,7 @@
   },
   "peerDependencies": {},
   "devDependencies": {
+    "concurrently": "^5.0.2",
     "eslint-config-standard-react": "^9.2.0",
     "oao": "^0.8.5",
     "semver": "^5.3.0"
