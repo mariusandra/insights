@@ -1,0 +1,38 @@
+{
+  "name": "insights",
+  "description": "Self-Hosted \"SQL-not-required\" data analytics and visualisation tool.",
+  "version": "0.0.31",
+  "homepage": "https://github.com/mariusandra/insights",
+  "main": "server",
+  "license": "MIT",
+  "keywords": [
+    "feathers",
+    "insights"
+  ],
+  "author": {
+    "name": "Marius Andra",
+    "email": "marius.andra@gmail.com"
+  },
+  "contributors": [],
+  "repository": "mariusandra/insights",
+  "bugs": {},
+  "engines": {
+    "node": ">= 8.0.0",
+    "yarn": ">= 0.18.0"
+  },
+  "scripts": {
+    "start": "echo \"Not yet!\" && exit 1",
+    "update-versions": "echo \"Not yet!\" && exit 1",
+    "build": "echo \"Not yet!\" && exit 1"
+  },
+  "files": [
+    "README.md"
+  ],
+  "dependencies": {
+    "insights-api": "0.0.1",
+    "insights-charts": "0.0.22",
+    "insights-cli": "0.0.32",
+    "insights-web": "*"
+  },
+  "peerDependencies": {}
+}

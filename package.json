@@ -1,5 +1,5 @@
 {
-  "name": "insights",
+  "name": "insights-build",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -30,8 +30,9 @@
   "scripts": {
     "start": "concurrently --kill-others \"yarn run start-api\" \"yarn run start-web\" \"yarn run start-charts\"",
     "start-api": "cd packages/insights-api && INSIGHTS_DATA=~/.insights/data yarn run dev",
-    "start-web": "cd packages/insights-web && yarn start",
     "start-charts": "cd packages/insights-charts && yarn start",
+    "start-web": "cd packages/insights-web && yarn start",
+    "build": "echo \"Not yet!\" && exit 1",
     "build-api": "cd packages/insights-api && yarn run compile",
     "build-charts": "cd packages/insights-charts && yarn run build",
     "createsuperuser": "cd packages/insights-cli && ./bin/insights-createsuperuser"
