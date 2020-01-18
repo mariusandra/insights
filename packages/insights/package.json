@@ -1,7 +1,7 @@
 {
   "name": "insights",
   "description": "Self-Hosted \"SQL-not-required\" data analytics and visualisation tool.",
-  "version": "0.0.31",
+  "version": "0.0.32",
   "homepage": "https://github.com/mariusandra/insights",
   "main": "server",
   "license": "MIT",
@@ -32,7 +32,7 @@
     "insights-api": "0.0.1",
     "insights-charts": "0.0.22",
     "insights-cli": "0.0.32",
-    "insights-web": "*"
+    "insights-client": "0.0.32"
   },
   "peerDependencies": {}
 }

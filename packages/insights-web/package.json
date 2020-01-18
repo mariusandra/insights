@@ -1,6 +1,6 @@
 {
-  "name": "insights-web",
-  "version": "0.1.0",
+  "name": "insights-client",
+  "version": "0.0.32",
   "dependencies": {
     "@blueprintjs/core": "^3.0.1",
     "@feathersjs/client": "^4.3.3",
@@ -42,7 +42,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prepublish": "npm run build"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -61,5 +62,8 @@
   },
   "devDependencies": {
     "semver": "^6.3.0"
-  }
+  },
+  "files": [
+    "build"
+  ]
 }

@@ -1,3 +1,13 @@
+
+## Package builds
+
+packages/insights-charts/lib/
+packages/insights-charts/es/
+packages/insights-web/build/
+
+
+
+
 # Logs
 logs
 *.log
@@ -109,8 +119,3 @@ $RECYCLE.BIN/
 
 # Others
 data/
-
-public/dist/
-packages/insights-core/public/dist/
-packages/insights-charts/lib/
-packages/insights-charts/es/
