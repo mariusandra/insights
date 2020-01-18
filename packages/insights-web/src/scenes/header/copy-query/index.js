@@ -1,8 +1,7 @@
 // libraries
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 
-import { Button, Alignment, Text, Classes, H3, H5, InputGroup, Navbar, Switch, Tab, TabId, Tabs, Popover, Position } from "@blueprintjs/core";
+import { Button, Popover, Position } from "@blueprintjs/core";
 
 // utils
 import copy from 'copy-to-clipboard'

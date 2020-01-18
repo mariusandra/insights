@@ -1,7 +1,6 @@
 {
   "name": "insights-web",
   "version": "0.1.0",
-  "private": true,
   "dependencies": {
     "@blueprintjs/core": "^3.0.1",
     "@feathersjs/client": "^4.3.3",

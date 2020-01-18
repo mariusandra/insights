@@ -3,7 +3,7 @@ import './styles.scss'
 // libraries
 import React, { Component } from 'react'
 import { connect } from 'kea'
-import { Alignment, Text, Classes, H3, H5, InputGroup, Navbar, Switch, Tab, TabId, Tabs } from "@blueprintjs/core";
+import { Alignment, Navbar, Tab, Tabs } from "@blueprintjs/core";
 
 // utils
 

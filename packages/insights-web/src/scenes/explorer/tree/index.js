@@ -7,7 +7,7 @@ import { Layout } from 'react-flex-layout'
 
 // utils
 import HighlightText from 'lib/utils/highlight-text'
-import { Tag, H4, Button, InputGroup, Menu, MenuItem } from "@blueprintjs/core"
+import { H4, Button, InputGroup, Menu, MenuItem } from "@blueprintjs/core"
 
 // components
 import Node from './node'

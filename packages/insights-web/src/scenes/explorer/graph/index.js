@@ -26,7 +26,7 @@ const logic = connect({
 
 class GraphView extends Component {
   render () {
-    const { graph, graphControls, graphTimeGroup, containerHeight } = this.props
+    const { graph, graphControls, containerHeight } = this.props
 
     return (
       <div className='graph-and-controls'>

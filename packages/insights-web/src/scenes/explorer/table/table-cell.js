@@ -57,7 +57,7 @@ export default (props) => {
   return (
     <Cell {...cellProps} className='cell-body'>
       {link
-        ? <a href={link} target='_blank' className={className}>{displayValue}</a>
+        ? <a href={link} target='_blank' rel="noopener noreferrer" className={className}>{displayValue}</a>
         : className
           ? <span className={className}>{displayValue}</span>
           : <span>{displayValue}</span>}
