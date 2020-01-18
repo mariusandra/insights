@@ -18,7 +18,9 @@
   "bugs": {},
   "bin": {
     "insights": "./bin/insights",
-    "insights-start": "./bin/insights-start",
+    "insights-start": "bin/insights-start",
+    "insights-start-api": "bin/insights-start-api",
+    "insights-start-web": "bin/insights-start-web",
     "insights-createsecret": "./bin/insights-createsecret",
     "insights-createsuperuser": "./bin/insights-createsuperuser"
   },
@@ -36,7 +38,8 @@
   "peerDependencies": {},
   "dependencies": {
     "commander": "^3.0.2",
-    "prompt-promise": "^1.0.3"
+    "prompt-promise": "^1.0.3",
+    "serve": "^11.3.0"
   },
   "devDependencies": {
     "ts-node": "^8.4.1",

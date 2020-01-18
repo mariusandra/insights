@@ -10,7 +10,9 @@ program.version(pkg.version)
   .description('Run insights server or helper commands')
 
 program
-  .command('start', 'run as a server')
+  .command('start', 'start web and api')
+  .command('start-web', 'start web server on port 8080')
+  .command('start-api', 'start api server on port 3030')
   .command('createsecret', 'create a new authentication secret')
   .command('createsuperuser', 'create a new admin user')
 
