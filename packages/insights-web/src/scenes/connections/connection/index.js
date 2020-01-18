@@ -118,11 +118,11 @@ class Connection extends Component {
             <br />
             Actions:
             {' '}
-            <a href='#' onClick={(e) => this.handleDelete(e, connection)}>Delete</a>
+            <span style={{ textDecoration: 'underline' }} onClick={(e) => this.handleDelete(e, connection)}>Delete</span>
             {' | '}
-            <a href='#' onClick={this.handleEdit}>Edit</a>
+            <span style={{ textDecoration: 'underline' }} onClick={this.handleEdit}>Edit</span>
             {' | '}
-            <a href='#' onClick={(e) => this.handleTest(e, connection._id)}>Test connection</a>
+            <span style={{ textDecoration: 'underline' }} onClick={(e) => this.handleTest(e, connection._id)}>Test connection</span>
             {' | '}
             <a href={`/connections/${connection._id}`} onClick={(e) => this.handleViewStructure(e, connection._id)}>View structure</a>
           </div>
