@@ -1,4 +1,4 @@
-#!/usr/bin/env ts-node
+#!/usr/bin/env node
 
 // Thanks to https://github.com/mysamai/mysam/blob/master/bin/mysam for this script!
 
@@ -14,7 +14,9 @@ program.version(pkg.version)
   .option('-p, --port [number]', 'Port in server mode. Defaults to 8080')
   .option('--public [folder]', 'HTML folder to server. Defaults to ../insights-web/build')
 
-process.env.INSIGHTS_WEB_PUBLIC = program.public || path.join('..', 'insights-web', 'build')
+if (program.public) {
+  process.env.INSIGHTS_WEB_PUBLIC = program.public
+}
 
 if (program.port) {
   process.env.INSIGHTS_WEB_PORT = program.port

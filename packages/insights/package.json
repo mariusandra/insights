@@ -21,9 +21,9 @@
     "yarn": ">= 0.18.0"
   },
   "scripts": {
-    "start": "echo \"Not yet!\" && exit 1",
-    "update-versions": "echo \"Not yet!\" && exit 1",
-    "build": "echo \"Not yet!\" && exit 1"
+    "start": "insights start",
+    "start-web": "insights start-web",
+    "start-api": "insights start-api"
   },
   "files": [
     "README.md"
@@ -31,7 +31,7 @@
   "dependencies": {
     "insights-api": "0.0.1",
     "insights-charts": "0.0.22",
-    "insights-cli": "0.0.32",
+    "insights-cli": "0.0.33",
     "insights-client": "0.0.32"
   },
   "peerDependencies": {}

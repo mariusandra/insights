@@ -11,10 +11,12 @@ var pkg = require(path.join(root, 'package.json'))
 program.version(pkg.version)
   .usage('<command> [options]')
   .description('Run insights server')
-  .option('-p, --port [number]', 'Port in server mode. Defaults to 3030')
+  .option('-p, --port [number]', 'Port for api server. Defaults to 3030')
   .option('--data [folder]', 'Where to store the local NeDB database. Defaults to ~/.insights/data')
   .option('--secret [path]', 'Where to store the authentication secret. Defaults to ~/.insights/secret')
   .option('-d --develop', 'Run in development mode')
+  .option('-w, --webport [number]', 'Port for web server. Defaults to 8080')
+  .option('--public [folder]', 'HTML folder to server. Defaults to ../insights-web/build')
 
 program.parse(process.argv)
 
@@ -39,4 +41,13 @@ try {
 }
 
 
+if (program.public) {
+  process.env.INSIGHTS_WEB_PUBLIC = program.public
+}
+
+if (program.webport) {
+  process.env.INSIGHTS_WEB_PORT = program.webport
+}
+
 require('../app/start-api')
+require('../app/start-web')

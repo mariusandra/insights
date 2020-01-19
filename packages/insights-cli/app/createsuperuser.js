@@ -2,9 +2,9 @@
 // - INSIGHTS_SUPERUSER_EMAIL
 // - INSIGHTS_SUPERUSER_PASSWORD
 
-import app from '../../insights-api/src/app'
-import prompt from 'prompt-promise'
-import randomString from '../lib/random-string'
+const app = require('../../insights-api/lib/app')
+const prompt = require('prompt-promise')
+const randomString = require('./lib/random-string')
 
 const azAZ09 = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 

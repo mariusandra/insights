@@ -1,4 +1,4 @@
-import path from 'path'
+const path = require('path')
 
 const root = process.env.INSIGHTS_WEB_PUBLIC || path.join(__dirname, '..', '..', 'insights-web', 'build')
 const port = process.env.INSIGHTS_WEB_PORT || 8080

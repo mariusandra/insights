@@ -1,7 +1,7 @@
 import logger from './logger';
 import app from './app';
 
-const port = app.get('port');
+const port = process.env.INSIGHTS_API_PORT || app.get('port');
 const server = app.listen(port);
 
 process.on('unhandledRejection', (reason, p) =>

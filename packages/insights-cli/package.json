@@ -1,7 +1,7 @@
 {
   "name": "insights-cli",
   "description": "Desktop and Self-Hosted \"SQL-not-required\" data analytics and visualisation tool.",
-  "version": "0.0.32",
+  "version": "0.0.33",
   "homepage": "",
   "main": "app",
   "license": "MIT",
@@ -33,16 +33,13 @@
   },
   "scripts": {},
   "files": [
-    "bin"
+    "bin",
+    "app/lib"
   ],
   "peerDependencies": {},
   "dependencies": {
     "commander": "^3.0.2",
     "prompt-promise": "^1.0.3",
     "serve": "^11.3.0"
-  },
-  "devDependencies": {
-    "ts-node": "^8.4.1",
-    "typescript": "^3.6.3"
   }
 }
