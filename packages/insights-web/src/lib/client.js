@@ -1,7 +1,10 @@
 import io from 'socket.io-client'
 import feathers from '@feathersjs/client'
 
-const socket = io('http://localhost:3030')
+const apiUrl = window.__INSIGHTS_CONFIG__ ? window.__INSIGHTS_CONFIG__.apiUrl : 'http://localhost:3030'
+// const apiPath = window.__INSIGHTS_CONFIG__ ? window.__INSIGHTS_CONFIG__.apiPath : ''
+
+const socket = io(apiUrl) //, { path: apiPath + '/socket.io' })
 const client = feathers()
 
 client.configure(feathers.socketio(socket))

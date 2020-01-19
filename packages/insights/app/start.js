@@ -1,34 +1,47 @@
 /* eslint-disable no-console */
-const logger = require('winston')
 const path = require('path')
+const fs = require('fs')
+const URL = require('url')
 const api = require('insights-api/lib/app').default
 const express = require('express')
 const bodyParser = require('body-parser')
 
-const port = process.env.INSIGHTS_PORT || api.get('port')
-const host = process.env.INSIGHTS_HOST || api.get('host')
-const apiPath = process.env.INSIGHTS_API_PATH || '/api'
-const root = process.env.INSIGHTS_WEB_PUBLIC || path.join(__dirname, '..', '..', 'insights-web', 'build')
+const port = process.env.INSIGHTS_PORT
+const host = process.env.INSIGHTS_HOST
+const staticRoot = process.env.INSIGHTS_WEB_BUILD || path.join(__dirname, '..', '..', 'insights-web', 'build')
+const apiUrl = process.env.INSIGHTS_API_URL || `http://${host}:${port}/api`
+const apiPath = URL.parse(apiUrl).pathname
 
-console.log(root)
+let indexHtml
 
-const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(apiPath, api);
-app.use(express.static(root));
-app.get('/*', (req, res) => {
-  const index = path.join(root, 'index.html')
-  res.sendFile(index);
-})
+const getIndex = (req, res) => {
+  if (!indexHtml) {
+    const indexPath = path.join(staticRoot, 'index.html')
+    const html = fs.readFileSync(indexPath, 'utf8')
+    const insightsConfig = {
+      apiPath,
+      apiUrl
+    }
+    indexHtml = html.replace("</head>", `<script>window.__INSIGHTS_CONFIG__ = ${JSON.stringify(insightsConfig)}</script></head>`)
+  }
+  res.send(indexHtml)
+}
 
-const server = app.listen(port);
-api.setup(server);
+const app = express()
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true }))
+app.get('/', getIndex)
+app.use(api)
+app.use(express.static(staticRoot))
+app.get('*', getIndex)
+
+const server = app.listen(port, host)
+api.setup(server)
 
 process.on('unhandledRejection', (reason, p) =>
-  logger.error('Unhandled Rejection at: Promise ', p, reason)
+  console.error('Unhandled Rejection at: Promise ', p, reason)
 )
 
 server.on('listening', () =>
-  logger.info(`Insights started on ${host}:${port}`)
+  console.info(`Insights started on ${host}:${port}`)
 )

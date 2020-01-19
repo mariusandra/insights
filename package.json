@@ -35,6 +35,7 @@
     "build": "echo \"Not yet!\" && exit 1",
     "build-api": "cd packages/insights-api && yarn run compile",
     "build-charts": "cd packages/insights-charts && yarn run build",
+    "build-web": "cd packages/insights-web && yarn run build",
     "createsuperuser": "cd packages/insights && ./bin/insights-createsuperuser"
   },
   "files": [

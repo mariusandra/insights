@@ -42,7 +42,7 @@ try {
 
 
 if (program.public) {
-  process.env.INSIGHTS_WEB_PUBLIC = program.public
+  process.env.INSIGHTS_WEB_BUILD = program.public
 }
 
 require('../app/start')

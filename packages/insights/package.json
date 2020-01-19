@@ -19,8 +19,6 @@
   "bin": {
     "insights": "./bin/insights",
     "insights-start": "bin/insights-start",
-    "insights-start-api": "bin/insights-start-api",
-    "insights-start-web": "bin/insights-start-web",
     "insights-createsecret": "./bin/insights-createsecret",
     "insights-createsuperuser": "./bin/insights-createsuperuser"
   },
