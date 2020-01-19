@@ -32,7 +32,7 @@
     "start-api": "cd packages/insights-api && INSIGHTS_DATA=~/.insights/data yarn run dev",
     "start-charts": "cd packages/insights-charts && yarn start",
     "start-web": "cd packages/insights-web && yarn start",
-    "build": "echo \"Not yet!\" && exit 1",
+    "build": "concurrently \"yarn run build-api\" \"yarn run build-web\" \"yarn run build-charts\"",
     "build-api": "cd packages/insights-api && yarn run compile",
     "build-charts": "cd packages/insights-charts && yarn run build",
     "build-web": "cd packages/insights-web && yarn run build",
