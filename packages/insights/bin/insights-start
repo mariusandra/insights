@@ -15,7 +15,7 @@ program.version(pkg.version)
   .option('-h, --host [domain]', 'Host for server. Defaults to 127.0.0.1')
   .option('--data [folder]', 'Where to store the local NeDB database. Defaults to ~/.insights/data')
   .option('--secret [path]', 'Where to store the authentication secret. Defaults to ~/.insights/secret')
-  .option('--public [folder]', 'HTML folder to server. Defaults to ../insights-web/build')
+  .option('--public [folder]', 'HTML folder to server. Defaults to ../insights-web-build/build')
 
 program.parse(process.argv)
 
@@ -25,6 +25,7 @@ process.env.NODE_CONFIG_DIR = path.join(__dirname, '..', '..', 'insights-api', '
 process.env.INSIGHTS_DATA = program.data || process.env.INSIGHTS_DATA || path.join(require('os').homedir(), '.insights', 'data')
 process.env.INSIGHTS_PORT = program.port || process.env.INSIGHTS_PORT || 8000
 process.env.INSIGHTS_HOST = program.host || process.env.INSIGHTS_HOST || '127.0.0.1'
+process.env.INSIGHTS_WEB_BUILD = program.public || process.env.INSIGHTS_WEB_BUILD || path.join(__dirname, '..', '..', 'insights-web-build', 'build')
 
 const secretPath = program.secret || path.join(require('os').homedir(), '.insights', 'secret')
 
@@ -38,11 +39,6 @@ try {
 } catch (error) {
   console.error(`Fatal Error! Could not find authentication secret at ${secretPath}`)
   process.exit(1)
-}
-
-
-if (program.public) {
-  process.env.INSIGHTS_WEB_BUILD = program.public
 }
 
 require('../app/start')

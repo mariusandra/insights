@@ -8,7 +8,7 @@ const bodyParser = require('body-parser')
 
 const port = process.env.INSIGHTS_PORT
 const host = process.env.INSIGHTS_HOST
-const staticRoot = process.env.INSIGHTS_WEB_BUILD || path.join(__dirname, '..', '..', 'insights-web', 'build')
+const staticRoot = process.env.INSIGHTS_WEB_BUILD || path.join(__dirname, '..', '..', 'insights-web-build', 'build')
 const socketUrl = process.env.INSIGHTS_SOCKET_URL || `http://${host}:${port}`
 const apiUrl = process.env.INSIGHTS_API_URL || `http://${host}:${port}/api`
 const apiPath = URL.parse(apiUrl).pathname
