@@ -5,6 +5,7 @@ import feathers from '@feathersjs/client'
 const client = feathers()
 
 // defaults
+// eslint-disable-next-line
 const { publicUrl, apiPath, socketPath } = window.__INSIGHTS_CONFIG__ || {
   publicUrl: 'http://localhost:3030',
   apiPath: '/',
