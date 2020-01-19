@@ -1,7 +1,7 @@
 {
   "name": "insights-api",
   "description": "",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "homepage": "",
   "main": "src",
   "keywords": [
@@ -54,6 +54,7 @@
     "pg-connection-string": "^2.1.0",
     "pg-escape": "^0.2.0",
     "pg-structure": "^4.2.2",
+    "pluralize": "^8.0.0",
     "serve-favicon": "^2.5.0",
     "winston": "^3.0.0"
   },

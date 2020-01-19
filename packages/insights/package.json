@@ -1,9 +1,9 @@
 {
   "name": "insights",
-  "description": "Self-Hosted \"SQL-not-required\" data analytics and visualisation tool.",
-  "version": "0.0.33",
-  "homepage": "https://github.com/mariusandra/insights",
-  "main": "server",
+  "description": "Desktop and Self-Hosted \"SQL-not-required\" data analytics and visualisation tool.",
+  "version": "0.0.37",
+  "homepage": "",
+  "main": "app",
   "license": "MIT",
   "keywords": [
     "feathers",
@@ -16,23 +16,33 @@
   "contributors": [],
   "repository": "mariusandra/insights",
   "bugs": {},
+  "bin": {
+    "insights": "./bin/insights",
+    "insights-start": "bin/insights-start",
+    "insights-start-api": "bin/insights-start-api",
+    "insights-start-web": "bin/insights-start-web",
+    "insights-createsecret": "./bin/insights-createsecret",
+    "insights-createsuperuser": "./bin/insights-createsuperuser"
+  },
+  "directories": {
+    "lib": "app"
+  },
   "engines": {
-    "node": ">= 8.0.0",
+    "node": ">= 7.6.0",
     "yarn": ">= 0.18.0"
   },
-  "scripts": {
-    "start": "insights start",
-    "start-web": "insights start-web",
-    "start-api": "insights start-api"
-  },
+  "scripts": {},
   "files": [
-    "README.md"
+    "bin",
+    "app"
   ],
+  "peerDependencies": {},
   "dependencies": {
-    "insights-api": "0.0.2",
+    "commander": "^3.0.2",
+    "prompt-promise": "^1.0.3",
+    "serve": "^11.3.0",
+    "insights-api": "0.0.3",
     "insights-charts": "0.0.22",
-    "insights-cli": "0.0.34",
     "insights-client": "0.0.32"
-  },
-  "peerDependencies": {}
+  }
 }

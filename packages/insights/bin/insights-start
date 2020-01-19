@@ -11,11 +11,10 @@ var pkg = require(path.join(root, 'package.json'))
 program.version(pkg.version)
   .usage('<command> [options]')
   .description('Run insights server')
-  .option('-p, --port [number]', 'Port for api server. Defaults to 3030')
+  .option('-p, --port [number]', 'Port for server. Defaults to 8000')
+  .option('-h, --host [domain]', 'Host for server. Defaults to 127.0.0.1')
   .option('--data [folder]', 'Where to store the local NeDB database. Defaults to ~/.insights/data')
   .option('--secret [path]', 'Where to store the authentication secret. Defaults to ~/.insights/secret')
-  .option('-d --develop', 'Run in development mode')
-  .option('-w, --webport [number]', 'Port for web server. Defaults to 8080')
   .option('--public [folder]', 'HTML folder to server. Defaults to ../insights-web/build')
 
 program.parse(process.argv)
@@ -24,7 +23,8 @@ process.env.NODE_ENV = program.develop ? 'development' : 'production'
 process.env.NODE_CONFIG_DIR = path.join(__dirname, '..', '..', 'insights-api', 'config')
 
 process.env.INSIGHTS_API_DATA = program.data || process.env.INSIGHTS_API_DATA || path.join(require('os').homedir(), '.insights', 'data')
-process.env.INSIGHTS_API_PORT = program.port || process.env.INSIGHTS_API_PORT || 3030
+process.env.INSIGHTS_PORT = program.port || process.env.INSIGHTS_PORT || 8000
+process.env.INSIGHTS_HOST = program.host || process.env.INSIGHTS_HOST || '127.0.0.1'
 
 const secretPath = program.secret || path.join(require('os').homedir(), '.insights', 'secret')
 
@@ -45,9 +45,4 @@ if (program.public) {
   process.env.INSIGHTS_WEB_PUBLIC = program.public
 }
 
-if (program.webport) {
-  process.env.INSIGHTS_WEB_PORT = program.webport
-}
-
-require('../app/start-api')
-require('../app/start-web')
+require('../app/start')
