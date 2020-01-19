@@ -1,7 +1,7 @@
 {
   "name": "insights",
   "description": "Desktop and Self-Hosted \"SQL-not-required\" data analytics and visualisation tool.",
-  "version": "0.0.37",
+  "version": "0.0.38",
   "homepage": "",
   "main": "app",
   "license": "MIT",
@@ -41,8 +41,8 @@
     "commander": "^3.0.2",
     "prompt-promise": "^1.0.3",
     "serve": "^11.3.0",
-    "insights-api": "0.0.3",
+    "insights-api": "0.0.4",
     "insights-charts": "0.0.22",
-    "insights-client": "0.0.32"
+    "insights-client": "0.0.33"
   }
 }

@@ -1,6 +1,6 @@
 {
   "name": "insights-client",
-  "version": "0.0.32",
+  "version": "0.0.33",
   "dependencies": {
     "@blueprintjs/core": "^3.0.1",
     "@feathersjs/client": "^4.3.3",
