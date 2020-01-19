@@ -1,0 +1,17 @@
+#!/usr/bin/env node
+
+const fs = require('fs')
+const path = require('path')
+const program = require('commander')
+const root = path.join(__dirname, '..')
+const pkg = require(path.join(root, 'package.json'))
+
+const initInsights = require('../app/init')
+
+program.version(pkg.version)
+  .usage('<command> [options]')
+  .description('Initialize config to start insights by answering a few questions')
+
+program.parse(process.argv)
+
+initInsights()

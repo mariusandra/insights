@@ -18,6 +18,7 @@
   "bugs": {},
   "bin": {
     "insights": "./bin/insights",
+    "insights-init": "./bin/insights-init",
     "insights-start": "./bin/insights-start",
     "insights-createsecret": "./bin/insights-createsecret",
     "insights-createsuperuser": "./bin/insights-createsuperuser"
