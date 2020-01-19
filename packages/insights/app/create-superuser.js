@@ -2,7 +2,7 @@
 // - INSIGHTS_SUPERUSER_EMAIL
 // - INSIGHTS_SUPERUSER_PASSWORD
 
-const app = require('../../insights-api/lib/app')
+const app = require('../../insights-api/lib/app').default
 const prompt = require('prompt-promise')
 const randomString = require('./lib/random-string')
 
@@ -13,7 +13,7 @@ function validateEmail (email) {
   return re.test(email)
 }
 
-async function main () {
+module.exports = async function createSuperuser () {
   console.log('Creating a new superuser')
   console.log('')
 
@@ -59,4 +59,3 @@ async function main () {
   process.exit(0)
 }
 
-main()

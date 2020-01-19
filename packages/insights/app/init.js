@@ -9,7 +9,7 @@ const root = path.join(__dirname, '..')
 const pkg = require(path.join(root, 'package.json'))
 
 const createFolder = require('./lib/create-folder')
-const createSecret = require('./createsecret')
+const createSecret = require('./create-secret')
 
 const azAZ09 = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 
@@ -22,14 +22,29 @@ module.exports = async function initInsights () {
   console.log(`Welcome to Insights v${pkg.version}!`)
   console.log('')
   console.log('We will create a directory .insights to store your config data.')
-  console.log('It is advised best to add it to .gitignore!')
+  console.log('Please add it to .gitignore!') // TODO: add to gitignore!
   console.log('')
 
-  const configPath = path.join(process.cwd(), '.insights')
-  createFolder(configPath)
+  const configFolder = path.join(process.cwd(), '.insights')
+  createFolder(configFolder)
 
-  const secretPath = `${configPath}/secret`
+  process.env.INSIGHTS_CONFIG_FOLDER = configFolder
+  process.env.NODE_CONFIG_DIR = configFolder
+  process.env.INSIGHTS_DATA = path.join(configFolder, 'data')
+
+  const secretPath = `${configFolder}/secret`
   createSecret(secretPath)
+
+  console.log('')
+  console.log('In order to use insights, you must create at least one user you will use to log in.')
+  console.log('(Loginless root mode for localhost usage coming soon. For now please create a user)')
+  console.log('')
+
+  const template = require('./templates/default.json')
+  fs.writeFileSync(path.join(configFolder, 'default.json'), JSON.stringify(template, null, 2))
+
+  const createSuperuser = require('./create-superuser')
+  await createSuperuser()
 
   process.exit(0)
 }

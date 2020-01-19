@@ -29,4 +29,5 @@ if (program.password) {
 // can be random for this case as we will not start the server
 process.env.AUTHENTICATION_SECRET = randomString(64)
 
-require('../app/createsuperuser')
+const createSuperuser = require('../app/createsuperuser')
+createSuperuser()

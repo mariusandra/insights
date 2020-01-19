@@ -1,5 +1,4 @@
 import path from 'path';
-import favicon from 'serve-favicon';
 import compress from 'compression';
 import helmet from 'helmet';
 import cors from 'cors';
@@ -34,9 +33,9 @@ app.use(cors());
 app.use(compress());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
+
 // Host the public folder
-app.use('/', express.static(app.get('public')));
+app.get('/', (req, res) => res.send('<p>Insights API backend!</p>'));
 
 // Set up Plugins and providers
 app.configure(express.rest());

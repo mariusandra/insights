@@ -5,6 +5,7 @@ const path = require('path')
 const program = require('commander')
 const root = path.join(__dirname, '..')
 const pkg = require(path.join(root, 'package.json'))
+const findConfigFolder = require('../app/lib/find-config-folder')
 
 program.version(pkg.version)
   .usage('<command> [options]')
@@ -13,44 +14,32 @@ program.version(pkg.version)
   .option('-H, --host [host]', 'Host name or IP address to listen on - defaults to 127.0.0.1')
   .option('--public-url [URL]', 'URL used in webapp - defaults to http://$HOST:$PORT')
   .option('--static-root [path]', 'Folder for the insights web build - defaults to $NODE_MODULES/insights/web-build')
-  .option('--config [path]', 'Insights config folder - default searched in order: ".insights", "insights", "config/insights"')
+  .option('--config [path]', 'Insights config folder - defaults to ".insights", searched from `pwd` all the way up to /')
   .option('--data [path]', 'Path to the local NeDB database - defaults to $CONFIG/data')
   .option('--secret [path]', 'Path to the authentication secret - defaults to $CONFIG/secret')
 
 
 program.parse(process.argv)
-//
-// // no config folder path given
-// if (program.config) {
-//   process.env.INSIGHTS_CONFIG = program.config
-//
-// } else {
-//   const currentPath = process.cwd()
-//   console.log(currentPath)
-//
-// }
-//
-//
-//
-//
-// // const configSearchPaths =
-// //   path.join(__dirname, '..', '..', 'insights-api', 'config')
-// // ]
-//
-//
-// if (fs.existsSync(path)) {
-//
-// }
-//
-//
+
+if (program.config) {
+  process.env.INSIGHTS_CONFIG_FOLDER = program.config
+
+} else {
+  const configFolder = findConfigFolder()
+  if (configFolder) {
+    console.log("Using config from:", configFolder)
+    process.env.INSIGHTS_CONFIG_FOLDER = configFolder
+  } else {
+    console.error(`Fatal Error! Could not find insights config folder!`)
+    process.exit(1)
+  }
+}
 
 process.env.NODE_ENV = 'production'
-process.env.NODE_CONFIG_DIR = path.join(__dirname, '..', '..', 'insights-api', 'config')
+process.env.NODE_CONFIG_DIR = process.env.INSIGHTS_CONFIG_FOLDER
+process.env.INSIGHTS_DATA = program.data || process.env.INSIGHTS_DATA || path.join(process.env.INSIGHTS_CONFIG_FOLDER, 'data')
 
-process.env.INSIGHTS_CONFIG = path.join(require('os').homedir(), '.insights')
-process.env.INSIGHTS_DATA = program.data || process.env.INSIGHTS_DATA || path.join(process.env.INSIGHTS_CONFIG, 'data')
-
-const secretPath = program.secret || path.join(process.env.INSIGHTS_CONFIG, 'secret')
+const secretPath = program.secret || path.join(process.env.INSIGHTS_CONFIG_FOLDER, 'secret')
 
 try {
   const secret = fs.readFileSync(secretPath, 'utf8').trim()
@@ -70,7 +59,7 @@ startInsights({
   port: program.port,
   host: program.host,
   publicUrl: program.publicUrl,
-  staticRoot: program.staticRoot,
+  staticRoot: program.staticRoot
 })
 
 
