@@ -30,18 +30,21 @@
     "yarn": ">= 0.18.0"
   },
   "scripts": {
-    "start": "./bin/insights-start"
+    "start": "./bin/insights-start",
+    "build": "npm run build-web && npm run copy-web",
+    "build-web": "cd ../insights-web && npm run build",
+    "copy-web": "rm -rf web-build/ && cp -a ../insights-web/build ./web-build",
+    "prepublish": "npm run build"
   },
   "files": [
     "bin",
-    "app"
+    "app",
+    "build"
   ],
   "peerDependencies": {},
   "dependencies": {
     "commander": "^3.0.2",
     "prompt-promise": "^1.0.3",
-    "insights-api": "0.0.5",
-    "insights-charts": "0.0.22",
-    "insights-web-build": "0.0.33"
+    "insights-api": "0.0.5"
   }
 }

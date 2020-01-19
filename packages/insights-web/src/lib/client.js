@@ -1,16 +1,22 @@
+/* global window */
 import io from 'socket.io-client'
 import feathers from '@feathersjs/client'
 
 const client = feathers()
 
-// websocket support
-const socketUrl = window.__INSIGHTS_CONFIG__ ? window.__INSIGHTS_CONFIG__.socketUrl : 'http://localhost:3030'
-const socket = io(socketUrl)
+// defaults
+const { publicUrl, apiPath, socketPath } = window.__INSIGHTS_CONFIG__ || {
+  publicUrl: 'http://localhost:3030',
+  apiPath: '/',
+  socketPath: '/socket.io'
+}
+
+// socket.io
+const socket = io(publicUrl, { path: socketPath })
 client.configure(feathers.socketio(socket))
 
-// regular api fallback
-// const apiUrl = window.__INSIGHTS_CONFIG__ ? window.__INSIGHTS_CONFIG__.apiUrl : 'http://localhost:3030'
-// client.configure(feathers.rest(apiUrl).fetch(window.fetch))
+// REST api
+// client.configure(feathers.rest(`${publicUrl}${apiPath === '/' ? '' : apiPath}`).fetch(window.fetch))
 
 // authentication
 client.configure(feathers.authentication({

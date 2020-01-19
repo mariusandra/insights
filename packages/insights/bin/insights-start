@@ -1,33 +1,56 @@
 #!/usr/bin/env node
 
-// Thanks to https://github.com/mysamai/mysam/blob/master/bin/mysam for this script!
-
-var fs = require('fs')
-var path = require('path')
-var program = require('commander')
-var root = path.join(__dirname, '..')
-var pkg = require(path.join(root, 'package.json'))
+const fs = require('fs')
+const path = require('path')
+const program = require('commander')
+const root = path.join(__dirname, '..')
+const pkg = require(path.join(root, 'package.json'))
 
 program.version(pkg.version)
   .usage('<command> [options]')
-  .description('Run insights server')
-  .option('-p, --port [number]', 'Port for server. Defaults to 8000')
-  .option('-h, --host [domain]', 'Host for server. Defaults to 127.0.0.1')
-  .option('--data [folder]', 'Where to store the local NeDB database. Defaults to ~/.insights/data')
-  .option('--secret [path]', 'Where to store the authentication secret. Defaults to ~/.insights/secret')
-  .option('--public [folder]', 'HTML folder to server. Defaults to ../insights-web-build/build')
+  .description('Start insights frontend and API server')
+  .option('-p, --port [number]', 'Run on specified port - defaults to 8000')
+  .option('-H, --host [host]', 'Host name or IP address to listen on - defaults to 127.0.0.1')
+  .option('--public-url [URL]', 'URL used in webapp - defaults to http://$HOST:$PORT')
+  .option('--static-root [path]', 'Folder for the insights web build - defaults to $NODE_MODULES/insights/web-build')
+  .option('--config [path]', 'Insights config folder - default searched in order: ".insights", "insights", "config/insights"')
+  .option('--data [path]', 'Path to the local NeDB database - defaults to $CONFIG/data')
+  .option('--secret [path]', 'Path to the authentication secret - defaults to $CONFIG/secret')
+
 
 program.parse(process.argv)
+//
+// // no config folder path given
+// if (program.config) {
+//   process.env.INSIGHTS_CONFIG = program.config
+//
+// } else {
+//   const currentPath = process.cwd()
+//   console.log(currentPath)
+//
+// }
+//
+//
+//
+//
+// // const configSearchPaths =
+// //   path.join(__dirname, '..', '..', 'insights-api', 'config')
+// // ]
+//
+//
+// if (fs.existsSync(path)) {
+//
+// }
+//
+//
 
 process.env.NODE_ENV = 'production'
 process.env.NODE_CONFIG_DIR = path.join(__dirname, '..', '..', 'insights-api', 'config')
 
-process.env.INSIGHTS_DATA = program.data || process.env.INSIGHTS_DATA || path.join(require('os').homedir(), '.insights', 'data')
-process.env.INSIGHTS_PORT = program.port || process.env.INSIGHTS_PORT || 8000
-process.env.INSIGHTS_HOST = program.host || process.env.INSIGHTS_HOST || '127.0.0.1'
-process.env.INSIGHTS_WEB_BUILD = program.public || process.env.INSIGHTS_WEB_BUILD || path.join(__dirname, '..', '..', 'insights-web-build', 'build')
+process.env.INSIGHTS_CONFIG = path.join(require('os').homedir(), '.insights')
+process.env.INSIGHTS_DATA = program.data || process.env.INSIGHTS_DATA || path.join(process.env.INSIGHTS_CONFIG, 'data')
 
-const secretPath = program.secret || path.join(require('os').homedir(), '.insights', 'secret')
+const secretPath = program.secret || path.join(process.env.INSIGHTS_CONFIG, 'secret')
 
 try {
   const secret = fs.readFileSync(secretPath, 'utf8').trim()
@@ -41,4 +64,13 @@ try {
   process.exit(1)
 }
 
-require('../app/start')
+const startInsights = require('../app/start')
+
+startInsights({
+  port: program.port,
+  host: program.host,
+  publicUrl: program.publicUrl,
+  staticRoot: program.staticRoot,
+})
+
+
