@@ -19,10 +19,10 @@ program.version(pkg.version)
 
 program.parse(process.argv)
 
-process.env.NODE_ENV = program.develop ? 'development' : 'production'
+process.env.NODE_ENV = 'production'
 process.env.NODE_CONFIG_DIR = path.join(__dirname, '..', '..', 'insights-api', 'config')
 
-process.env.INSIGHTS_API_DATA = program.data || process.env.INSIGHTS_API_DATA || path.join(require('os').homedir(), '.insights', 'data')
+process.env.INSIGHTS_DATA = program.data || process.env.INSIGHTS_DATA || path.join(require('os').homedir(), '.insights', 'data')
 process.env.INSIGHTS_PORT = program.port || process.env.INSIGHTS_PORT || 8000
 process.env.INSIGHTS_HOST = program.host || process.env.INSIGHTS_HOST || '127.0.0.1'
 

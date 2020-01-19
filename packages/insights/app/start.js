@@ -9,8 +9,18 @@ const bodyParser = require('body-parser')
 const port = process.env.INSIGHTS_PORT
 const host = process.env.INSIGHTS_HOST
 const staticRoot = process.env.INSIGHTS_WEB_BUILD || path.join(__dirname, '..', '..', 'insights-web', 'build')
+const socketUrl = process.env.INSIGHTS_SOCKET_URL || `http://${host}:${port}`
 const apiUrl = process.env.INSIGHTS_API_URL || `http://${host}:${port}/api`
 const apiPath = URL.parse(apiUrl).pathname
+
+console.log({
+  host,
+  port,
+  staticRoot,
+  apiUrl,
+  apiPath,
+  socketUrl
+})
 
 let indexHtml
 
@@ -20,7 +30,8 @@ const getIndex = (req, res) => {
     const html = fs.readFileSync(indexPath, 'utf8')
     const insightsConfig = {
       apiPath,
-      apiUrl
+      apiUrl,
+      socketUrl
     }
     indexHtml = html.replace("</head>", `<script>window.__INSIGHTS_CONFIG__ = ${JSON.stringify(insightsConfig)}</script></head>`)
   }
@@ -31,7 +42,8 @@ const app = express()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.get('/', getIndex)
-app.use(api)
+app.get(apiPath, getIndex) // redirect /api -> /
+app.use(apiPath, api)
 app.use(express.static(staticRoot))
 app.get('*', getIndex)
 

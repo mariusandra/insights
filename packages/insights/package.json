@@ -18,7 +18,7 @@
   "bugs": {},
   "bin": {
     "insights": "./bin/insights",
-    "insights-start": "bin/insights-start",
+    "insights-start": "./bin/insights-start",
     "insights-createsecret": "./bin/insights-createsecret",
     "insights-createsuperuser": "./bin/insights-createsuperuser"
   },
@@ -29,7 +29,9 @@
     "node": ">= 7.6.0",
     "yarn": ">= 0.18.0"
   },
-  "scripts": {},
+  "scripts": {
+    "start": "./bin/insights-start"
+  },
   "files": [
     "bin",
     "app"
