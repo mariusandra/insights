@@ -23,7 +23,9 @@
     "yarn": ">= 0.18.0"
   },
   "files": [
-    "lib"
+    "config",
+    "lib",
+    "public"
   ],
   "scripts": {
     "test": "yarn run compile && yarn run jest",

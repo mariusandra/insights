@@ -27,7 +27,7 @@ app.configure(configuration());
 if (process.env.INSIGHTS_DATA) {
   app.set('nedb', process.env.INSIGHTS_DATA)
 }
-  
+
 // Enable security, CORS, compression, favicon and body parsing
 app.use(helmet());
 app.use(cors());
