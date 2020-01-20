@@ -51,6 +51,7 @@
     "feathers-nedb": "^5.0.2",
     "helmet": "^3.20.0",
     "js-yaml": "^3.13.1",
+    "moment": "^2.24.0",
     "nedb": "^1.8.0",
     "pg": "^7.12.1",
     "pg-connection-string": "^2.1.0",
