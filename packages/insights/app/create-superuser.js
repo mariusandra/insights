@@ -2,7 +2,7 @@
 // - INSIGHTS_SUPERUSER_EMAIL
 // - INSIGHTS_SUPERUSER_PASSWORD
 
-const app = require('../../insights-api/lib/app').default
+const app = require('insights-api/lib/app').default
 const prompt = require('prompt-promise')
 const randomString = require('./lib/random-string')
 
