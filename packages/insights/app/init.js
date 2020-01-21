@@ -40,8 +40,8 @@ module.exports = async function initInsights () {
   console.log('(Loginless root mode for localhost usage coming soon. For now please create a user)')
   console.log('')
 
-  const template = require('./templates/default.json')
-  fs.writeFileSync(path.join(configFolder, 'default.json'), JSON.stringify(template, null, 2))
+  const template = require('./templates/production.json')
+  fs.writeFileSync(path.join(configFolder, 'production.json'), JSON.stringify(template, null, 2))
 
   const createSuperuser = require('./create-superuser')
   await createSuperuser()
