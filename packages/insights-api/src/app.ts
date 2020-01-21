@@ -3,11 +3,11 @@ import compress from 'compression';
 import helmet from 'helmet';
 import cors from 'cors';
 
+import './utils/set-config-folder'
 import feathers from '@feathersjs/feathers';
 import configuration from '@feathersjs/configuration';
 import express from '@feathersjs/express';
 import socketio from '@feathersjs/socketio';
-
 
 import { Application } from './declarations';
 import logger from './logger';
@@ -23,8 +23,18 @@ const app: Application = express(feathers());
 // Load app configuration
 app.configure(configuration());
 
+if (!app.get('authentication') || !app.get('authentication').secret) {
+  throw new Error("A 'secret' must be provided in your authentication configuration")
+}
+
 if (process.env.INSIGHTS_DATA) {
   app.set('nedb', process.env.INSIGHTS_DATA)
+} else {
+  process.env.INSIGHTS_DATA = app.get('nedb') || path.join(process.env.NODE_CONFIG_DIR, 'data')
+}
+
+if (process.env.INSIGHTS_PUBLIC_URL) {
+  app.set('authentication.jwtOptions.audience', process.env.INSIGHTS_PUBLIC_URL)
 }
 
 // Enable security, CORS, compression, favicon and body parsing

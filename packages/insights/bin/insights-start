@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 const fs = require('fs')
 const path = require('path')
 const program = require('commander')
@@ -21,45 +20,25 @@ program.version(pkg.version)
 
 program.parse(process.argv)
 
-if (program.config) {
-  process.env.INSIGHTS_CONFIG_FOLDER = program.config
+const mapping = {
+  config: 'NODE_CONFIG_DIR',
+  data: 'INSIGHTS_DATA',
+  host: 'INSIGHTS_HOST',
+  port: 'INSIGHTS_PORT',
+  publicUrl: 'INSIGHTS_PUBLIC_URL',
+  staticRoot: 'INSIGHTS_STATIC_ROOT',
+  apiPath: 'INSIGHTS_API_PATH',
+  socketPath: 'INSIGHTS_SOCKET_PATH',
+}
 
-} else {
-  const configFolder = findConfigFolder()
-  if (configFolder) {
-    console.log("Using config from:", configFolder)
-    process.env.INSIGHTS_CONFIG_FOLDER = configFolder
-  } else {
-    console.error(`Fatal Error! Could not find insights config folder!`)
-    process.exit(1)
+for (const [key, envKey] of Object.values(mapping)) {
+  if (program[key]) {
+    process.env[envKey] = program[key]
   }
 }
 
 process.env.NODE_ENV = 'production'
-process.env.NODE_CONFIG_DIR = process.env.INSIGHTS_CONFIG_FOLDER
-process.env.INSIGHTS_DATA = program.data || process.env.INSIGHTS_DATA || path.join(process.env.INSIGHTS_CONFIG_FOLDER, 'data')
-
-const secretPath = program.secret || path.join(process.env.INSIGHTS_CONFIG_FOLDER, 'secret')
-
-try {
-  const secret = fs.readFileSync(secretPath, 'utf8').trim()
-  if (secret.length < 64) {
-    console.error(`Fatal Error! Read secret at ${secretPath} was less than 64 characters long!`)
-    process.exit(1)
-  }
-  process.env.AUTHENTICATION_SECRET = secret
-} catch (error) {
-  console.error(`Fatal Error! Could not find authentication secret at ${secretPath}`)
-  process.exit(1)
-}
 
 const startInsights = require('../app/start')
 
-startInsights({
-  port: program.port,
-  host: program.host,
-  publicUrl: program.publicUrl,
-  staticRoot: program.staticRoot
-})
-
-
+startInsights()

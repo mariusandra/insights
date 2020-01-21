@@ -29,7 +29,7 @@
   },
   "scripts": {
     "start": "concurrently --kill-others \"yarn run start-api\" \"yarn run start-web\" \"yarn run start-charts\"",
-    "start-api": "cd packages/insights-api && INSIGHTS_DATA=~/.insights/data yarn run dev",
+    "start-api": "cd packages/insights-api && yarn start",
     "start-charts": "cd packages/insights-charts && yarn start",
     "start-web": "cd packages/insights-web && yarn start",
     "build": "concurrently \"yarn run build-api\" \"yarn run build-web\" \"yarn run build-charts\"",
@@ -37,7 +37,7 @@
     "build-charts": "cd packages/insights-charts && yarn run build",
     "build-web": "cd packages/insights-web && yarn run build",
     "createsuperuser": "cd packages/insights && ./bin/insights-createsuperuser",
-    "init": "rm -rf .insights && ./packages/insights/bin/insights-init"
+    "init": "rm -rf .insights && ./packages/insights/bin/insights-init --dev"
   },
   "files": [
     "bin",
@@ -46,7 +46,6 @@
   "dependencies": {
     "insights-api": "*",
     "insights-charts": "*",
-    "insights-cli": "*",
     "insights-client": "*"
   },
   "peerDependencies": {},

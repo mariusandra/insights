@@ -1,6 +1,6 @@
 {
   "host": "localhost",
-  "port": 8000,
+  "port": 3030,
   "authentication": {
     "secret": ""
   }

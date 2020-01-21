@@ -11,7 +11,8 @@ const initInsights = require('../app/init')
 program.version(pkg.version)
   .usage('<command> [options]')
   .description('Initialize config to start insights by answering a few questions')
+  .option('--dev', 'Include development.json in .insight')
 
 program.parse(process.argv)
 
-initInsights()
+initInsights({ dev: program.dev })

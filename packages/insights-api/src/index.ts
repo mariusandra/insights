@@ -1,8 +1,9 @@
 import logger from './logger';
 import app from './app';
 
-const port = process.env.INSIGHTS_API_PORT || app.get('port');
-const server = app.listen(port);
+const host = process.env.INSIGHTS_HOST || app.get('host');
+const port = process.env.INSIGHTS_PORT || app.get('port');
+const server = app.listen(port, host);
 
 process.on('unhandledRejection', (reason, p) =>
   logger.error('Unhandled Rejection at: Promise ', p, reason)

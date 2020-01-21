@@ -29,8 +29,8 @@
   ],
   "scripts": {
     "test": "yarn run compile && yarn run jest",
-    "dev": "ts-node-dev --no-notify src/",
-    "start": "yarn run compile && node lib/",
+    "start": "ts-node-dev --no-notify src/",
+    "run-build": "yarn run compile && node lib/",
     "jest": "jest  --forceExit",
     "compile": "shx rm -rf lib/ && tsc",
     "prepublish": "yarn run compile"
