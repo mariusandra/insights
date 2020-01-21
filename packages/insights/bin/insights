@@ -10,6 +10,7 @@ program.version(pkg.version)
   .description('Run insights server or helper commands')
 
 program
+  .command('init', 'init the .insights folder')
   .command('start', 'start insights on port 8000')
   .command('createsecret', 'create a new authentication secret')
   .command('createsuperuser', 'create a new admin user')
