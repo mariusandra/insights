@@ -13,11 +13,17 @@ function validateEmail (email) {
   return re.test(email)
 }
 
-module.exports = async function createSuperuser () {
-  console.log('Creating a new superuser')
-  console.log('')
+async function createSuperuser ({ noLogin = false } = {}) {
+  if (!noLogin) {
+    console.log('Creating a new superuser')
+    console.log('')
+  }
 
   let email = process.env.INSIGHTS_SUPERUSER_EMAIL || ''
+  if (noLogin && email && !validateEmail(email)) {
+    email = 'root@localhost'
+  }
+
   let repeat = !email || !validateEmail(email)
 
   while (repeat) {
@@ -46,10 +52,12 @@ module.exports = async function createSuperuser () {
       roles: ['superuser']
     })
 
-    console.log('')
-    console.log('Superuser created!')
-    console.log(`  email: ${email}`)
-    console.log(`  password: ${passwordGenerated ? password : '<whatever you entered>'}`)
+    if (!noLogin) {
+      console.log('')
+      console.log('Superuser created!')
+      console.log(`  email: ${email}`)
+      console.log(`  password: <Using ROOT MODE! No password required!>`)
+    }
   } catch (error) {
     console.error('Could not create superuser! Exception:')
     console.error(error)
@@ -59,3 +67,4 @@ module.exports = async function createSuperuser () {
   process.exit(0)
 }
 
+module.exports = createSuperuser

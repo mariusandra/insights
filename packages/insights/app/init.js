@@ -7,7 +7,10 @@ const pkg = require(path.join(root, 'package.json'))
 
 const createFolder = require('./lib/create-folder')
 
-module.exports = async function initInsights ({ dev = false }) {
+const { promisify } = require('util');
+const exec = promisify(require('child_process').exec)
+
+async function initInsights ({ dev = false, noLogin = false }) {
   console.log(`Welcome to Insights v${pkg.version}!`)
   console.log('')
   console.log('We will create a directory .insights to store your config data.')
@@ -19,27 +22,42 @@ module.exports = async function initInsights ({ dev = false }) {
   process.env.NODE_CONFIG_DIR = configFolder
 
   console.log('')
-  console.log('In order to use insights, you must create at least one user you will use to log in.')
-  console.log('(Loginless root mode for localhost usage coming soon. For now please create a user)')
-  console.log('')
+  if (!noLogin) {
+    console.log('In order to use insights, you must create at least one user you will use to log in.')
+  }
 
   const secretKey = randomString(64)
 
   if (dev) {
     let developmentTemplate = require('./templates/development.json')
     developmentTemplate.authentication.secret = secretKey
+    if (noLogin) {
+      developmentTemplate.authentication.noLogin = true
+    }
     fs.writeFileSync(path.join(configFolder, 'development.json'), JSON.stringify(developmentTemplate, null, 2))
   }
 
   let productionTemplate = require('./templates/production.json')
   productionTemplate.authentication.secret = secretKey
+  if (noLogin) {
+    productionTemplate.authentication.noLogin = true
+  }
   fs.writeFileSync(path.join(configFolder, 'production.json'), JSON.stringify(productionTemplate, null, 2))
 
   const defaultTemplate = require('./templates/default.json')
   fs.writeFileSync(path.join(configFolder, 'default.json'), JSON.stringify(defaultTemplate, null, 2))
 
+  if (noLogin) {
+    const user = (await exec(`whoami`)).stdout.trim() || 'root'
+    const host = (await exec(`hostname`)).stdout.trim() || 'localhost'
+    process.env.INSIGHTS_SUPERUSER_EMAIL = `${user}@${host}`
+    process.env.INSIGHTS_SUPERUSER_PASSWORD = randomString(128)
+  }
+
   const createSuperuser = require('./create-superuser')
-  await createSuperuser()
+  await createSuperuser({ noLogin })
 
   process.exit(0)
 }
+
+module.exports = initInsights

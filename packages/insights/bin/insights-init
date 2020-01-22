@@ -11,8 +11,9 @@ const initInsights = require('../app/init')
 program.version(pkg.version)
   .usage('<command> [options]')
   .description('Initialize config to start insights by answering a few questions')
-  .option('--dev', 'Include development.json in .insight')
+  .option('--dev', 'Include development.json in ".insights"')
+  .option('--no-login', 'Run insights without requiring a user to login with')
 
 program.parse(process.argv)
 
-initInsights({ dev: program.dev })
+initInsights({ dev: program.dev, noLogin: !program.login })
