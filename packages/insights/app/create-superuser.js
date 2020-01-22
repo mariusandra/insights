@@ -37,7 +37,7 @@ async function createSuperuser ({ noLogin = false } = {}) {
     }
   }
 
-  let password = process.env.INSIGHTS_SUPERUSER_PASSWORD || (await prompt.password('password (type or hit [enter] to autogenerate): '))
+  let password = noLogin || process.env.INSIGHTS_SUPERUSER_PASSWORD || (await prompt.password('password (type or hit [enter] to autogenerate): '))
   let passwordGenerated = false
 
   if (!password) {
@@ -46,13 +46,18 @@ async function createSuperuser ({ noLogin = false } = {}) {
   }
 
   try {
-    await app.service('users').create({
-      email: email,
-      password: password,
-      roles: ['superuser']
-    })
+    if (noLogin) {
+      await app.service('users').create({
+        email: email,
+        roles: ['superuser']
+      })
+    } else {
+      await app.service('users').create({
+        email: email,
+        password: password,
+        roles: ['superuser']
+      })
 
-    if (!noLogin) {
       console.log('')
       console.log('Superuser created!')
       console.log(`  email: ${email}`)

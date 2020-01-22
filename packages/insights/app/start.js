@@ -34,7 +34,8 @@ module.exports = function startInsights({
       const insightsConfig = {
         apiPath,
         socketPath,
-        publicUrl
+        publicUrl,
+        noLogin: !!api.get('authentication').noLogin
       }
       indexHtml = html.replace("</head>", `<script>window.__INSIGHTS_CONFIG__ = ${JSON.stringify(insightsConfig)}</script></head>`)
     }

@@ -48,14 +48,14 @@ async function initInsights ({ dev = false, noLogin = false }) {
   if (noLogin) {
     delete defaultTemplate.authentication.local
     defaultTemplate.authentication.authStrategies = defaultTemplate.authentication.authStrategies.filter(s => s !== 'local')
+    defaultTemplate.authentication.authStrategies.push('noLogin')
   }
   fs.writeFileSync(path.join(configFolder, 'default.json'), JSON.stringify(defaultTemplate, null, 2))
 
   if (noLogin) {
-    const user = (await exec(`whoami`)).stdout.trim() || 'root'
+    const user = (await exec(`whoami`)).stdout.trim() || 'anonymous'
     const host = (await exec(`hostname`)).stdout.trim() || 'localhost'
     process.env.INSIGHTS_SUPERUSER_EMAIL = `${user}@${host}`
-    process.env.INSIGHTS_SUPERUSER_PASSWORD = randomString(128)
   }
 
   const createSuperuser = require('./create-superuser')
