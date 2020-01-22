@@ -28,6 +28,7 @@
     "yarn": ">= 0.18.0"
   },
   "scripts": {
+    "init": "rm -rf .insights && ./packages/insights/bin/insights-init --dev",
     "start": "concurrently --kill-others \"yarn run start-api\" \"yarn run start-web\" \"yarn run start-charts\"",
     "start-api": "cd packages/insights-api && yarn start",
     "start-charts": "cd packages/insights-charts && yarn start",
@@ -36,8 +37,7 @@
     "build-api": "cd packages/insights-api && yarn run compile",
     "build-charts": "cd packages/insights-charts && yarn run build",
     "build-web": "cd packages/insights-web && yarn run build",
-    "createsuperuser": "cd packages/insights && ./bin/insights-createsuperuser",
-    "init": "rm -rf .insights && ./packages/insights/bin/insights-init --dev"
+    "createsuperuser": "cd packages/insights && ./bin/insights-createsuperuser"
   },
   "files": [
     "bin",
