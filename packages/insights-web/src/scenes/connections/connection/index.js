@@ -25,6 +25,7 @@ class Connection extends Component {
     this.state = {
       url: props.connection.url,
       structurePath: props.connection.structurePath,
+      timeoutMs: props.connection.timeoutMs,
       editing: false
     }
   }
@@ -32,7 +33,7 @@ class Connection extends Component {
   handleUpdate = (e) => {
     const { connection } = this.props
     const { editConnection } = this.actions
-    const { url, structurePath } = this.state
+    const { url, structurePath, timeoutMs } = this.state
 
     e.preventDefault()
 
@@ -41,7 +42,7 @@ class Connection extends Component {
       return
     }
 
-    editConnection(connection._id, url, structurePath)
+    editConnection(connection._id, url, structurePath, timeoutMs)
 
     this.setState({ editing: false })
   }
@@ -81,7 +82,7 @@ class Connection extends Component {
 
   render () {
     const { connection } = this.props
-    const { editing, url, structurePath } = this.state
+    const { editing, url, structurePath, timeoutMs } = this.state
 
     return (
       <div key={connection._id} className='one-connection'>
@@ -93,6 +94,11 @@ class Connection extends Component {
               <strong>connection url</strong>
               <br />
               <input placeholder='psql://user:pass@localhost/dbname' value={url} onChange={e => this.setState({ url: e.target.value })} className='input-text' style={{width: 400}} />
+            </div>
+            <div className='details-edit-line'>
+              <strong>timeout milliseconds</strong>
+              <br />
+              <input placeholder='no timeout' value={timeoutMs || ''} onChange={e => this.setState({ timeoutMs: e.target.value.replace(/[^0-9]/g, '') })} className='input-text' style={{width: 400}} />
             </div>
             <div className='details-edit-line'>
               <strong>insights.yml path</strong>

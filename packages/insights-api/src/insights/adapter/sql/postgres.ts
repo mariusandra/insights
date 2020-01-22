@@ -10,11 +10,12 @@ import { timezone } from '../../../config'
 export default class Postgres extends SQL {
   pool: Pool
 
-  constructor (connection: string) {
-    super(connection)
+  constructor (connection: string, timeoutMs: number) {
+    super(connection, timeoutMs)
 
     this.pool = new Pool({
-      connectionString: connection
+      connectionString: connection,
+      statement_timeout: timeoutMs || false,
     })
   }
 

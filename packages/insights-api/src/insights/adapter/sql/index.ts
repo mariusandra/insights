@@ -4,9 +4,11 @@ import moment from 'moment'
 
 export default class SQL {
   connection: string
+  timeoutMs: number
 
-  constructor (connection: string) {
+  constructor (connection: string, timeoutMs: number) {
     this.connection = connection
+    this.timeoutMs = timeoutMs
   }
 
   async test () {

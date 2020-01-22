@@ -23,7 +23,7 @@ export class ConnectionTest implements Partial<ServiceMethods<Data>> {
       const { url, structurePath } = await connectionsService.get(id)
 
       // check that this doesn't throw up
-      await createAdapter(url).test()
+      await createAdapter(url, 60000).test()
 
       // if we want a structure from a file, test that it exists
       if (structurePath) {

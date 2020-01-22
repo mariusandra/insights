@@ -8,10 +8,10 @@ export default kea({
     loadingConnections: true,
     connectionsLoaded: connections => ({ connections }),
 
-    addConnection: ({ keyword, url, structurePath }) => ({ keyword, url, structurePath }),
+    addConnection: ({ keyword, url, structurePath, timeoutMs }) => ({ keyword, url, structurePath, timeoutMs }),
     connectionAdded: (connection) => ({ connection }),
 
-    editConnection: (id, url, structurePath) => ({ id, url, structurePath }),
+    editConnection: (id, url, structurePath, timeoutMs) => ({ id, url, structurePath, timeoutMs }),
     connectionEdited: (connection) => ({ connection }),
 
     viewStructure: (id) => ({ id }),

@@ -59,15 +59,15 @@ export default kea({
   workers: {
     addConnection: function * (action) {
       const { connectionAdded } = this.actions
-      const { keyword, url, structurePath } = action.payload
-      const connection = yield connectionsService.create({ keyword, url, structurePath })
+      const { keyword, url, structurePath, timeoutMs } = action.payload
+      const connection = yield connectionsService.create({ keyword, url, structurePath, timeoutMs })
       yield put(connectionAdded(connection))
     },
 
     editConnection: function * (action) {
       const { connectionEdited } = this.actions
-      const { id, url, structurePath } = action.payload
-      const connection = yield connectionsService.patch(id, { url, structurePath })
+      const { id, url, structurePath, timeoutMs } = action.payload
+      const connection = yield connectionsService.patch(id, { url, structurePath, timeoutMs })
       yield put(connectionEdited(connection))
     },
 

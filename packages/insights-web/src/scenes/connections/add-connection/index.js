@@ -21,6 +21,7 @@ class AddConnection extends Component {
       keyword: '',
       url: '',
       structurePath: '',
+      timeoutMs: '',
       adding: false,
       added: false
     }
@@ -28,7 +29,7 @@ class AddConnection extends Component {
 
   handleAdd = (e) => {
     const { addConnection } = this.props.actions
-    const { keyword, url, structurePath } = this.state
+    const { keyword, url, structurePath, timeoutMs } = this.state
 
     e.preventDefault()
 
@@ -42,13 +43,13 @@ class AddConnection extends Component {
       return
     }
 
-    addConnection({ keyword, url, structurePath })
+    addConnection({ keyword, url, structurePath, timeoutMs })
 
-    this.setState({ adding: false, keyword: '', url: '' })
+    this.setState({ adding: false, keyword: '', url: '', timeoutMs: '' })
   }
 
   render () {
-    const { adding, keyword, url, structurePath } = this.state
+    const { adding, keyword, url, structurePath, timeoutMs } = this.state
 
     return (
       <div>
@@ -60,7 +61,7 @@ class AddConnection extends Component {
               <div style={{marginBottom: 10}}>
                 <strong>Keyword</strong>
                 {' - '}
-                This will be used in URLs, dashboards, etc to refer to your database. Changing it later will result in problems...
+                This will be used in URLs, dashboards, etc to refer to your database. Changing it later might result in problems...
                 <br />
                 <input autoFocus placeholder='mydb' value={keyword} onChange={e => this.setState({ keyword: e.target.value })} className='input-text' style={{width: 400}} />
               </div>
@@ -70,6 +71,13 @@ class AddConnection extends Component {
                 Currently only URLs in the format "psql://user:pass@localhost/dbname" are supported.
                 <br />
                 <input placeholder='psql://user:pass@localhost/dbname' value={url} onChange={e => this.setState({ url: e.target.value })} className='input-text' style={{width: 400}} />
+              </div>
+              <div style={{marginBottom: 10}}>
+                <strong>Timeout</strong>
+                {' - '}
+                Statement timeout in milliseconds
+                <br />
+                <input placeholder='no timeout' value={timeoutMs || ''} onChange={e => this.setState({ timeoutMs: e.target.value.replace(/[^0-9]/g, '') })} className='input-text' style={{width: 400}} />
               </div>
               <div style={{marginBottom: 10}}>
                 <strong>insights.yml path</strong>
