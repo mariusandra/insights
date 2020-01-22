@@ -45,6 +45,10 @@ async function initInsights ({ dev = false, noLogin = false }) {
   fs.writeFileSync(path.join(configFolder, 'production.json'), JSON.stringify(productionTemplate, null, 2))
 
   const defaultTemplate = require('./templates/default.json')
+  if (noLogin) {
+    delete defaultTemplate.authentication.local
+    defaultTemplate.authentication.authStrategies = defaultTemplate.authentication.authStrategies.filter(s => s !== 'local')
+  }
   fs.writeFileSync(path.join(configFolder, 'default.json'), JSON.stringify(defaultTemplate, null, 2))
 
   if (noLogin) {
