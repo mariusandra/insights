@@ -29,6 +29,7 @@
   },
   "scripts": {
     "init": "rm -rf .insights && ./packages/insights/bin/insights-init --dev",
+    "init-no-login": "rm -rf .insights && ./packages/insights/bin/insights-init --dev --no-login",
     "start": "concurrently --kill-others \"yarn run start-api\" \"yarn run start-web\" \"yarn run start-charts\"",
     "start-api": "cd packages/insights-api && yarn start",
     "start-charts": "cd packages/insights-charts && yarn start",
