@@ -50,6 +50,7 @@ class LoginScene extends Component {
       <div className='login-scene'>
         <form className='login-box' onSubmit={this.handleFormSubmit}>
           <div className='logo'>
+            <img src='/logo64.png' alt='' />
             Insights
           </div>
           <div className='field'>

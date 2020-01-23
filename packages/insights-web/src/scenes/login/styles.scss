@@ -6,8 +6,16 @@
     .logo {
       font-size: 32px;
       padding-left: 110px;
-      font-family: 'Roboto Slab';
+      font-family: serif;
       margin-bottom: 20px;
+      text-transform: uppercase;
+
+      img {
+        width: 32px;
+        height: 32px;
+        vertical-align: text-top;
+        margin-right: 6px
+      }
     }
     .field {
       display: flex;

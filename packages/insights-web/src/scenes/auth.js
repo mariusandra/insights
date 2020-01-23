@@ -59,7 +59,6 @@ export default kea({
   workers: {
     authenticate: function * (credentials) {
       const { loginStarted, loginSuccess, loginFailure } = this.actions
-      const { noLogin } = window.__INSIGHTS_CONFIG__ || {}
 
       yield put(loginStarted())
 
@@ -73,6 +72,7 @@ export default kea({
           try {
             authenticationResponse = yield client.reAuthenticate()
           } catch (e) {
+            // try if we can use the "noLogin" authentication to get in
             authenticationResponse = yield client.authenticate({strategy: 'noLogin'})
           }
         }
