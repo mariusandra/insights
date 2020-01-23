@@ -1,15 +1,10 @@
 import './styles.scss'
 
-// libraries
 import React, { Component } from 'react'
 import { connect } from 'kea'
 
-// utils
-
-// components
 import SubmitButton from 'lib/tags/submit-button'
 
-// logic
 import sceneLogic from 'scenes/login/logic'
 import sceneSaga from 'scenes/login/saga'
 
@@ -70,6 +65,10 @@ class LoginScene extends Component {
           <div className='field'>
             <label />
             <SubmitButton type='submit' isSubmitting={isSubmitting}>Login</SubmitButton>
+          </div>
+          <div className='field'>
+            <label />
+            <a href='http://localhost:3030/oauth/google'>Login with Google</a>
           </div>
         </form>
       </div>
