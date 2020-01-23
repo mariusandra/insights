@@ -35,7 +35,7 @@ module.exports = function startInsights({
         apiPath,
         socketPath,
         publicUrl,
-        noLogin: !!api.get('authentication').noLogin
+        noLogin: api.get('authentication').authStrategies.includes('noLogin')
       }
       indexHtml = html.replace("</head>", `<script>window.__INSIGHTS_CONFIG__ = ${JSON.stringify(insightsConfig)}</script></head>`)
     }
