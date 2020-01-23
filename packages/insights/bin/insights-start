@@ -31,7 +31,7 @@ const mapping = {
   socketPath: 'INSIGHTS_SOCKET_PATH',
 }
 
-for (const [key, envKey] of Object.values(mapping)) {
+for (const [key, envKey] of Object.entries(mapping)) {
   if (program[key]) {
     process.env[envKey] = program[key]
   }
