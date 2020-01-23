@@ -31,25 +31,16 @@ async function initInsights ({ dev = false, noLogin = false }) {
   if (dev) {
     let developmentTemplate = require('./templates/development.json')
     developmentTemplate.authentication.secret = secretKey
-    if (noLogin) {
-      developmentTemplate.authentication.noLogin = true
-    }
+    developmentTemplate.authentication.authStrategies = ["jwt", noLogin ? "noLogin" : 'local']
     fs.writeFileSync(path.join(configFolder, 'development.json'), JSON.stringify(developmentTemplate, null, 2))
   }
 
   let productionTemplate = require('./templates/production.json')
   productionTemplate.authentication.secret = secretKey
-  if (noLogin) {
-    productionTemplate.authentication.noLogin = true
-  }
+  productionTemplate.authentication.authStrategies = ["jwt", noLogin ? "noLogin" : 'local']
   fs.writeFileSync(path.join(configFolder, 'production.json'), JSON.stringify(productionTemplate, null, 2))
 
   const defaultTemplate = require('./templates/default.json')
-  if (noLogin) {
-    delete defaultTemplate.authentication.local
-    defaultTemplate.authentication.authStrategies = defaultTemplate.authentication.authStrategies.filter(s => s !== 'local')
-    defaultTemplate.authentication.authStrategies.push('noLogin')
-  }
   fs.writeFileSync(path.join(configFolder, 'default.json'), JSON.stringify(defaultTemplate, null, 2))
 
   if (noLogin) {

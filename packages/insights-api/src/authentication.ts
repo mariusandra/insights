@@ -34,7 +34,7 @@ export default function(app: Application) {
     authentication.register('local', new LocalStrategy());
   }
 
-  if (app.get('authentication').noLogin) {
+  if (app.get('authentication').authStrategies.includes('noLogin')) {
     authentication.register('noLogin', new NoLoginStrategy());
   }
 

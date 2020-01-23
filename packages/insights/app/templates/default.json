@@ -6,10 +6,6 @@
   "authentication": {
     "entity": "user",
     "service": "users",
-    "authStrategies": [
-      "jwt",
-      "local"
-    ],
     "jwtOptions": {
       "header": {
         "typ": "access"
