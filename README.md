@@ -22,6 +22,8 @@ This creates a folder `.insights` which contains all the config and runtime data
 
 Skip `--no-login` if you wish to deploy it on a server and want to configure real users!
 
+(Of course this is an extremely early BETA release, so use on a live server at your own risk!)
+
 ## How does it work
 
 Similar to Looker and their LookML, Insights requires a mapping of your database's structure to function.
