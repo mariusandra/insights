@@ -59,6 +59,7 @@ export default kea({
   workers: {
     authenticate: function * (credentials) {
       const { loginStarted, loginSuccess, loginFailure } = this.actions
+      const { noLogin } = window.__INSIGHTS_CONFIG__ || {}
 
       yield put(loginStarted())
 
@@ -69,7 +70,11 @@ export default kea({
           const payload = Object.assign({ strategy: 'local' }, credentials)
           authenticationResponse = yield client.authenticate(payload)
         } else {
-          authenticationResponse = yield client.reAuthenticate()
+          try {
+            authenticationResponse = yield client.reAuthenticate()
+          } catch (e) {
+            authenticationResponse = yield client.authenticate({strategy: 'noLogin'})
+          }
         }
 
         const { accessToken, user } = authenticationResponse
@@ -77,6 +82,7 @@ export default kea({
         yield put(loginSuccess(accessToken, user))
         return true
       } catch (error) {
+        console.error(error)
         const showLogin = yield this.get('showLogin')
         yield put(loginFailure())
 
