@@ -63,7 +63,7 @@ async function createSuperuser ({ noLogin = false } = {}) {
       console.log('')
       console.log('Superuser created!')
       console.log(`  email: ${email}`)
-      console.log(`  password: <Using ROOT MODE! No password required!>`)
+      console.log(`  password: ${passwordGenerated ? password : '<whatever you entered>'}`)
     }
   } catch (error) {
     console.error('Could not create superuser! Exception:')
