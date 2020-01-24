@@ -1,21 +1,19 @@
 import { Structure, StructureColumn, ColumnType } from '../../definitions'
 
 import pgStructure from 'pg-structure'
-import { parse } from 'pg-connection-string'
-import changeCase from 'change-case'
+import { pascalCase } from 'change-case'
 import { singular } from 'pluralize'
 
 export default async function postgresGenerator (database: string): Promise<Structure> {
-  const dbConfig = parse(database)
-  const db = await pgStructure(dbConfig, ['public'])
-  const tablesArray = db.get('public').tables
+  const db = await pgStructure(database, { includeSchemas: ['public'] })
+  const tablesArray = db.entities
 
   let structure: Structure = {}
   let multiples = {}
 
   tablesArray.forEach(table => {
     const name = table.name
-    const model = changeCase.pascalCase(singular(name))
+    const model = pascalCase(singular(name))
 
     structure[model] = structure[model] || {
       enabled: true,
@@ -31,18 +29,18 @@ export default async function postgresGenerator (database: string): Promise<Stru
 
   tablesArray.forEach(table => {
     const name = table.name
-    const model = changeCase.pascalCase(singular(name))
+    const model = pascalCase(singular(name))
 
     let primaryKey
 
     table.columns.forEach(column => {
-      const { name, type, isPrimaryKey, foreignKeyConstraints } = column
+      const { name, type, isPrimaryKey, foreignKeys } = column
 
-      if (foreignKeyConstraints.size > 0) {
-        foreignKeyConstraints.forEach(constraint => {
-          const otherTableName = constraint.referencedTable.name
-          const otherModel = changeCase.pascalCase(singular(otherTableName))
-          const otherKey = constraint.referencedColumnsBy.get(name).name
+      if (foreignKeys.length > 0) {
+        foreignKeys.forEach(foreignKey => {
+          const otherTableName = foreignKey.referencedTable.name
+          const otherModel = pascalCase(singular(otherTableName))
+          const otherKey = foreignKey.referencedColumnsBy[0].column.name
 
           const linkName = name.replace(/_id$/, '')
           structure[model].links[linkName] = {
@@ -56,7 +54,7 @@ export default async function postgresGenerator (database: string): Promise<Stru
           if (structure[otherModel].links[table.name]) {
             multiples[otherModel][table.name] = true
 
-            let otherReverseKey = `${table.name}_as_${structure[otherModel].links[table.name].model_key.replace(/_id$/, '')}`
+            const otherReverseKey = `${table.name}_as_${structure[otherModel].links[table.name].model_key.replace(/_id$/, '')}`
             structure[otherModel].links[otherReverseKey] = structure[otherModel].links[table.name]
             delete structure[otherModel].links[table.name]
           }
@@ -73,7 +71,7 @@ export default async function postgresGenerator (database: string): Promise<Stru
         })
       } else {
         let columnObject: StructureColumn = {
-          type: convertPgType(type)
+          type: convertPgType(type.name)
         }
 
         if (isPrimaryKey) {
@@ -108,7 +106,9 @@ function convertPgType (type: string) : ColumnType {
   case 'character varying':
   case 'text':
   case 'json':
+  case 'jsonb':
   case 'name':
+  case 'uuid':
     return 'string'
   case 'boolean':
     return 'boolean'

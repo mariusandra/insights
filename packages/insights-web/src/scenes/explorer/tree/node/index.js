@@ -147,7 +147,7 @@ class Node extends Component {
     return ((links
       ? (links.incoming && links.outgoing ? (Object.keys(links.outgoing || {}).length + Object.keys(links.incoming).length)
         : Object.keys(links).length) : 0) +
-            Object.keys(columns).length + Object.keys(custom).length) > 0
+      (columns ? Object.keys(columns).length : 0) + (custom ? Object.keys(custom).length : 0)) > 0
   }
 
   getChildNodes = () => {
