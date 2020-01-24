@@ -34,13 +34,13 @@ function Welcome ({ groupedViews, actions: { openView } }) {
         {groupedViews.map(({ group, views }) => (
           <div key={group}>
             <strong>{group}</strong>
-            {views.map(view => (
-              <ol key={view._id}>
-                <li>
+            <ol>
+              {views.map(view => (
+                <li key={view._id}>
                   <u style={{ cursor: 'pointer' }} onClick={() => openView(view._id)}>{view.name}</u>
                 </li>
-              </ol>
-            ))}
+              ))}
+            </ol>
           </div>
         ))}
       </div>}
