@@ -1,6 +1,6 @@
 import './styles.scss'
 
-import React from 'react'
+import React, { Component } from 'react'
 import { useValues } from 'kea'
 
 import Dimensions from 'react-dimensions'
@@ -33,4 +33,11 @@ function GraphView ({ containerHeight }) {
   )
 }
 
-export default Dimensions({ elementResize: true })(GraphView)
+// Dimensions adds a ref to its children and functional components don't support them
+class GraphViewContainer extends Component {
+  render () {
+    return <GraphView containerHeight={this.props.containerHeight} />
+  }
+}
+
+export default Dimensions({ elementResize: true })(GraphViewContainer)
