@@ -1,7 +1,8 @@
 import './styles.scss'
 
-import React, { Component } from 'react'
-import { connect } from 'kea'
+import React, { useEffect, useReducer } from 'react'
+import { useActions, useMountedLogic, useValues } from 'kea'
+import { useSelector } from 'react-redux'
 import { Alignment, Navbar, Tab, Tabs } from "@blueprintjs/core";
 
 import User from './user'
@@ -14,90 +15,56 @@ import headerLogic from 'scenes/header/logic'
 import sceneSaga from 'scenes/header/saga'
 import viewsSaga from 'scenes/header/views/saga'
 
-const logic = connect({
-  actions: [
-    headerLogic, [
-      'openLocation'
-    ]
-  ],
-  props: [
-    state => state.router.location, [
-      'pathname',
-      'search'
-    ],
-    authLogic, [
-      'user',
-      'runningInElectron'
-    ]
-  ],
-  sagas: [
-    sceneSaga,
-    viewsSaga
-  ]
-})
+const locationSelector = state => state.router.location
 
-class HeaderScene extends Component {
-  constructor (props) {
-    super(props)
-    this._pathHistory = {}
-  }
+const pathHistoryReducer = (state, { page, url }) => ({ ...state, [page]: url })
 
-  componentWillUpdate (nextProps) {
-    const page = nextProps.pathname.split('/')[1] || 'root'
-    this._pathHistory[page] = nextProps.pathname + nextProps.search
-  }
+export default function HeaderScene () {
+  useMountedLogic(sceneSaga)
+  useMountedLogic(viewsSaga)
 
-  openLocation = (pathname) => {
-    const { openLocation } = this.props.actions
+  const [pathHistory, updatePathHistory] = useReducer(pathHistoryReducer, {})
+  const { pathname, search } = useSelector(locationSelector)
+  const { user } = useValues(authLogic)
+  const { openLocation } = useActions(headerLogic)
+
+  useEffect(() => {
     const page = pathname.split('/')[1] || 'root'
-    openLocation(this._pathHistory[page] || pathname)
-  }
+    updatePathHistory({ page, url: pathname + search })
+  }, [pathname, search])
 
-  openPage = (page) => {
-    const { openLocation } = this.props.actions
-    openLocation(this._pathHistory[page] || `/${page}`)
-  }
+  const page = pathname.indexOf('/explorer') === 0 || pathname === '/'
+                ? 'explorer'
+                : pathname.indexOf('/connections') === 0
+                  ? 'connections'
+                  : 'root'
 
-  render () {
-    const { user, pathname, runningInElectron } = this.props
-
-    const animate = true
-
-    const page = pathname.indexOf('/explorer') === 0 || pathname === '/'
-                  ? 'explorer'
-                  : pathname.indexOf('/connections') === 0
-                    ? 'connections'
-                    : 'root'
-
-    return (
-      <Navbar className='bp3-dark' style={{ borderBottom: '1px solid #dbdcdd' }}>
-        <Navbar.Group>
-          <Tabs
-            className='bp3-dark'
-            animate={animate}
-            id='navbar'
-            large
-            onChange={this.openPage}
-            selectedTabId={page}>
-            <Tab id='connections' title='Connections' />
-            <Tab id='explorer' icon='search-around' title='Explorer' />
-          </Tabs>
-        </Navbar.Group>
-        {user ? <Navbar.Group align={Alignment.RIGHT}>
-          <User email={user.email} />
-        </Navbar.Group> : null}
-        {page === 'explorer' && !runningInElectron ? <Navbar.Group align={Alignment.RIGHT}>
-          <CopyQuery />
-        </Navbar.Group> : null}
-        {!runningInElectron ? <Navbar.Group align={Alignment.RIGHT}>
-          <Share />
-        </Navbar.Group> : null}
-        <Navbar.Group align={Alignment.RIGHT}>
-          <Views />
-        </Navbar.Group>
-      </Navbar>
-    )
-  }
+  return (
+    <Navbar className='bp3-dark' style={{ borderBottom: '1px solid #dbdcdd' }}>
+      <Navbar.Group>
+        <Tabs
+          className='bp3-dark'
+          animate
+          id='navbar'
+          large
+          onChange={p => openLocation(pathHistory[p] || `/${p}`)}
+          selectedTabId={page}>
+          <Tab id='connections' title='Connections' />
+          <Tab id='explorer' icon='search-around' title='Explorer' />
+        </Tabs>
+      </Navbar.Group>
+      {user ? <Navbar.Group align={Alignment.RIGHT}>
+        <User email={user.email} />
+      </Navbar.Group> : null}
+      {page === 'explorer' ? <Navbar.Group align={Alignment.RIGHT}>
+        <CopyQuery />
+      </Navbar.Group> : null}
+      <Navbar.Group align={Alignment.RIGHT}>
+        <Share />
+      </Navbar.Group>
+      <Navbar.Group align={Alignment.RIGHT}>
+        <Views />
+      </Navbar.Group>
+    </Navbar>
+  )
 }
-
-export default logic(HeaderScene)
