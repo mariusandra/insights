@@ -1,21 +1,14 @@
 import './styles.scss'
 
-// libraries
 import React, { Component } from 'react'
 import { connect } from 'kea'
 
-// utils
-
-// components
 import Spinner from 'lib/tags/spinner'
 import Connection from './connection'
 import AddConnection from './add-connection'
 
-// logic
 import connections from 'scenes/connections/logic'
 import sceneSaga from 'scenes/connections/saga'
-
-// const { SHOW_ALL, SHOW_ACTIVE, SHOW_COMPLETED } = connections.constants
 
 const logic = connect({
   props: [

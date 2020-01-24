@@ -1,14 +1,11 @@
 import './styles.scss'
 
-// libraries
 import React, { Component } from 'react'
 import { connect } from 'kea'
 
-// utils
 import { Layout, LayoutSplitter } from 'react-flex-layout'
 import { Button } from "@blueprintjs/core";
 
-// components
 import Graph from './graph'
 import TimeFilter from './time-filter'
 import Pagination from './pagination'
@@ -16,7 +13,6 @@ import Tree from './tree'
 import Table from './table'
 import Filter from './filter'
 
-// logic
 import explorerLogic from 'scenes/explorer/logic'
 import explorerSaga from 'scenes/explorer/saga'
 

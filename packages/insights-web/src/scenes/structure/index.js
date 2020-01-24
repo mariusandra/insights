@@ -1,17 +1,13 @@
 import './styles.scss'
 
-// libraries
 import React, { Component } from 'react'
 import { connect } from 'kea'
 
-// utils
 import { Layout, LayoutSplitter } from 'react-flex-layout'
 
-// components
 import Spinner from 'lib/tags/spinner'
 import StructureModel from './model'
 
-// logic
 import structure from 'scenes/structure/logic'
 import sceneSaga from 'scenes/structure/saga'
 

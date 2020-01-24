@@ -1,19 +1,15 @@
 import './styles.scss'
 
-// libraries
 import React, { Component } from 'react'
 import { connect } from 'kea'
 import { Layout } from 'react-flex-layout'
 
-// utils
 import HighlightText from 'lib/utils/highlight-text'
 import { H4, Button, InputGroup, Menu, MenuItem } from "@blueprintjs/core"
 
-// components
 import Node from './node'
 import Connection from './connection'
 
-// logic
 import explorerLogic from 'scenes/explorer/logic'
 import viewsLogic from 'scenes/header/views/logic'
 

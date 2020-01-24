@@ -1,4 +1,3 @@
-// libraries
 import React, { Component } from 'react'
 import { connect } from 'kea'
 
@@ -9,14 +8,10 @@ import './styles.scss'
 
 import Dimensions from 'react-dimensions'
 
-// utils
-
-// components
 import TableCell from './table-cell'
 import TableHeader from './table-header'
 import TableSettings from './table-settings'
 
-// logic
 import explorerLogic from 'scenes/explorer/logic'
 
 const defaultColumnWidth = (meta) => {

@@ -1,10 +1,6 @@
-// libraries
 import React, { Component } from 'react'
 import { connect } from 'kea'
 
-// utils
-
-// components
 import Column from './column'
 
 import structure from 'scenes/structure/logic'

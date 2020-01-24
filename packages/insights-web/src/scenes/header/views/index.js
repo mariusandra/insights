@@ -1,14 +1,10 @@
 import './styles.scss'
 
-// libraries
 import React, { Component } from 'react'
 import { connect } from 'kea'
 
-// utils
 import { AnchorButton, Dialog, Classes, Intent, Button, Popover, Position, Menu, MenuItem, MenuDivider } from "@blueprintjs/core"
-// components
 
-// logic
 import viewsLogic from 'scenes/header/views/logic'
 
 const logic = connect({

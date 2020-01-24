@@ -1,19 +1,14 @@
 import './styles.scss'
 
-// libraries
 import React, { Component } from 'react'
 import { connect } from 'kea'
 import { Alignment, Navbar, Tab, Tabs } from "@blueprintjs/core";
 
-// utils
-
-// components
 import User from './user'
 import Views from './views'
 import Share from './share'
 import CopyQuery from './copy-query'
 
-// logic
 import authLogic from 'scenes/auth'
 import headerLogic from 'scenes/header/logic'
 import sceneSaga from 'scenes/header/saga'

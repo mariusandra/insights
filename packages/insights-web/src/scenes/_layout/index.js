@@ -4,18 +4,14 @@ import '@blueprintjs/core/lib/css/blueprint.css'
 
 import './styles.scss'
 
-// libraries
 import React, { Component } from 'react'
 
-// utils
 import { Layout } from 'react-flex-layout'
 import { connect } from 'kea'
 
-// components
 import Header from 'scenes/header'
 import Spinner from 'lib/tags/spinner'
 
-// logic
 import authLogic from 'scenes/auth'
 
 const logic = connect({

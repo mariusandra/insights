@@ -1,17 +1,13 @@
 import './styles.scss'
 
-// libraries
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'kea'
 
-// utils
 import Dimensions from 'react-dimensions'
 
-// components
 import OneFilter from './one-filter'
 
-// logic
 import explorerLogic from 'scenes/explorer/logic'
 
 const logic = connect({

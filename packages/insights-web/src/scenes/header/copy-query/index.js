@@ -1,9 +1,7 @@
-// libraries
 import React, { Component } from 'react'
 
 import { Button, Popover, Position } from "@blueprintjs/core";
 
-// utils
 import copy from 'copy-to-clipboard'
 import messg from 'messg'
 
