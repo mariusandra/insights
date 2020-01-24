@@ -66,10 +66,10 @@ class LoginScene extends Component {
             <label />
             <SubmitButton type='submit' isSubmitting={isSubmitting}>Login</SubmitButton>
           </div>
-          <div className='field'>
+          {false && <div className='field'>
             <label />
             <a href='http://localhost:3030/oauth/google'>Login with Google</a>
-          </div>
+          </div>}
         </form>
       </div>
     )
