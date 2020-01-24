@@ -68,7 +68,7 @@ export default kea({
           }
         })
 
-        let groupKeys = Object.keys(groups).sort((a, b) => a.name.localeCompare(b.name))
+        let groupKeys = Object.keys(groups).sort((a, b) => a.localeCompare(b))
 
         return groupKeys.map(key => ({ group: key, views: groups[key] }))
       },
