@@ -47,7 +47,7 @@
   "dependencies": {
     "insights-api": "*",
     "insights-charts": "*",
-    "insights-client": "*"
+    "insights-web": "*"
   },
   "peerDependencies": {},
   "devDependencies": {

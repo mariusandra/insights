@@ -315,8 +315,6 @@ export default kea({
           } else {
             response = yield resultsService.find({ query: params })
 
-            // console.log({ params, response })
-
             if (response.success) {
               // not asking because of a pagination update
               const resetScrolling = action.type !== setPagination.toString()
@@ -439,8 +437,6 @@ export default kea({
 
       const columns = yield explorerLogic.get('columns')
       const facetsColumn = yield explorerLogic.get('facetsColumn')
-
-      console.log(columns, facetsColumn)
 
       if (!facetsColumn || columns.indexOf(facetsColumn) < 0) {
         const structure = yield explorerLogic.get('structure')

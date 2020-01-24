@@ -59,7 +59,7 @@ class StructureScene extends Component {
     }
 
     return (
-      <Layout className='structure-scene' ref={ref => { this._layout = ref }}>
+      <Layout className='structure-scene'>
         <Layout layoutWidth={300}>
           <Layout layoutHeight={80}>
             <div className='models-pane'>
