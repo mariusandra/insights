@@ -4,56 +4,43 @@ import '@blueprintjs/core/lib/css/blueprint.css'
 
 import './styles.scss'
 
-import React, { Component } from 'react'
+import React from 'react'
 
 import { Layout } from 'react-flex-layout'
-import { connect } from 'kea'
+import { useValues } from 'kea'
 
 import Header from 'scenes/header'
 import Spinner from 'lib/tags/spinner'
 
 import authLogic from 'scenes/auth'
 
-const logic = connect({
-  props: [
-    authLogic, [
-      'showLogin',
-      'showApp'
-    ]
-  ]
-})
+export default function InsightsScene ({ children }) {
+  const { showLogin, showApp } = useValues(authLogic)
 
-class InsightsScene extends Component {
-  render () {
-    const { showLogin, showApp } = this.props
+  if (!showLogin && !showApp) {
+    return <div style={{marginTop: 20, marginLeft: 20}}><Spinner /></div>
+  }
 
-    if (!showLogin && !showApp) {
-      return <div style={{marginTop: 20, marginLeft: 20}}><Spinner /></div>
-    }
-
-    if (showLogin || window.location.search.indexOf('embed=true') >= 0) {
-      return (
-        <div className='insights-scene'>
-          <Layout fill='window'>
-            {this.props.children}
-          </Layout>
-        </div>
-      )
-    }
-
+  if (showLogin || window.location.search.indexOf('embed=true') >= 0) {
     return (
-      <div className='insights-scene' style={{minHeight: '100%'}}>
+      <div className='insights-scene'>
         <Layout fill='window'>
-          <Layout layoutHeight={50}>
-            <Header />
-          </Layout>
-          <Layout layoutHeight='flex'>
-            {this.props.children}
-          </Layout>
+          {this.props.children}
         </Layout>
       </div>
     )
   }
-}
 
-export default logic(InsightsScene)
+  return (
+    <div className='insights-scene' style={{minHeight: '100%'}}>
+      <Layout fill='window'>
+        <Layout layoutHeight={50}>
+          <Header />
+        </Layout>
+        <Layout layoutHeight='flex'>
+          {children}
+        </Layout>
+      </Layout>
+    </div>
+  )
+}

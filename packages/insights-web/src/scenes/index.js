@@ -3,6 +3,7 @@ import { Provider } from 'react-redux'
 
 import { resetContext, getContext } from 'kea'
 import sagaPlugin from 'kea-saga'
+import listenersPlugin from 'kea-listeners'
 
 import { ConnectedRouter, connectRouter, routerMiddleware } from 'connected-react-router'
 import { Route, Switch } from 'react-router' // react-router v4/v5
@@ -25,7 +26,8 @@ resetContext({
     ],
   },
   plugins: [
-    sagaPlugin({ useLegacyUnboundActions: true })
+    sagaPlugin({ useLegacyUnboundActions: true }),
+    listenersPlugin
   ]
 })
 

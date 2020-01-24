@@ -1,7 +1,7 @@
 import './styles.scss'
 
-import React, { Component } from 'react'
-import { kea } from 'kea'
+import React from 'react'
+import { kea, useActions, useValues } from 'kea'
 import PropTypes from 'prop-types'
 
 import explorerLogic from 'scenes/explorer/logic'
@@ -13,12 +13,6 @@ const logic = kea({
     actions: [
       explorerLogic, [
         'setGraphTimeGroup',
-        'setGraphControls'
-      ]
-    ],
-    props: [
-      explorerLogic, [
-        'graphTimeGroup'
       ]
     ]
   },
@@ -35,48 +29,46 @@ const logic = kea({
   })
 })
 
-class ControlsLeft extends Component {
-  setGraphTimeGroup = (graphTimeGroup) => {
-    const { setGraphTimeGroup, setGraphControls } = this.actions
+export default function ControlsLeft () {
+  const { graphTimeGroup } = useValues(explorerLogic)
+  const { setGraphTimeGroup, setGraphControls } = useActions(explorerLogic)
+
+  const { moreShown } = useValues(logic)
+  const { showMore } = useActions(logic)
+
+  function setGraphTimeGroupLocal (graphTimeGroup) {
     setGraphTimeGroup(graphTimeGroup)
     setGraphControls({ compareWith: 0 })
   }
 
-  render () {
-    const { graphTimeGroup, moreShown } = this.props
-    const { showMore } = this.actions
-
-    return (
-      <div className='left'>
-        <span className='control-group'>
-          <span className={graphTimeGroup === 'day' ? 'control selected' : 'control'} onClick={() => this.setGraphTimeGroup('day')}>
-            day
-          </span>
-          <span className={graphTimeGroup === 'week' ? 'control selected' : 'control'} onClick={() => this.setGraphTimeGroup('week')}>
-            week
-          </span>
-          <span className={graphTimeGroup === 'month' ? 'control selected' : 'control'} onClick={() => this.setGraphTimeGroup('month')}>
-            month
-          </span>
-          {!moreShown && (
-            <span className='control' onClick={showMore}>
-              ...
-            </span>
-          )}
-          {moreShown && (
-            <span className={graphTimeGroup === 'quarter' ? 'control selected' : 'control'} onClick={() => this.setGraphTimeGroup('quarter')}>
-              quarter
-            </span>
-          )}
-          {moreShown && (
-            <span className={graphTimeGroup === 'year' ? 'control selected' : 'control'} onClick={() => this.setGraphTimeGroup('year')}>
-              year
-            </span>
-          )}
+  return (
+    <div className='left'>
+      <span className='control-group'>
+        <span className={graphTimeGroup === 'day' ? 'control selected' : 'control'} onClick={() => setGraphTimeGroupLocal('day')}>
+          day
         </span>
-      </div>
-    )
-  }
+        <span className={graphTimeGroup === 'week' ? 'control selected' : 'control'} onClick={() => setGraphTimeGroupLocal('week')}>
+          week
+        </span>
+        <span className={graphTimeGroup === 'month' ? 'control selected' : 'control'} onClick={() => setGraphTimeGroupLocal('month')}>
+          month
+        </span>
+        {!moreShown && (
+          <span className='control' onClick={showMore}>
+            ...
+          </span>
+        )}
+        {moreShown && (
+          <span className={graphTimeGroup === 'quarter' ? 'control selected' : 'control'} onClick={() => setGraphTimeGroupLocal('quarter')}>
+            quarter
+          </span>
+        )}
+        {moreShown && (
+          <span className={graphTimeGroup === 'year' ? 'control selected' : 'control'} onClick={() => setGraphTimeGroupLocal('year')}>
+            year
+          </span>
+        )}
+      </span>
+    </div>
+  )
 }
-
-export default logic(ControlsLeft)

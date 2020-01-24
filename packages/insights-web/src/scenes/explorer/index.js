@@ -1,7 +1,7 @@
 import './styles.scss'
 
-import React, { Component } from 'react'
-import { connect } from 'kea'
+import React, { useState } from 'react'
+import { useActions, useMountedLogic, useValues } from 'kea'
 
 import { Layout, LayoutSplitter } from 'react-flex-layout'
 import { Button } from "@blueprintjs/core";
@@ -17,90 +17,55 @@ import Welcome from './welcome'
 import explorerLogic from 'scenes/explorer/logic'
 import explorerSaga from 'scenes/explorer/saga'
 
-const logic = connect({
-  actions: [
-    explorerLogic, [
-      'refreshData'
-    ]
-  ],
-  props: [
-    explorerLogic, [
-      'graph',
-      'isSubmitting',
-      'columns',
-      'filter',
-      'selectedModel'
-    ]
-  ],
-  sagas: [
-    explorerSaga
-  ]
-})
+export default function Explorer () {
+  useMountedLogic(explorerSaga)
 
-class Explorer extends Component {
-  constructor (props) {
-    super(props)
+  const { isSubmitting, columns, graph, selectedModel } = useValues(explorerLogic)
+  const { refreshData } = useActions(explorerLogic)
 
-    this.state = {
-      filterHeight: 40
-    }
-  }
+  const [filterHeight, setFilterHeight] = useState(40)
 
-  setFilterHeight = (filterHeight) => {
-    if (this.state.filterHeight !== filterHeight) {
-      this.setState({ filterHeight })
-    }
-  }
+  const hasGraph = graph && graph.results
 
-  render () {
-    const { isSubmitting, columns, graph, selectedModel } = this.props
-    const { filterHeight } = this.state
-    const { refreshData } = this.props.actions
-
-    const hasGraph = graph && graph.results
-
-    return (
-      <Layout className='explorer-scene'>
-        <Layout layoutWidth={300} className='explorer-tree-bar'>
-          <Tree />
-        </Layout>
-        <LayoutSplitter />
-        {selectedModel ?
-          <Layout layoutWidth='flex'>
-            <Layout layoutHeight={50}>
-              <div style={{padding: 10}}>
-                <div className='top-controls'>
-                  {columns.length > 0 ? (
-                    <Button icon='refresh' loading={isSubmitting} onClick={refreshData}>
-                      Reload
-                    </Button>
-                  ) : null}
-                  {hasGraph ? (
-                    <TimeFilter />
-                  ) : null}
-                </div>
-                <div className='top-pagination'>
-                  <Pagination />
-                </div>
-              </div>
-            </Layout>
-            <Layout layoutHeight={filterHeight}>
-              {selectedModel ? <Filter setFilterHeight={this.setFilterHeight} /> : null}
-            </Layout>
-            {hasGraph ? (
-              <Layout layoutHeight={300} className='visible-overflow'>
-                <Graph />
-              </Layout>
-            ) : <div />}
-            {hasGraph ? <LayoutSplitter /> : <div />}
-            <Layout layoutHeight='flex'>
-              <Table />
-            </Layout>
-          </Layout>
-          : <Layout layoutWidth='flex'><Welcome /></Layout>}
+  return (
+    <Layout className='explorer-scene'>
+      <Layout layoutWidth={300} className='explorer-tree-bar'>
+        <Tree />
       </Layout>
-    )
-  }
+      <LayoutSplitter />
+      {selectedModel ?
+        <Layout layoutWidth='flex'>
+          <Layout layoutHeight={50}>
+            <div style={{padding: 10}}>
+              <div className='top-controls'>
+                {columns.length > 0 ? (
+                  <Button icon='refresh' loading={isSubmitting} onClick={refreshData}>
+                    Reload
+                  </Button>
+                ) : null}
+                {hasGraph ? (
+                  <TimeFilter />
+                ) : null}
+              </div>
+              <div className='top-pagination'>
+                <Pagination />
+              </div>
+            </div>
+          </Layout>
+          <Layout layoutHeight={filterHeight}>
+            {selectedModel ? <Filter filterHeight={filterHeight} setFilterHeight={setFilterHeight} /> : null}
+          </Layout>
+          {hasGraph ? (
+            <Layout layoutHeight={300} className='visible-overflow'>
+              <Graph />
+            </Layout>
+          ) : <div />}
+          {hasGraph ? <LayoutSplitter /> : <div />}
+          <Layout layoutHeight='flex'>
+            <Table />
+          </Layout>
+        </Layout>
+        : <Layout layoutWidth='flex'><Welcome /></Layout>}
+    </Layout>
+  )
 }
-
-export default logic(Explorer)

@@ -10067,6 +10067,11 @@ jws@^3.2.2:
     jwa "^1.4.1"
     safe-buffer "^5.0.1"
 
+kea-listeners@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/kea-listeners/-/kea-listeners-0.2.2.tgz#25e2a8fe0d7177d47368379ff868feda96fd62be"
+  integrity sha512-+V/ZfUrkeMDQVLlqghIiOhYY9+Djeaea+avpqqi6qzJTi1NHHHzBsHQN4TEgzvvy4q5ooJJrqTQntfh9Lwt6cA==
+
 kea-saga@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/kea-saga/-/kea-saga-1.0.1.tgz#a795f210ac6d8b8aeb85fb3e448a032257c08aa7"

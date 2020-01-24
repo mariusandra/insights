@@ -1,25 +1,15 @@
 import './styles.scss'
 
 import React from 'react'
-import { connect } from 'kea'
+import { useActions, useValues } from 'kea'
 import { Icon } from '@blueprintjs/core'
 
 import viewsLogic from 'scenes/header/views/logic'
 
-const welcomeLogic = connect({
-  actions: [
-    viewsLogic, [
-      'openView'
-    ]
-  ],
-  props: [
-    viewsLogic, [
-      'groupedViews'
-    ]
-  ]
-})
+export default function Welcome () {
+  const { groupedViews } = useValues(viewsLogic)
+  const { openView } = useActions(viewsLogic)
 
-function Welcome ({ groupedViews, actions: { openView } }) {
   return (
     <div className='explorer-welcome'>
       <h1>Welcome to Insights!</h1>
@@ -47,5 +37,3 @@ function Welcome ({ groupedViews, actions: { openView } }) {
     </div>
   )
 }
-
-export default welcomeLogic(Welcome)

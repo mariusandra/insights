@@ -24,11 +24,13 @@ class Filter extends Component {
   }
 
   componentDidUpdate () {
-    const { setFilterHeight } = this.props
+    const { setFilterHeight, filterHeight } = this.props
 
     const element = this.refs.filter
     if (element && element.clientHeight) {
-      setFilterHeight(element.clientHeight)
+      if (filterHeight !== element.clientHeight) {
+        setFilterHeight(element.clientHeight)
+      }
     }
   }
 

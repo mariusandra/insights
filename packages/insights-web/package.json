@@ -14,6 +14,7 @@
     "font-awesome": "4.7.0",
     "helmet": "3.21.2",
     "kea": "1.0.1",
+    "kea-listeners": "^0.2.2",
     "kea-saga": "^1.0.1",
     "merge-ranges": "1.0.2",
     "messg": "mariusandra/messg#e698a77bc0b81a4f7b81329361ebbe33afa4f9b8",

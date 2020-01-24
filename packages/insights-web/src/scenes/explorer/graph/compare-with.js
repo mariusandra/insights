@@ -1,7 +1,7 @@
 import './styles.scss'
 
-import React, { Component } from 'react'
-import { kea } from 'kea'
+import React from 'react'
+import { kea, useActions, useValues } from 'kea'
 import PropTypes from 'prop-types'
 
 import explorerLogic from 'scenes/explorer/logic'
@@ -22,12 +22,6 @@ const logic = kea({
       explorerLogic, [
         'setGraphControls'
       ]
-    ],
-    props: [
-      explorerLogic, [
-        'graphControls',
-        'graphTimeGroup'
-      ]
     ]
   },
 
@@ -45,41 +39,40 @@ const logic = kea({
   })
 })
 
-class CompareWith extends Component {
-  render () {
-    const { graphControls, moreShown, graphTimeGroup } = this.props
-    const { setGraphControls, showMore, showLess } = this.actions
+export default function CompareWith () {
+  const { graphControls, graphTimeGroup } = useValues(explorerLogic)
+  const { setGraphControls, showLess } = useActions(explorerLogic)
 
-    const { compareWith, compareWithPercentageLine } = graphControls
+  const { moreShown } = useValues(logic)
+  const { showMore } = useActions(logic)
 
-    const options = compareWithForTimeGroup[graphTimeGroup]
+  const { compareWith, compareWithPercentageLine } = graphControls
 
-    return (
-      <div className='left'>
-        <span className='control-group'>
-          <span className='control' onClick={() => moreShown ? showLess() : showMore()}>
-            Compare with
-          </span>
-          {(moreShown ? options : compareWith ? [compareWith] : []).map(option => (
-            <span
-              key={option}
-              className={compareWith === option ? 'control selected' : 'control'}
-              onClick={() => moreShown ? setGraphControls({ compareWith: compareWith === option ? 0 : option, type: 'bar' }) : showMore()}>
-              {option}
-              {compareWith === option ? ` ${graphTimeGroup} ago` : ''}
-            </span>
-          ))}
-          {!!compareWith && compareWith !== 0 && (
-            <span
-              className={compareWithPercentageLine ? 'control selected' : 'control'}
-              onClick={() => setGraphControls({ compareWithPercentageLine: !compareWithPercentageLine })}>
-              {'%'}
-            </span>
-          )}
+  const options = compareWithForTimeGroup[graphTimeGroup]
+
+  return (
+    <div className='left'>
+      <span className='control-group'>
+        <span className='control' onClick={() => moreShown ? showLess() : showMore()}>
+          Compare with
         </span>
-      </div>
-    )
-  }
+        {(moreShown ? options : compareWith ? [compareWith] : []).map(option => (
+          <span
+            key={option}
+            className={compareWith === option ? 'control selected' : 'control'}
+            onClick={() => moreShown ? setGraphControls({ compareWith: compareWith === option ? 0 : option, type: 'bar' }) : showMore()}>
+            {option}
+            {compareWith === option ? ` ${graphTimeGroup} ago` : ''}
+          </span>
+        ))}
+        {!!compareWith && compareWith !== 0 && (
+          <span
+            className={compareWithPercentageLine ? 'control selected' : 'control'}
+            onClick={() => setGraphControls({ compareWithPercentageLine: !compareWithPercentageLine })}>
+            {'%'}
+          </span>
+        )}
+      </span>
+    </div>
+  )
 }
-
-export default logic(CompareWith)
