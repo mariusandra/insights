@@ -14,7 +14,7 @@ import Spinner from 'lib/tags/spinner'
 
 import authLogic from 'scenes/auth'
 
-export default function InsightsScene ({ children }) {
+export default function InsightsLayout ({ children }) {
   const { showLogin, showApp } = useValues(authLogic)
 
   if (!showLogin && !showApp) {

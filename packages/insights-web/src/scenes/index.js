@@ -11,7 +11,7 @@ import { createBrowserHistory } from 'history'
 
 import routes from './routes'
 
-import App from './_layout'
+import Layout from './_layout'
 
 export const history = createBrowserHistory()
 
@@ -35,13 +35,13 @@ export default function Scenes() {
   return (
     <Provider store={getContext().store}>
       <ConnectedRouter history={history}>
-        <App>
+        <Layout>
           <Switch>
             {Object.entries(routes).map(([path, Component]) => (
               <Route key={path} exact path={path} render={() => <Component />} />
             ))}
           </Switch>
-        </App>
+        </Layout>
       </ConnectedRouter>
     </Provider>
   )

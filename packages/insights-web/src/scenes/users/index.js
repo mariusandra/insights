@@ -42,7 +42,9 @@ export default function UsersScene () {
 
       <br />
 
-      <Button>Invite Users</Button>
+      <div>
+        <Button>New User</Button>
+      </div>
     </div>
   )
 }
