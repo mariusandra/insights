@@ -40,7 +40,7 @@ export default async function postgresGenerator (database: string): Promise<Stru
         foreignKeys.forEach(foreignKey => {
           const otherTableName = foreignKey.referencedTable.name
           const otherModel = pascalCase(singular(otherTableName))
-          const otherKey = foreignKey.referencedColumnsBy[0].column.name
+          const otherKey = foreignKey.referencedColumns[0].name
 
           const linkName = name.replace(/_id$/, '')
           structure[model].links[linkName] = {
