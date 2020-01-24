@@ -1,3 +1,9 @@
 .users-scene {
   margin: 20px;
+
+  table.users-table {
+    td {
+      vertical-align: middle;
+    }
+  }
 }
