@@ -25,7 +25,7 @@ export default function InsightsLayout ({ children }) {
     return (
       <div className='insights-scene'>
         <Layout fill='window'>
-          {this.props.children}
+          {children}
         </Layout>
       </div>
     )

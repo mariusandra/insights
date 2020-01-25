@@ -22,6 +22,12 @@ const arrayUniq = (array) => {
 export default kea({
   path: () => ['scenes', 'explorer', 'index'],
 
+  connect: {
+    values: [
+      viewsLogic, ['sortedViews']
+    ]
+  },
+
   actions: () => ({
     setConnections: connections => ({ connections }),
     setConnection: connection => ({ connection }),
@@ -338,7 +344,7 @@ export default kea({
     ],
 
     savedViews: [
-      () => [selectors.selectedModel, viewsLogic.selectors.sortedViews],
+      () => [selectors.selectedModel, selectors.sortedViews],
       (model, sortedViews) => {
         if (sortedViews) {
           return sortedViews.filter(view => view.path.indexOf(`&columns=${model}.`) >= 0)
