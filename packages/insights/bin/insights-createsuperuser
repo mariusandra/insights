@@ -4,7 +4,8 @@ var path = require('path')
 var program = require('commander')
 var root = path.join(__dirname, '..')
 var pkg = require(path.join(root, 'package.json'))
-var randomString = require('../lib/random-string')
+var randomString = require('../app/lib/random-string')
+var findConfigFolder = require('../app/lib/find-config-folder')
 
 program.version(pkg.version)
   .usage('[options]')
@@ -15,8 +16,10 @@ program.version(pkg.version)
   .option('-d --develop', 'Run in development mode')
   .parse(process.argv)
 
-process.env.NODE_CONFIG_DIR = path.join(__dirname, '..', '..', 'insights-api', 'config')
-process.env.INSIGHTS_DATA = program.data || path.join(require('os').homedir(), '.insights', 'data')
+process.env.NODE_CONFIG_DIR = findConfigFolder()
+process.env.INSIGHTS_DATA = program.data || path.join(process.env.NODE_CONFIG_DIR, 'data')
+
+console.log(`Using config in: ${process.env.NODE_CONFIG_DIR}`)
 
 if (program.email) {
   process.env.INSIGHTS_SUPERUSER_EMAIL = program.email
@@ -29,5 +32,5 @@ if (program.password) {
 // can be random for this case as we will not start the server
 process.env.AUTHENTICATION_SECRET = randomString(64)
 
-const createSuperuser = require('../app/createsuperuser')
+const createSuperuser = require('../app/create-superuser')
 createSuperuser()
