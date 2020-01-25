@@ -5,6 +5,7 @@ import { useActions, useMountedLogic, useValues } from 'kea'
 import { useSelector } from 'react-redux'
 import { Alignment, Navbar, Tab, Tabs } from "@blueprintjs/core";
 
+import Connection from './connection'
 import User from './user'
 import Views from './views'
 import Share from './share'
@@ -41,7 +42,10 @@ export default function HeaderScene () {
 
   return (
     <Navbar className='bp3-dark' style={{ borderBottom: '1px solid #dbdcdd' }}>
-      <Navbar.Group>
+      <Navbar.Group align={Alignment.LEFT}>
+        <Connection />
+      </Navbar.Group>
+      <Navbar.Group align={Alignment.LEFT}>
         <Tabs
           className='bp3-dark'
           animate
