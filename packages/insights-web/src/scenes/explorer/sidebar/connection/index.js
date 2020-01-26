@@ -1,5 +1,5 @@
 import React from 'react'
-import { ButtonGroup, Dialog } from "@blueprintjs/core";
+import { Button } from "antd";
 
 import Database from './database'
 import Subset from './subset'
@@ -7,10 +7,10 @@ import Subset from './subset'
 export default function Connection () {
   return (
     <>
-      <ButtonGroup>
+      <Button.Group >
         <Database />
         <Subset />
-      </ButtonGroup>
+      </Button.Group>
     </>
   )
 }

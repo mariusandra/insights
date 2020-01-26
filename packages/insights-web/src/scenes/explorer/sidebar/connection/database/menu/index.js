@@ -1,7 +1,7 @@
 import React from 'react'
 import { useActions, useValues } from 'kea'
 
-import { Menu, MenuDivider, MenuItem } from '@blueprintjs/core'
+import { Menu, Icon } from 'antd'
 
 import connectionsLogic from '../../logic'
 import explorerLogic from '../../../../logic'
@@ -13,17 +13,34 @@ export default function DatabaseMenu () {
   const { setConnection } = useActions(explorerLogic)
 
   return (
-    <Menu >
-      {selectedConnection ? <>
-        <li className="bp3-menu-header"><h6 className="bp3-heading">{selectedConnection.keyword}</h6></li>
-        <MenuItem text="Edit Connection" icon="wrench" onClick={() => openEditConnection(selectedConnection._id)} />
-        <MenuDivider />
-      </> : null}
-      {otherConnections.length > 0 ? <>
-        {otherConnections.map(connection => <MenuItem key={connection._id} text={connection.keyword} icon="database" onClick={() => setConnection(connection.keyword)} />)}
-        <MenuDivider />
-      </> : null}
-      <MenuItem text="New Connection" icon="plus" onClick={openAddConnection} />
+    <Menu>
+      {selectedConnection ? (
+        <Menu.Item>
+          <Icon type="database" theme="filled" />
+          {selectedConnection.keyword}
+        </Menu.Item>
+      ) : null}
+      {selectedConnection ? (
+        <Menu.Item onClick={() => openEditConnection(selectedConnection._id)}>
+          <Icon type="edit" />
+          Edit Connection
+        </Menu.Item>
+      ) : null}
+      {selectedConnection ? <Menu.Divider /> : null}
+
+      {otherConnections.map(connection => (
+        <Menu.Item key={connection._id} onClick={() => setConnection(connection.keyword)}>
+          <Icon type="database" />
+          {connection.keyword}
+        </Menu.Item>
+      ))}
+
+      {otherConnections.length > 0 ? <Menu.Divider /> : null}
+
+      <Menu.Item onClick={openAddConnection}>
+        <Icon type="plus" />
+        New Connection
+      </Menu.Item>
     </Menu>
   )
 }

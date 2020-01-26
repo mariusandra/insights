@@ -1,13 +1,18 @@
 import React, { Component } from 'react'
 import { connect } from 'kea'
 
-import { FormGroup,  } from "@blueprintjs/core"
+import { Form, Input, Modal } from "antd"
 
 import messg from 'messg'
 
 import connectionsLogic from '../../logic'
 
 const logic = connect({
+  values: [
+    connectionsLogic, [
+      'isAddOpen'
+    ]
+  ],
   actions: [
     connectionsLogic, [
       'addConnection',
@@ -51,42 +56,37 @@ class AddDatabase extends Component {
 
   render () {
     const { keyword, url, structurePath, timeoutMs } = this.state
+    const { isAddOpen } = this.props
     const { closeAddConnection } = this.actions
 
     return (
-      <div style={{ padding: 20, paddingBottom: 0 }}>
-        <form onSubmit={this.handleAdd}>
-          <FormGroup
+      <Modal visible={isAddOpen} title='New Connection' onOk={this.handleAdd} onCancel={closeAddConnection} canOutsideClickClose>
+        <Form labelCol={{ span: 5 }} wrapperCol={{ span: 19 }} onSubmit={this.handleAdd}>
+          <Form.Item
             label='Keyword'
-            helperText='This will be used in URLs, dashboards, etc to refer to your database. Changing it later might result in problems...'>
-            <input autoFocus placeholder='mydb' value={keyword} onChange={e => this.setState({ keyword: e.target.value })} className='input-text' style={{width: '100%'}} />
-          </FormGroup>
+            extra='This will be used in URLs, dashboards, etc to refer to your database. Changing it later might result in problems...'>
+            <Input autoFocus placeholder='mydb' value={keyword} onChange={e => this.setState({ keyword: e.target.value })} style={{width: '100%'}} />
+          </Form.Item>
 
-          <FormGroup
-            label='Connection URL'
-            helperText='Currently only URLs in the format "psql://user:pass@localhost/dbname" are supported.'>
-            <input placeholder='psql://user:pass@localhost/dbname' value={url} onChange={e => this.setState({ url: e.target.value })} className='input-text' style={{width: '100%'}} />
-          </FormGroup>
+          <Form.Item
+            label='Connection'
+            extra='Currently only URLs in the format "psql://user:pass@localhost/dbname" are supported.'>
+            <Input placeholder='psql://user:pass@localhost/dbname' value={url} onChange={e => this.setState({ url: e.target.value })} style={{width: '100%'}} />
+          </Form.Item>
 
-          <FormGroup
+          <Form.Item
             label='Timeout'
-            helperText='Statement timeout in milliseconds'>
-            <input placeholder='no timeout' value={timeoutMs || ''} onChange={e => this.setState({ timeoutMs: e.target.value.replace(/[^0-9]/g, '') })} className='input-text' style={{width: '100%'}} />
-          </FormGroup>
+            extra='Statement timeout in milliseconds'>
+            <Input placeholder='no timeout' value={timeoutMs || ''} onChange={e => this.setState({ timeoutMs: e.target.value.replace(/[^0-9]/g, '') })} style={{width: '100%'}} />
+          </Form.Item>
 
-          <FormGroup
-            label='insights.yml path'
-            helperText='Leave empty to autodetect the database structure'>
-            <input placeholder='/Users/yourname/projects/code/insights.yml' value={structurePath} onChange={e => this.setState({ structurePath: e.target.value })} className='input-text' style={{width: '100%'}} />
-          </FormGroup>
-
-          <div>
-            <button type='submit'>Add</button>
-            {' '}
-            <button type='button' className='white' onClick={closeAddConnection}>Cancel</button>
-          </div>
-        </form>
-      </div>
+          <Form.Item
+            label='insights.yml'
+            extra='Leave empty to autodetect the database structure'>
+            <Input placeholder='/Users/yourname/projects/code/insights.yml' value={structurePath} onChange={e => this.setState({ structurePath: e.target.value })} style={{width: '100%'}} />
+          </Form.Item>
+        </Form>
+      </Modal>
     )
   }
 }

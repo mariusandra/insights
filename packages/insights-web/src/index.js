@@ -1,13 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import "antd/dist/antd.css";
 import * as serviceWorker from './serviceWorker';
 
 import Scenes from './scenes';
 import Popup from 'react-popup'
-import { FocusStyleManager } from '@blueprintjs/core'
-
-FocusStyleManager.onlyShowFocusOnTabs()
 
 ReactDOM.render(<Scenes />, document.getElementById('root'))
 ReactDOM.render(<Popup />, document.getElementById('popupContainer'))

@@ -109,4 +109,15 @@
   .count-tag {
     color: #888;
   }
+
+  .model-list {
+    .model-list-item {
+      padding: 6px 10px;
+      cursor: pointer;
+      &:hover {
+        background: #cedfeb;
+      }
+    }
+  }
 }
+

@@ -2,7 +2,7 @@ import './styles.scss'
 
 import React from 'react'
 import { useActions, useValues } from 'kea'
-import { Icon } from '@blueprintjs/core'
+import { Icon } from 'antd'
 
 import viewsLogic from 'scenes/header/views/logic'
 
@@ -19,7 +19,7 @@ export default function Welcome () {
       <br />
       <h2>Saved views</h2>
       {groupedViews.length === 0 ? <p>
-        When you save a view by clicking the <Icon icon='star' title='star' /> in the top right, it will show up here.
+        When you save a view by clicking the <Icon type="star" theme="filled" /> in the top right, it will show up here.
       </p> : <div>
         {groupedViews.map(({ group, views }) => (
           <div key={group}>

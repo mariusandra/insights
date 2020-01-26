@@ -3,7 +3,7 @@ import './styles.scss'
 import React, { useEffect, useReducer } from 'react'
 import { useActions, useMountedLogic, useValues } from 'kea'
 import { useSelector } from 'react-redux'
-import { Alignment, Navbar, Tab, Tabs } from "@blueprintjs/core";
+import { Menu } from 'antd'
 
 import User from './user'
 import Views from './views'
@@ -40,30 +40,24 @@ export default function HeaderScene () {
                   : 'root'
 
   return (
-    <Navbar className='bp3-dark' style={{ borderBottom: '1px solid #dbdcdd' }}>
-      <Navbar.Group align={Alignment.LEFT}>
-        <Tabs
-          className='bp3-dark'
-          animate
-          id='navbar'
-          large
-          onChange={p => openLocation(pathHistory[p] || `/${p}`)}
-          selectedTabId={page}>
-          <Tab id='explorer' icon='search-around' title='Explorer' />
-        </Tabs>
-      </Navbar.Group>
-      {user ? <Navbar.Group align={Alignment.RIGHT}>
-        <User email={user.email} />
-      </Navbar.Group> : null}
-      {page === 'explorer' ? <Navbar.Group align={Alignment.RIGHT}>
-        <CopyQuery />
-      </Navbar.Group> : null}
-      <Navbar.Group align={Alignment.RIGHT}>
-        <Share />
-      </Navbar.Group>
-      <Navbar.Group align={Alignment.RIGHT}>
+    <div className='header-navbar'>
+      <div>
+        <span className='header-link selected' onClick={() => openLocation(pathHistory['explorer'] || `/explorer`)}>
+          Explorer
+        </span>
+        <span className='header-link'>
+          Dashboard
+        </span>
+      </div>
+
+      <div style={{ width: 'auto' }} />
+
+      <div style={{ marginTop: 8, marginRight: 8 }}>
         <Views />
-      </Navbar.Group>
-    </Navbar>
+        <Share />
+        {page === 'explorer' ? <CopyQuery /> : null}
+        {user ? <User email={user.email} /> : null}
+      </div>
+    </div>
   )
 }

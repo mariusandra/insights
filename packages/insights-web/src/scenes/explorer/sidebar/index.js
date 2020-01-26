@@ -5,7 +5,7 @@ import { connect } from 'kea'
 import { Layout } from 'react-flex-layout'
 
 import HighlightText from 'lib/utils/highlight-text'
-import { H4, Button, InputGroup, Menu, MenuItem } from "@blueprintjs/core"
+import { Button, Input } from 'antd'
 
 import Node from './node'
 import Connection from './connection'
@@ -44,11 +44,6 @@ const logic = connect({
 })
 
 class ExplorerTree extends Component {
-  handleSearch = (e) => {
-    const { setSearch } = this.actions
-    setSearch(e.target.value)
-  }
-
   openModel = (model) => {
     const { structure } = this.props
     const { openTreeNode, setSearch, addColumn } = this.actions
@@ -92,14 +87,13 @@ class ExplorerTree extends Component {
     const { filteredModels, search } = this.props
 
     return (
-      <Menu>
+      <div className='model-list'>
         {filteredModels.map(model => (
-          <MenuItem
-            key={model}
-            onClick={() => this.openModel(model)}
-            text={search ? <HighlightText highlight={search}>{model}</HighlightText> : model} />
+          <div key={model} onClick={() => this.openModel(model)} className='model-list-item'>
+            {search ? <HighlightText highlight={search}>{model}</HighlightText> : model}
+          </div>
         ))}
-      </Menu>
+      </div>
     )
   }
 
@@ -112,8 +106,8 @@ class ExplorerTree extends Component {
     return (
       <div>
         <div>
-          <Button minimal icon='cross' style={{float: 'right'}} onClick={this.closeModel} />
-          <H4 style={{lineHeight: '30px'}}>{selectedModel}</H4>
+          <Button type='link' icon='close' style={{float: 'right'}} onClick={this.closeModel} />
+          <h4 style={{ lineHeight: '30px', fontSize: 18, fontWeight: 'bold' }}>{selectedModel}</h4>
         </div>
 
         <div className='node' style={{marginBottom: 10}}>
@@ -194,6 +188,7 @@ class ExplorerTree extends Component {
 
   render () {
     const { search, selectedModel } = this.props
+    const { setSearch } = this.actions
 
     return (
       <Layout>
@@ -203,13 +198,10 @@ class ExplorerTree extends Component {
               <Connection />
             </div>
             <div style={{ padding: 10 }}>
-              <InputGroup
+              <Input.Search
                 placeholder='Type to search...'
-                type='search'
-                leftIcon='search'
-                inputRef={this.setSearchInputRef}
                 value={search}
-                onChange={this.handleSearch}
+                onChange={e => setSearch(e.target.value)}
               />
             </div>
           </div>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { Button, Popover, Position } from "@blueprintjs/core";
+import { Button, Dropdown, Tooltip } from 'antd'
 
 import copy from 'copy-to-clipboard'
 import messg from 'messg'
@@ -74,9 +74,11 @@ export default class Share extends Component {
   render () {
     const { query } = this.state
     return (
-      <Popover minimal onClose={this.handleCancel} content={<AutoFocusInput query={query} />} position={Position.LEFT}>
-        <Button key={query ? 'copy-button' : 'generate-button'} className='bp3-minimal' icon='code' onClick={this.handleShare} />
-      </Popover>
+      <Dropdown overlay={<AutoFocusInput query={query} />} trigger={['click']} >
+        <Tooltip title="Copy the code for the query">
+          <Button shape="circle" key={query ? 'copy-button' : 'generate-button'} icon='code' onClick={this.handleShare} />
+        </Tooltip>
+      </Dropdown>
     )
   }
 }

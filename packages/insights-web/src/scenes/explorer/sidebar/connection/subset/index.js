@@ -1,24 +1,43 @@
 import React from 'react'
-import { Popover, Button, Position, Menu, MenuDivider, MenuItem } from "@blueprintjs/core";
+import { Menu, Button, Dropdown, Icon } from 'antd'
 
 function SubsetMenu () {
   return (
     <Menu >
-      <li className="bp3-menu-header"><h6 className="bp3-heading">All Data</h6></li>
-      <MenuItem text="Configure" icon="wrench" />
-      <MenuDivider />
-      <MenuItem text="Accounting" icon="layer" />
-      <MenuItem text="Marketing" icon="layer" />
-      <MenuDivider />
-      <MenuItem text="Create Subset" icon="new-layer" />
+      <Menu.Item >
+        <Icon type="bars" />
+        All Data
+      </Menu.Item>
+      <Menu.Item>
+        <Icon type="edit" />
+        Configure
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item>
+        <Icon type="bars" />
+        Accounting Subset
+      </Menu.Item>
+      <Menu.Item>
+        <Icon type="bars" />
+        Marketing Subset
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item>
+        <Icon type="plus" />
+        Create Subset
+      </Menu.Item>
     </Menu>
   )
 }
 
 export default function Subset () {
   return (
-    <Popover content={<SubsetMenu />} position={Position.RIGHT_BOTTOM} minimal>
-      <Button icon='layers' text='All Data' />
-    </Popover>
+    <Dropdown overlay={<SubsetMenu />} trigger={['click']}>
+      <Button>
+        <Icon type="bars" />
+        All Data
+        <Icon type="down" />
+      </Button>
+    </Dropdown>
   )
 }

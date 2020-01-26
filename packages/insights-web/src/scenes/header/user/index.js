@@ -1,6 +1,6 @@
 import React from 'react'
 import { useActions } from 'kea'
-import { Button, Popover, Position, Menu, MenuItem, MenuDivider } from "@blueprintjs/core"
+import { Button, Dropdown, Menu, Icon } from 'antd'
 
 import client from 'lib/client'
 
@@ -17,18 +17,30 @@ export default function User ({ email }) {
 
   const menu = (
     <Menu>
-      <MenuItem icon="user" text={email} />
-      <MenuDivider />
-      <MenuItem icon="new-person" text='Users' onClick={() => openLocation('/users')} />
-      <MenuItem icon="cog" text='Settings' onClick={() => openLocation('/settings')} />
-      <MenuDivider />
-      <MenuItem icon="log-out" text='Log out' onClick={handleLogout} />
+      <Menu.Item>
+        <Icon type='user' />
+        {email}
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item onClick={() => openLocation('/users')}>
+        <Icon type="usergroup-add" />
+        Users
+      </Menu.Item>
+      <Menu.Item onClick={() => openLocation('/settings')}>
+        <Icon type="setting" />
+        Settings
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item onClick={handleLogout}>
+        <Icon type="logout" />
+        Log out
+      </Menu.Item>
     </Menu>
   )
 
   return (
-    <Popover content={menu} minimal position={Position.RIGHT_BOTTOM}>
-      <Button className='bp3-minimal' icon='user' />
-    </Popover>
+    <Dropdown overlay={menu} trigger={['click']} >
+      <Button type='primary' shape="circle" icon="user" />
+    </Dropdown>
   )
 }

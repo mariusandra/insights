@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { useActions, useMountedLogic, useValues } from 'kea'
 
 import { Layout, LayoutSplitter } from 'react-flex-layout'
-import { Button } from "@blueprintjs/core";
+import { Button } from "antd";
 
 import Graph from './graph'
 import TimeFilter from './time-filter'
@@ -39,7 +39,7 @@ export default function Explorer () {
             <div style={{padding: 10}}>
               <div className='top-controls'>
                 {columns.length > 0 ? (
-                  <Button icon='refresh' loading={isSubmitting} onClick={refreshData}>
+                  <Button icon='reload' loading={isSubmitting} onClick={refreshData}>
                     Reload
                   </Button>
                 ) : null}

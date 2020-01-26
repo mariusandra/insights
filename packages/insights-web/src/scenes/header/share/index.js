@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { Button, Popover, Position } from "@blueprintjs/core";
+import { Dropdown, Button, Tooltip } from 'antd'
 
 import copy from 'copy-to-clipboard'
 import messg from 'messg'
@@ -37,6 +37,7 @@ class AutoFocusInput extends Component {
         onFocus={this.handleFocus}
         type='text'
         value={this.props.url}
+        onChange={() => {}}
         className='bp3-input'
         placeholder='Generating URL...'
         style={{minWidth: 280}} />
@@ -82,9 +83,11 @@ export default class Share extends Component {
   render () {
     const { url } = this.state
     return (
-      <Popover minimal onClose={this.handleCancel} content={<AutoFocusInput url={url} />} position={Position.LEFT}>
-        <Button key={url ? 'copy-button' : 'generate-button'} className='bp3-minimal' icon={url ? 'clipboard' : 'link'} onClick={this.handleShare} />
-      </Popover>
+      <Dropdown overlay={<AutoFocusInput url={url} />} trigger={['click']} >
+        <Tooltip title="Share this URL">
+          <Button shape="circle" key={url ? 'copy-button' : 'generate-button'} icon={url ? 'copy' : 'link'} onClick={this.handleShare} />
+        </Tooltip>
+      </Dropdown>
     )
   }
 }

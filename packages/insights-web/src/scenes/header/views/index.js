@@ -3,7 +3,7 @@ import './styles.scss'
 import React, { Component } from 'react'
 import { connect } from 'kea'
 
-import { AnchorButton, Dialog, Classes, Intent, Button, Popover, Position, Menu, MenuItem, MenuDivider } from "@blueprintjs/core"
+import { Dropdown, Button, Menu, Icon, Modal } from 'antd'
 
 import viewsLogic from 'scenes/header/views/logic'
 
@@ -59,57 +59,54 @@ class Views extends Component {
     const overlay = (
       <Menu>
         {pathname.includes('/explorer')
-          ? <MenuItem icon='plus' shouldDismissPopover={false} text='Save this view' onClick={openNew} />
-          : <MenuItem icon='plus' disabled text='Open the explorer to save views' onClick={openNew} />
+          ? <Menu.Item shouldDismissPopover={false} onClick={openNew}>
+              <Icon type='plus' />
+              Save this view
+            </Menu.Item>
+          : <Menu.Item icon='plus' disabled onClick={openNew}>
+              <Icon type='plus' />
+              Open the explorer to save views
+            </Menu.Item>
         }
 
-        <MenuDivider />
+        <Menu.Divider />
 
         {sortedViews.map(view => (
-          <MenuItem
+          <Menu.Item
             key={view._id}
             style={{maxWidth: 300}}
             multiline
             icon='th-derived'
-            text={view.name}
-            onClick={() => this.openView(view._id)} />
+            onClick={() => this.openView(view._id)}>{view.name}</Menu.Item>
         ))}
       </Menu>
     )
 
     return (
-      <div>
-        <Popover content={overlay} minimal position={Position.RIGHT_BOTTOM}>
-          <Button className='bp3-minimal' icon='star' />
-        </Popover>
+      <>
+        <Dropdown overlay={overlay} trigger={['click']} >
+          <Button shape="circle" icon="star" />
+        </Dropdown>
 
         {newOpen ? (
-          <Dialog
+          <Modal
             icon='info-sign'
-            onClose={cancelNew}
+            onOk={this.saveView}
+            onCancel={cancelNew}
             title='Enter a title'
-            isOpen
+            visible
           >
-            <div className='bp3-dialog-body'>
-              <form onSubmit={this.saveView}>
-                <input
-                  className='bp3-input bp3-fill'
-                  placeholder='Enter a title'
-                  onChange={e => setNewName(e.target.value)}
-                  value={newName}
-                  autoFocus />
-              </form>
-            </div>
-            <div className={Classes.DIALOG_FOOTER}>
-              <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-                <Button onClick={cancelNew}>Cancel</Button>
-                <AnchorButton intent={Intent.PRIMARY} onClick={this.saveView}>Save</AnchorButton>
-              </div>
-            </div>
-          </Dialog>
-
+            <form onSubmit={this.saveView}>
+              <input
+                className='bp3-input bp3-fill'
+                placeholder='Enter a title'
+                onChange={e => setNewName(e.target.value)}
+                value={newName}
+                autoFocus />
+            </form>
+          </Modal>
         ) : null}
-      </div>
+      </>
     )
   }
 }
