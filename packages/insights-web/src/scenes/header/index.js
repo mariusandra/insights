@@ -3,7 +3,6 @@ import './styles.scss'
 import React, { useEffect, useReducer } from 'react'
 import { useActions, useMountedLogic, useValues } from 'kea'
 import { useSelector } from 'react-redux'
-import { Menu } from 'antd'
 
 import User from './user'
 import Views from './views'
