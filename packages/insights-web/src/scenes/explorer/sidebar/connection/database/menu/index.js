@@ -4,10 +4,13 @@ import { useActions, useValues } from 'kea'
 import { Menu, MenuDivider, MenuItem } from '@blueprintjs/core'
 
 import connectionsLogic from '../../logic'
+import explorerLogic from '../../../../logic'
 
 export default function DatabaseMenu () {
   const { selectedConnection, otherConnections } = useValues(connectionsLogic)
+
   const { openAddConnection, openEditConnection } = useActions(connectionsLogic)
+  const { setConnection } = useActions(explorerLogic)
 
   return (
     <Menu >
@@ -17,7 +20,7 @@ export default function DatabaseMenu () {
         <MenuDivider />
       </> : null}
       {otherConnections.length > 0 ? <>
-        {otherConnections.map(connection => <MenuItem text={connection.keyword} icon="database" />)}
+        {otherConnections.map(connection => <MenuItem key={connection._id} text={connection.keyword} icon="database" onClick={() => setConnection(connection.keyword)} />)}
         <MenuDivider />
       </> : null}
       <MenuItem text="New Connection" icon="plus" onClick={openAddConnection} />

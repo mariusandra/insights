@@ -5,6 +5,7 @@ import messg from 'messg'
 import { push } from "connected-react-router"
 
 import authLogic from 'scenes/auth'
+import explorerLogic from '../../logic'
 import client from 'lib/client'
 
 const connectionsService = client.service('connections')
@@ -12,6 +13,12 @@ const connectionTestService = client.service('connection-test')
 
 export default kea({
   path: () => ['scenes', 'connections', 'index'],
+
+  connect: {
+    values: [
+      explorerLogic, ['connection']
+    ]
+  },
 
   actions: ({ constants }) => ({
     loadingConnections: true,
@@ -84,14 +91,14 @@ export default kea({
     ],
 
     selectedConnection: [
-      () => [selectors.sortedConnections],
-      (sortedConnections) => sortedConnections[0],
+      () => [selectors.sortedConnections, selectors.connection],
+      (sortedConnections, connection) => sortedConnections.filter(c => c.keyword === connection)[0],
       PropTypes.object
     ],
 
     otherConnections: [
-      () => [selectors.sortedConnections],
-      (sortedConnections) => { const [, ...rest] = sortedConnections; return rest },
+      () => [selectors.sortedConnections, selectors.connection],
+      (sortedConnections, connection) => sortedConnections.filter(c => c.keyword !== connection),
       PropTypes.array
     ],
 

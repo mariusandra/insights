@@ -224,6 +224,7 @@ export default kea({
         yield put(setStructure(structure))
       } catch (e) {
         messg.error('Error loading database structure for connection!', 2500)
+        yield put(setStructure({}))
       }
     },
 
