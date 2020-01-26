@@ -16,7 +16,7 @@ export default function DatabaseMenu () {
     <Menu >
       {selectedConnection ? <>
         <li className="bp3-menu-header"><h6 className="bp3-heading">{selectedConnection.keyword}</h6></li>
-        <MenuItem text="Configure" icon="wrench" onClick={() => openEditConnection(selectedConnection._id)} />
+        <MenuItem text="Edit Connection" icon="wrench" onClick={() => openEditConnection(selectedConnection._id)} />
         <MenuDivider />
       </> : null}
       {otherConnections.length > 0 ? <>
