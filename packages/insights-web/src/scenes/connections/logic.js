@@ -52,7 +52,7 @@ export default kea({
   selectors: ({ constants, selectors }) => ({
     sortedConnections: [
       () => [selectors.connections],
-      (connections) => Object.values(connections).sort((a, b) => a.keyword.localeCompare(b.keyword)),
+      (connections) => Object.values(connections).sort((a, b) => (a.keyword || '').localeCompare(b.keyword || '')),
       PropTypes.array
     ]
   })

@@ -9,7 +9,7 @@ import { Button } from "@blueprintjs/core";
 import Graph from './graph'
 import TimeFilter from './time-filter'
 import Pagination from './pagination'
-import Tree from './tree'
+import Sidebar from './sidebar'
 import Table from './table'
 import Filter from './filter'
 import Welcome from './welcome'
@@ -30,7 +30,7 @@ export default function Explorer () {
   return (
     <Layout className='explorer-scene'>
       <Layout layoutWidth={300} className='explorer-tree-bar'>
-        <Tree />
+        <Sidebar />
       </Layout>
       <LayoutSplitter />
       {selectedModel ?

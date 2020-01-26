@@ -1,5 +1,5 @@
 import React from 'react'
-import { ButtonGroup, Popover, Button, Position, Menu, MenuDivider, MenuItem } from "@blueprintjs/core";
+import { Popover, Button, Position, Menu, MenuDivider, MenuItem } from "@blueprintjs/core";
 
 function SubsetMenu () {
   return (

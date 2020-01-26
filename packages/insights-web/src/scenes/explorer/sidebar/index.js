@@ -31,7 +31,6 @@ const logic = connect({
       'search',
       'filteredModels',
       'selectedModel',
-      'connections',
       'structure',
       'savedViews',
       'modelFavourites',
@@ -194,15 +193,15 @@ class ExplorerTree extends Component {
   }
 
   render () {
-    const { search, selectedModel, connections } = this.props
-
-    const showConnections = Object.keys(connections).length > 1
+    const { search, selectedModel } = this.props
 
     return (
       <Layout>
-        <Layout layoutHeight={showConnections ? 90 : 50}>
+        <Layout layoutHeight={100}>
           <div>
-            {showConnections ? <Connection /> : null}
+            <div style={{ padding: 10, paddingBottom: 0 }}>
+              <Connection />
+            </div>
             <div style={{ padding: 10 }}>
               <InputGroup
                 placeholder='Type to search...'
