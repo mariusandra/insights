@@ -64,9 +64,7 @@ export default kea({
       yield put(loginRequest())
       const result = yield call(authLogic.workers.authenticate, { email, password })
 
-      if (result) {
-        message.success('Login success')
-      } else {
+      if (!result) {
         message.error('Login failed')
         yield put(loginFailure({}))
       }
