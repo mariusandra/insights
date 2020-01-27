@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'kea'
 import PropTypes from 'prop-types'
+import { Select } from 'antd'
 
 import 'react-datetime/css/react-datetime.css'
 import range from 'lib/utils/range'
@@ -129,11 +130,11 @@ class TableHeader extends Component {
           <div>
             <span>Split count:</span>
             {' '}
-            <select value={facetsCount} onChange={(e) => setFacetsCount(parseInt(e.target.value) || 0)} style={{display: 'inline-block', margin: 0}}>
+            <Select value={facetsCount} onChange={(v) => setFacetsCount(parseInt(v) || 0)} style={{display: 'inline-block', margin: 0}}>
               {range(1, 20).map(i => (
-                <option value={i} key={i}>{i}</option>
+                <Select.Option value={i} key={i}>{i}</Select.Option>
               ))}
-            </select>
+            </Select>
           </div>
         )}
       </div>

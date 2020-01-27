@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import Select from 'lib/forms/select'
+import { Select } from 'antd'
 
 const groupTypes = ['column', 'custom', 'link']
 const columnTypes = ['unknown', 'number', 'string', 'boolean', 'time', 'date']
@@ -64,11 +64,23 @@ export default class ModelColumn extends Component {
     const { models, column } = this.props
 
     if (field === 'type') {
-      return <Select value={value} options={columnTypes} onValueChange={val => this.handleMetaChange(val, 'type', true)} />
+      return (
+        <Select value={value} onChange={val => this.handleMetaChange(val, 'type', true)}>
+          {columnTypes.map(t => <Select.Option value={t} key={t}>{t}</Select.Option>)}
+        </Select>
+      )
     } else if (field === 'model') {
-      return <Select value={value} options={models} onValueChange={val => this.handleMetaChange(val, 'model', true)} />
+      return (
+        <Select value={value} onChange={val => this.handleMetaChange(val, 'model', true)}>
+          {models.map(t => <Select.Option value={t} key={t}>{t}</Select.Option>)}
+        </Select>
+      )
     } else if (field === 'index') {
-      return <Select value={value} options={indexTypes} onValueChange={val => this.handleMetaChange(val, 'inex', true)} />
+      return (
+        <Select value={value} onChange={val => this.handleMetaChange(val, 'inex', true)}>
+          {indexTypes.map(t => <Select.Option value={t} key={t}>{t}</Select.Option>)}
+        </Select>
+      )
     } else {
       const placeholder = field === 'url' ? `https://mysite.com/admin/?${column}={${column}}` : ''
       return (
