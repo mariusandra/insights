@@ -39,7 +39,7 @@ export default function User ({ email }) {
 
   return (
     <Dropdown overlay={menu} trigger={['click']} >
-      <Button type='primary' shape="circle" icon="user" />
+      <Button type='primary' shape="link" icon="user" />
     </Dropdown>
   )
 }

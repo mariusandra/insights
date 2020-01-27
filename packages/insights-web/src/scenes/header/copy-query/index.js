@@ -75,7 +75,7 @@ export default class Share extends Component {
     return (
       <Dropdown overlay={<AutoFocusInput query={query} />} trigger={['click']} >
         <Tooltip title="Copy the code for the query">
-          <Button shape="circle" key={query ? 'copy-button' : 'generate-button'} icon='code' onClick={this.handleShare} />
+          <Button shape="link" key={query ? 'copy-button' : 'generate-button'} icon='code' onClick={this.handleShare} />
         </Tooltip>
       </Dropdown>
     )

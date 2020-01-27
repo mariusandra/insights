@@ -85,7 +85,7 @@ class Views extends Component {
     return (
       <>
         <Dropdown overlay={overlay} trigger={['click']} >
-          <Button shape="circle" icon="star" />
+          <Button shape="link" icon="star" />
         </Dropdown>
 
         {newOpen ? (
