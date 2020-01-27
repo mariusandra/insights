@@ -5,7 +5,7 @@ import { push } from 'connected-react-router'
 import authLogic from 'scenes/auth'
 import viewsLogic from 'scenes/header/views/logic'
 
-import messg from 'messg'
+import { message } from 'antd'
 
 import client from 'lib/client'
 
@@ -62,7 +62,7 @@ export default kea({
           yield put(viewSaved(result))
         }
       } else {
-        messg.error('Please enter a name', 1000)
+        message.error('Please enter a name')
       }
     },
 

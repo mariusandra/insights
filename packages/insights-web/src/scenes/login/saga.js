@@ -2,7 +2,7 @@ import { kea } from 'kea'
 import { put, call } from 'redux-saga/effects'
 import { push } from 'connected-react-router'
 
-import messg from 'messg'
+import { message } from 'antd'
 
 import authLogic from 'scenes/auth'
 import loginLogic from 'scenes/login/logic'
@@ -65,9 +65,9 @@ export default kea({
       const result = yield call(authLogic.workers.authenticate, { email, password })
 
       if (result) {
-        messg.success('Login success', 2500)
+        message.success('Login success')
       } else {
-        messg.error('Login failed', 2500)
+        message.error('Login failed')
         yield put(loginFailure({}))
       }
     }

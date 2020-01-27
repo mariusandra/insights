@@ -1,7 +1,7 @@
 import { kea } from 'kea'
 import PropTypes from 'prop-types'
 import { call, put } from 'redux-saga/effects'
-import messg from 'messg'
+import { message } from 'antd'
 import { push } from "connected-react-router"
 
 import authLogic from 'scenes/auth'
@@ -156,9 +156,9 @@ export default kea({
       const result = yield connectionTestService.get(id)
 
       if (result.working) {
-        messg.success('The connection is working!', 2500)
+        message.success('The connection is working!')
       } else {
-        messg.error(`Error: ${result.error}`, 4000)
+        message.error(`Error: ${result.error}`)
       }
     },
 

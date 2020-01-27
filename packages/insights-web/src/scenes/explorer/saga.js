@@ -1,6 +1,6 @@
 import { kea } from 'kea'
 import { put, call, fork, take } from 'redux-saga/effects'
-import messg from 'messg'
+import { message } from 'antd'
 import { LOCATION_CHANGE, push } from 'connected-react-router'
 
 import download from 'downloadjs'
@@ -175,7 +175,7 @@ export default kea({
     const connections = yield connectionsService.find()
 
     if (connections.total === 0) {
-      messg.warning('Please set up a connection!', 2500)
+      message.warning('Please set up a connection!')
       yield put(push('/connections'))
       return
     }
@@ -215,7 +215,7 @@ export default kea({
         const connection = connections[keyword]
 
         if (!connection) {
-          messg.error(`Connection "${keyword}" not found!`, 2500)
+          message.error(`Connection "${keyword}" not found!`)
           yield put(setStructure({}))
           return
         }
@@ -223,7 +223,7 @@ export default kea({
         const structure = yield structureService.get(connection._id)
         yield put(setStructure(structure))
       } catch (e) {
-        messg.error('Error loading database structure for connection!', 2500)
+        message.error('Error loading database structure for connection!')
         yield put(setStructure({}))
       }
     },
@@ -310,7 +310,7 @@ export default kea({
               const match = disposition.match(/filename="([^"]+)"/)
               download(blob, match[1] || `export.${format}`)
             } else {
-              messg.error(response.error, 2500)
+              message.error(response.error)
             }
             yield put(clearLoading())
           } else {
@@ -323,13 +323,13 @@ export default kea({
               yield put(setResults(response, resetScrolling))
             } else {
               yield put(clearLoading())
-              messg.error(response.error, 2500)
+              message.error(response.error)
             }
           }
         } catch (e) {
           console.error(e)
           yield put(clearLoading())
-          messg.error(`Error: ${e.message}`, 2500)
+          message.error(`Error: ${e.message}`)
         }
       }
     },
@@ -353,7 +353,7 @@ export default kea({
         if (connections[newConnection]) {
           yield call(this.workers.loadStructure, newConnection)
         } else {
-          messg.error(`Connection "${newConnection}" not found!`, 2500)
+          message.error(`Connection "${newConnection}" not found!`)
         }
       }
 

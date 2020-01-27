@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'kea'
 
-import { Form, Input, Modal } from "antd"
-
-import messg from 'messg'
+import { message, Form, Input, Modal } from "antd"
 
 import connectionsLogic from '../../logic'
 
@@ -40,12 +38,12 @@ class AddDatabase extends Component {
     e.preventDefault()
 
     if (!keyword) {
-      messg.error('You must enter a keyword', 2500)
+      message.error('You must enter a keyword')
       return
     }
 
     if (!url) {
-      messg.error('You must enter a url', 2500)
+      message.error('You must enter a url')
       return
     }
 

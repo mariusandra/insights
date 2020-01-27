@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 
-import { Dropdown, Button, Tooltip } from 'antd'
+import { Dropdown, Button, Tooltip, message } from 'antd'
 
 import copy from 'copy-to-clipboard'
-import messg from 'messg'
 
 import client from 'lib/client'
 
@@ -67,14 +66,14 @@ export default class Share extends Component {
 
     if (path === newPath) {
       copy(url)
-      messg.success('Copied to clipboard!', 2500)
+      message.success('Copied to clipboard!')
       this.setState({ path: '', url: '' })
     } else {
       urlService.create({ path: newPath }).then(url => {
         if (url) {
           this.setState({ path: newPath, url: window.location.origin + '/url/' + url.code })
         } else {
-          messg.error('Error', 2500)
+          message.error('Error')
         }
       })
     }

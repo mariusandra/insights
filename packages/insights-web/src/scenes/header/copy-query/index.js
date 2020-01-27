@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 
-import { Button, Dropdown, Tooltip } from 'antd'
+import { message, Button, Dropdown, Tooltip } from 'antd'
 
 import copy from 'copy-to-clipboard'
-import messg from 'messg'
 
 import urlToState from 'lib/explorer/url-to-state'
 
@@ -68,7 +67,7 @@ export default class Share extends Component {
 
     copy(query)
 
-    messg.success('Copied query to clipboard!', 2500)
+    message.success('Copied query to clipboard!')
   }
 
   render () {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'kea'
 
-import messg from 'messg'
+import { message } from 'antd'
 
 import deletePopup from 'lib/popups/delete'
 
@@ -38,7 +38,7 @@ class Connection extends Component {
     e.preventDefault()
 
     if (!url) {
-      messg.error('You must enter a url', 2500)
+      message.error('You must enter a url')
       return
     }
 
