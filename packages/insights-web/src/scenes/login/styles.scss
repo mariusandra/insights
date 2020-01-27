@@ -1,41 +1,35 @@
 .login-scene {
-  padding-top: 200px;
-  .login-box {
-    width: 300px;
-    margin: 0 auto;
-    .logo {
-      font-size: 32px;
-      padding-left: 110px;
-      font-family: serif;
-      margin-bottom: 20px;
-      text-transform: uppercase;
+  padding-top: calc(50vh - 230px);
+  height: 100%;
+  background: #162c41;
 
-      img {
-        width: 32px;
-        height: 32px;
-        vertical-align: text-top;
-        margin-right: 6px
+  .ant-card {
+    margin: 0 auto;
+    .has-error {
+      .ant-form-extra {
+        color: #f5222d;
       }
     }
-    .field {
-      display: flex;
-      line-height: 30px;
-      margin: 20px 0;
+  }
+
+  .logo {
+    font-size: 32px;
+    font-family: serif;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    text-align: center;
+
+    img {
+      width: 32px;
+      height: 32px;
+      vertical-align: text-top;
+      margin-right: 6px
     }
-    label {
-      float: left;
-      text-align: right;
-      width: 100px;
-      margin-right: 10px;
-    }
-    input {
-      width: 190px;
-      display: inline-block;
-    }
-    .simple-error {
-      color: red;
-      margin-left: 110px;
-      margin-top: -18px;
+  }
+
+  .login-box {
+    .login-form-button {
+      width: 100%;
     }
   }
 }

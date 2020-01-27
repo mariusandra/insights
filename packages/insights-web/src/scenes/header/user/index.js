@@ -7,8 +7,7 @@ import client from 'lib/client'
 import headerLogic from '../logic'
 
 export default function User ({ email }) {
-  function handleLogout (e) {
-    e.preventDefault()
+  function handleLogout () {
     client.logout()
     window.location.href = '/login'
   }
