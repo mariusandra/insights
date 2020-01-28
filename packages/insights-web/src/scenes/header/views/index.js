@@ -1,114 +1,67 @@
 import './styles.scss'
 
-import React, { Component } from 'react'
-import { connect } from 'kea'
-
-import { Dropdown, Button, Menu, Icon, Modal } from 'antd'
+import React from 'react'
+import { connect, useActions, useValues } from 'kea'
+import { useSelector } from 'react-redux'
+import { Dropdown, Button, Menu, Icon, Modal, Form, Input } from 'antd'
 
 import viewsLogic from 'scenes/header/views/logic'
+import locationSelector from 'lib/selectors/location'
 
-const logic = connect({
-  actions: [
-    viewsLogic, [
-      'setNewName',
-      'openNew',
-      'saveView',
-      'cancelNew',
-      'openView'
-    ]
-  ],
-  props: [
-    viewsLogic, [
-      'newName',
-      'newOpen',
-      'sortedViews'
-    ],
-    state => state.router.location, [
-      'pathname'
-    ]
-  ]
-})
+function Views () {
+  const { newName, sortedViews, newOpen } = useValues(viewsLogic)
+  const { setNewName, openNew, cancelNew, openView, saveView } = useActions(viewsLogic)
+  const { pathname } = useSelector(locationSelector)
 
-class Views extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      tooltipHover: false
-    }
-  }
+  const overlay = (
+    <Menu>
+      {pathname.includes('/explorer')
+        ? <Menu.Item shouldDismissPopover={false} onClick={openNew}>
+            <Icon type='plus' />
+            Save this view
+          </Menu.Item>
+        : <Menu.Item icon='plus' disabled onClick={openNew}>
+            <Icon type='plus' />
+            Open the explorer to save views
+          </Menu.Item>
+      }
 
-  handleTooltip = (tooltipHover) => {
-    this.setState({ tooltipHover })
-  }
+      <Menu.Divider />
 
-  saveView = (e) => {
-    const { saveView } = this.props.actions
-    e.preventDefault()
-    saveView()
-  }
+      {sortedViews.map(view => (
+        <Menu.Item
+          key={view._id}
+          style={{maxWidth: 300}}
+          multiline
+          icon='th-derived'
+          onClick={() => openView(view._id)}>{view.name}</Menu.Item>
+      ))}
+    </Menu>
+  )
 
-  openView = (id) => {
-    const { openView } = this.props.actions
-    openView(id)
-  }
+  return (
+    <>
+      <Dropdown overlay={overlay} trigger={['click']} >
+        <Button shape="link" icon="star" style={{ color: '#e8f3fd' }} />
+      </Dropdown>
 
-  render () {
-    const { newName, sortedViews, newOpen, pathname } = this.props
-    const { setNewName, openNew, cancelNew } = this.props.actions
-
-    const overlay = (
-      <Menu>
-        {pathname.includes('/explorer')
-          ? <Menu.Item shouldDismissPopover={false} onClick={openNew}>
-              <Icon type='plus' />
-              Save this view
-            </Menu.Item>
-          : <Menu.Item icon='plus' disabled onClick={openNew}>
-              <Icon type='plus' />
-              Open the explorer to save views
-            </Menu.Item>
-        }
-
-        <Menu.Divider />
-
-        {sortedViews.map(view => (
-          <Menu.Item
-            key={view._id}
-            style={{maxWidth: 300}}
-            multiline
-            icon='th-derived'
-            onClick={() => this.openView(view._id)}>{view.name}</Menu.Item>
-        ))}
-      </Menu>
-    )
-
-    return (
-      <>
-        <Dropdown overlay={overlay} trigger={['click']} >
-          <Button shape="link" icon="star" />
-        </Dropdown>
-
-        {newOpen ? (
-          <Modal
-            icon='info-sign'
-            onOk={this.saveView}
-            onCancel={cancelNew}
-            title='Enter a title'
-            visible
-          >
-            <form onSubmit={this.saveView}>
-              <input
-                className='bp3-input bp3-fill'
-                placeholder='Enter a title'
-                onChange={e => setNewName(e.target.value)}
-                value={newName}
-                autoFocus />
-            </form>
-          </Modal>
-        ) : null}
-      </>
-    )
-  }
+      {newOpen ? (
+        <Modal
+          icon='info-sign'
+          onOk={saveView}
+          onCancel={cancelNew}
+          title='Save the current view'
+          visible
+        >
+          <Form onSubmit={e => { e.preventDefault(); saveView() }}>
+            <Form.Item>
+              <Input placeholder='Enter a title' value={newName} onChange={e => setNewName(e.target.value)} style={{width: '100%'}} autoFocus />
+            </Form.Item>
+          </Form>
+        </Modal>
+      ) : null}
+    </>
+  )
 }
 
-export default logic(Views)
+export default Views

@@ -1,7 +1,8 @@
 .login-scene {
-  padding-top: calc(50vh - 230px);
+  padding-top: calc(46vh - 140px);
   height: 100%;
-  background: #162c41;
+  background: url('https://images.unsplash.com/photo-1579961611811-54b643ddbd91?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3450&q=80') #162c41 center center;
+  background-size: cover;
 
   .ant-card {
     margin: 0 auto;

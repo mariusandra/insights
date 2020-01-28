@@ -6,12 +6,12 @@ import client from 'lib/client'
 
 import headerLogic from '../logic'
 
-export default function User ({ email }) {
-  function handleLogout () {
-    client.logout()
-    window.location.href = '/login'
-  }
+function handleLogout () {
+  client.logout()
+  window.location.href = '/login'
+}
 
+export default function User ({ email }) {
   const { openLocation } = useActions(headerLogic)
 
   const menu = (
@@ -39,7 +39,7 @@ export default function User ({ email }) {
 
   return (
     <Dropdown overlay={menu} trigger={['click']} >
-      <Button type='primary' shape="link" icon="user" />
+      <Button type='primary' shape="link" icon="user" style={{ color: '#e8f3fd' }} />
     </Dropdown>
   )
 }

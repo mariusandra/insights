@@ -39,9 +39,9 @@
     "typescript": "3.7.5"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "prepublish": "npm run build"
   },
@@ -61,6 +61,11 @@
     ]
   },
   "devDependencies": {
+    "babel-plugin-import": "^1.13.0",
+    "customize-cra": "^0.9.1",
+    "less": "^3.10.3",
+    "less-loader": "^5.0.0",
+    "react-app-rewired": "^2.1.5",
     "semver": "^7.1.1"
   },
   "files": [

@@ -59,6 +59,7 @@ export default kea({
         const result = yield viewsService.create({ name: newName, path: newPath })
 
         if (result) {
+          message.success(`View "${newName}" saved!`)
           yield put(viewSaved(result))
         }
       } else {

@@ -66,7 +66,7 @@ export default class Share extends Component {
 
     if (path === newPath) {
       copy(url)
-      message.success('Copied to clipboard!')
+      message.success('URL copied to clipboard!')
       this.setState({ path: '', url: '' })
     } else {
       urlService.create({ path: newPath }).then(url => {
@@ -83,8 +83,8 @@ export default class Share extends Component {
     const { url } = this.state
     return (
       <Dropdown overlay={<AutoFocusInput url={url} />} trigger={['click']} >
-        <Tooltip title="Share this URL">
-          <Button shape="link" key={url ? 'copy-button' : 'generate-button'} icon={url ? 'copy' : 'link'} onClick={this.handleShare} />
+        <Tooltip title={url ? "Click to copy" : "Share this URL"}>
+          <Button shape="link" key={url ? 'copy-button' : 'generate-button'} icon={url ? 'copy' : 'link'} onClick={this.handleShare} style={{ color: '#e8f3fd' }} />
         </Tooltip>
       </Dropdown>
     )
