@@ -1,9 +1,9 @@
 import React from 'react'
 import { Menu, Button, Dropdown, Icon } from 'antd'
 
-function SubsetMenu () {
-  return (
-    <Menu >
+export default function Subset () {
+  const menu = (
+    <Menu>
       <Menu.Item >
         <Icon type="bars" />
         All Data
@@ -28,11 +28,9 @@ function SubsetMenu () {
       </Menu.Item>
     </Menu>
   )
-}
 
-export default function Subset () {
   return (
-    <Dropdown overlay={<SubsetMenu />} trigger={['click']}>
+    <Dropdown overlay={menu} trigger={['click']}>
       <Button>
         <Icon type="bars" />
         All Data
