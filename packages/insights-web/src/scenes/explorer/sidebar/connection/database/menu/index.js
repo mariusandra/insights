@@ -13,27 +13,47 @@ export default function DatabaseMenu ({ hide }) {
   const { setConnection } = useActions(explorerLogic)
 
   return (
-    <Menu selectable={false}>
+    <Menu
+      mode="inline"
+      selectable={false}
+      defaultOpenKeys={['selected', 'other']}>
       {selectedConnection ? (
-        <Menu.Item onClick={hide}>
-          <Icon type="database" theme="filled" />
-          {selectedConnection.keyword}
-        </Menu.Item>
+        <Menu.SubMenu
+          key="selected"
+          title={
+            <span>
+              <Icon type="database" theme="filled" />
+              <span>{selectedConnection.keyword}</span>
+            </span>
+          }
+        >
+          <Menu.Item onClick={() => { openEditConnection(selectedConnection._id); hide() }}>
+            <Icon type="edit" />
+            Edit Connection
+          </Menu.Item>
+        </Menu.SubMenu>
       ) : null}
-      {selectedConnection ? (
-        <Menu.Item onClick={() => { openEditConnection(selectedConnection._id); hide() }}>
-          <Icon type="edit" />
-          Edit Connection
-        </Menu.Item>
-      ) : null}
-      {selectedConnection ? <Menu.Divider /> : null}
 
-      {otherConnections.map(connection => (
-        <Menu.Item key={connection._id} onClick={() => { setConnection(connection.keyword); hide() }}>
-          <Icon type="database" />
-          {connection.keyword}
-        </Menu.Item>
-      ))}
+      {selectedConnection && otherConnections.length > 0 ? <Menu.Divider /> : null}
+
+      {otherConnections.length > 0 ? (
+        <Menu.SubMenu
+          key="other"
+          title={
+            <span>
+              <Icon type="database" />
+              <span>Other Connections</span>
+            </span>
+          }
+        >
+          {otherConnections.map(connection => (
+            <Menu.Item key={connection._id} onClick={() => { setConnection(connection.keyword); hide() }}>
+              <Icon type="api" />
+              {connection.keyword}
+            </Menu.Item>
+          ))}
+        </Menu.SubMenu>
+      ) : null}
 
       {otherConnections.length > 0 ? <Menu.Divider /> : null}
 
