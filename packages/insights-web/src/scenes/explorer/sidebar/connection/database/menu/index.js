@@ -6,22 +6,22 @@ import { Menu, Icon } from 'antd'
 import connectionsLogic from '../../logic'
 import explorerLogic from '../../../../logic'
 
-export default function DatabaseMenu () {
+export default function DatabaseMenu ({ hide }) {
   const { selectedConnection, otherConnections } = useValues(connectionsLogic)
 
   const { openAddConnection, openEditConnection } = useActions(connectionsLogic)
   const { setConnection } = useActions(explorerLogic)
 
   return (
-    <Menu>
+    <Menu selectable={false}>
       {selectedConnection ? (
-        <Menu.Item>
+        <Menu.Item onClick={hide}>
           <Icon type="database" theme="filled" />
           {selectedConnection.keyword}
         </Menu.Item>
       ) : null}
       {selectedConnection ? (
-        <Menu.Item onClick={() => openEditConnection(selectedConnection._id)}>
+        <Menu.Item onClick={() => { openEditConnection(selectedConnection._id); hide() }}>
           <Icon type="edit" />
           Edit Connection
         </Menu.Item>
@@ -29,7 +29,7 @@ export default function DatabaseMenu () {
       {selectedConnection ? <Menu.Divider /> : null}
 
       {otherConnections.map(connection => (
-        <Menu.Item key={connection._id} onClick={() => setConnection(connection.keyword)}>
+        <Menu.Item key={connection._id} onClick={() => { setConnection(connection.keyword); hide() }}>
           <Icon type="database" />
           {connection.keyword}
         </Menu.Item>
@@ -37,7 +37,7 @@ export default function DatabaseMenu () {
 
       {otherConnections.length > 0 ? <Menu.Divider /> : null}
 
-      <Menu.Item onClick={openAddConnection}>
+      <Menu.Item onClick={() => { openAddConnection(); hide() } }>
         <Icon type="plus" />
         New Connection
       </Menu.Item>
