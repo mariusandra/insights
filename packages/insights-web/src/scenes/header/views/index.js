@@ -1,7 +1,7 @@
 import './styles.scss'
 
 import React from 'react'
-import { connect, useActions, useValues } from 'kea'
+import { useActions, useValues } from 'kea'
 import { useSelector } from 'react-redux'
 import { Dropdown, Button, Menu, Icon, Modal, Form, Input } from 'antd'
 
@@ -42,7 +42,7 @@ function Views () {
   return (
     <>
       <Dropdown overlay={overlay} trigger={['click']} >
-        <Button shape="link" icon="star" style={{ color: '#e8f3fd' }} />
+        <Button type="link" icon="star" style={{ color: '#e8f3fd' }} />
       </Dropdown>
 
       {newOpen ? (

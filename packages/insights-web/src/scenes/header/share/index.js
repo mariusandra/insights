@@ -84,7 +84,7 @@ export default class Share extends Component {
     return (
       <Dropdown overlay={<AutoFocusInput url={url} />} trigger={['click']} >
         <Tooltip title={url ? "Click to copy" : "Share this URL"}>
-          <Button shape="link" key={url ? 'copy-button' : 'generate-button'} icon={url ? 'copy' : 'link'} onClick={this.handleShare} style={{ color: '#e8f3fd' }} />
+          <Button type="link" key={url ? 'copy-button' : 'generate-button'} icon={url ? 'copy' : 'link'} onClick={this.handleShare} style={{ color: '#e8f3fd' }} />
         </Tooltip>
       </Dropdown>
     )
