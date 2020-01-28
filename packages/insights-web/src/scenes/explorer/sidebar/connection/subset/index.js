@@ -9,7 +9,7 @@ export default function Subset () {
         All Data
       </Menu.Item>
       <Menu.Item>
-        <Icon type="edit" />
+        <Icon type="edit" style={{ marginLeft: 16 }} />
         Configure
       </Menu.Item>
       <Menu.Divider />
