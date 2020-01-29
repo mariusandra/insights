@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useActions, useValues } from 'kea'
 import { Button, Icon, Dropdown, Menu } from "antd"
 
-import AddDatabase from './add'
+import DatabaseForm from './form'
 
 import connectionsLogic from '../logic'
 import explorerLogic from '../../../logic'
@@ -55,7 +55,7 @@ export default function Database () {
           <Icon type="down" />
         </Button>
       </Dropdown>
-      <AddDatabase />
+      <DatabaseForm />
     </>
   )
 }
