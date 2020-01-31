@@ -1,7 +1,7 @@
 import { kea } from 'kea'
 import PropTypes from 'prop-types'
 import { call, put } from 'redux-saga/effects'
-import { message } from 'antd'
+import { message, Modal } from 'antd'
 import { push } from "connected-react-router"
 
 import authLogic from 'scenes/auth'
@@ -34,6 +34,7 @@ export default kea({
 
     testConnection: (id) => ({ id }),
 
+    confirmRemoveConnection: (id) => ({ id }),
     removeConnection: (id) => ({ id }),
     connectionRemoved: (id) => ({ id }),
 
@@ -147,6 +148,20 @@ export default kea({
       const connection = await connectionsService.patch(id, { url, structurePath, timeoutMs })
       actions.connectionEdited(connection)
       message.success('Changes saved!');
+    },
+
+    [actions.confirmRemoveConnection]: async function ({ id }) {
+      Modal.confirm({
+        title: 'Are you sure delete this connection?',
+        content: 'This can not be undone!',
+        okText: 'Yes',
+        okType: 'danger',
+        cancelText: 'No',
+        onOk() {
+          actions.removeConnection(id)
+        }
+      });
+
     },
 
     [actions.removeConnection]: async function ({ id }) {

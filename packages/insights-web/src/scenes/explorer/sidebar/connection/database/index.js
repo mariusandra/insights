@@ -24,7 +24,7 @@ export default function Database () {
       {selectedConnection ? (
         <Menu.Item onClick={() => openEditConnection(selectedConnection._id)}>
           <Icon type="edit" style={{ marginLeft: 16 }} />
-          Edit Connection
+          Edit
         </Menu.Item>
       ) : null}
 

@@ -1,13 +1,13 @@
 import React from 'react'
 import { useActions, useValues } from 'kea'
 
-import { message, Form, Input, Modal } from "antd"
+import { Button, Form, Input, Modal, Icon } from "antd"
 
 import connectionsLogic from '../../logic'
 
 function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll } }) {
   const { isAddOpen, isEditOpen, editingConnection, isSaving } = useValues(connectionsLogic)
-  const { addConnection, editConnection, closeConnection } = useActions(connectionsLogic)
+  const { addConnection, editConnection, closeConnection, confirmRemoveConnection } = useActions(connectionsLogic)
 
   const handleAdd = (e) => {
     e.preventDefault()
@@ -28,7 +28,25 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll } })
   const inital = isEditOpen ? editingConnection : {}
 
   return (
-    <Modal destroyOnClose visible={isAddOpen || isEditOpen} title='New Connection' confirmLoading={isSaving} onOk={handleAdd} onCancel={closeConnection} canOutsideClickClose>
+    <Modal
+      destroyOnClose
+      visible={isAddOpen || isEditOpen}
+      title={isAddOpen ? 'New Connection' : 'Edit Connection'}
+      onCancel={closeConnection}
+      canOutsideClickClose
+      footer={[
+        isEditOpen ? <Button key="delete" onClick={() => confirmRemoveConnection(editingConnection._id)} type='link' style={{ float: 'left' }}>
+          <Icon type='delete' theme="filled" />
+          Delete
+        </Button> : null,
+        <Button key="back" onClick={closeConnection}>
+          Cancel
+        </Button>,
+        <Button key="submit" type="primary" loading={isSaving} onClick={handleAdd}>
+          Save
+        </Button>,
+      ]}
+    >
       <Form labelCol={{ span: 5 }} wrapperCol={{ span: 19 }} onSubmit={handleAdd}>
         <Form.Item
           label='Keyword'
@@ -41,7 +59,7 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll } })
                 message: 'Please input a keyword!',
               }
             ]
-          })(<Input disabled autoFocus={isAddOpen} placeholder='mydb' style={{width: '100%'}} />)}
+          })(<Input disabled={isEditOpen} autoFocus={isAddOpen} placeholder='mydb' style={{width: '100%'}} />)}
         </Form.Item>
 
         <Form.Item
