@@ -6,11 +6,9 @@ import Subset from './subset'
 
 export default function Connection () {
   return (
-    <>
-      <Button.Group >
-        <Database />
-        <Subset />
-      </Button.Group>
-    </>
+    <Button.Group>
+      <Database />
+      <Subset />
+    </Button.Group>
   )
 }

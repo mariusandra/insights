@@ -20,7 +20,7 @@ export default kea({
     ]
   },
 
-  actions: ({ constants }) => ({
+  actions: () => ({
     loadingConnections: true,
     connectionsLoaded: connections => ({ connections }),
 
@@ -38,11 +38,11 @@ export default kea({
     connectionRemoved: (id) => ({ id }),
 
     openAddConnection: true,
-    closeAddConnection: true,
+    closeConnection: true,
     openEditConnection: id => ({ id })
   }),
 
-  reducers: ({ actions, constants }) => ({
+  reducers: ({ actions }) => ({
     isLoading: [false, PropTypes.bool, {
       [actions.loadingConnections]: () => true,
       [actions.connectionsLoaded]: () => false
@@ -70,12 +70,28 @@ export default kea({
 
     isAddOpen: [false, PropTypes.bool, {
       [actions.openAddConnection]: () => true,
-      [actions.closeAddConnection]: () => false,
-      [actions.connectionAdded]: () => false
+      [actions.closeConnection]: () => false,
+      [actions.connectionAdded]: () => false,
+      [actions.openEditConnection]: () => false
     }],
 
     isEditOpen: [false, PropTypes.bool, {
-      [actions.openEditConnection]: () => true
+      [actions.openAddConnection]: () => false,
+      [actions.openEditConnection]: () => true,
+      [actions.closeConnection]: () => false,
+      [actions.connectionEdited]: () => false,
+      [actions.connectionRemoved]: () => false
+    }],
+
+    isSaving: [false, PropTypes.bool, {
+      [actions.openAddConnection]: () => false,
+      [actions.openEditConnection]: () => false,
+      [actions.addConnection]: () => true,
+      [actions.editConnection]: () => true,
+      [actions.removeConnection]: () => true,
+      [actions.connectionAdded]: () => false,
+      [actions.connectionEdited]: () => false,
+      [actions.connectionRemoved]: () => false
     }],
 
     editingConnectionId: [null, PropTypes.string, {
@@ -109,14 +125,6 @@ export default kea({
     ]
   }),
 
-  takeEvery: ({ actions, workers }) => ({
-    [actions.addConnection]: workers.addConnection,
-    [actions.editConnection]: workers.editConnection,
-    [actions.removeConnection]: workers.removeConnection,
-    [actions.testConnection]: workers.testConnection,
-    [actions.viewStructure]: workers.viewStructure
-  }),
-
   start: function * () {
     const { connectionsLoaded, loadingConnections } = this.actions
 
@@ -128,32 +136,26 @@ export default kea({
     yield put(connectionsLoaded(connections.data))
   },
 
-  workers: {
-    addConnection: function * (action) {
-      const { connectionAdded } = this.actions
-      const { keyword, url, structurePath, timeoutMs } = action.payload
-      const connection = yield connectionsService.create({ keyword, url, structurePath, timeoutMs })
-      yield put(connectionAdded(connection))
+  listeners: ({ actions, dispatch }) => ({
+    [actions.addConnection]: async function ({ keyword, url, structurePath, timeoutMs }) {
+      const connection = await connectionsService.create({ keyword, url, structurePath, timeoutMs })
+      actions.connectionAdded(connection)
+      message.success(`Connection "${keyword}" added!`);
     },
 
-    editConnection: function * (action) {
-      const { connectionEdited } = this.actions
-      const { id, url, structurePath, timeoutMs } = action.payload
-      const connection = yield connectionsService.patch(id, { url, structurePath, timeoutMs })
-      yield put(connectionEdited(connection))
+    [actions.editConnection]: async function ({ id, url, structurePath, timeoutMs }) {
+      const connection = await connectionsService.patch(id, { url, structurePath, timeoutMs })
+      actions.connectionEdited(connection)
+      message.success('Changes saved!');
     },
 
-    removeConnection: function * (action) {
-      const { connectionRemoved } = this.actions
-      const { id } = action.payload
-      yield connectionsService.remove(id)
-      yield put(connectionRemoved(id))
+    [actions.removeConnection]: async function ({ id }) {
+      await connectionsService.remove(id)
+      actions.connectionRemoved(id)
     },
 
-    testConnection: function * (action) {
-      const { id } = action.payload
-
-      const result = yield connectionTestService.get(id)
+    [actions.testConnection]: async function ({ id }) {
+      const result = await connectionTestService.get(id)
 
       if (result.working) {
         message.success('The connection is working!')
@@ -162,9 +164,8 @@ export default kea({
       }
     },
 
-    viewStructure: function * (action) {
-      const { id } = action.payload
-      yield put(push(`/connections/${id}`))
+    [actions.viewStructure]: async function ({ id }) {
+      dispatch(push(`/connections/${id}`))
     }
-  }
+  })
 })

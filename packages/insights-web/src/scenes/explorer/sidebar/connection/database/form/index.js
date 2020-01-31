@@ -6,8 +6,8 @@ import { message, Form, Input, Modal } from "antd"
 import connectionsLogic from '../../logic'
 
 function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll } }) {
-  const { isAddOpen } = useValues(connectionsLogic)
-  const { addConnection, closeAddConnection } = useActions(connectionsLogic)
+  const { isAddOpen, isEditOpen, editingConnection, isSaving } = useValues(connectionsLogic)
+  const { addConnection, editConnection, closeConnection } = useActions(connectionsLogic)
 
   const handleAdd = (e) => {
     e.preventDefault()
@@ -15,34 +15,40 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll } })
     validateFieldsAndScroll((err, values) => {
       if (!err) {
         const { keyword, url, structurePath, timeoutMs } = values
-        addConnection({ keyword, url, structurePath, timeoutMs })
-        message.success(`Database "${keyword}" added!`);
+
+        if (isEditOpen) {
+          editConnection(editingConnection._id, url, structurePath, timeoutMs)
+        } else {
+          addConnection({keyword, url, structurePath, timeoutMs})
+        }
       }
     })
   }
 
+  const inital = isEditOpen ? editingConnection : {}
+
   return (
-    <Modal visible={isAddOpen} title='New Connection' onOk={handleAdd} onCancel={closeAddConnection} canOutsideClickClose>
+    <Modal destroyOnClose visible={isAddOpen || isEditOpen} title='New Connection' confirmLoading={isSaving} onOk={handleAdd} onCancel={closeConnection} canOutsideClickClose>
       <Form labelCol={{ span: 5 }} wrapperCol={{ span: 19 }} onSubmit={handleAdd}>
         <Form.Item
           label='Keyword'
-          extra='This will be used in URLs, dashboards, etc to refer to your database. Changing it later might result in problems...'>
+          extra="This will be used in URLs, dashboards, etc to refer to your database. You can't change this later!">
           {getFieldDecorator('keyword', {
-            initialValue: '',
+            initialValue: inital.keyword || '',
             rules: [
               {
                 required: true,
                 message: 'Please input a keyword!',
               }
             ]
-          })(<Input autoFocus placeholder='mydb' style={{width: '100%'}} />)}
+          })(<Input disabled autoFocus={isAddOpen} placeholder='mydb' style={{width: '100%'}} />)}
         </Form.Item>
 
         <Form.Item
           label='Connection'
           extra='Currently only URLs in the format "psql://user:pass@localhost/dbname" are supported.'>
           {getFieldDecorator('url', {
-            initialValue: '',
+            initialValue: inital.url || '',
             rules: [
               {
                 required: true,
@@ -53,14 +59,14 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll } })
                 message: 'Must be in the format "psql://user:pass@localhost/dbname"'
               }
             ]
-          })(<Input autoFocus placeholder='psql://user:pass@localhost/dbname' style={{width: '100%'}} />)}
+          })(<Input placeholder='psql://user:pass@localhost/dbname' style={{width: '100%'}} />)}
         </Form.Item>
 
         <Form.Item
           label='Timeout'
           extra='Statement timeout in milliseconds'>
           {getFieldDecorator('timeoutMs', {
-            initialValue: '',
+            initialValue: inital.timeoutMs || '',
             rules: [
               {
                 type: 'number',
@@ -68,15 +74,15 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll } })
                 transform: value => Number(value)
               }
             ]
-          })(<Input autoFocus placeholder='15000' style={{width: '100%'}} />)}
+          })(<Input placeholder='15000' style={{width: '100%'}} />)}
         </Form.Item>
 
         <Form.Item
           label='insights.yml'
           extra='Leave empty to autodetect the database structure'>
           {getFieldDecorator('structurePath', {
-            initialValue: ''
-          })(<Input autoFocus placeholder='/Users/yourname/projects/code/insights.yml' style={{width: '100%'}} />)}
+            initialValue: inital.structurePath || ''
+          })(<Input placeholder='/Users/yourname/projects/code/insights.yml' style={{width: '100%'}} />)}
         </Form.Item>
       </Form>
     </Modal>
