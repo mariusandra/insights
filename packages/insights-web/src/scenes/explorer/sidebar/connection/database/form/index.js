@@ -1,13 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useActions, useValues } from 'kea'
 
-import { Button, Form, Input, Modal, Icon } from "antd"
+import { Button, Form, Input, Modal, Icon, Badge, Tag } from "antd"
 
 import connectionsLogic from '../../logic'
 
-function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll } }) {
-  const { isAddOpen, isEditOpen, editingConnection, isSaving } = useValues(connectionsLogic)
-  const { addConnection, editConnection, closeConnection, confirmRemoveConnection } = useActions(connectionsLogic)
+function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFieldValue } }) {
+  const { isAddOpen, isEditOpen, editingConnection, isSaving, didTest, isTesting, testPassed } = useValues(connectionsLogic)
+  const { addConnection, editConnection, closeConnection, confirmRemoveConnection, testConnection } = useActions(connectionsLogic)
 
   const handleAdd = (e) => {
     e.preventDefault()
@@ -25,7 +25,15 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll } })
     })
   }
 
-  const inital = isEditOpen ? editingConnection : {}
+  const runTest = () => {
+    testConnection(getFieldValue('url'), getFieldValue('structurePath'))
+  }
+
+  useEffect(() => {
+    runTest()
+  }, [isEditOpen, isAddOpen])
+
+  const initial = isEditOpen ? editingConnection : {}
 
   return (
     <Modal
@@ -52,7 +60,7 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll } })
           label='Keyword'
           extra="This will be used in URLs, dashboards, etc to refer to your database. You can't change this later!">
           {getFieldDecorator('keyword', {
-            initialValue: inital.keyword || '',
+            initialValue: initial.keyword || '',
             rules: [
               {
                 required: true,
@@ -66,7 +74,7 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll } })
           label='Connection'
           extra='Currently only URLs in the format "psql://user:pass@localhost/dbname" are supported.'>
           {getFieldDecorator('url', {
-            initialValue: inital.url || '',
+            initialValue: initial.url || '',
             rules: [
               {
                 required: true,
@@ -77,14 +85,22 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll } })
                 message: 'Must be in the format "psql://user:pass@localhost/dbname"'
               }
             ]
-          })(<Input placeholder='psql://user:pass@localhost/dbname' style={{width: '100%'}} />)}
+          })(<Input placeholder='psql://user:pass@localhost/dbname' style={{width: '100%'}} onBlur={runTest} />)}
+        </Form.Item>
+
+        <Form.Item
+          label='insights.yml'
+          extra='Leave empty to autodetect the database structure'>
+          {getFieldDecorator('structurePath', {
+            initialValue: initial.structurePath || ''
+          })(<Input placeholder='/Users/yourname/projects/code/insights.yml' style={{width: '100%'}} onBlur={runTest} />)}
         </Form.Item>
 
         <Form.Item
           label='Timeout'
           extra='Statement timeout in milliseconds'>
           {getFieldDecorator('timeoutMs', {
-            initialValue: inital.timeoutMs || '',
+            initialValue: initial.timeoutMs || '',
             rules: [
               {
                 type: 'number',
@@ -95,13 +111,20 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll } })
           })(<Input placeholder='15000' style={{width: '100%'}} />)}
         </Form.Item>
 
-        <Form.Item
-          label='insights.yml'
-          extra='Leave empty to autodetect the database structure'>
-          {getFieldDecorator('structurePath', {
-            initialValue: inital.structurePath || ''
-          })(<Input placeholder='/Users/yourname/projects/code/insights.yml' style={{width: '100%'}} />)}
+        <Form.Item label='Test'>
+          {!didTest
+            ? <Tag>Enter URL to test</Tag>
+            : isTesting
+              ? <Tag color='blue'>Connecting...</Tag>
+              : testPassed
+                ? <Tag color='green'>Connection Established</Tag>
+                : <Tag color='red'>Connection Failed</Tag>}
+          {!getFieldValue('url') ? <Button
+            type='link'
+            onClick={runTest}
+            loading={isTesting}>{isTesting ? '' : 'Retry'}</Button> : null}
         </Form.Item>
+
       </Form>
     </Modal>
   )

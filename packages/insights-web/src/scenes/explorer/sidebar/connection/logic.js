@@ -32,7 +32,9 @@ export default kea({
 
     viewStructure: (id) => ({ id }),
 
-    testConnection: (id) => ({ id }),
+    testConnection: (url, structurePath) => ({ url, structurePath }),
+    testSuccess: true,
+    testFailure: true,
 
     confirmRemoveConnection: (id) => ({ id }),
     removeConnection: (id) => ({ id }),
@@ -93,6 +95,26 @@ export default kea({
       [actions.connectionAdded]: () => false,
       [actions.connectionEdited]: () => false,
       [actions.connectionRemoved]: () => false
+    }],
+
+    didTest: [false, PropTypes.bool, {
+      [actions.openAddConnection]: () => false,
+      [actions.openEditConnection]: () => false,
+      [actions.testConnection]: (_, { url }) => !!url
+    }],
+
+    isTesting: [false, PropTypes.bool, {
+      [actions.openAddConnection]: () => false,
+      [actions.openEditConnection]: () => false,
+      [actions.testConnection]: () => true,
+      [actions.testSuccess]: () => false,
+      [actions.testFailure]: () => false
+    }],
+
+    testPassed: [false, PropTypes.bool, {
+      [actions.testConnection]: () => false,
+      [actions.testSuccess]: () => true,
+      [actions.testFailure]: () => false
     }],
 
     editingConnectionId: [null, PropTypes.string, {
@@ -169,13 +191,21 @@ export default kea({
       actions.connectionRemoved(id)
     },
 
-    [actions.testConnection]: async function ({ id }) {
-      const result = await connectionTestService.get(id)
+    [actions.testConnection]: async function ({ url, structurePath }) {
+      if (url) {
+        try {
+          const result = await connectionTestService.find({query: {url, structurePath}})
 
-      if (result.working) {
-        message.success('The connection is working!')
+          if (result.working) {
+            actions.testSuccess()
+          } else {
+            actions.testFailure()
+          }
+        } catch (e) {
+          actions.testFailure()
+        }
       } else {
-        message.error(`Error: ${result.error}`)
+        actions.testFailure()
       }
     },
 

@@ -16,11 +16,9 @@ export class ConnectionTest implements Partial<ServiceMethods<Data>> {
     this.app = app;
   }
 
-  async get (id: Id, params?: Params): Promise<Data> {
-    const connectionsService = this.app.service('connections')
-
+  async find (params?: Params): Promise<Data> {
     try {
-      const { url, structurePath } = await connectionsService.get(id)
+      const { url, structurePath } = params.query
 
       // check that this doesn't throw up
       await createAdapter(url, 60000).test()
