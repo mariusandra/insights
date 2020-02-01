@@ -1,0 +1,21 @@
+.connection-buttons {
+  width: calc(100% + 1px);
+  button {
+    width: 50%;
+    overflow: hidden;
+    text-align: left;
+    display: inline-flex;
+    align-items: center;
+    i {
+      margin-top: 1px;
+      &.arrow {
+        margin-top: 2px;
+      }
+    }
+    span {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}

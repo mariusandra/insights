@@ -1,3 +1,5 @@
+import './styles.scss'
+
 import React from 'react'
 import { Button } from "antd";
 import { useValues } from 'kea'
@@ -11,7 +13,7 @@ export default function Connection () {
   const { selectedConnection } = useValues(connectionsLogic)
 
   return (
-    <Button.Group>
+    <Button.Group className='connection-buttons'>
       <Database />
       {selectedConnection ? <Subset /> : null}
     </Button.Group>

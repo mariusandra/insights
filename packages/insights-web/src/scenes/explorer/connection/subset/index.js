@@ -34,7 +34,7 @@ export default function Subset () {
       <Button>
         <Icon type="bars" />
         All Data
-        <Icon type="down" />
+        <Icon type="down" className='arrow' />
       </Button>
     </Dropdown>
   )
