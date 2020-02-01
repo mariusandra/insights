@@ -1,7 +1,18 @@
 .models-select-tree {
   li .ant-tree-node-content-wrapper {
     height: auto;
+    cursor: initial;
   }
+  li .ant-tree-node-content-wrapper:hover {
+    background: #eeeeee;
+  }
+  .ant-tree-checkbox-inner {
+    transition-duration: 0.1s;
+  }
+  .ant-tree-checkbox-checked::after {
+    transition-duration: 0.1s;
+  }
+
   .tree-column-row {
     display: flex;
     .column-key {
@@ -9,12 +20,23 @@
       min-width: 25%;
       .anticon-idcard {
         margin-left: 5px;
-        color: #2e5b85;
+        color: #888;
       }
     }
-    .ant-tag {
-      white-space: normal;
-      max-width: calc(75% - 75px)
+    .column-meta {
+      max-width: calc(75% - 80px);
+      .ant-tag {
+        white-space: normal;
+      }
+      .anticon-edit {
+        color: #cccccc;
+        cursor: pointer;
+        vertical-align: top;
+        margin-top: 6px;
+        &:hover {
+          color: #2e5b85;
+        }
+      }
     }
   }
 }

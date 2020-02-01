@@ -1,14 +1,13 @@
 import React from 'react'
-import { Button, Form, Input, Modal, Tree, Checkbox } from 'antd'
+import { Button, Form, Input, Modal } from 'antd'
 import { useActions, useValues } from 'kea'
 
 import connectionsLogic from '../../logic'
-import logic from './logic'
+
 import Models from 'scenes/explorer/connection/subset/form/models'
 
 function SubsetForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFieldValue } }) {
   const { isSubsetOpen } = useValues(connectionsLogic)
-  const { structure } = useValues(logic)
   const { closeSubset } = useActions(connectionsLogic)
   const isSaving = false
   const handleAdd = () => {}

@@ -92,39 +92,30 @@ const logic = kea({
 })
 
 const RenderNodeTitle = memo(({ model, field }) => {
-  if (field.type === 'link') {
-    return (
-      <div className='tree-column-row'>
-        <span className='column-key'>{field.key}</span>
-        <Tag color='geekblue'>
-          <Icon type="link" /> {field.meta.model} <Icon type="ellipsis" /> {field.meta.model_key}
-        </Tag>
+  return (
+    <div className='tree-column-row'>
+      <span className='column-key'>
+        {field.key}
+        {field.meta.index === 'primary_key' ? <Icon type="idcard" title='Primary Key' /> : ''}
+      </span>
+      <div className='column-meta'>
+        {field.type === 'link' ? (
+          <Tag color='geekblue'>
+            <Icon type="link" /> {field.meta.model} <Icon type="ellipsis" /> {field.meta.model_key}
+          </Tag>
+        ) : field.type === 'column' ? (
+          <Tag color='orange'>
+            <Icon type={columnIcon[field.meta.type] || 'tag'} /> {field.meta.type}
+          </Tag>
+        ) : field.type === 'custom' ? (
+          <Tag color='green'>
+            <Icon type='code' /> {field.meta.sql}
+          </Tag>
+        ) : null}
+        <Icon type='edit' onClick={() => { console.log('clicked')}}  />
       </div>
-    )
-  } else if (field.type === 'column') {
-    return (
-      <div className='tree-column-row'>
-        <span className='column-key'>
-          {field.key}
-          {field.meta.index === 'primary_key' ? <Icon type="idcard" title='Primary Key' /> : ''}
-        </span>
-        <Tag color='orange'>
-          <Icon type={columnIcon[field.meta.type] || 'tag'} /> {field.meta.type}
-        </Tag>
-      </div>
-    )
-  } else if (field.type === 'custom') {
-    return (
-      <div className='tree-column-row'>
-        <span className='column-key'>{field.key}</span>
-        <Tag color='green'>
-          <Icon type='code' /> {field.meta.sql}
-        </Tag>
-      </div>
-    )
-  } else {
-    return field.key
-  }
+    </div>
+  )
 })
 
 export default function Models () {
@@ -133,7 +124,8 @@ export default function Models () {
 
   return (
     <Tree
-      selectable={false}
+      selectable
+      selectedKeys={[]}
       showLine
       switcherIcon={<Icon type="down" />}
       blockNode
@@ -150,7 +142,7 @@ export default function Models () {
         >
           {sortedStructure[model].map(field => (
             <Tree.TreeNode
-              disableCheckbox={field.type === 'link' && !checkedModelsLookup[field.meta.model]}
+              disabled={field.type === 'link' && !checkedModelsLookup[field.meta.model]}
               switcherIcon={<Icon type={icons[field.type]} />}
               key={`${model}.${field.key}`}
               title={<RenderNodeTitle model={model} field={field} />}

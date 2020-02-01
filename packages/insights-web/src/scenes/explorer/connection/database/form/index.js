@@ -70,7 +70,7 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll, get
                 message: 'Please input a keyword!',
               },
               {
-                pattern: /^[a-zA-Z0-9_\-]+$/,
+                pattern: /^[a-zA-Z0-9_-]+$/,
                 message: 'Allowed characters: A-Z, a-z, 0-9, _ and -'
               }
             ]
