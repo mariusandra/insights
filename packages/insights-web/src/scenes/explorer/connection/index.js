@@ -13,7 +13,7 @@ export default function Connection () {
   const { selectedConnection } = useValues(connectionsLogic)
 
   return (
-    <Button.Group className='connection-buttons'>
+    <Button.Group className={`connection-buttons${selectedConnection ? '' : ' only-database'}`}>
       <Database />
       {selectedConnection ? <Subset /> : null}
     </Button.Group>

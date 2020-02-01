@@ -26,7 +26,9 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll, get
   }
 
   const runTest = () => {
-    testConnection(getFieldValue('url'), getFieldValue('structurePath'))
+    if (isEditOpen || isAddOpen) {
+      testConnection(getFieldValue('url'), getFieldValue('structurePath'))
+    }
   }
 
   useEffect(runTest, [isEditOpen, isAddOpen])

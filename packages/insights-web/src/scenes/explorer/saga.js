@@ -185,14 +185,11 @@ export default kea({
 
     if (connectionInUrl && connections.data.filter(c => c.keyword === connectionInUrl).length > 0) {
       connection = connectionInUrl
-    } else {
-      connection = connections.data[0].keyword
+      yield put(setConnection(connection))
+      yield call(this.workers.loadStructure, connection)
     }
 
-    yield put(setConnection(connection))
-
     yield fork(this.workers.loadFavourites)
-    yield call(this.workers.loadStructure, connection)
 
     yield call(this.workers.urlToState, { payload: { pathname: window.location.pathname, search: window.location.search, firstLoad: true } })
   },

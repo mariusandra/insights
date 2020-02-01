@@ -1,11 +1,16 @@
 .connection-buttons {
   width: calc(100% + 1px);
+
+  &.only-database button {
+    width: 100%;
+  }
   button {
     width: 50%;
     overflow: hidden;
     text-align: left;
     display: inline-flex;
     align-items: center;
+    transition: none !important;
     i {
       margin-top: 1px;
       &.arrow {
