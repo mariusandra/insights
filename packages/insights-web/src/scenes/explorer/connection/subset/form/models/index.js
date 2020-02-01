@@ -100,7 +100,10 @@ const RenderNodeTitle = memo(({ model, field }) => {
   } else if (field.type === 'column') {
     return (
       <div className='tree-column-row'>
-        <span className='column-key'>{field.key}</span>
+        <span className='column-key'>
+          {field.key}
+          {field.meta.index === 'primary_key' ? <Icon type="idcard" title='Primary Key' /> : ''}
+        </span>
         <Tag color='orange'>
           <Icon type={columnIcon[field.meta.type] || 'tag'} /> {field.meta.type}
         </Tag>
