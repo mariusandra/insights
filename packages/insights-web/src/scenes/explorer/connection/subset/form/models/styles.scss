@@ -1,4 +1,7 @@
 .models-select-tree {
+  .ant-tree li .ant-tree-node-content-wrapper {
+    height: auto;
+  }
   .tree-column-row {
     display: flex;
     .column-key {
