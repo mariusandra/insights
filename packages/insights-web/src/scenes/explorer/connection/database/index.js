@@ -5,7 +5,7 @@ import { Button, Icon, Dropdown, Menu } from "antd"
 import DatabaseForm from './form'
 
 import connectionsLogic from '../logic'
-import explorerLogic from '../../../logic'
+import explorerLogic from '../../logic'
 
 export default function Database () {
   const { selectedConnection, otherConnections, isLoading } = useValues(connectionsLogic)

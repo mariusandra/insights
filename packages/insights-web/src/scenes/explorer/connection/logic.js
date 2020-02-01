@@ -1,11 +1,9 @@
 import { kea } from 'kea'
 import PropTypes from 'prop-types'
-import { call, put } from 'redux-saga/effects'
 import { message, Modal } from 'antd'
 import { push } from "connected-react-router"
 
-import authLogic from 'scenes/auth'
-import explorerLogic from '../../logic'
+import explorerLogic from '../logic'
 import client from 'lib/client'
 
 const connectionsService = client.service('connections')
@@ -21,7 +19,9 @@ export default kea({
   },
 
   actions: () => ({
-    loadingConnections: true,
+    setConnection: connection => ({ connection }),
+
+    loadConnections: true,
     connectionsLoaded: connections => ({ connections }),
 
     addConnection: ({ keyword, url, structurePath, timeoutMs }) => ({ keyword, url, structurePath, timeoutMs }),
@@ -47,7 +47,7 @@ export default kea({
 
   reducers: ({ actions }) => ({
     isLoading: [false, PropTypes.bool, {
-      [actions.loadingConnections]: () => true,
+      [actions.loadConnections]: () => true,
       [actions.connectionsLoaded]: () => false
     }],
 
@@ -148,18 +148,18 @@ export default kea({
     ]
   }),
 
-  start: function * () {
-    const { connectionsLoaded, loadingConnections } = this.actions
-
-    yield call(authLogic.workers.waitUntilLogin)
-
-    yield put(loadingConnections())
-
-    const connections = yield connectionsService.find({})
-    yield put(connectionsLoaded(connections.data))
-  },
+  events: ({ actions }) => ({
+    afterMount: () => {
+      actions.loadConnections()
+    }
+  }),
 
   listeners: ({ actions, dispatch }) => ({
+    [actions.loadConnections]: async function () {
+      const connections = await connectionsService.find({})
+      actions.connectionsLoaded(connections.data)
+    },
+
     [actions.addConnection]: async function ({ keyword, url, structurePath, timeoutMs }) {
       const connection = await connectionsService.create({ keyword, url, structurePath, timeoutMs })
       actions.connectionAdded(connection)

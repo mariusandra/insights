@@ -8,7 +8,7 @@ import HighlightText from 'lib/utils/highlight-text'
 import { Button, Input } from 'antd'
 
 import Node from './node'
-import Connection from './connection'
+import Connection from '../connection'
 
 import explorerLogic from 'scenes/explorer/logic'
 import viewsLogic from 'scenes/header/views/logic'
