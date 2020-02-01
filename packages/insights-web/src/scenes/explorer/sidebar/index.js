@@ -29,6 +29,7 @@ const logic = connect({
   props: [
     explorerLogic, [
       'search',
+      'models',
       'filteredModels',
       'selectedModel',
       'structure',
@@ -84,9 +85,9 @@ class ExplorerTree extends Component {
   }
 
   renderModels = () => {
-    const { filteredModels, search } = this.props
+    const { models, filteredModels, search } = this.props
 
-    if (filteredModels.length === 0) {
+    if (models.length === 0) {
       return <Empty description='No tables found in this connection' style={{ marginTop: 60 }} />
     }
 
