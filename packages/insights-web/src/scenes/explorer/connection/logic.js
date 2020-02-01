@@ -1,7 +1,6 @@
 import { kea } from 'kea'
 import PropTypes from 'prop-types'
 import { message, Modal } from 'antd'
-import { push } from "connected-react-router"
 
 import explorerLogic from '../logic'
 import client from 'lib/client'
@@ -15,12 +14,13 @@ export default kea({
   connect: {
     values: [
       explorerLogic, ['connection']
+    ],
+    actions: [
+      explorerLogic, ['setConnections as setExplorerConnections']
     ]
   },
 
   actions: () => ({
-    setConnection: connection => ({ connection }),
-
     loadConnections: true,
     connectionsLoaded: connections => ({ connections }),
 
@@ -29,8 +29,6 @@ export default kea({
 
     editConnection: (id, url, structurePath, timeoutMs) => ({ id, url, structurePath, timeoutMs }),
     connectionEdited: (connection) => ({ connection }),
-
-    viewStructure: (id) => ({ id }),
 
     testConnection: (url, structurePath) => ({ url, structurePath }),
     testSuccess: true,
@@ -154,7 +152,19 @@ export default kea({
     }
   }),
 
-  listeners: ({ actions, dispatch }) => ({
+  sharedListeners: ({ actions, values }) => ({
+    updateExplorerConnections: () => {
+      const { connections } = values
+      actions.setExplorerConnections(Object.values(connections))
+    }
+  }),
+
+  listeners: ({ actions, sharedListeners }) => ({
+    [actions.connectionsLoaded]: sharedListeners.updateExplorerConnections,
+    [actions.connectionAdded]: sharedListeners.updateExplorerConnections,
+    [actions.connectionEdited]: sharedListeners.updateExplorerConnections,
+    [actions.connectionRemoved]: sharedListeners.updateExplorerConnections,
+
     [actions.loadConnections]: async function () {
       const connections = await connectionsService.find({})
       actions.connectionsLoaded(connections.data)
@@ -163,13 +173,13 @@ export default kea({
     [actions.addConnection]: async function ({ keyword, url, structurePath, timeoutMs }) {
       const connection = await connectionsService.create({ keyword, url, structurePath, timeoutMs })
       actions.connectionAdded(connection)
-      message.success(`Connection "${keyword}" added!`);
+      message.success(`Connection "${keyword}" added!`)
     },
 
     [actions.editConnection]: async function ({ id, url, structurePath, timeoutMs }) {
       const connection = await connectionsService.patch(id, { url, structurePath, timeoutMs })
       actions.connectionEdited(connection)
-      message.success('Changes saved!');
+      message.success('Changes saved!')
     },
 
     [actions.confirmRemoveConnection]: async function ({ id }) {
@@ -179,11 +189,10 @@ export default kea({
         okText: 'Yes',
         okType: 'danger',
         cancelText: 'No',
-        onOk() {
+        onOk () {
           actions.removeConnection(id)
         }
-      });
-
+      })
     },
 
     [actions.removeConnection]: async function ({ id }) {
@@ -207,10 +216,6 @@ export default kea({
       } else {
         actions.testFailure()
       }
-    },
-
-    [actions.viewStructure]: async function ({ id }) {
-      dispatch(push(`/connections/${id}`))
     }
   })
 })
