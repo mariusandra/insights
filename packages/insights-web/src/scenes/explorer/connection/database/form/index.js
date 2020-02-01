@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useActions, useValues } from 'kea'
 
 import { Button, Form, Input, Modal, Icon, Tag } from "antd"
@@ -8,6 +8,8 @@ import connectionsLogic from '../../logic'
 function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFieldValue } }) {
   const { isAddOpen, isEditOpen, editingConnection, isSaving, didTest, isTesting, testPassed } = useValues(connectionsLogic)
   const { addConnection, editConnection, closeConnection, confirmRemoveConnection, testConnection } = useActions(connectionsLogic)
+
+  const [wasEverOpen, setWasEverOpen] = useState(false)
 
   const handleAdd = (e) => {
     e.preventDefault()
@@ -27,6 +29,7 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll, get
 
   const runTest = () => {
     if (isEditOpen || isAddOpen) {
+      setWasEverOpen(true)
       testConnection(getFieldValue('url'), getFieldValue('structurePath'))
     }
   }
@@ -55,7 +58,7 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll, get
         </Button>,
       ]}
     >
-      <Form labelCol={{ span: 5 }} wrapperCol={{ span: 19 }} onSubmit={handleAdd}>
+      {wasEverOpen ? <Form labelCol={{ span: 5 }} wrapperCol={{ span: 19 }} onSubmit={handleAdd}>
         <Form.Item
           label='Keyword'
           extra="This will be used in URLs, dashboards, etc to refer to your database. You can't change this later!">
@@ -125,7 +128,7 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll, get
             onClick={runTest}
             loading={isTesting}>{isTesting ? '' : testPassed ? 'Reconnect' : 'Retry'}</Button> : null}
         </Form.Item>
-      </Form>
+      </Form> : null}
     </Modal>
   )
 }
