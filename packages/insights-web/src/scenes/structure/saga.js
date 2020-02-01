@@ -2,8 +2,6 @@ import { kea } from 'kea'
 import { put, call } from 'redux-saga/effects'
 import { LOCATION_CHANGE, push } from 'connected-react-router'
 
-import authLogic from 'scenes/auth'
-
 import client from 'lib/client'
 
 import structureLogic from 'scenes/structure/logic'
@@ -31,7 +29,6 @@ export default kea({
   }),
 
   start: function * () {
-    yield call(authLogic.workers.waitUntilLogin)
     yield call(this.workers.setStructureFromUrl)
   },
 

@@ -5,7 +5,6 @@ import { LOCATION_CHANGE, push } from 'connected-react-router'
 
 import download from 'downloadjs'
 
-import authLogic from 'scenes/auth'
 import explorerLogic from 'scenes/explorer/logic'
 
 import getMeta from 'lib/explorer/get-meta'
@@ -168,7 +167,6 @@ export default kea({
 
   start: function * () {
     const { setConnections, setConnection } = this.actions
-    yield call(authLogic.workers.waitUntilLogin)
 
     window.document.title = 'Insights Explorer'
 

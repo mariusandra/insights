@@ -2,7 +2,6 @@ import { kea } from 'kea'
 import { put, call } from 'redux-saga/effects'
 import { push } from 'connected-react-router'
 
-import authLogic from 'scenes/auth'
 import viewsLogic from 'scenes/header/views/logic'
 
 import { message } from 'antd'
@@ -31,8 +30,6 @@ export default kea({
   }),
 
   start: function * (action) {
-    yield call(authLogic.workers.waitUntilLogin)
-
     try {
       yield call(this.workers.loadViews)
     } catch (error) {
