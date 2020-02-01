@@ -44,7 +44,7 @@ function SubsetForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFi
         </Form.Item>
       </Form>
 
-      <h1>Select models and fields to include in this subset</h1>
+      <h3>Select models and fields to include in this subset</h3>
       <Models />
 
     </Modal>

@@ -58,6 +58,10 @@ const logic = kea({
   }),
 
   selectors: ({ selectors }) => ({
+    sortedModels: [
+      () => [selectors.structure],
+      structure => Object.keys(structure).sort()
+    ],
     sortedStructure: [
       () => [selectors.structure],
       (structure) => {
@@ -124,10 +128,7 @@ const RenderNodeTitle = memo(({ model, field }) => {
 })
 
 export default function Models () {
-  const { structure } = useValues(explorerLogic)
-  const { sortedStructure, checkedModelsLookup } = useValues(logic)
-
-  const { checkedKeys } = useValues(logic)
+  const { sortedModels, sortedStructure, checkedModelsLookup, checkedKeys } = useValues(logic)
   const { setCheckedKeys } = useActions(logic)
 
   return (
@@ -141,7 +142,7 @@ export default function Models () {
       onCheck={setCheckedKeys}
       className='models-select-tree'
     >
-      {Object.keys(sortedStructure).map(model => (
+      {sortedModels.map(model => (
         <Tree.TreeNode
           key={model}
           showLine
