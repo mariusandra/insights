@@ -40,7 +40,10 @@ export default kea({
 
     openAddConnection: true,
     closeConnection: true,
-    openEditConnection: id => ({ id })
+    openEditConnection: id => ({ id }),
+
+    openSubset: true,
+    closeSubset: true
   }),
 
   reducers: ({ actions }) => ({
@@ -117,6 +120,11 @@ export default kea({
 
     editingConnectionId: [null, PropTypes.string, {
       [actions.openEditConnection]: (_, payload) => payload.id
+    }],
+
+    isSubsetOpen: [false, PropTypes.bool, {
+      [actions.openSubset]: () => true,
+      [actions.closeSubset]: () => false
     }]
   }),
 

@@ -1,14 +1,22 @@
 import React from 'react'
 import { Menu, Button, Dropdown, Icon } from 'antd'
 
+import SubsetForm from 'scenes/explorer/connection/subset/form'
+
+import { useActions } from 'kea'
+
+import connectionsLogic from 'scenes/explorer/connection/logic'
+
 export default function Subset () {
+  const { openSubset } = useActions(connectionsLogic)
+
   const menu = (
     <Menu>
       <Menu.Item >
         <Icon type="bars" />
         All Data
       </Menu.Item>
-      <Menu.Item>
+      <Menu.Item onClick={openSubset}>
         <Icon type="edit" style={{ marginLeft: 16 }} />
         Configure
       </Menu.Item>
@@ -30,12 +38,15 @@ export default function Subset () {
   )
 
   return (
-    <Dropdown overlay={menu} trigger={['click']}>
-      <Button>
-        <Icon type="bars" />
-        All Data
-        <Icon type="down" className='arrow' />
-      </Button>
-    </Dropdown>
+    <>
+      <Dropdown overlay={menu} trigger={['click']}>
+        <Button>
+          <Icon type="bars" />
+          All Data
+          <Icon type="down" className='arrow' />
+        </Button>
+      </Dropdown>
+      <SubsetForm />
+    </>
   )
 }
