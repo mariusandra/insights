@@ -16,6 +16,10 @@ export default function Subset () {
         <Icon type="bars" />
         All Data
       </Menu.Item>
+      <Menu.Item>
+        <Icon type="branches" style={{ marginLeft: 16 }} />
+        Show Structure
+      </Menu.Item>
       <Menu.Item onClick={openSubset}>
         <Icon type="edit" style={{ marginLeft: 16 }} />
         Configure

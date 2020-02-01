@@ -4,6 +4,7 @@ import { useActions, useValues } from 'kea'
 
 import connectionsLogic from '../../logic'
 import logic from './logic'
+import Models from 'scenes/explorer/connection/subset/form/models'
 
 function SubsetForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFieldValue } }) {
   const { isSubsetOpen } = useValues(connectionsLogic)
@@ -43,15 +44,8 @@ function SubsetForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFi
         </Form.Item>
       </Form>
 
-      <Tree>
-        {Object.keys(structure).map(model => (
-          <Tree.TreeNode key={model} title={<><Checkbox style={{ marginRight: 10 }} checked />{model}</>}>
-            {Object.keys(structure[model].columns).map(column => (
-              <Tree.TreeNode key={column} title={<><Checkbox style={{ marginRight: 10 }} checked />{column}</>} />
-            ))}
-          </Tree.TreeNode>
-        ))}
-      </Tree>
+      <h1>Select models and fields to include in this subset</h1>
+      <Models />
 
     </Modal>
   )

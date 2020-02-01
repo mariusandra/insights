@@ -1,0 +1,12 @@
+.models-select-tree {
+  .tree-column-row {
+    display: flex;
+    .column-key {
+      width: 200px;
+      min-width: 25%;
+    }
+    .ant-tag {
+      white-space: normal;
+    }
+  }
+}
