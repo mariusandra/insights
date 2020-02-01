@@ -152,6 +152,14 @@ export default function Models () {
               title={<RenderNodeTitle model={model} field={field} />}
             />
           ))}
+
+          <Tree.TreeNode
+            checkable={false}
+            switcherIcon={<Icon type='plus' />}
+            key={`${model}...new_custom`}
+            title='Add custom field'
+          />
+
         </Tree.TreeNode>
       ))}
     </Tree>
