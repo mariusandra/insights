@@ -13,7 +13,6 @@ export function combineScenesAndRoutes (scenes, routes) {
 }
 
 const scenes = {
-  connections: require('./connections').default,
   structure: require('./structure').default,
   explorer: require('./explorer').default,
   login: require('./login').default,
@@ -22,8 +21,6 @@ const scenes = {
 }
 
 const routes = {
-  '/connections': 'connections',
-  '/connections/:id': 'structure',
   '/explorer': 'explorer',
   '/': 'explorer',
   '/login': 'login',

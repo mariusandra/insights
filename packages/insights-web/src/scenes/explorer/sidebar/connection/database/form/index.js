@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useActions, useValues } from 'kea'
 
-import { Button, Form, Input, Modal, Icon, Badge, Tag } from "antd"
+import { Button, Form, Input, Modal, Icon, Tag } from "antd"
 
 import connectionsLogic from '../../logic'
 
@@ -29,9 +29,7 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll, get
     testConnection(getFieldValue('url'), getFieldValue('structurePath'))
   }
 
-  useEffect(() => {
-    runTest()
-  }, [isEditOpen, isAddOpen])
+  useEffect(runTest, [isEditOpen, isAddOpen])
 
   const initial = isEditOpen ? editingConnection : {}
 
@@ -119,12 +117,12 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll, get
               : testPassed
                 ? <Tag color='green'>Connection Established</Tag>
                 : <Tag color='red'>Connection Failed</Tag>}
-          {!getFieldValue('url') ? <Button
+
+          {getFieldValue('url') ? <Button
             type='link'
             onClick={runTest}
-            loading={isTesting}>{isTesting ? '' : 'Retry'}</Button> : null}
+            loading={isTesting}>{isTesting ? '' : testPassed ? 'Reconnect' : 'Retry'}</Button> : null}
         </Form.Item>
-
       </Form>
     </Modal>
   )

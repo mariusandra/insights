@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useActions, useValues } from 'kea'
 import { Button, Icon, Dropdown, Menu } from "antd"
 
