@@ -1,5 +1,5 @@
 .models-select-tree {
-  .ant-tree li .ant-tree-node-content-wrapper {
+  li .ant-tree-node-content-wrapper {
     height: auto;
   }
   .tree-column-row {
@@ -14,6 +14,7 @@
     }
     .ant-tag {
       white-space: normal;
+      max-width: calc(75% - 75px)
     }
   }
 }
