@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Form, Input, Modal, List, Tree, Checkbox } from 'antd'
+import { Button, Form, Input, Modal, Tree, Checkbox } from 'antd'
 import { useActions, useValues } from 'kea'
 
 import connectionsLogic from '../../logic'
