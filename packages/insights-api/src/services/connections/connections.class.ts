@@ -6,7 +6,7 @@ export interface ConnectionData {
   keyword: string;
   url: string;
   structurePath: string;
-  timeoutMs: number
+  timeout: number
 }
 
 export class Connections extends Service<ConnectionData> {

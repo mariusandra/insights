@@ -16,12 +16,12 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll, get
 
     validateFieldsAndScroll((err, values) => {
       if (!err) {
-        const { keyword, url, structurePath, timeoutMs } = values
+        const { keyword, url, structurePath, timeout } = values
 
         if (isEditOpen) {
-          editConnection(editingConnection._id, url, structurePath, timeoutMs)
+          editConnection(editingConnection._id, url, structurePath, timeout)
         } else {
-          addConnection({keyword, url, structurePath, timeoutMs})
+          addConnection({keyword, url, structurePath, timeout})
         }
       }
     })
@@ -105,9 +105,9 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll, get
 
         <Form.Item
           label='Timeout'
-          extra='Statement timeout in milliseconds'>
-          {getFieldDecorator('timeoutMs', {
-            initialValue: initial.timeoutMs || '',
+          extra='Statement timeout in seconds'>
+          {getFieldDecorator('timeout', {
+            initialValue: initial.timeout || '',
             rules: [
               {
                 type: 'number',
@@ -115,7 +115,7 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll, get
                 transform: value => Number(value)
               }
             ]
-          })(<Input placeholder='15000' style={{width: '100%'}} />)}
+          })(<Input placeholder='15' type='number' style={{width: '100%'}} />)}
         </Form.Item>
 
         <Form.Item label='Test'>

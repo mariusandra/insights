@@ -14,7 +14,7 @@ const { publicUrl, apiPath, socketPath } = window.__INSIGHTS_CONFIG__ || {
 
 // socket.io
 const socket = io(publicUrl, { path: socketPath })
-client.configure(feathers.socketio(socket))
+client.configure(feathers.socketio(socket, { timeout: 600000 }))
 
 // REST api
 // client.configure(feathers.rest(`${publicUrl}${apiPath === '/' ? '' : apiPath}`).fetch(window.fetch))

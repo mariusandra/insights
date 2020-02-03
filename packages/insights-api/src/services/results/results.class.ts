@@ -28,10 +28,10 @@ export class Results implements Partial<ServiceMethods<ResultsResponse>> {
     const { connection } = params.query
     const connectionsResult = await this.app.service('connections').find({ query: { keyword: connection } })
 
-    const { structurePath, url, timeoutMs } = (connectionsResult as Paginated<ConnectionData>).data[0]
+    const { structurePath, url, timeout } = (connectionsResult as Paginated<ConnectionData>).data[0]
 
     const structure = await getStructure(structurePath, url)
-    const adapter = createAdapter(url, timeoutMs)
+    const adapter = createAdapter(url, timeout)
 
     const results = new FindResults({ params: params.query, adapter, structure })
     return results.getResponse()
