@@ -13,8 +13,6 @@ export default class Postgres extends SQL {
   constructor (connection: string, timeout: number) {
     super(connection, timeout)
 
-    console.log(`New connection with ${timeout}s timeout`)
-
     this.pool = new Pool({
       connectionString: connection,
       statement_timeout: timeout ? timeout * 1000 : 15000
