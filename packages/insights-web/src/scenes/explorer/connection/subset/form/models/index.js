@@ -62,7 +62,7 @@ const FieldTitle = ({ structure, model, field, editColumn }) => {
 
 export default function Models () {
   const { sortedModels, structure, sortedStructure, checkedModelsLookup, checkedKeys, editingColumn, cleanSubset } = useValues(logic)
-  const { setCheckedKeys, editColumn, closeEdit } = useActions(logic)
+  const { setCheckedKeysRaw, editColumn, closeEdit } = useActions(logic)
 
   return (
     <div>
@@ -74,7 +74,7 @@ export default function Models () {
         blockNode
         checkable
         checkedKeys={checkedKeys}
-        onCheck={setCheckedKeys}
+        onCheck={setCheckedKeysRaw}
         className='models-select-tree'
       >
         {sortedModels.map(model => (
