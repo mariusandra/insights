@@ -30,7 +30,6 @@ const ModelTitle = ({ model, cleanSubset, sortedStructure }) => {
 }
 
 const FieldTitle = ({ structure, model, field, editColumn }) => {
-  console.log(structure[model].links[field.key])
   return (
     <div className='tree-column-row'>
       <span className='column-key'>
