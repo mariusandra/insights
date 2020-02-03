@@ -66,13 +66,13 @@ function SubsetForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFi
             </Select>)}
         </Form.Item>
 
-        <Form.Item label='New Fields' extra='What to do with fields in selected models'>
+        <Form.Item label='New Fields' extra='What to do with new fields in included models'>
           {getFieldDecorator('new_fields', {
             initialValue: 'add'
           })(
             <Select style={{width: '100%'}}>
-              <Select.Option value="add">Add automatically to all selected models</Select.Option>
-              <Select.Option value="auto">Add automatically to only fully selected models</Select.Option>
+              <Select.Option value="add">Add automatically to all included models</Select.Option>
+              <Select.Option value="auto">Add automatically to only fully included models</Select.Option>
               <Select.Option value="none">Never add automatically</Select.Option>
             </Select>)}
         </Form.Item>
