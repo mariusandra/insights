@@ -1,6 +1,6 @@
 import './styles.scss'
 
-import React, { memo } from 'react'
+import React from 'react'
 import { useActions, useValues } from 'kea'
 import { Tree, Icon, Tag } from 'antd'
 import EditColumn from './edit-column'
@@ -20,7 +20,17 @@ const columnIcon = {
   boolean: 'tag'
 }
 
-const RenderNodeTitle = memo(({ model, field, editColumn }) => {
+const ModelTitle = ({ model, cleanSubset, sortedStructure }) => {
+  if (!cleanSubset[model] || cleanSubset[model] === true) {
+    return <span>{model}</span>
+  } else {
+    const diff = sortedStructure[model].length - cleanSubset[model].length
+    return <span>{model} <Tag>{diff} field{diff === 1 ? '' : 's'} ignored</Tag></span>
+  }
+}
+
+const FieldTitle = ({ structure, model, field, editColumn }) => {
+  console.log(structure[model].links[field.key])
   return (
     <div className='tree-column-row'>
       <span className='column-key'>
@@ -28,9 +38,13 @@ const RenderNodeTitle = memo(({ model, field, editColumn }) => {
         {field.meta.index === 'primary_key' ? <Icon type="idcard" title='Primary Key' /> : ''}
       </span>
       <div className='column-meta'>
-        {field.type === 'link' ? (
+        {field.type === 'link' && structure[model].columns[field.meta.my_key] && structure[model].columns[field.meta.my_key].index === 'primary_key' ? (
           <Tag color='geekblue'>
-            <Icon type="link" /> {field.meta.model} <Icon type="ellipsis" /> {field.meta.model_key}
+            <Icon type="link" /> {field.meta.model}.{field.meta.model_key} <Icon type="ellipsis" />  {field.meta.my_key}
+          </Tag>
+        ) : field.type === 'link' ? (
+          <Tag color='geekblue'>
+            <Icon type="link" /> {field.meta.my_key} <Icon type="ellipsis" />  {field.meta.model}.{field.meta.model_key}
           </Tag>
         ) : field.type === 'column' ? (
           <Tag color='orange'>
@@ -45,10 +59,10 @@ const RenderNodeTitle = memo(({ model, field, editColumn }) => {
       </div>
     </div>
   )
-})
+}
 
 export default function Models () {
-  const { sortedModels, sortedStructure, checkedModelsLookup, checkedKeys, editingColumn } = useValues(logic)
+  const { sortedModels, structure, sortedStructure, checkedModelsLookup, checkedKeys, editingColumn, cleanSubset } = useValues(logic)
   const { setCheckedKeys, editColumn, closeEdit } = useActions(logic)
 
   return (
@@ -68,14 +82,15 @@ export default function Models () {
           <Tree.TreeNode
             key={model}
             showLine
-            title={model}
+            title={<ModelTitle model={model} cleanSubset={cleanSubset} sortedStructure={sortedStructure} />}
           >
             {sortedStructure[model].map(field => (
               <Tree.TreeNode
-                disabled={field.type === 'link' && !checkedModelsLookup[field.meta.model]}
+                // disabled={field.type === 'link' && !checkedModelsLookup[field.meta.model]}
+                disableCheckbox={field.type === 'link' && !checkedModelsLookup[field.meta.model]}
                 switcherIcon={<Icon type={icons[field.type]} />}
                 key={`${model}.${field.key}`}
-                title={<RenderNodeTitle model={model} field={field} editColumn={editColumn} />}
+                title={<FieldTitle structure={structure} model={model} field={field} editColumn={editColumn} />}
               />
             ))}
 
