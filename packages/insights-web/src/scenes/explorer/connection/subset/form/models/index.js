@@ -90,8 +90,7 @@ export default function Models () {
           >
             {sortedStructure[model].map(field => (
               <Tree.TreeNode
-                // disabled={field.type === 'link' && !checkedModelsLookup[field.meta.model]}
-                disableCheckbox={field.type === 'link' && !checkedModelsLookup[field.meta.model]}
+                disabled={field.type === 'link' && !checkedModelsLookup[field.meta.model]}
                 switcherIcon={<Icon type={icons[field.type]} />}
                 key={`${model}.${field.key}`}
                 title={<FieldTitle structure={structure} model={model} field={field} editColumn={editColumn} />}
