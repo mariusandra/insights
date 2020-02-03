@@ -2,7 +2,7 @@ import './styles.scss'
 
 import React from 'react'
 import { useActions, useValues } from 'kea'
-import { Tree, Icon, Tag } from 'antd'
+import { Tree, Icon, Tag, Button } from 'antd'
 import EditColumn from './edit-column'
 
 import logic from './logic'
@@ -25,7 +25,7 @@ const ModelTitle = ({ model, cleanSubset, sortedStructure }) => {
     return <span>{model}</span>
   } else {
     const diff = sortedStructure[model].length - cleanSubset[model].length
-    return <span>{model} <Tag>{diff} field{diff === 1 ? '' : 's'} ignored</Tag></span>
+    return <span>{model} <Tag className='ignore-tag'>{diff} field{diff === 1 ? '' : 's'} ignored</Tag></span>
   }
 }
 
@@ -62,10 +62,15 @@ const FieldTitle = ({ structure, model, field, editColumn }) => {
 
 export default function Models () {
   const { sortedModels, structure, sortedStructure, checkedModelsLookup, checkedKeys, editingColumn, cleanSubset } = useValues(logic)
-  const { setCheckedKeysRaw, editColumn, closeEdit } = useActions(logic)
+  const { setCheckedKeysRaw, editColumn, closeEdit, toggle } = useActions(logic)
 
   return (
     <div>
+      <h3>
+        Select models and fields to include in this subset
+        <Button type='link' onClick={toggle}>Toggle All</Button>
+      </h3>
+
       <Tree
         selectable
         selectedKeys={[]}
@@ -103,6 +108,7 @@ export default function Models () {
           </Tree.TreeNode>
         ))}
       </Tree>
+
       <EditColumn visible={!!editingColumn} column={editingColumn} closeEdit={closeEdit} />
     </div>
   )

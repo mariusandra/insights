@@ -3,14 +3,26 @@ import { Button, Divider, Form, Modal, Alert, Input, Select } from 'antd'
 import { useActions, useValues } from 'kea'
 
 import connectionsLogic from '../../logic'
+import logic from './logic'
 
-import Models from 'scenes/explorer/connection/subset/form/models'
+import Models from './models'
 
 function SubsetForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFieldValue } }) {
   const { isSubsetOpen } = useValues(connectionsLogic)
   const { closeSubset } = useActions(connectionsLogic)
-  const isSaving = false
-  const handleAdd = () => {}
+  const { isSaving } = useValues(logic)
+  const { saveSubset } = useActions(logic)
+
+  const handleAdd = (e) => {
+    e.preventDefault()
+
+    validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        const { name, new_models, new_fields } = values
+        saveSubset({ name, new_models, new_fields })
+      }
+    })
+  }
 
   return (
     <Modal
@@ -45,7 +57,7 @@ function SubsetForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFi
 
       <Form labelCol={{ span: 5 }} wrapperCol={{ span: 19 }} onSubmit={handleAdd}>
         <Form.Item label='Name'>
-          {getFieldDecorator('keyword', {
+          {getFieldDecorator('name', {
             initialValue: 'All Data',
             rules: [
               {
@@ -71,8 +83,7 @@ function SubsetForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFi
             initialValue: 'add'
           })(
             <Select style={{width: '100%'}}>
-              <Select.Option value="add">Add automatically to all included models</Select.Option>
-              <Select.Option value="auto">Add automatically to only fully included models</Select.Option>
+              <Select.Option value="add">Add automatically</Select.Option>
               <Select.Option value="none">Never add automatically</Select.Option>
             </Select>)}
         </Form.Item>
@@ -80,7 +91,6 @@ function SubsetForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFi
 
       <Divider />
 
-      <h3>Select models and fields to include in this subset</h3>
       <Models />
 
     </Modal>

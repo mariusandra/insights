@@ -36,7 +36,8 @@ export default kea({
     setCheckedKeysRaw: (checkedKeys) => ({ checkedKeys }),
     setCheckedKeys: (checkedKeys) => ({ checkedKeys }),
     editColumn: (column) => ({ column }),
-    closeEdit: true
+    closeEdit: true,
+    toggle: true
   }),
 
   reducers: ({ actions, selectors }) => ({
@@ -151,6 +152,14 @@ export default kea({
       })
 
       actions.setCheckedKeys(finalCheckedKeys)
+    },
+
+    [actions.toggle]: () => {
+      if (values.checkedKeys.length > 0) {
+        actions.setCheckedKeys([])
+      } else {
+        actions.setCheckedKeys(getAllFields(values.structure))
+      }
     }
   })
 })
