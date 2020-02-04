@@ -79,7 +79,8 @@ export default kea({
   connect: {
     props: [
       explorerLogic, [
-        'connections'
+        'connections',
+        'structure'
       ]
     ],
     actions: [
@@ -213,7 +214,9 @@ export default kea({
         const connection = connections[keyword]
 
         if (!connection) {
-          message.error(`Connection "${keyword}" not found!`)
+          if (keyword !== '') {
+            message.error(`Connection "${keyword}" not found!`)
+          }
           yield put(setStructure({}))
           return
         }
@@ -230,8 +233,9 @@ export default kea({
       const { clear } = this.actions
       const { connection } = action.payload
       const urlValues = urlToState(window.location.search)
+      const { structure } = this.values
 
-      if (urlValues.connection !== connection) {
+      if (urlValues.connection !== connection || !structure || Object.keys(structure).length === 0) {
         yield call(this.workers.loadStructure, connection)
         yield put(clear())
       }

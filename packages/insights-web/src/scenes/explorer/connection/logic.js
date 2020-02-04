@@ -18,7 +18,7 @@ export default kea({
     ],
     actions: [
       sharedLogic, ['openAddConnection'],
-      explorerLogic, ['setConnections as setExplorerConnections']
+      explorerLogic, ['setConnections as setExplorerConnections', 'setConnection as setExplorerConnection']
     ]
   },
 
@@ -186,6 +186,7 @@ export default kea({
     [actions.addConnection]: async function ({ keyword, url, structurePath, timeout }) {
       const connection = await connectionsService.create({ keyword, url, structurePath, timeout })
       actions.connectionAdded(connection)
+      actions.setExplorerConnection(keyword)
       message.success(`Connection "${keyword}" added!`)
     },
 
@@ -211,6 +212,7 @@ export default kea({
     [actions.removeConnection]: async function ({ id }) {
       await connectionsService.remove(id)
       actions.connectionRemoved(id)
+      actions.setExplorerConnection('')
     },
 
     [actions.testConnection]: async function ({ url, structurePath }) {
