@@ -8,6 +8,8 @@ import { useValues } from 'kea'
 import Header from 'scenes/header'
 import Spinner from 'lib/tags/spinner'
 
+import Login from '../login'
+
 import authLogic from 'scenes/auth'
 
 export default function InsightsLayout ({ children }) {
@@ -21,7 +23,7 @@ export default function InsightsLayout ({ children }) {
     return (
       <div className='insights-scene'>
         <Layout fill='window'>
-          {children}
+          {showLogin ? <Login /> : children}
         </Layout>
       </div>
     )
