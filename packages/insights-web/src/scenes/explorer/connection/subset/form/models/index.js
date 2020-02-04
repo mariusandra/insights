@@ -58,7 +58,7 @@ const FieldTitle = ({ structure, model, field, editColumn }) => {
 
 export default function Models () {
   const { sortedModels, structure, sortedStructure, checkedModelsLookup, checkedKeys, editingColumn, ignoredColumnCount } = useValues(logic)
-  const { setCheckedKeysRaw, editColumn, closeEdit, toggle } = useActions(logic)
+  const { setCheckedKeysRaw, addCustomField, editColumn, closeEdit, toggle } = useActions(logic)
 
   return (
     <div>
@@ -97,7 +97,7 @@ export default function Models () {
               checkable={false}
               switcherIcon={<Icon type='plus' />}
               key={`${model}...new_custom`}
-              title='Add custom field'
+              title={<div style={{ cursor: 'pointer' }} onClick={() => addCustomField(model)}>Add custom field</div>}
             />
 
           </Tree.TreeNode>

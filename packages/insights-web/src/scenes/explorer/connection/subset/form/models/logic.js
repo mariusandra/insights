@@ -39,6 +39,7 @@ export default kea({
   actions: () => ({
     setCheckedKeysRaw: (checkedKeys) => ({ checkedKeys }),
     setCheckedKeys: (checkedKeys) => ({ checkedKeys }),
+    addCustomField: (model) => ({ model }),
     editColumn: (column) => ({ column }),
     closeEdit: true,
     toggle: true
@@ -49,6 +50,7 @@ export default kea({
       [actions.setCheckedKeys]: (_, payload) => payload.checkedKeys,
     }],
     editingColumn: [null, {
+      [actions.addCustomField]: (_, payload) => payload.model,
       [actions.editColumn]: (_, payload) => payload.column,
       [actions.closeEdit]: () => null
     }]
