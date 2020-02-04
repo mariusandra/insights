@@ -18,11 +18,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react",
-    "baseUrl": "./src",
-    "paths": {
-      "lib/*": ["./lib/*"],
-      "scenes/*": ["./scenes/*"]
-    }
+    "baseUrl": "./src"
   },
   "include": [
     "src"
