@@ -17,7 +17,7 @@ function openSupport () {
     content: (
       <div>
         <p>If you like Insights or use it in your company, please consider sponsoring its development.</p>
-        <p><a href='https://github.com/sponsors/mariusandra' target='_blank'>https://github.com/sponsors/mariusandra</a></p>
+        <p><a href='https://github.com/sponsors/mariusandra' target='_blank' rel="noopener noreferrer">https://github.com/sponsors/mariusandra</a></p>
       </div>
     ),
     onOk() {},
