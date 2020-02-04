@@ -1,6 +1,13 @@
 import { kea } from 'kea'
 
+import modelsLogic from './models/logic'
+
 export default kea({
+  connect: {
+    values: [
+      modelsLogic, ['subsetSelection']
+    ]
+  },
   actions: () => ({
     saveSubset: (formValues) => ({ formValues })
   }),
@@ -11,7 +18,8 @@ export default kea({
 
   listeners: ({ actions, values }) => ({
     [actions.saveSubset]: async ({ formValues }) => {
-      console.log("SUBMITTING", formValues)
+      const { subsetSelection } = values
+      console.log("SUBMITTING", { ...formValues, selection: subsetSelection })
     }
   })
 })

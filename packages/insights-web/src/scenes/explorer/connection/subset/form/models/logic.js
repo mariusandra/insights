@@ -2,6 +2,7 @@ import { kea } from 'kea'
 import naturalCompare from 'string-natural-compare'
 
 import explorerLogic from 'scenes/explorer/logic'
+import connectionLogic from '../../../logic'
 
 const arrayToObjectKeys = (arr, defaultValue = true) => {
   let obj = {}
@@ -29,6 +30,9 @@ export default kea({
   connect: {
     values: [
       explorerLogic, ['structure']
+    ],
+    actions: [
+      connectionLogic, ['openSubset']
     ]
   },
 
@@ -41,8 +45,8 @@ export default kea({
   }),
 
   reducers: ({ actions, selectors }) => ({
-    checkedKeys: [state => selectors.structure(state) ? getAllFields(selectors.structure(state)) : [], {
-      [actions.setCheckedKeys]: (_, payload) => payload.checkedKeys
+    checkedKeys: [[], {
+      [actions.setCheckedKeys]: (_, payload) => payload.checkedKeys,
     }],
     editingColumn: [null, {
       [actions.editColumn]: (_, payload) => payload.column,
@@ -98,7 +102,7 @@ export default kea({
             const fieldSelection = {}
 
             fields.forEach(field => {
-              fieldSelection[field.key] = fieldSupported(field)
+              fieldSelection[field.key] = !!fieldSupported(field)
             })
 
             selection[model] = fieldSelection
@@ -127,6 +131,10 @@ export default kea({
   }),
 
   listeners: ({ actions, values }) => ({
+    [actions.openSubset]: () => {
+      actions.setCheckedKeys(getAllFields(values.structure))
+    },
+
     // add and remove links to models that were added/removed before saving to a reducer
     [actions.setCheckedKeysRaw]: ({ checkedKeys: newCheckedKeys }) => {
       const addedModels = []
