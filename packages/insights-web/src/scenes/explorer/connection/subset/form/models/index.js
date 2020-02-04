@@ -2,7 +2,7 @@ import './styles.scss'
 
 import React from 'react'
 import { useActions, useValues } from 'kea'
-import { Tree, Icon, Tag, Button } from 'antd'
+import { Tree, Icon, Tag, Button, Tooltip } from 'antd'
 import EditColumn from './edit-column'
 
 import logic from './logic'
@@ -34,7 +34,7 @@ const FieldTitle = ({ structure, model, field, editColumn }) => {
     <div className='tree-column-row'>
       <span className='column-key'>
         {field.key}
-        {field.meta.index === 'primary_key' ? <Icon type="idcard" title='Primary Key' /> : ''}
+        {field.meta.index === 'primary_key' ? <Tooltip title="Primary Key"><Icon type="idcard" /></Tooltip> : ''}
       </span>
       <div className='column-meta'>
         {field.type === 'link' && structure[model].columns[field.meta.my_key] && structure[model].columns[field.meta.my_key].index === 'primary_key' ? (
