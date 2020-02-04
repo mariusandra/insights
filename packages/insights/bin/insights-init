@@ -12,8 +12,9 @@ program.version(pkg.version)
   .usage('<command> [options]')
   .description('Initialize config to start insights by answering a few questions')
   .option('--dev', 'Include development.json in ".insights"')
-  .option('--no-login', 'Run insights without requiring a user to login with')
+  .option('--login', 'Init insights with support for user accounts')
+  .option('--no-login', 'Init insights without requiring a user to login with')
 
 program.parse(process.argv)
 
-initInsights({ dev: program.dev, noLogin: !program.login })
+initInsights({ dev: program.dev, login: program.login })

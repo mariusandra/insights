@@ -10,20 +10,51 @@ const createFolder = require('./lib/create-folder')
 const { promisify } = require('util');
 const exec = promisify(require('child_process').exec)
 
-async function initInsights ({ dev = false, noLogin = false }) {
+async function initInsights ({ dev = false, login = undefined }) {
   console.log(`Welcome to Insights v${pkg.version}!`)
-  console.log('')
-  console.log('We will create a directory .insights to store your config data.')
-  console.log('Please add it to .gitignore!') // TODO: add to gitignore!
   console.log('')
 
   const configFolder = path.join(process.cwd(), '.insights')
+
+  if (fs.existsSync(configFolder)) {
+    console.error('!! Fatal Error! The folder ".insights" already exists. Could not complete init.')
+    process.exit(1)
+  }
+
+  console.log('This script will create a folder ".insights", which will be used to store config data.')
+  console.log('Please add it to .gitignore if you\'re running this script inside a project folder!')
+  console.log('')
+
+  if (login === undefined) {
+    let repeat = true
+
+    console.log('Do you wish to setup Insights in "login" mode, requiring authentication to access the interface')
+    console.log('or in standalone "loginless" mode, which is practical only when running in localhost.')
+    console.log('')
+
+    while (repeat) {
+      const answer = (await prompt('Setup Insights with user accounts and authentication? [Y/n]: ')).trim()
+      const letter = answer.toLowerCase()[0]
+
+      if (answer === '' || letter === 'y' || letter === 'n') {
+        repeat = false
+        login = letter !== 'n'
+      } else {
+        console.error('!! Please answer either "y" or "n" or hit CTRL+C to cancel')
+      }
+      console.log('')
+    }
+  }
+
   createFolder(configFolder)
   process.env.NODE_CONFIG_DIR = configFolder
 
   console.log('')
-  if (!noLogin) {
-    console.log('In order to use insights, you must create at least one user you will use to log in.')
+
+  if (login) {
+    console.log('In order to log in to Insights you must create at least one user account.')
+    console.log('Run "insights createsuperuser" or use the web interface to create more later.')
+    console.log('')
   }
 
   const secretKey = randomString(64)
@@ -31,26 +62,29 @@ async function initInsights ({ dev = false, noLogin = false }) {
   if (dev) {
     let developmentTemplate = require('./templates/development.json')
     developmentTemplate.authentication.secret = secretKey
-    developmentTemplate.authentication.authStrategies = ["jwt", noLogin ? "noLogin" : 'local']
+    developmentTemplate.authentication.authStrategies = ['jwt', login ? 'local' : 'noLogin']
     fs.writeFileSync(path.join(configFolder, 'development.json'), JSON.stringify(developmentTemplate, null, 2))
   }
 
   let productionTemplate = require('./templates/production.json')
   productionTemplate.authentication.secret = secretKey
-  productionTemplate.authentication.authStrategies = ["jwt", noLogin ? "noLogin" : 'local']
+  productionTemplate.authentication.authStrategies = ['jwt', login ? 'local' : 'noLogin']
   fs.writeFileSync(path.join(configFolder, 'production.json'), JSON.stringify(productionTemplate, null, 2))
 
   const defaultTemplate = require('./templates/default.json')
   fs.writeFileSync(path.join(configFolder, 'default.json'), JSON.stringify(defaultTemplate, null, 2))
 
-  if (noLogin) {
+  if (!login) {
     const user = (await exec(`whoami`)).stdout.trim() || 'anonymous'
     const host = (await exec(`hostname`)).stdout.trim() || 'localhost'
     process.env.INSIGHTS_SUPERUSER_EMAIL = `${user}@${host}`
   }
 
   const createSuperuser = require('./create-superuser')
-  await createSuperuser({ noLogin })
+  await createSuperuser({ login, exit: false })
+
+  console.log('')
+  console.log('Success! Run "insights start" to start the server!')
 
   process.exit(0)
 }

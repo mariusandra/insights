@@ -15,14 +15,14 @@ function validateEmail (email) {
   return re.test(email)
 }
 
-async function createSuperuser ({ noLogin = false } = {}) {
-  if (!noLogin) {
+async function createSuperuser ({ login = true, exit = true } = {}) {
+  if (login) {
     console.log('Creating a new superuser')
     console.log('')
   }
 
   let email = process.env.INSIGHTS_SUPERUSER_EMAIL || ''
-  if (noLogin && email && !validateEmail(email)) {
+  if (!login && email && !validateEmail(email)) {
     email = 'root@localhost'
   }
 
@@ -39,7 +39,7 @@ async function createSuperuser ({ noLogin = false } = {}) {
     }
   }
 
-  let password = noLogin || process.env.INSIGHTS_SUPERUSER_PASSWORD || (await prompt.password('password (type or hit [enter] to autogenerate): '))
+  let password = !login || process.env.INSIGHTS_SUPERUSER_PASSWORD || (await prompt.password('password (type or hit [enter] to autogenerate): '))
   let passwordGenerated = false
 
   if (!password) {
@@ -48,7 +48,7 @@ async function createSuperuser ({ noLogin = false } = {}) {
   }
 
   try {
-    if (noLogin) {
+    if (!login) {
       await app.service('users').create({
         email: email,
         roles: ['superuser']
@@ -71,7 +71,9 @@ async function createSuperuser ({ noLogin = false } = {}) {
     process.exit(1)
   }
 
-  process.exit(0)
+  if (exit) {
+    process.exit(0)
+  }
 }
 
 module.exports = createSuperuser
