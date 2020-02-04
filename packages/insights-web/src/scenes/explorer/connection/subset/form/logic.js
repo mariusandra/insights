@@ -11,7 +11,7 @@ export default kea({
 
   listeners: ({ actions, values }) => ({
     [actions.saveSubset]: async ({ formValues }) => {
-      // const { checkedKeys } = values
+      console.log("SUBMITTING", formValues)
     }
   })
 })
