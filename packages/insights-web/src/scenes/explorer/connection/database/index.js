@@ -16,16 +16,17 @@ export default function Database () {
   const menu = (
     <Menu>
       {selectedConnection ? (
-        <Menu.Item>
-          <Icon type="database" theme="filled" />
-          <span>{selectedConnection.keyword}</span>
-        </Menu.Item>
-      ) : null}
-      {selectedConnection ? (
-        <Menu.Item onClick={() => openEditConnection(selectedConnection._id)}>
-          <Icon type="edit" style={{ marginLeft: 16 }} />
-          Edit
-        </Menu.Item>
+        <Menu.ItemGroup className='connection-menu-header-title' title={
+          <>
+            <Icon type="database" theme="filled" style={{ marginRight: 6 }} />
+            <span>{selectedConnection.keyword}</span>
+          </>
+        }>
+          <Menu.Item onClick={() => openEditConnection(selectedConnection._id)}>
+            <Icon type="edit" style={{ marginLeft: 12 }} />
+            Edit
+          </Menu.Item>
+        </Menu.ItemGroup>
       ) : null}
 
       {selectedConnection ? <Menu.Divider /> : null}

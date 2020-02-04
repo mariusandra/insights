@@ -12,14 +12,17 @@ export default function Subset () {
 
   const menu = (
     <Menu>
-      <Menu.Item >
-        <Icon type="bars" />
-        All Data
-      </Menu.Item>
-      <Menu.Item onClick={openSubset}>
-        <Icon type="edit" style={{ marginLeft: 16 }} />
-        Configure
-      </Menu.Item>
+      <Menu.ItemGroup className='connection-menu-header-title' title={
+        <>
+          <Icon type="bars" style={{ marginRight: 6 }} />
+          <span>All Data</span>
+        </>
+      }>
+        <Menu.Item onClick={openSubset}>
+          <Icon type="edit" style={{ marginLeft: 12 }} />
+          Configure
+        </Menu.Item>
+      </Menu.ItemGroup>
       <Menu.Divider />
       <Menu.Item>
         <Icon type="bars" />

@@ -46,7 +46,8 @@ function SubsetForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFi
         description={
           <span>
             Insights uses "Subsets" to limit what can be seen in the explorer. Think of them as a partial views of your database.
-            Each subset can be shared with different teams in your organisation.
+            Each subset can be shared with different teams in your organisation. For example you might want to hide accounting
+            tables from the marketing department who shouldn't have access to sensitive data.
             The "All Data" subset is what other subsets are based on. Changes here will be mirrored to all other subsets.
           </span>
         }
