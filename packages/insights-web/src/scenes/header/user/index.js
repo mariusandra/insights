@@ -1,6 +1,6 @@
 import React from 'react'
 import { useActions } from 'kea'
-import { Button, Dropdown, Menu, Icon } from 'antd'
+import { Button, Dropdown, Menu, Icon, Modal } from 'antd'
 
 import client from 'lib/client'
 
@@ -9,6 +9,19 @@ import headerLogic from '../logic'
 function handleLogout () {
   client.logout()
   window.location.href = '/login'
+}
+
+function openSupport () {
+  Modal.info({
+    title: 'Support Insights',
+    content: (
+      <div>
+        <p>If you like Insights or use it in your company, please consider sponsoring its development.</p>
+        <p><a href='https://github.com/sponsors/mariusandra' target='_blank'>https://github.com/sponsors/mariusandra</a></p>
+      </div>
+    ),
+    onOk() {},
+  });
 }
 
 export default function User ({ email }) {
@@ -28,6 +41,11 @@ export default function User ({ email }) {
       <Menu.Item onClick={() => openLocation('/settings')}>
         <Icon type="setting" />
         Settings
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item onClick={openSupport}>
+        <Icon type="smile" />
+        Support Insights
       </Menu.Item>
       <Menu.Divider />
       <Menu.Item onClick={handleLogout}>
