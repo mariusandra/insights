@@ -18,8 +18,8 @@ function SubsetForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFi
 
     validateFieldsAndScroll((err, values) => {
       if (!err) {
-        const { name, new_models, new_fields } = values
-        saveSubset({ name, new_models, new_fields })
+        const { name, newModels, newFields } = values
+        saveSubset({ name, newModels, newFields })
       }
     })
   }
@@ -69,7 +69,7 @@ function SubsetForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFi
         </Form.Item>
 
         <Form.Item label='New Models' extra='What to do with models that are added in the future'>
-          {getFieldDecorator('new_models', {
+          {getFieldDecorator('newModels', {
             initialValue: 'add'
           })(
             <Select style={{width: '100%'}}>
@@ -79,7 +79,7 @@ function SubsetForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFi
         </Form.Item>
 
         <Form.Item label='New Fields' extra='What to do with new fields in included models'>
-          {getFieldDecorator('new_fields', {
+          {getFieldDecorator('newFields', {
             initialValue: 'add'
           })(
             <Select style={{width: '100%'}}>

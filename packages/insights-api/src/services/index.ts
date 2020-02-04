@@ -7,6 +7,7 @@ import favourites from './favourites/favourites.service';
 import connectionTest from './connection-test/connection-test.service';
 import results from './results/results.service';
 import structure from './structure/structure.service';
+import subsets from './subsets/subsets.service';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 export default function (app: Application) {
@@ -18,4 +19,5 @@ export default function (app: Application) {
   app.configure(connectionTest);
   app.configure(results);
   app.configure(structure);
+  app.configure(subsets);
 }
