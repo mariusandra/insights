@@ -74,7 +74,7 @@ function SubsetForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFi
           })(
             <Select style={{width: '100%'}}>
               <Select.Option value="add">Add automatically</Select.Option>
-              <Select.Option value="none">Never add automatically</Select.Option>
+              <Select.Option value="skip">Never add automatically</Select.Option>
             </Select>)}
         </Form.Item>
 
@@ -84,7 +84,7 @@ function SubsetForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFi
           })(
             <Select style={{width: '100%'}}>
               <Select.Option value="add">Add automatically</Select.Option>
-              <Select.Option value="none">Never add automatically</Select.Option>
+              <Select.Option value="skip">Never add automatically</Select.Option>
             </Select>)}
         </Form.Item>
       </Form>

@@ -20,13 +20,9 @@ const columnIcon = {
   boolean: 'tag'
 }
 
-const ModelTitle = ({ model, cleanSubset, sortedStructure }) => {
-  if (!cleanSubset[model] || cleanSubset[model] === true) {
-    return <span>{model}</span>
-  } else {
-    const diff = sortedStructure[model].length - cleanSubset[model].length
-    return <span>{model} <Tag className='ignore-tag'>{diff} field{diff === 1 ? '' : 's'} ignored</Tag></span>
-  }
+const ModelTitle = ({ model, ignoredColumnCount }) => {
+  const diff = ignoredColumnCount[model] || 0
+  return <span>{model} {diff > 0 ? <Tag className='ignore-tag'>{diff} field{diff === 1 ? '' : 's'} ignored</Tag> : null}</span>
 }
 
 const FieldTitle = ({ structure, model, field, editColumn }) => {
@@ -61,7 +57,7 @@ const FieldTitle = ({ structure, model, field, editColumn }) => {
 }
 
 export default function Models () {
-  const { sortedModels, structure, sortedStructure, checkedModelsLookup, checkedKeys, editingColumn, cleanSubset } = useValues(logic)
+  const { sortedModels, structure, sortedStructure, checkedModelsLookup, checkedKeys, editingColumn, ignoredColumnCount } = useValues(logic)
   const { setCheckedKeysRaw, editColumn, closeEdit, toggle } = useActions(logic)
 
   return (
@@ -86,7 +82,7 @@ export default function Models () {
           <Tree.TreeNode
             key={model}
             showLine
-            title={<ModelTitle model={model} cleanSubset={cleanSubset} sortedStructure={sortedStructure} />}
+            title={<ModelTitle model={model} ignoredColumnCount={ignoredColumnCount} sortedStructure={sortedStructure} />}
           >
             {sortedStructure[model].map(field => (
               <Tree.TreeNode

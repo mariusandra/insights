@@ -81,29 +81,47 @@ export default kea({
         return models
       }
     ],
-    cleanSubset: [
+    subsetSelection: [
       () => [selectors.sortedStructure, selectors.checkedKeysLookup, selectors.checkedModelsLookup],
       (sortedStructure, checkedKeysLookup, checkedModelsLookup) => {
-        const subset = {}
+        const selection = {}
 
         Object.entries(sortedStructure).forEach(([model, fields]) => {
           const fieldSupported = field => {
             return checkedKeysLookup[`${model}.${field.key}`] &&
-                   (field.type !== 'link' || checkedModelsLookup[field.meta.model])
+              (field.type !== 'link' || checkedModelsLookup[field.meta.model])
           }
 
-          if (fields.every(fieldSupported)) {
-            subset[model] = true
+          if (!fields.some(fieldSupported)) {
+            selection[model] = false
           } else {
-            const array = fields.filter(fieldSupported).map(field => field.key)
+            const fieldSelection = {}
 
-            if (array.length > 0) {
-              subset[model] = array
-            }
+            fields.forEach(field => {
+              fieldSelection[field.key] = fieldSupported(field)
+            })
+
+            selection[model] = fieldSelection
           }
         })
 
-        return subset
+        return selection
+      }
+    ],
+    ignoredColumnCount: [
+      () => [selectors.sortedStructure, selectors.subsetSelection],
+      (sortedStructure, subsetSelection) => {
+        const ignoredColumnCount = {}
+
+        Object.entries(subsetSelection).forEach(([model, fieldStatusObject]) => {
+          if (fieldStatusObject === false) {
+            ignoredColumnCount[model] = 0 //sortedStructure[model].length
+          } else {
+            ignoredColumnCount[model] = Object.values(fieldStatusObject).filter(v => !v).length
+          }
+        })
+
+        return ignoredColumnCount
       }
     ]
   }),
