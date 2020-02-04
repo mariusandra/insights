@@ -6,6 +6,7 @@ import { LOCATION_CHANGE, push } from 'connected-react-router'
 import download from 'downloadjs'
 
 import explorerLogic from 'scenes/explorer/logic'
+import sharedConnectionsLogic from 'scenes/explorer/connection/shared-logic'
 
 import getMeta from 'lib/explorer/get-meta'
 import urlToState from 'lib/explorer/url-to-state'
@@ -82,6 +83,9 @@ export default kea({
       ]
     ],
     actions: [
+      sharedConnectionsLogic, [
+        'openAddConnection'
+      ],
       explorerLogic, [
         'setConnections',
         'setConnection',
@@ -166,15 +170,14 @@ export default kea({
   }),
 
   start: function * () {
-    const { setConnections, setConnection } = this.actions
+    const { setConnections, setConnection, openAddConnection } = this.actions
 
     window.document.title = 'Insights Explorer'
 
     const connections = yield connectionsService.find()
 
     if (connections.total === 0) {
-      message.warning('Please set up a connection!')
-      yield put(push('/connections'))
+      yield put(openAddConnection(true))
       return
     }
 

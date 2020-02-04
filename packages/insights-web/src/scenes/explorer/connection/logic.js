@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { message, Modal } from 'antd'
 
 import explorerLogic from '../logic'
+import sharedLogic from './shared-logic'
 import client from 'lib/client'
 
 const connectionsService = client.service('connections')
@@ -16,6 +17,7 @@ export default kea({
       explorerLogic, ['connection']
     ],
     actions: [
+      sharedLogic, ['openAddConnection'],
       explorerLogic, ['setConnections as setExplorerConnections']
     ]
   },
@@ -38,7 +40,6 @@ export default kea({
     removeConnection: (id) => ({ id }),
     connectionRemoved: (id) => ({ id }),
 
-    openAddConnection: true,
     closeConnection: true,
     openEditConnection: id => ({ id }),
 
@@ -70,6 +71,10 @@ export default kea({
         const { [payload.id]: discard, ...rest } = state // eslint-disable-line
         return rest
       }
+    }],
+
+    addIntroMessage: [false, PropTypes.bool, {
+      [actions.openAddConnection]: (_, payload) => payload.introMessage
     }],
 
     isAddOpen: [false, PropTypes.bool, {

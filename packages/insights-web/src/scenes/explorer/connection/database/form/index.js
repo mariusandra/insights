@@ -3,10 +3,12 @@ import { useActions, useValues } from 'kea'
 
 import { Button, Form, Input, Modal, Icon, Tag } from "antd"
 
+import Intro from './intro'
+
 import connectionsLogic from '../../logic'
 
 function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFieldValue } }) {
-  const { isAddOpen, isEditOpen, editingConnection, isSaving, didTest, isTesting, testPassed } = useValues(connectionsLogic)
+  const { isAddOpen, isEditOpen, editingConnection, isSaving, didTest, isTesting, testPassed, addIntroMessage } = useValues(connectionsLogic)
   const { addConnection, editConnection, closeConnection, confirmRemoveConnection, testConnection } = useActions(connectionsLogic)
 
   const [wasEverOpen, setWasEverOpen] = useState(false)
@@ -59,6 +61,7 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll, get
       ]}
     >
       {wasEverOpen ? <Form labelCol={{ span: 5 }} wrapperCol={{ span: 19 }} onSubmit={handleAdd}>
+        {isAddOpen && addIntroMessage ? <Intro /> : null}
         <Form.Item
           label='Keyword'
           extra="This will be used in URLs, dashboards, etc to refer to your database. You can't change this later!">

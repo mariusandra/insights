@@ -39,7 +39,7 @@ export default function Database () {
 
       {otherConnections.length > 0 ? <Menu.Divider /> : null}
 
-      <Menu.Item onClick={openAddConnection}>
+      <Menu.Item onClick={() => openAddConnection(false)}>
         <Icon type="plus" />
         New Connection
       </Menu.Item>
