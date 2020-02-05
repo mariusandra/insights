@@ -3,6 +3,34 @@ import * as authentication from '@feathersjs/authentication';
 
 const { authenticate } = authentication.hooks;
 
+const addAllDataSubset = async context => {
+  const { result: connection, app } = context
+
+  const subsetsService = app.service('subsets')
+
+  const subsetParams = {
+    connectionId: connection._id,
+    type: 'all_data',
+    name: 'All Data',
+    newModels: 'add',
+    newFields: 'add',
+    selection: {}
+  }
+
+  await subsetsService.create(subsetParams)
+
+  return context;
+}
+
+const removeAllSubsets = async context => {
+  const { app, result: connection } = context
+
+  const subsetsService = app.service('subsets')
+  await subsetsService.remove(null, { query: { connectionId: connection._id } })
+
+  return context
+}
+
 export default {
   before: {
     all: [ authenticate('jwt') ],
@@ -18,10 +46,10 @@ export default {
     all: [],
     find: [],
     get: [],
-    create: [],
+    create: [ addAllDataSubset ],
     update: [],
     patch: [],
-    remove: []
+    remove: [ removeAllSubsets ]
   },
 
   error: {

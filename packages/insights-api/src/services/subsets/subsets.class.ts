@@ -3,6 +3,8 @@ import { Application } from '../../declarations';
 
 interface SubsetData {
   _id?: string,
+  connectionId: string,
+  type: 'all_data' | 'custom',
   name: string,
   newModels: 'add' | 'skip',
   newFields: 'add' | 'skip',
