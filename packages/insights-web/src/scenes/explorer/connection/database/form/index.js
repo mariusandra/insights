@@ -18,12 +18,12 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll, get
 
     validateFieldsAndScroll((err, values) => {
       if (!err) {
-        const { keyword, url, structurePath, timeout } = values
+        const { name, url, structurePath, timeout } = values
 
         if (isEditOpen) {
-          editConnection(editingConnection._id, url, structurePath, timeout)
+          editConnection(editingConnection._id, name, url, structurePath, timeout)
         } else {
-          addConnection({keyword, url, structurePath, timeout})
+          addConnection({name, url, structurePath, timeout})
         }
       }
     })
@@ -63,26 +63,22 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll, get
       {wasEverOpen ? <Form labelCol={{ span: 5 }} wrapperCol={{ span: 19 }} onSubmit={handleAdd}>
         {isAddOpen && addIntroMessage ? <Intro /> : null}
         <Form.Item
-          label='Keyword'
-          extra="This will be used in URLs, dashboards, etc to refer to your database. You can't change this later!">
-          {getFieldDecorator('keyword', {
-            initialValue: initial.keyword || '',
+          label='Name'
+          extra="How do you want to call this connection?">
+          {getFieldDecorator('name', {
+            initialValue: initial.name || '',
             rules: [
               {
                 required: true,
-                message: 'Please input a keyword!',
-              },
-              {
-                pattern: /^[a-zA-Z0-9_-]+$/,
-                message: 'Allowed characters: A-Z, a-z, 0-9, _ and -'
+                message: 'Please input a name!',
               }
             ]
-          })(<Input disabled={isEditOpen} autoFocus={isAddOpen} placeholder='mydb' style={{width: '100%'}} />)}
+          })(<Input autoFocus={isAddOpen} placeholder='My Database' style={{width: '100%'}} />)}
         </Form.Item>
 
         <Form.Item
           label='Connection'
-          extra='Currently only URLs in the format "psql://user:pass@localhost/dbname" are supported.'>
+          extra='Currently only Postgres URLs in the format "psql://user:pass@localhost/dbname" are supported.'>
           {getFieldDecorator('url', {
             initialValue: initial.url || '',
             rules: [

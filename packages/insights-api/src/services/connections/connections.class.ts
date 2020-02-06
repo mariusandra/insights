@@ -3,7 +3,7 @@ import { Application } from '../../declarations';
 
 export interface ConnectionData {
   _id?: string;
-  keyword: string;
+  name: string;
   url: string;
   structurePath: string;
   timeout: number

@@ -16,7 +16,7 @@ function Views () {
   const overlay = (
     <Menu>
       {pathname.includes('/explorer')
-        ? <Menu.Item shouldDismissPopover={false} onClick={openNew}>
+        ? <Menu.Item onClick={openNew}>
             <Icon type='plus' />
             Save this view
           </Menu.Item>
@@ -32,7 +32,6 @@ function Views () {
         <Menu.Item
           key={view._id}
           style={{maxWidth: 300}}
-          multiline
           icon='th-derived'
           onClick={() => openView(view._id)}>{view.name}</Menu.Item>
       ))}

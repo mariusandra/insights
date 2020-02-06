@@ -26,10 +26,10 @@ export default kea({
     loadConnections: true,
     connectionsLoaded: connections => ({ connections }),
 
-    addConnection: ({ keyword, url, structurePath, timeout }) => ({ keyword, url, structurePath, timeout }),
+    addConnection: ({ name, url, structurePath, timeout }) => ({ name, url, structurePath, timeout }),
     connectionAdded: (connection) => ({ connection }),
 
-    editConnection: (id, url, structurePath, timeout) => ({ id, url, structurePath, timeout }),
+    editConnection: (id, name, url, structurePath, timeout) => ({ id, name, url, structurePath, timeout }),
     connectionEdited: (connection) => ({ connection }),
 
     testConnection: (url, structurePath) => ({ url, structurePath }),
@@ -136,19 +136,19 @@ export default kea({
   selectors: ({ constants, selectors }) => ({
     sortedConnections: [
       () => [selectors.connections],
-      (connections) => Object.values(connections).sort((a, b) => (a.keyword || '').localeCompare(b.keyword || '')),
+      (connections) => Object.values(connections).sort((a, b) => (a.name || '').localeCompare(b.name || '')),
       PropTypes.array
     ],
 
     selectedConnection: [
       () => [selectors.sortedConnections, selectors.connection],
-      (sortedConnections, connection) => sortedConnections.filter(c => c.keyword === connection)[0],
+      (sortedConnections, connection) => sortedConnections.filter(c => c._id === connection)[0],
       PropTypes.object
     ],
 
     otherConnections: [
       () => [selectors.sortedConnections, selectors.connection],
-      (sortedConnections, connection) => sortedConnections.filter(c => c.keyword !== connection),
+      (sortedConnections, connection) => sortedConnections.filter(c => c._id !== connection),
       PropTypes.array
     ],
 
@@ -183,15 +183,15 @@ export default kea({
       actions.connectionsLoaded(connections.data)
     },
 
-    [actions.addConnection]: async function ({ keyword, url, structurePath, timeout }) {
-      const connection = await connectionsService.create({ keyword, url, structurePath, timeout })
+    [actions.addConnection]: async function ({ name, url, structurePath, timeout }) {
+      const connection = await connectionsService.create({ name, url, structurePath, timeout })
       actions.connectionAdded(connection)
-      actions.setExplorerConnection(keyword)
-      message.success(`Connection "${keyword}" added!`)
+      actions.setExplorerConnection(connection._id)
+      message.success(`Connection "${name}" added!`)
     },
 
-    [actions.editConnection]: async function ({ id, url, structurePath, timeout }) {
-      const connection = await connectionsService.patch(id, { url, structurePath, timeout })
+    [actions.editConnection]: async function ({ id, name, url, structurePath, timeout }) {
+      const connection = await connectionsService.patch(id, { name, url, structurePath, timeout })
       actions.connectionEdited(connection)
       message.success('Changes saved!')
     },

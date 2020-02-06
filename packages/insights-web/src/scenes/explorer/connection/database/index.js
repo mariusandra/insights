@@ -19,7 +19,7 @@ export default function Database () {
         <Menu.ItemGroup className='connection-menu-header-title' title={
           <>
             <Icon type="database" theme="filled" style={{ marginRight: 6 }} />
-            <span>{selectedConnection.keyword}</span>
+            <span>{selectedConnection.name}</span>
           </>
         }>
           <Menu.Item onClick={() => openEditConnection(selectedConnection._id)}>
@@ -32,9 +32,9 @@ export default function Database () {
       {selectedConnection ? <Menu.Divider /> : null}
 
       {otherConnections.map(connection => (
-        <Menu.Item key={connection._id} onClick={() => setConnection(connection.keyword)}>
+        <Menu.Item key={connection._id} onClick={() => setConnection(connection._id)}>
           <Icon type="database" />
-          {connection.keyword}
+          {connection.name}
         </Menu.Item>
       ))}
 
@@ -52,7 +52,7 @@ export default function Database () {
       <Dropdown overlay={menu} trigger={['click']}>
         <Button>
           <Icon type="database" theme="filled" />
-          <span className='button-text'>{isLoading ? '...' : (selectedConnection ? selectedConnection.keyword : 'Select Connection')}</span>
+          <span className='button-text'>{isLoading ? '...' : (selectedConnection ? selectedConnection.name : 'Select Connection')}</span>
           <Icon type="down" className='arrow' />
         </Button>
       </Dropdown>

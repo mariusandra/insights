@@ -99,7 +99,7 @@ export default kea({
       [actions.setConnections]: (_, payload) => {
         let newState = {}
         payload.connections.forEach(connection => {
-          newState[connection.keyword] = connection
+          newState[connection._id] = connection
         })
         return newState
       }

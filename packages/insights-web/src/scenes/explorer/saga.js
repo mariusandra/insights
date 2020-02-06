@@ -187,7 +187,7 @@ export default kea({
     const connectionInUrl = urlToState(window.location.search).connection
     let connection
 
-    if (connectionInUrl && connections.data.filter(c => c.keyword === connectionInUrl).length > 0) {
+    if (connectionInUrl && connections.data.filter(c => c._id === connectionInUrl).length > 0) {
       connection = connectionInUrl
       yield put(setConnection(connection))
       yield call(this.workers.loadStructure, connection)
@@ -206,16 +206,16 @@ export default kea({
       yield put(favouritesLoaded(response.data))
     },
 
-    loadStructure: function * (keyword) {
+    loadStructure: function * (connectionId) {
       const { setStructure } = this.actions
 
       try {
         const connections = yield explorerLogic.get('connections')
-        const connection = connections[keyword]
+        const connection = connections[connectionId]
 
         if (!connection) {
-          if (keyword !== '') {
-            message.error(`Connection "${keyword}" not found!`)
+          if (!connectionId) {
+            message.error(`Connection with ID "${connectionId}" not found!`)
           }
           yield put(setStructure({}))
           return
