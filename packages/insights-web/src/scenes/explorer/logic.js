@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 
 import { push } from 'connected-react-router'
 
+import connectionLogic from './connection/logic'
 import viewsLogic from 'scenes/header/views/logic'
 import stateToUrl from 'lib/explorer/state-to-url'
 
@@ -23,15 +24,16 @@ export default kea({
   path: () => ['scenes', 'explorer', 'index'],
 
   connect: {
+    actions: [
+      connectionLogic, ['setConnections', 'setConnectionId']
+    ],
     values: [
-      viewsLogic, ['sortedViews']
+      viewsLogic, ['sortedViews'],
+      connectionLogic, ['connections', 'connectionId']
     ]
   },
 
   actions: () => ({
-    setConnections: connections => ({ connections }),
-    setConnectionId: connectionId => ({ connectionId }),
-
     setStructure: structure => ({ structure }),
 
     setColumnsAndFilter: (columns, filter) => ({ columns, filter }),
@@ -94,19 +96,6 @@ export default kea({
   reducers: ({ actions }) => ({
     search: ['', PropTypes.string, {
       [actions.setSearch]: (_, payload) => payload.search
-    }],
-    connections: [{}, PropTypes.object, {
-      [actions.setConnections]: (_, payload) => {
-        let newState = {}
-        payload.connections.forEach(connection => {
-          newState[connection._id] = connection
-        })
-        return newState
-      }
-    }],
-    connectionId: [null, PropTypes.string, {
-      [actions.setConnectionId]: (_, payload) => payload.connectionId,
-      [actions.urlChanged]: (state, payload) => payload.connection || state
     }],
     // shape of each model
     structure: [{}, PropTypes.object, {
@@ -528,6 +517,14 @@ export default kea({
     * [actions.openUrl] (action) {
       const { url } = action.payload
       yield put(push(url))
+    }
+  }),
+
+  listeners: ({ actions, values }) => ({
+    [actions.urlChanged]: ({ connection }) => {
+      if (values.connectionId !== connection) {
+        actions.setConnectionId(connection)
+      }
     }
   })
 })

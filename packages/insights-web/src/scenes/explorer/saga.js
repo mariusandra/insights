@@ -6,7 +6,7 @@ import { LOCATION_CHANGE, push } from 'connected-react-router'
 import download from 'downloadjs'
 
 import explorerLogic from 'scenes/explorer/logic'
-import sharedConnectionsLogic from 'scenes/explorer/connection/shared-logic'
+import connectionsLogic from 'scenes/explorer/connection/logic'
 
 import getMeta from 'lib/explorer/get-meta'
 import urlToState from 'lib/explorer/url-to-state'
@@ -78,21 +78,21 @@ export default kea({
 
   connect: {
     props: [
-      explorerLogic, [
+      connectionsLogic, [
         'connections',
+      ],
+      explorerLogic, [
         'structure'
       ]
     ],
     actions: [
-      sharedConnectionsLogic, [
+      connectionsLogic, [
+        'setConnections',
+        'setConnectionId',
         'openAddConnection'
       ],
       explorerLogic, [
-        'setConnections',
-        'setConnectionId',
-
         'setStructure',
-
         'refreshData',
         'setResults',
         'setColumns',

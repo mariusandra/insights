@@ -2,8 +2,6 @@ import { kea } from 'kea'
 import PropTypes from 'prop-types'
 import { message, Modal } from 'antd'
 
-import explorerLogic from '../logic'
-import sharedLogic from './shared-logic'
 import client from 'lib/client'
 
 const connectionsService = client.service('connections')
@@ -12,19 +10,11 @@ const connectionTestService = client.service('connection-test')
 export default kea({
   path: () => ['scenes', 'connections', 'index'],
 
-  connect: {
-    values: [
-      explorerLogic, ['connectionId']
-    ],
-    actions: [
-      sharedLogic, ['openAddConnection'],
-      explorerLogic, ['setConnections as setExplorerConnections', 'setConnectionId as setExplorerConnectionId']
-    ]
-  },
-
   actions: () => ({
+    setConnectionId: connectionId => ({ connectionId }),
+
     loadConnections: true,
-    connectionsLoaded: connections => ({ connections }),
+    setConnections: connections => ({ connections }),
 
     addConnection: ({ name, url, structurePath, timeout }) => ({ name, url, structurePath, timeout }),
     connectionAdded: (connection) => ({ connection }),
@@ -36,6 +26,7 @@ export default kea({
     testSuccess: true,
     testFailure: true,
 
+    openAddConnection: (introMessage = false) => ({ introMessage }),
     confirmRemoveConnection: (id) => ({ id }),
     removeConnection: (id) => ({ id }),
     connectionRemoved: (id) => ({ id }),
@@ -50,11 +41,11 @@ export default kea({
   reducers: ({ actions }) => ({
     isLoading: [false, PropTypes.bool, {
       [actions.loadConnections]: () => true,
-      [actions.connectionsLoaded]: () => false
+      [actions.setConnections]: () => false
     }],
 
     connections: [{}, PropTypes.object, {
-      [actions.connectionsLoaded]: (_, payload) => {
+      [actions.setConnections]: (_, payload) => {
         let newState = {}
         payload.connections.forEach(connection => {
           newState[connection._id] = connection
@@ -71,6 +62,10 @@ export default kea({
         const { [payload.id]: discard, ...rest } = state // eslint-disable-line
         return rest
       }
+    }],
+
+    connectionId: [null, PropTypes.string, {
+      [actions.setConnectionId]: (_, payload) => payload.connectionId
     }],
 
     addIntroMessage: [false, PropTypes.bool, {
@@ -165,28 +160,16 @@ export default kea({
     }
   }),
 
-  sharedListeners: ({ actions, values }) => ({
-    updateExplorerConnections: () => {
-      const { connections } = values
-      actions.setExplorerConnections(Object.values(connections))
-    }
-  }),
-
   listeners: ({ actions, sharedListeners }) => ({
-    [actions.connectionsLoaded]: sharedListeners.updateExplorerConnections,
-    [actions.connectionAdded]: sharedListeners.updateExplorerConnections,
-    [actions.connectionEdited]: sharedListeners.updateExplorerConnections,
-    [actions.connectionRemoved]: sharedListeners.updateExplorerConnections,
-
     [actions.loadConnections]: async function () {
       const connections = await connectionsService.find({})
-      actions.connectionsLoaded(connections.data)
+      actions.setConnections(connections.data)
     },
 
     [actions.addConnection]: async function ({ name, url, structurePath, timeout }) {
       const connection = await connectionsService.create({ name, url, structurePath, timeout })
       actions.connectionAdded(connection)
-      actions.setExplorerConnectionId(connection._id)
+      actions.setConnectionId(connection._id)
       message.success(`Connection "${name}" added!`)
     },
 
@@ -212,7 +195,7 @@ export default kea({
     [actions.removeConnection]: async function ({ id }) {
       await connectionsService.remove(id)
       actions.connectionRemoved(id)
-      actions.setExplorerConnectionId('')
+      actions.setConnectionId('')
     },
 
     [actions.testConnection]: async function ({ url, structurePath }) {
