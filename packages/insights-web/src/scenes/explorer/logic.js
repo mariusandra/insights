@@ -30,7 +30,7 @@ export default kea({
 
   actions: () => ({
     setConnections: connections => ({ connections }),
-    setConnection: connection => ({ connection }),
+    setConnectionId: connectionId => ({ connectionId }),
 
     setStructure: structure => ({ structure }),
 
@@ -104,8 +104,8 @@ export default kea({
         return newState
       }
     }],
-    connection: [null, PropTypes.string, {
-      [actions.setConnection]: (_, payload) => payload.connection,
+    connectionId: [null, PropTypes.string, {
+      [actions.setConnectionId]: (_, payload) => payload.connectionId,
       [actions.urlChanged]: (state, payload) => payload.connection || state
     }],
     // shape of each model
@@ -383,7 +383,7 @@ export default kea({
 
     url: [
       () => [
-        selectors.connection, selectors.columns, selectors.sort, selectors.treeState, selectors.graphTimeFilter,
+        selectors.connectionId, selectors.columns, selectors.sort, selectors.treeState, selectors.graphTimeFilter,
         selectors.facetsColumn, selectors.facetsCount, selectors.filter, selectors.graphControls
       ],
       (connection, columns, sort, treeState, graphTimeFilter, facetsColumn, facetsCount, filter, graphControls) => {
@@ -403,7 +403,7 @@ export default kea({
     ],
 
     recommendedViews: [
-      () => [selectors.connection, selectors.selectedModel, selectors.structure, selectors.modelFavourites],
+      () => [selectors.connectionId, selectors.selectedModel, selectors.structure, selectors.modelFavourites],
       (connection, selectedModel, structure, modelFavourites) => {
         if (!selectedModel) {
           return []

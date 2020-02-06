@@ -11,7 +11,7 @@ export default function Database () {
   const { selectedConnection, otherConnections, isLoading } = useValues(connectionsLogic)
 
   const { openAddConnection, openEditConnection } = useActions(connectionsLogic)
-  const { setConnection } = useActions(explorerLogic)
+  const { setConnectionId } = useActions(explorerLogic)
 
   const menu = (
     <Menu>
@@ -32,7 +32,7 @@ export default function Database () {
       {selectedConnection ? <Menu.Divider /> : null}
 
       {otherConnections.map(connection => (
-        <Menu.Item key={connection._id} onClick={() => setConnection(connection._id)}>
+        <Menu.Item key={connection._id} onClick={() => setConnectionId(connection._id)}>
           <Icon type="database" />
           {connection.name}
         </Menu.Item>

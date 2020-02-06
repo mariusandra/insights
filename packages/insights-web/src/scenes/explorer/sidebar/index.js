@@ -28,7 +28,7 @@ const logic = connect({
   ],
   props: [
     explorerLogic, [
-      'connection',
+      'connectionId',
       'search',
       'models',
       'filteredModels',
@@ -86,9 +86,9 @@ class ExplorerTree extends Component {
   }
 
   renderModels = () => {
-    const { connection, models, filteredModels, search } = this.props
+    const { connectionId, models, filteredModels, search } = this.props
 
-    if (!connection) {
+    if (!connectionId) {
       return <p style={{ textAlign: 'center', padding: '0 20px' }}>Please select a connection</p>
     }
 

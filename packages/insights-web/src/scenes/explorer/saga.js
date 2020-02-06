@@ -89,7 +89,7 @@ export default kea({
       ],
       explorerLogic, [
         'setConnections',
-        'setConnection',
+        'setConnectionId',
 
         'setStructure',
 
@@ -135,7 +135,7 @@ export default kea({
   takeEvery: ({ actions, workers }) => ({
     [LOCATION_CHANGE]: workers.urlToState,
     [actions.digDeeper]: workers.digDeeper,
-    [actions.setConnection]: workers.setConnection
+    [actions.setConnectionId]: workers.setConnectionId
   }),
 
   takeLatest: ({ actions, workers }) => ({
@@ -171,7 +171,7 @@ export default kea({
   }),
 
   start: function * () {
-    const { setConnections, setConnection, openAddConnection } = this.actions
+    const { setConnections, setConnectionId, openAddConnection } = this.actions
 
     window.document.title = 'Insights Explorer'
 
@@ -185,12 +185,12 @@ export default kea({
     yield put(setConnections(connections.data))
 
     const connectionInUrl = urlToState(window.location.search).connection
-    let connection
+    let connectionId
 
     if (connectionInUrl && connections.data.filter(c => c._id === connectionInUrl).length > 0) {
-      connection = connectionInUrl
-      yield put(setConnection(connection))
-      yield call(this.workers.loadStructure, connection)
+      connectionId = connectionInUrl
+      yield put(setConnectionId(connectionId))
+      yield call(this.workers.loadStructure, connectionId)
     }
 
     yield fork(this.workers.loadFavourites)
@@ -229,14 +229,14 @@ export default kea({
       }
     },
 
-    setConnection: function * (action) {
+    setConnectionId: function * (action) {
       const { clear } = this.actions
-      const { connection } = action.payload
+      const { connectionId } = action.payload
       const urlValues = urlToState(window.location.search)
       const { structure } = this.values
 
-      if (urlValues.connection !== connection || !structure || Object.keys(structure).length === 0) {
-        yield call(this.workers.loadStructure, connection)
+      if (urlValues.connection !== connectionId || !structure || Object.keys(structure).length === 0) {
+        yield call(this.workers.loadStructure, connectionId)
         yield put(clear())
       }
     },
@@ -249,10 +249,10 @@ export default kea({
       }
 
       const {
-        connection,
+        connectionId,
         url, columns, offsetTarget, offset, limitTarget, limit, sort, filter, graphTimeFilter,
         facetsCount, facetsColumn, exportTitle, graphControls, graph
-      } = yield explorerLogic.fetch('connection', 'url', 'columns', 'offset', 'limit', 'offsetTarget', 'limitTarget', 'sort', 'filter', 'graphTimeFilter', 'facetsCount', 'facetsColumn', 'exportTitle', 'graphControls', 'graph')
+      } = yield explorerLogic.fetch('connectionId', 'url', 'columns', 'offset', 'limit', 'offsetTarget', 'limitTarget', 'sort', 'filter', 'graphTimeFilter', 'facetsCount', 'facetsColumn', 'exportTitle', 'graphControls', 'graph')
 
       // if paginating and fetching what is currently there (horizontal scroll)
       if (action.type === setPagination.toString() && action.payload.offset === offset && action.payload.limit === limit) {
@@ -277,7 +277,7 @@ export default kea({
       if (columns.length > 0) {
         try {
           const params = {
-            connection,
+            connection: connectionId,
 
             columns,
             sort,
@@ -347,15 +347,15 @@ export default kea({
       const values = urlToState(search)
 
       // fetch a new structure if the connection changes
-      const oldConnection = yield explorerLogic.get('connection')
-      const newConnection = values.connection
+      const oldConnectionId = yield explorerLogic.get('connectionId')
+      const newConnectionId = values.connectionId
 
-      if (newConnection && newConnection !== oldConnection) {
+      if (newConnectionId && newConnectionId !== oldConnectionId) {
         const connections = yield explorerLogic.get('connections')
-        if (connections[newConnection]) {
-          yield call(this.workers.loadStructure, newConnection)
+        if (connections[newConnectionId]) {
+          yield call(this.workers.loadStructure, newConnectionId)
         } else {
-          message.error(`Connection "${newConnection}" not found!`)
+          message.error(`Connection with ID "${newConnectionId}" not found!`)
         }
       }
 

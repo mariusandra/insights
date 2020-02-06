@@ -14,11 +14,11 @@ export default kea({
 
   connect: {
     values: [
-      explorerLogic, ['connection']
+      explorerLogic, ['connectionId']
     ],
     actions: [
       sharedLogic, ['openAddConnection'],
-      explorerLogic, ['setConnections as setExplorerConnections', 'setConnection as setExplorerConnection']
+      explorerLogic, ['setConnections as setExplorerConnections', 'setConnectionId as setExplorerConnectionId']
     ]
   },
 
@@ -141,14 +141,14 @@ export default kea({
     ],
 
     selectedConnection: [
-      () => [selectors.sortedConnections, selectors.connection],
-      (sortedConnections, connection) => sortedConnections.filter(c => c._id === connection)[0],
+      () => [selectors.sortedConnections, selectors.connectionId],
+      (sortedConnections, connectionId) => sortedConnections.filter(c => c._id === connectionId)[0],
       PropTypes.object
     ],
 
     otherConnections: [
-      () => [selectors.sortedConnections, selectors.connection],
-      (sortedConnections, connection) => sortedConnections.filter(c => c._id !== connection),
+      () => [selectors.sortedConnections, selectors.connectionId],
+      (sortedConnections, connectionId) => sortedConnections.filter(c => c._id !== connectionId),
       PropTypes.array
     ],
 
@@ -186,7 +186,7 @@ export default kea({
     [actions.addConnection]: async function ({ name, url, structurePath, timeout }) {
       const connection = await connectionsService.create({ name, url, structurePath, timeout })
       actions.connectionAdded(connection)
-      actions.setExplorerConnection(connection._id)
+      actions.setExplorerConnectionId(connection._id)
       message.success(`Connection "${name}" added!`)
     },
 
@@ -212,7 +212,7 @@ export default kea({
     [actions.removeConnection]: async function ({ id }) {
       await connectionsService.remove(id)
       actions.connectionRemoved(id)
-      actions.setExplorerConnection('')
+      actions.setExplorerConnectionId('')
     },
 
     [actions.testConnection]: async function ({ url, structurePath }) {
