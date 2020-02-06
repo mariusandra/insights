@@ -6,15 +6,19 @@ import client from 'lib/client'
 
 const connectionsService = client.service('connections')
 const connectionTestService = client.service('connection-test')
+const subsetsService = client.service('subsets')
 
 export default kea({
   path: () => ['scenes', 'connections', 'index'],
 
   actions: () => ({
-    setConnectionId: connectionId => ({ connectionId }),
-
     loadConnections: true,
     setConnections: connections => ({ connections }),
+    setConnectionId: connectionId => ({ connectionId }),
+
+    loadSubsets: connectionId => ({ connectionId }),
+    setSubsets: subsets => ({ subsets }),
+    setSubsetId: subsetId => ({ subsetId }),
 
     addConnection: ({ name, url, structurePath, timeout }) => ({ name, url, structurePath, timeout }),
     connectionAdded: (connection) => ({ connection }),
@@ -39,9 +43,15 @@ export default kea({
   }),
 
   reducers: ({ actions }) => ({
-    isLoading: [false, PropTypes.bool, {
+    isLoadingConnections: [false, PropTypes.bool, {
       [actions.loadConnections]: () => true,
-      [actions.setConnections]: () => false
+      [actions.setConnections]: () => false,
+    }],
+
+    isLoadingSubsets: [false, PropTypes.bool, {
+      [actions.loadConnections]: () => true,
+      [actions.loadSubsets]: () => true,
+      [actions.setSubsets]: () => false
     }],
 
     connections: [{}, PropTypes.object, {
@@ -66,6 +76,22 @@ export default kea({
 
     connectionId: [null, PropTypes.string, {
       [actions.setConnectionId]: (_, payload) => payload.connectionId
+    }],
+
+    subsets: [{}, PropTypes.object, {
+      [actions.setConnectionId]: () => ({}),
+      [actions.setSubsets]: (_, payload) => {
+        let newState = {}
+        payload.subsets.forEach(subset => {
+          newState[subset._id] = subset
+        })
+        return newState
+      },
+    }],
+
+    subsetId: [null, PropTypes.string, {
+      [actions.setConnectionId]: () => null,
+      [actions.setSubsetId]: (_, payload) => payload.subsetId
     }],
 
     addIntroMessage: [false, PropTypes.bool, {
@@ -163,7 +189,17 @@ export default kea({
   listeners: ({ actions, sharedListeners }) => ({
     [actions.loadConnections]: async function () {
       const connections = await connectionsService.find({})
-      actions.setConnections(connections.data)
+      actions.setConnections(connections)
+    },
+
+    [actions.setConnectionId]: async function ({ connectionId }) {
+      actions.loadSubsets(connectionId)
+    },
+
+    [actions.loadSubsets]: async function ({ connectionId }, breakpoint) {
+      const subsets = await subsetsService.find({ query: { connectionId } })
+      breakpoint()
+      actions.setSubsets(subsets)
     },
 
     [actions.addConnection]: async function ({ name, url, structurePath, timeout }) {

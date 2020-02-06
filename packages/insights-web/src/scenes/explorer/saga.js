@@ -182,12 +182,12 @@ export default kea({
       return
     }
 
-    yield put(setConnections(connections.data))
+    yield put(setConnections(connections))
 
     const connectionInUrl = urlToState(window.location.search).connection
     let connectionId
 
-    if (connectionInUrl && connections.data.filter(c => c._id === connectionInUrl).length > 0) {
+    if (connectionInUrl && connections.filter(c => c._id === connectionInUrl).length > 0) {
       connectionId = connectionInUrl
       yield put(setConnectionId(connectionId))
       yield call(this.workers.loadStructure, connectionId)

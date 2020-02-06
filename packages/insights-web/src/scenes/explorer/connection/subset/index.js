@@ -3,11 +3,12 @@ import { Menu, Button, Dropdown, Icon } from 'antd'
 
 import SubsetForm from 'scenes/explorer/connection/subset/form'
 
-import { useActions } from 'kea'
+import { useActions, useValues } from 'kea'
 
 import connectionsLogic from 'scenes/explorer/connection/logic'
 
 export default function Subset () {
+  const { isLoadingSubsets, subsets } = useValues(connectionsLogic)
   const { openSubset } = useActions(connectionsLogic)
 
   const menu = (
@@ -45,7 +46,7 @@ export default function Subset () {
       <Dropdown overlay={menu} trigger={['click']}>
         <Button>
           <Icon type="bars" />
-          All Data
+          {isLoadingSubsets ? '...' : 'All Data'}
           <Icon type="down" className='arrow' />
         </Button>
       </Dropdown>

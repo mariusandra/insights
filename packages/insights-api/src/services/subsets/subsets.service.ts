@@ -15,7 +15,7 @@ declare module '../../declarations' {
 export default function (app: Application) {
   const options = {
     Model: createModel(app),
-    paginate: app.get('paginate'),
+    paginate: false,
     multi: ['remove']
   };
 
