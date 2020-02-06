@@ -18,7 +18,8 @@ export default function (app: Application) {
 
   const options = {
     Model,
-    paginate
+    paginate,
+    multi: ['remove']
   };
 
   // Initialize our service with any options it requires

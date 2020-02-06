@@ -31,6 +31,15 @@ const removeAllSubsets = async context => {
   return context
 }
 
+const removeAllViews = async context => {
+  const { app, result: connection } = context
+
+  const viewsService = app.service('views')
+  await viewsService.remove(null, { query: { connectionId: connection._id } })
+
+  return context
+}
+
 export default {
   before: {
     all: [ authenticate('jwt') ],
@@ -49,7 +58,7 @@ export default {
     create: [ addAllDataSubset ],
     update: [],
     patch: [],
-    remove: [ removeAllSubsets ]
+    remove: [ removeAllSubsets, removeAllViews ]
   },
 
   error: {
