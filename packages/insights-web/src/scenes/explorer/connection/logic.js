@@ -258,7 +258,12 @@ export default kea({
         return
       }
 
-      const subsets = await subsetsService.find({ query: { connectionId } })
+      const subsets = await subsetsService.find({
+        query: {
+          connectionId,
+          $select: ['_id', 'name', 'type', 'connectionId']
+        }
+      })
       breakpoint()
       actions.setSubsets(subsets, connectionId)
 
