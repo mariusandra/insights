@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Divider, Form, Modal, Alert, Input, Select } from 'antd'
+import { Button, Divider, Form, Modal, Alert, Input, Checkbox } from 'antd'
 import { useActions, useValues } from 'kea'
 
 import connectionsLogic from '../../logic'
@@ -18,8 +18,8 @@ function SubsetForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFi
 
     validateFieldsAndScroll((err, values) => {
       if (!err) {
-        const { name, newModels, newFields } = values
-        saveSubset({ name, newModels, newFields })
+        const { name, addNewModels, addNewFields } = values
+        saveSubset({ name, addNewModels, addNewFields })
       }
     })
   }
@@ -79,24 +79,18 @@ function SubsetForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFi
               })(<Input placeholder='All Data' disabled style={{width: '100%'}} />)}
             </Form.Item>
 
-            <Form.Item label='New Models' extra='What to do with models that are added in the future'>
-              {getFieldDecorator('newModels', {
-                initialValue: subset.newModels
-              })(
-                <Select style={{width: '100%'}}>
-                  <Select.Option value="add">Add automatically</Select.Option>
-                  <Select.Option value="skip">Never add automatically</Select.Option>
-                </Select>)}
+            <Form.Item wrapperCol={{ offset: 5, span: 19 }}>
+              {getFieldDecorator('addNewModels', {
+                initialValue: subset.addNewModels,
+                valuePropName: 'checked'
+              })(<Checkbox>Automatically add new models when they are added to the database</Checkbox>)}
             </Form.Item>
 
-            <Form.Item label='New Fields' extra='What to do with new fields in included models'>
-              {getFieldDecorator('newFields', {
-                initialValue: subset.newFields
-              })(
-                <Select style={{width: '100%'}}>
-                  <Select.Option value="add">Add automatically</Select.Option>
-                  <Select.Option value="skip">Never add automatically</Select.Option>
-                </Select>)}
+            <Form.Item wrapperCol={{ offset: 5, span: 19 }}>
+              {getFieldDecorator('addNewFields', {
+                initialValue: subset.addNewFields,
+                valuePropName: 'checked'
+              })(<Checkbox>Automatically add new fields in selected models</Checkbox>)}
             </Form.Item>
           </Form>
 

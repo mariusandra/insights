@@ -6,8 +6,8 @@ interface SubsetData {
   connectionId: string,
   type: 'all_data' | 'custom',
   name: string,
-  newModels: 'add' | 'skip',
-  newFields: 'add' | 'skip',
+  addNewModels: boolean,
+  addNewFields: boolean,
   selection: { [key: string]: false | { [key: string]: boolean } }
 }
 

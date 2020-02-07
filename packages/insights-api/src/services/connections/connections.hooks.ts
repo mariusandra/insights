@@ -12,8 +12,8 @@ const addAllDataSubset = async context => {
     connectionId: connection._id,
     type: 'all_data',
     name: 'All Data',
-    newModels: 'add',
-    newFields: 'add',
+    addNewModels: true,
+    addNewFields: true,
     selection: {}
   }
 

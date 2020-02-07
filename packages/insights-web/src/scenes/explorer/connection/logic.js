@@ -45,7 +45,8 @@ export default kea({
 
     openSubset: true,
     closeSubset: true,
-    fullSubsetLoaded: subset => ({ subset })
+    subsetEdited: subset => ({ subset }),
+    fullSubsetLoaded: (subset, structure) => ({ subset, structure })
   }),
 
   reducers: ({ actions }) => ({
@@ -96,8 +97,11 @@ export default kea({
         })
         return newState
       },
+      [actions.subsetEdited]: (state, { subset }) => ({
+        ...state,
+        [subset._id]: { _id: subset._id, name: subset.name, type: subset.type, connectionId: subset.connectionId }
+      })
     }],
-
     subsetId: [null, PropTypes.string, {
       [actions.setConnectionId]: (_, payload) => payload.subsetId || null,
       [actions.setSubsetId]: (_, payload) => payload.subsetId,
@@ -170,6 +174,11 @@ export default kea({
     subset: [null, PropTypes.object, {
       [actions.openSubset]: () => null,
       [actions.fullSubsetLoaded]: (_, payload) => payload.subset,
+    }],
+
+    subsetStructureInput: [{}, PropTypes.object, {
+      [actions.openSubset]: () => ({}),
+      [actions.fullSubsetLoaded]: (_, payload) => payload.structure,
     }]
   }),
 
@@ -354,10 +363,15 @@ export default kea({
     },
 
     [actions.openSubset]: async function (_, breakpoint) {
-      const { subsetId } = values
-      const subset = await subsetsService.get(subsetId)
+      const { subsetId, connectionId } = values
+
+      let [subset, structure] = await Promise.all([
+        subsetsService.get(subsetId),
+        structureService.get(connectionId)
+      ]);
       breakpoint()
-      actions.fullSubsetLoaded(subset)
+
+      actions.fullSubsetLoaded(subset, structure)
     }
   })
 })

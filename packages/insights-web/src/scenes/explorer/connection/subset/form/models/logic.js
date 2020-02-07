@@ -1,7 +1,6 @@
 import { kea } from 'kea'
 import naturalCompare from 'string-natural-compare'
 
-import explorerLogic from 'scenes/explorer/logic'
 import connectionLogic from '../../../logic'
 
 const arrayToObjectKeys = (arr, defaultValue = true) => {
@@ -26,10 +25,54 @@ const getAllFields = (structure) => {
   return allFields
 }
 
+function checkedKeysForSubsetAndStructure (subset, structure) {
+  const { addNewModels, addNewFields } = subset
+  const selection = subset.selection || {}
+
+  let checkedKeys = []
+
+  Object.entries(structure).forEach(([model, modelStructure]) => {
+    const modelKeys = [
+      ...Object.keys(modelStructure.columns),
+      ...Object.keys(modelStructure.links),
+      ...Object.keys(modelStructure.custom)
+    ]
+
+    if (typeof selection[model] === 'object') {
+      let allSelected = true
+
+      modelKeys.forEach(key => {
+        const keySelection = selection[model][key]
+        if (keySelection === true) {
+          checkedKeys.push(`${model}.${key}`)
+        } else if (keySelection === false) {
+          allSelected = false
+        } else if (typeof keySelection === 'undefined') {
+          if (addNewFields) {
+            checkedKeys.push(`${model}.${key}`)
+          } else {
+            allSelected = false
+          }
+        }
+      })
+
+      if (allSelected) {
+        checkedKeys.push(model)
+      }
+    } else if (typeof selection[model] === 'undefined' && addNewModels) {
+      checkedKeys = [...checkedKeys, model, ...modelKeys.map(k => `${model}.${k}`)]
+    }
+  })
+
+  checkedKeys.sort()
+
+  return checkedKeys
+}
+
 export default kea({
   connect: {
     values: [
-      explorerLogic, ['structure']
+      connectionLogic, ['subsetStructureInput as structure']
     ],
     actions: [
       connectionLogic, ['openSubset', 'fullSubsetLoaded']
@@ -47,6 +90,7 @@ export default kea({
 
   reducers: ({ actions, selectors }) => ({
     checkedKeys: [[], {
+      [actions.openSubset]: () => ([]),
       [actions.setCheckedKeys]: (_, payload) => payload.checkedKeys,
     }],
     editingColumn: [null, {
@@ -133,8 +177,9 @@ export default kea({
   }),
 
   listeners: ({ actions, values }) => ({
-    [actions.openSubset]: () => {
-      actions.setCheckedKeys(getAllFields(values.structure))
+    [actions.fullSubsetLoaded]: ({ subset, structure }) => {
+      const checkedKeys = checkedKeysForSubsetAndStructure(subset, structure)
+      actions.setCheckedKeys(checkedKeys)
     },
 
     // add and remove links to models that were added/removed before saving to a reducer
