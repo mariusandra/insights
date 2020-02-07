@@ -1,6 +1,6 @@
 import { kea } from 'kea'
 
-import { message } from 'antd'
+import { message, Modal } from 'antd'
 
 import client from 'lib/client'
 
@@ -17,13 +17,15 @@ export default kea({
       connectionsLogic, ['subset', 'connectionId']
     ],
     actions: [
-      connectionsLogic, ['subsetEdited', 'closeSubset', 'loadStructure'],
-      explorerLogic, ['refreshData']
+      explorerLogic, ['refreshData'],
+      connectionsLogic, ['setConnectionId', 'subsetEdited', 'subsetRemoved', 'closeSubset', 'loadStructure', 'loadSubsets']
     ]
   },
 
   actions: () => ({
-    saveSubset: (formValues) => ({ formValues })
+    saveSubset: (formValues) => ({ formValues }),
+    confirmRemoveSubset: subsetId => ({ subsetId }),
+    removeSubset: subsetId => ({ subsetId })
   }),
 
   listeners: ({ actions, values }) => ({
@@ -42,7 +44,37 @@ export default kea({
       actions.closeSubset()
       actions.loadStructure(connectionId, subsetId)
       actions.refreshData()
-      message.success('Subset saved!')
+
+      if (subsetId) {
+        message.success(`Subset "${subset.name}" updated!`)
+      } else {
+        message.success(`Subset "${subset.name}" created!`)
+        actions.setConnectionId(connectionId, subset._id)
+      }
+    },
+    [actions.confirmRemoveSubset]: async ({ subsetId }) => {
+      const { subset: { name } } = values
+
+      Modal.confirm({
+        title: `Delete the subset "${name}"?`,
+        content: 'This can not be undone!',
+        okText: 'Yes',
+        okType: 'danger',
+        cancelText: 'No',
+        onOk () {
+          actions.removeSubset(subsetId)
+        }
+      })
+    },
+    [actions.removeSubset]: async ({ subsetId }) => {
+      const { subset: { connectionId, name } } = values
+      await subsetsService.remove(subsetId)
+      actions.subsetRemoved(subsetId)
+      actions.closeSubset()
+      actions.setConnectionId(connectionId)
+      actions.loadSubsets(connectionId)
+      actions.refreshData()
+      message.success(`Subset "${name}" removed!`)
     }
   })
 })

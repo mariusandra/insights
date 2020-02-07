@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, Divider, Form, Modal, Alert, Input, Checkbox } from 'antd'
+import { Button, Divider, Form, Modal, Alert, Input, Checkbox, Icon } from 'antd'
 import { useActions, useValues } from 'kea'
 
 import connectionsLogic from '../../logic'
@@ -11,7 +11,7 @@ function SubsetForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFi
   const { isSubsetOpen, subset } = useValues(connectionsLogic)
   const { closeSubset } = useActions(connectionsLogic)
   const { isSaving } = useValues(logic)
-  const { saveSubset } = useActions(logic)
+  const { saveSubset, confirmRemoveSubset } = useActions(logic)
 
   const handleAdd = (e) => {
     e.preventDefault()
@@ -33,6 +33,10 @@ function SubsetForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFi
       canOutsideClickClose
       width='85%'
       footer={[
+        subset && subset._id && subset.type === 'custom' ? <Button key="delete" onClick={() => confirmRemoveSubset(subset._id)} type='link' style={{ float: 'left' }}>
+          <Icon type='delete' theme="filled" />
+          Delete
+        </Button> : null,
         <Button key="back" onClick={closeSubset}>
           Cancel
         </Button>,

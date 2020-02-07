@@ -46,6 +46,7 @@ export default kea({
     editSubset: true,
     closeSubset: true,
     subsetEdited: subset => ({ subset }),
+    subsetRemoved: subsetId => ({ subsetId }),
     fullSubsetLoaded: (subset, structure) => ({ subset, structure })
   }),
 
@@ -86,7 +87,8 @@ export default kea({
     }],
 
     subsetsLoadedForConnectionId: [null, PropTypes.string, {
-      [actions.setSubsets]: (_, payload) => payload.connectionId
+      [actions.setSubsets]: (_, payload) => payload.connectionId,
+      [actions.subsetRemoved]: () => null
     }],
 
     subsets: [{}, PropTypes.object, {
@@ -100,7 +102,11 @@ export default kea({
       [actions.subsetEdited]: (state, { subset }) => ({
         ...state,
         [subset._id]: { _id: subset._id, name: subset.name, type: subset.type, connectionId: subset.connectionId }
-      })
+      }),
+      [actions.subsetRemoved]: (state, { subsetId }) => {
+        const { [subsetId]: _discard, ...rest } = state
+        return rest
+      }
     }],
 
     subsetId: [null, PropTypes.string, {
@@ -326,7 +332,7 @@ export default kea({
 
     [actions.confirmRemoveConnection]: async function ({ id }) {
       Modal.confirm({
-        title: 'Are you sure delete this connection?',
+        title: `Delete the connection "${values.selectedConnection.name}"?`,
         content: 'This can not be undone!',
         okText: 'Yes',
         okType: 'danger',
