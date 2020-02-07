@@ -17,23 +17,26 @@ async function initInsights ({ dev = false, login = undefined }) {
   const configFolder = path.join(process.cwd(), '.insights')
 
   if (fs.existsSync(configFolder)) {
-    console.error('!! Fatal Error! The folder ".insights" already exists. Could not complete init.')
+    console.error('!! Fatal Error! The folder ".insights" already exists. ')
+    console.error('   Could not complete init.')
     process.exit(1)
   }
 
-  console.log('This script will create a folder ".insights", which will be used to store config data.')
-  console.log('Please add it to .gitignore if you\'re running this script inside a project folder!')
+  console.log('This script will create a folder ".insights", which will be used to store')
+  console.log('config data. Please add it to .gitignore if you\'re running this script')
+  console.log('inside a project folder!')
   console.log('')
 
   if (login === undefined) {
     let repeat = true
 
-    console.log('Do you wish to setup Insights in "login" mode, requiring authentication to access the interface')
-    console.log('or in standalone "loginless" mode, which is practical only when running in localhost.')
+    console.log('Do you wish to setup Insights in "login" mode, requiring authentication to')
+    console.log('access the interface or in standalone "loginless" mode, which is practical')
+    console.log('only when running in localhost.')
     console.log('')
 
     while (repeat) {
-      const answer = (await prompt('Setup Insights with user accounts and authentication? [Y/n]: ')).trim()
+      const answer = (await prompt('Setup Insights in "login" mode? (Y/n): ')).trim()
       const letter = answer.toLowerCase()[0]
 
       if (answer === '' || letter === 'y' || letter === 'n') {
