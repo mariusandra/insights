@@ -29,7 +29,7 @@ export default kea({
     ],
     values: [
       viewsLogic, ['sortedViews'],
-      connectionLogic, ['connections', 'connectionId', 'structure', 'connectionString']
+      connectionLogic, ['connections', 'connectionId', 'subsetId', 'structure', 'connectionString']
     ]
   },
 
@@ -327,10 +327,12 @@ export default kea({
     ],
 
     savedViews: [
-      () => [selectors.selectedModel, selectors.sortedViews],
-      (model, sortedViews) => {
+      () => [selectors.connectionId, selectors.subsetId, selectors.selectedModel, selectors.sortedViews],
+      (connectionId, subsetId, model, sortedViews) => {
         if (sortedViews) {
-          return sortedViews.filter(view => view.path.indexOf(`&columns=${model}.`) >= 0)
+          return sortedViews.filter(view => view.connectionId === connectionId &&
+                                            view.subsetId === subsetId &&
+                                            view.path.indexOf(`&columns=${model}.`) >= 0)
         }
         return []
       },

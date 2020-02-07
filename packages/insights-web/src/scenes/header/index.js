@@ -13,10 +13,25 @@ import authLogic from 'scenes/auth'
 import headerLogic from 'scenes/header/logic'
 import sceneSaga from 'scenes/header/saga'
 import viewsSaga from 'scenes/header/views/saga'
+import { Modal } from 'antd'
 
 const locationSelector = state => state.router.location
 
 const pathHistoryReducer = (state, { page, url }) => ({ ...state, [page]: url })
+
+function openDashboards () {
+  Modal.info({
+    title: 'DashboardsNotFoundException',
+    content: (
+      <div>
+        <p>You're using an early release of Insights which doesn't yet support Dashboards.</p>
+        <p>Please consider sponsoring this project if you want to see dashboards implemented quickly!</p>
+        <p><a href='https://github.com/sponsors/mariusandra' target='_blank' rel="noopener noreferrer">https://github.com/sponsors/mariusandra</a></p>
+      </div>
+    ),
+    onOk() {},
+  });
+}
 
 export default function HeaderScene () {
   useMountedLogic(sceneSaga)
@@ -44,7 +59,7 @@ export default function HeaderScene () {
         <span className='header-link selected' onClick={() => openLocation(pathHistory['explorer'] || `/explorer`)}>
           Explorer
         </span>
-        <span className='header-link'>
+        <span className='header-link' onClick={openDashboards}>
           Dashboard
         </span>
       </div>

@@ -26,7 +26,7 @@ function Views () {
           </Menu.Item>
       }
 
-      <Menu.Divider />
+      {sortedViews.length > 0 ? <Menu.Divider /> : null}
 
       {sortedViews.map(view => (
         <Menu.Item
