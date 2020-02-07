@@ -3,22 +3,9 @@ import './styles.scss'
 import React from 'react'
 import { useActions, useValues } from 'kea'
 import { Tree, Icon, Tag, Button, Tooltip } from 'antd'
-import EditColumn from './edit-column'
+import EditColumn, { columnIcon, fieldIcon } from './edit-column'
 
 import logic from './logic'
-
-const icons = {
-  column: 'tag',
-  link: 'link',
-  custom: 'form'
-}
-
-const columnIcon = {
-  number: 'number',
-  time: 'clock-circle',
-  string: 'font-size',
-  boolean: 'tag'
-}
 
 const ModelTitle = ({ model, ignoredColumnCount }) => {
   const diff = ignoredColumnCount[model] || 0
@@ -87,7 +74,7 @@ export default function Models () {
             {sortedStructure[model].map(field => (
               <Tree.TreeNode
                 disabled={field.type === 'link' && !checkedModelsLookup[field.meta.model]}
-                switcherIcon={<Icon type={icons[field.type]} />}
+                switcherIcon={<Icon type={fieldIcon[field.type]} />}
                 key={`${model}.${field.key}`}
                 title={<FieldTitle structure={structure} model={model} field={field} editColumn={editColumn} />}
               />
