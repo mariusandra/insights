@@ -2272,6 +2272,13 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
+"@types/helmet@^0.0.45":
+  version "0.0.45"
+  resolved "https://registry.yarnpkg.com/@types/helmet/-/helmet-0.0.45.tgz#3eab6550a4e19acf86012596a7f1981529480fd5"
+  integrity sha512-PsLZI1NqKpXvsMZxh66xAZtpKiTeW+swY8a8LnCNSBbM/mvwU41P3BYoEqkJM9RbITPsq4uhIH0NkIsL9fzPbg==
+  dependencies:
+    "@types/express" "*"
+
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0":
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/@types/istanbul-lib-coverage/-/istanbul-lib-coverage-2.0.1.tgz#42995b446db9a48a11a07ec083499a860e9138ff"
@@ -8450,7 +8457,7 @@ helmet-csp@2.9.4:
     content-security-policy-builder "2.1.0"
     dasherize "2.0.0"
 
-helmet@3.21.2:
+helmet@3.21.2, helmet@^3.20.0:
   version "3.21.2"
   resolved "https://registry.yarnpkg.com/helmet/-/helmet-3.21.2.tgz#7e2a19d5f6d898a77b5d2858e8e4bb2cda59f19f"
   integrity sha512-okUo+MeWgg00cKB8Csblu8EXgcIoDyb5ZS/3u0W4spCimeVuCUvVZ6Vj3O2VJ1Sxpyb8jCDvzu0L1KKT11pkIg==
@@ -8966,6 +8973,33 @@ inquirer@^7.0.0:
     string-width "^4.1.0"
     strip-ansi "^5.1.0"
     through "^2.3.6"
+
+insights-api@0.0.12:
+  version "0.0.12"
+  resolved "https://registry.yarnpkg.com/insights-api/-/insights-api-0.0.12.tgz#84a2e9df0ce687014120538151a199fad05e0f2e"
+  integrity sha512-vUJBAWdu/y8g7EoXNCtbCG3zGoXD9vfGgu1DCraRNLV/6yN1coXIn1SRiyoUjYbcOXhEiYV/+yZDr1nPh3B7zw==
+  dependencies:
+    "@feathersjs/authentication" "^4.5.0"
+    "@feathersjs/authentication-local" "^4.5.0"
+    "@feathersjs/authentication-oauth" "^4.5.0"
+    "@feathersjs/configuration" "^4.5.0"
+    "@feathersjs/errors" "^4.5.0"
+    "@feathersjs/express" "^4.5.0"
+    "@feathersjs/feathers" "^4.5.0"
+    "@feathersjs/socketio" "^4.5.0"
+    change-case "^4.1.1"
+    compression "^1.7.4"
+    cors "^2.8.5"
+    feathers-nedb "^5.1.0"
+    js-yaml "^3.13.1"
+    moment "^2.24.0"
+    nedb "^1.8.0"
+    pg "^7.17.1"
+    pg-escape "^0.2.0"
+    pg-structure "^5.10.5"
+    pluralize "^8.0.0"
+    serve-favicon "^2.5.0"
+    winston "^3.0.0"
 
 internal-ip@^4.3.0:
   version "4.3.0"

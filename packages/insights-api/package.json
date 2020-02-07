@@ -1,7 +1,7 @@
 {
   "name": "insights-api",
   "description": "",
-  "version": "0.0.11",
+  "version": "0.0.13",
   "homepage": "",
   "main": "src",
   "keywords": [
@@ -49,6 +49,7 @@
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "feathers-nedb": "^5.1.0",
+    "helmet": "^3.20.0",
     "js-yaml": "^3.13.1",
     "moment": "^2.24.0",
     "nedb": "^1.8.0",
@@ -63,6 +64,7 @@
     "@feathersjs/cli": "^4.2.5",
     "@types/compression": "^1.0.1",
     "@types/cors": "^2.8.6",
+    "@types/helmet": "^0.0.45",
     "@types/jest": "^24.9.1",
     "@types/js-yaml": "^3.12.1",
     "@types/jsonwebtoken": "^8.3.7",
