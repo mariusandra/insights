@@ -3,6 +3,15 @@ import * as authentication from '@feathersjs/authentication';
 
 const { authenticate } = authentication.hooks;
 
+const removeAllViews = async context => {
+  const { app, result: subset } = context
+
+  const viewsService = app.service('views')
+  await viewsService.remove(null, { query: { subsetId: subset._id } })
+
+  return context
+}
+
 export default {
   before: {
     all: [ authenticate('jwt') ],
@@ -21,7 +30,7 @@ export default {
     create: [],
     update: [],
     patch: [],
-    remove: []
+    remove: [ removeAllViews ]
   },
 
   error: {
