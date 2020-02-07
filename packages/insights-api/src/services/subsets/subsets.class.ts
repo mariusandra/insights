@@ -1,7 +1,7 @@
 import { Service, NedbServiceOptions } from 'feathers-nedb';
 import { Application } from '../../declarations';
 
-interface SubsetData {
+export interface SubsetData {
   _id?: string,
   connectionId: string,
   type: 'all_data' | 'custom',

@@ -16,7 +16,7 @@ export default kea({
       connectionsLogic, ['subsetId']
     ],
     actions: [
-      connectionsLogic, ['subsetEdited', 'closeSubset']
+      connectionsLogic, ['subsetEdited', 'closeSubset', 'loadStructure']
     ]
   },
   actions: () => ({
@@ -29,6 +29,7 @@ export default kea({
       const subset = await subsetsService.patch(subsetId, { ...formValues, selection: subsetSelection })
       actions.subsetEdited(subset)
       actions.closeSubset()
+      actions.loadStructure(subset.connectionId, subsetId)
       message.success('Subset saved!')
     }
   })

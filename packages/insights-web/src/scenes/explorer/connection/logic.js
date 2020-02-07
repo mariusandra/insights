@@ -300,7 +300,7 @@ export default kea({
       }
 
       try {
-        const structure = await structureService.get(connectionId)
+        const structure = await structureService.get(connectionId, { query: { subsetId } })
         breakpoint()
         actions.setStructure(structure)
       } catch (e) {
@@ -367,7 +367,7 @@ export default kea({
 
       let [subset, structure] = await Promise.all([
         subsetsService.get(subsetId),
-        structureService.get(connectionId)
+        structureService.get(connectionId, { query: { subsetId, getInputStructure: true } })
       ]);
       breakpoint()
 
