@@ -75,7 +75,7 @@ export default kea({
       connectionLogic, ['subsetStructureInput as structure']
     ],
     actions: [
-      connectionLogic, ['openSubset', 'fullSubsetLoaded']
+      connectionLogic, ['editSubset', 'fullSubsetLoaded']
     ]
   },
 
@@ -90,7 +90,7 @@ export default kea({
 
   reducers: ({ actions, selectors }) => ({
     checkedKeys: [[], {
-      [actions.openSubset]: () => ([]),
+      [actions.editSubset]: () => ([]),
       [actions.setCheckedKeys]: (_, payload) => payload.checkedKeys,
     }],
     editingColumn: [null, {

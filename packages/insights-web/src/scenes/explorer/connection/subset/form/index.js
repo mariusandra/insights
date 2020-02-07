@@ -28,7 +28,7 @@ function SubsetForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFi
     <Modal
       destroyOnClose
       visible={isSubsetOpen}
-      title={subset ? `Configure "${subset.name}"` : 'Loading Subset...'}
+      title={subset ? (subset._id ? `Configure "${subset.name}"` : 'New Subset') : 'Loading Subset...'}
       onCancel={closeSubset}
       canOutsideClickClose
       width='85%'
@@ -76,7 +76,7 @@ function SubsetForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFi
                     message: 'Please input a name!',
                   }
                 ]
-              })(<Input placeholder='All Data' disabled style={{width: '100%'}} />)}
+              })(<Input placeholder='Marketing Subset' disabled={subset.type === 'all_data'} style={{width: '100%'}} />)}
             </Form.Item>
 
             <Form.Item wrapperCol={{ offset: 5, span: 19 }}>

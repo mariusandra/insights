@@ -4,8 +4,6 @@ import { Structure as IStructure } from '../../insights/definitions.d'
 import getStructure from '../../insights/structure'
 import { SubsetData } from '../subsets/subsets.class'
 
-interface Data {}
-
 interface ServiceOptions {}
 
 function applySubsetToStructure (structure: IStructure, subset: SubsetData) {
@@ -44,7 +42,7 @@ function applySubsetToStructure (structure: IStructure, subset: SubsetData) {
   return newStructure
 }
 
-export class Structure implements Partial<ServiceMethods<Data>> {
+export class Structure implements Partial<ServiceMethods<IStructure>> {
   app: Application;
   options: ServiceOptions;
 
@@ -53,7 +51,7 @@ export class Structure implements Partial<ServiceMethods<Data>> {
     this.app = app;
   }
 
-  async get (id: Id, params?: Params): Promise<Data> {
+  async get (id: Id, params?: Params): Promise<IStructure> {
     const connectionsService = this.app.service('connections')
     const subsetsService = this.app.service('subsets')
 
@@ -90,8 +88,12 @@ export class Structure implements Partial<ServiceMethods<Data>> {
           return applySubsetToStructure(structureWithAllData, subset)
         }
       }
+    } else {
+      const allDataSubset = (await subsetsService.find({ query: { connectionId: id, type: 'all_data' } }))[0]
+      if (!allDataSubset) {
+        throw new Error(`Can not find "All Data" subset for connection "${id}"`)
+      }
+      return applySubsetToStructure(baseStructure, allDataSubset)
     }
-
-    return baseStructure
   }
 }

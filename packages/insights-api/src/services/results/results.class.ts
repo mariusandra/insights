@@ -25,12 +25,17 @@ export class Results implements Partial<ServiceMethods<ResultsResponse>> {
   }
 
   async find (params: ResultsServiceParams): Promise<ResultsResponse> {
+    const connectionsService = this.app.service('connections')
+    const structureService = this.app.service('structure')
+
     const { connection } = params.query
     const [connectionId, subsetId] = connection.split('--')
-    const connectionsResult = await this.app.service('connections').get(connectionId)
-    const { structurePath, url, timeout } = connectionsResult
 
-    const structure = await getStructure(structurePath, url)
+    const connectionsResult = await connectionsService.get(connectionId)
+    const { url, timeout } = connectionsResult
+
+    const structure = await structureService.get(connectionId, { query: { subsetId } })
+
     const adapter = createAdapter(url, timeout)
 
     const results = new FindResults({ params: params.query, adapter, structure })

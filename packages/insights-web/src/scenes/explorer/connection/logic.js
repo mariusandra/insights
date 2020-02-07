@@ -20,7 +20,6 @@ export default kea({
 
     loadSubsets: connectionId => ({ connectionId }),
     setSubsets: (subsets, connectionId) => ({ subsets, connectionId }),
-    setSubsetId: subsetId => ({ subsetId }),
 
     loadStructure: (connectionId, subsetId) => ({ connectionId, subsetId }),
     setStructure: structure => ({ structure }),
@@ -43,7 +42,8 @@ export default kea({
     closeConnection: true,
     openEditConnection: id => ({ id }),
 
-    openSubset: true,
+    newSubset: true,
+    editSubset: true,
     closeSubset: true,
     subsetEdited: subset => ({ subset }),
     fullSubsetLoaded: (subset, structure) => ({ subset, structure })
@@ -102,9 +102,9 @@ export default kea({
         [subset._id]: { _id: subset._id, name: subset.name, type: subset.type, connectionId: subset.connectionId }
       })
     }],
+
     subsetId: [null, PropTypes.string, {
-      [actions.setConnectionId]: (_, payload) => payload.subsetId || null,
-      [actions.setSubsetId]: (_, payload) => payload.subsetId,
+      [actions.setConnectionId]: (_, payload) => payload.subsetId || null
     }],
 
     structure: [{}, {
@@ -167,17 +167,20 @@ export default kea({
     }],
 
     isSubsetOpen: [false, PropTypes.bool, {
-      [actions.openSubset]: () => true,
+      [actions.newSubset]: () => true,
+      [actions.editSubset]: () => true,
       [actions.closeSubset]: () => false
     }],
 
     subset: [null, PropTypes.object, {
-      [actions.openSubset]: () => null,
+      [actions.newSubset]: () => null,
+      [actions.editSubset]: () => null,
       [actions.fullSubsetLoaded]: (_, payload) => payload.subset,
     }],
 
     subsetStructureInput: [{}, PropTypes.object, {
-      [actions.openSubset]: () => ({}),
+      [actions.newSubset]: () => ({}),
+      [actions.editSubset]: () => ({}),
       [actions.fullSubsetLoaded]: (_, payload) => payload.structure,
     }]
   }),
@@ -282,13 +285,9 @@ export default kea({
       breakpoint()
       actions.setSubsets(subsets, connectionId)
 
-      if (!values.subsetId) {
-        actions.setSubsetId(subsets[0] ? subsets[0]._id : '')
+      if (!values.subsetId && subsets[0] && subsets[0]._id) {
+        actions.setConnectionId(connectionId, subsets[0] ? subsets[0]._id : '')
       }
-    },
-
-    [actions.setSubsetId]: async function ({ subsetId }) {
-      actions.loadStructure(values.subsetsLoadedForConnectionId, subsetId)
     },
 
     [actions.loadStructure]: async function ({ connectionId, subsetId }, breakpoint) {
@@ -362,7 +361,23 @@ export default kea({
       }
     },
 
-    [actions.openSubset]: async function (_, breakpoint) {
+    [actions.newSubset]: async function (_, breakpoint) {
+      const { connectionId } = values
+
+      const structure = await structureService.get(connectionId, { query: { getInputStructure: true } })
+      breakpoint()
+      const emptySubset = {
+        connectionId,
+        type: 'custom',
+        name: '',
+        addNewModels: false,
+        addNewFields: false,
+        selection: {}
+      }
+      actions.fullSubsetLoaded(emptySubset, structure)
+    },
+
+    [actions.editSubset]: async function (_, breakpoint) {
       const { subsetId, connectionId } = values
 
       let [subset, structure] = await Promise.all([
