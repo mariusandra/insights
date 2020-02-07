@@ -44,7 +44,8 @@ export default kea({
     openEditConnection: id => ({ id }),
 
     openSubset: true,
-    closeSubset: true
+    closeSubset: true,
+    fullSubsetLoaded: subset => ({ subset })
   }),
 
   reducers: ({ actions }) => ({
@@ -164,6 +165,11 @@ export default kea({
     isSubsetOpen: [false, PropTypes.bool, {
       [actions.openSubset]: () => true,
       [actions.closeSubset]: () => false
+    }],
+
+    subset: [null, PropTypes.object, {
+      [actions.openSubset]: () => null,
+      [actions.fullSubsetLoaded]: (_, payload) => payload.subset,
     }]
   }),
 
@@ -292,7 +298,7 @@ export default kea({
         if (e.message === 'kea-listeners breakpoint broke') {
           return
         }
-        message.error(`Error loading database structure for connection with ID "${connectionId}"!`)
+        message.error(`Unable to load database structure for connection "${connectionId}--${subsetId}"!`)
         actions.setStructure({})
       }
     },
@@ -345,6 +351,13 @@ export default kea({
       } else {
         actions.testFailure()
       }
+    },
+
+    [actions.openSubset]: async function (_, breakpoint) {
+      const { subsetId } = values
+      const subset = await subsetsService.get(subsetId)
+      breakpoint()
+      actions.fullSubsetLoaded(subset)
     }
   })
 })

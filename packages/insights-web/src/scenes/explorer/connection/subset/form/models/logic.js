@@ -32,7 +32,7 @@ export default kea({
       explorerLogic, ['structure']
     ],
     actions: [
-      connectionLogic, ['openSubset']
+      connectionLogic, ['openSubset', 'fullSubsetLoaded']
     ]
   },
 
