@@ -26,7 +26,8 @@ export class Results implements Partial<ServiceMethods<ResultsResponse>> {
 
   async find (params: ResultsServiceParams): Promise<ResultsResponse> {
     const { connection } = params.query
-    const connectionsResult = await this.app.service('connections').get(connection)
+    const [connectionId, subsetId] = connection.split('--')
+    const connectionsResult = await this.app.service('connections').get(connectionId)
     const { structurePath, url, timeout } = connectionsResult
 
     const structure = await getStructure(structurePath, url)

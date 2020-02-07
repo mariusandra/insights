@@ -8,35 +8,37 @@ import { useActions, useValues } from 'kea'
 import connectionsLogic from 'scenes/explorer/connection/logic'
 
 export default function Subset () {
-  const { isLoadingSubsets, subsets } = useValues(connectionsLogic)
-  const { openSubset } = useActions(connectionsLogic)
+  const { isLoadingSubsets, selectedSubset, otherSubsets } = useValues(connectionsLogic)
+  const { openSubset, setSubsetId } = useActions(connectionsLogic)
 
   const menu = (
     <Menu>
-      <Menu.ItemGroup className='connection-menu-header-title' title={
+      {selectedSubset ? <Menu.ItemGroup className='connection-menu-header-title' title={
         <>
           <Icon type="bars" style={{ marginRight: 6 }} />
-          <span>All Data</span>
+          <span>{selectedSubset ? selectedSubset.name : '...'}</span>
         </>
       }>
         <Menu.Item onClick={openSubset}>
           <Icon type="edit" style={{ marginLeft: 12 }} />
           Configure
         </Menu.Item>
-      </Menu.ItemGroup>
-      <Menu.Divider />
-      <Menu.Item>
-        <Icon type="bars" />
-        Accounting Subset
-      </Menu.Item>
-      <Menu.Item>
-        <Icon type="bars" />
-        Marketing Subset
-      </Menu.Item>
-      <Menu.Divider />
-      <Menu.Item>
+      </Menu.ItemGroup> : null}
+
+      {selectedSubset ? <Menu.Divider /> : null}
+
+      {otherSubsets.map(subset => (
+        <Menu.Item key={subset._id} onClick={() => setSubsetId(subset._id)}>
+          <Icon type="bars" />
+          {subset.name}
+        </Menu.Item>
+      ))}
+
+      {otherSubsets.length > 0 ? <Menu.Divider /> : null}
+
+      <Menu.Item onClick={openSubset}>
         <Icon type="plus" />
-        Create Subset
+        New Subset
       </Menu.Item>
     </Menu>
   )

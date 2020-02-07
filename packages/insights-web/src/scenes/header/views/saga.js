@@ -7,6 +7,7 @@ import viewsLogic from 'scenes/header/views/logic'
 import { message } from 'antd'
 
 import client from 'lib/client'
+import urlToState from '../../../lib/explorer/url-to-state'
 
 const viewsService = client.service('views')
 
@@ -53,11 +54,23 @@ export default kea({
 
       if (newName.trim()) {
         const newPath = `${window.location.pathname}${window.location.search}`
-        const result = yield viewsService.create({ name: newName, path: newPath })
+        const urlValues = urlToState(newPath)
 
-        if (result) {
-          message.success(`View "${newName}" saved!`)
-          yield put(viewSaved(result))
+        if (urlValues.connection) {
+          const [connectionId, subsetId] = urlValues.connection.split('--')
+          const result = yield viewsService.create({
+            connectionId,
+            subsetId,
+            name: newName,
+            path: newPath
+          })
+
+          if (result) {
+            message.success(`View "${newName}" saved!`)
+            yield put(viewSaved(result))
+          }
+        } else {
+          message.error('No connection selected, can not save view')
         }
       } else {
         message.error('Please enter a name')

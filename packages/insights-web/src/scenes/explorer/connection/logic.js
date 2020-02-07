@@ -3,22 +3,27 @@ import PropTypes from 'prop-types'
 import { message, Modal } from 'antd'
 
 import client from 'lib/client'
+import urlToState from '../../../lib/explorer/url-to-state'
 
 const connectionsService = client.service('connections')
 const connectionTestService = client.service('connection-test')
 const subsetsService = client.service('subsets')
+const structureService = client.service('structure')
 
 export default kea({
   path: () => ['scenes', 'connections', 'index'],
 
   actions: () => ({
-    loadConnections: true,
-    setConnections: connections => ({ connections }),
-    setConnectionId: connectionId => ({ connectionId }),
+    loadConnections: (initialLoad = false) => ({ initialLoad }),
+    setConnections: (connections, initialLoad) => ({ connections, initialLoad }),
+    setConnectionId: (connectionId, subsetId) => ({ connectionId, subsetId }),
 
     loadSubsets: connectionId => ({ connectionId }),
-    setSubsets: subsets => ({ subsets }),
+    setSubsets: (subsets, connectionId) => ({ subsets, connectionId }),
     setSubsetId: subsetId => ({ subsetId }),
+
+    loadStructure: (connectionId, subsetId) => ({ connectionId, subsetId }),
+    setStructure: structure => ({ structure }),
 
     addConnection: ({ name, url, structurePath, timeout }) => ({ name, url, structurePath, timeout }),
     connectionAdded: (connection) => ({ connection }),
@@ -78,8 +83,11 @@ export default kea({
       [actions.setConnectionId]: (_, payload) => payload.connectionId
     }],
 
+    subsetsLoadedForConnectionId: [null, PropTypes.string, {
+      [actions.setSubsets]: (_, payload) => payload.connectionId
+    }],
+
     subsets: [{}, PropTypes.object, {
-      [actions.setConnectionId]: () => ({}),
       [actions.setSubsets]: (_, payload) => {
         let newState = {}
         payload.subsets.forEach(subset => {
@@ -90,8 +98,13 @@ export default kea({
     }],
 
     subsetId: [null, PropTypes.string, {
-      [actions.setConnectionId]: () => null,
-      [actions.setSubsetId]: (_, payload) => payload.subsetId
+      [actions.setConnectionId]: (_, payload) => payload.subsetId || null,
+      [actions.setSubsetId]: (_, payload) => payload.subsetId,
+    }],
+
+    structure: [{}, {
+      [actions.setConnectionId]: () => ({}),
+      [actions.setStructure]: (_, { structure }) => structure
     }],
 
     addIntroMessage: [false, PropTypes.bool, {
@@ -155,6 +168,11 @@ export default kea({
   }),
 
   selectors: ({ constants, selectors }) => ({
+    connectionString: [
+      () => [selectors.connectionId, selectors.subsetId],
+      (connectionId, subsetId) => connectionId ? (subsetId ? `${connectionId}--${subsetId}` : connectionId) : ''
+    ],
+
     sortedConnections: [
       () => [selectors.connections],
       (connections) => Object.values(connections).sort((a, b) => (a.name || '').localeCompare(b.name || '')),
@@ -177,29 +195,101 @@ export default kea({
       () => [selectors.editingConnectionId, selectors.connections],
       (editingConnectionId, connections) => editingConnectionId ? connections[editingConnectionId] : null,
       PropTypes.object
-    ]
+    ],
+
+    sortedSubsets: [
+      () => [selectors.subsets],
+      (subsets) => Object.values(subsets).sort((a, b) => (a.name || '').localeCompare(b.name || '')),
+      PropTypes.array
+    ],
+
+    selectedSubset: [
+      () => [selectors.sortedSubsets, selectors.subsetId],
+      (sortedSubsets, subsetId) => sortedSubsets.filter(c => c._id === subsetId)[0],
+      PropTypes.object
+    ],
+
+    otherSubsets: [
+      () => [selectors.sortedSubsets, selectors.subsetId],
+      (sortedSubsets, subsetId) => sortedSubsets.filter(c => c._id !== subsetId),
+      PropTypes.array
+    ],
   }),
 
   events: ({ actions }) => ({
     afterMount: () => {
-      actions.loadConnections()
+      actions.loadConnections(true)
     }
   }),
 
-  listeners: ({ actions, sharedListeners }) => ({
-    [actions.loadConnections]: async function () {
-      const connections = await connectionsService.find({})
-      actions.setConnections(connections)
+  listeners: ({ actions, values }) => ({
+    [actions.setConnectionId]: async function ({ connectionId, subsetId }) {
+      if (connectionId && values.subsetsLoadedForConnectionId !== connectionId) {
+        actions.loadSubsets(connectionId)
+      }
+
+      if (connectionId && subsetId) {
+        actions.loadStructure(connectionId, subsetId)
+      }
     },
 
-    [actions.setConnectionId]: async function ({ connectionId }) {
-      actions.loadSubsets(connectionId)
+    [actions.loadConnections]: async function ({ initialLoad }, breakpoint) {
+      const connections = await connectionsService.find({})
+      breakpoint()
+      actions.setConnections(connections, initialLoad)
+    },
+
+    [actions.setConnections]: async function ({ connections, initialLoad }) {
+      if (initialLoad && connections.length === 0) {
+        actions.openAddConnection(true)
+      }
+
+      if (initialLoad && connections.length === 1) {
+        const path = `${window.location.pathname}${window.location.search}`
+        const values = urlToState(path)
+        if (!values.connection || values.connection === '--') {
+          actions.setConnectionId(connections[0]._id)
+        }
+      }
     },
 
     [actions.loadSubsets]: async function ({ connectionId }, breakpoint) {
+      if (!connectionId || values.subsetsLoadedForConnectionId === connectionId) {
+        return
+      }
+
       const subsets = await subsetsService.find({ query: { connectionId } })
       breakpoint()
-      actions.setSubsets(subsets)
+      actions.setSubsets(subsets, connectionId)
+
+      if (!values.subsetId) {
+        actions.setSubsetId(subsets[0] ? subsets[0]._id : '')
+      }
+    },
+
+    [actions.setSubsetId]: async function ({ subsetId }) {
+      actions.loadStructure(values.subsetsLoadedForConnectionId, subsetId)
+    },
+
+    [actions.loadStructure]: async function ({ connectionId, subsetId }, breakpoint) {
+      if (!connectionId) {
+        if (Object.keys(values.structure).length > 0) {
+          actions.setStructure({})
+        }
+        return
+      }
+
+      try {
+        const structure = await structureService.get(connectionId)
+        breakpoint()
+        actions.setStructure(structure)
+      } catch (e) {
+        if (e.message === 'kea-listeners breakpoint broke') {
+          return
+        }
+        message.error(`Error loading database structure for connection with ID "${connectionId}"!`)
+        actions.setStructure({})
+      }
     },
 
     [actions.addConnection]: async function ({ name, url, structurePath, timeout }) {

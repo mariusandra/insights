@@ -1,5 +1,5 @@
 import { kea } from 'kea'
-import { put, call, fork, take } from 'redux-saga/effects'
+import { put, fork } from 'redux-saga/effects'
 import { message } from 'antd'
 import { LOCATION_CHANGE, push } from 'connected-react-router'
 
@@ -15,8 +15,6 @@ import delay from 'lib/utils/delay'
 
 import client from 'lib/client'
 
-const connectionsService = client.service('connections')
-const structureService = client.service('structure')
 const resultsService = client.service('results')
 const favouritesService = client.service('favourites')
 
@@ -79,20 +77,16 @@ export default kea({
   connect: {
     props: [
       connectionsLogic, [
+        'connectionString',
         'connections',
-      ],
-      explorerLogic, [
         'structure'
       ]
     ],
     actions: [
       connectionsLogic, [
-        'setConnections',
         'setConnectionId',
-        'openAddConnection'
       ],
       explorerLogic, [
-        'setStructure',
         'refreshData',
         'setResults',
         'setColumns',
@@ -134,8 +128,7 @@ export default kea({
 
   takeEvery: ({ actions, workers }) => ({
     [LOCATION_CHANGE]: workers.urlToState,
-    [actions.digDeeper]: workers.digDeeper,
-    [actions.setConnectionId]: workers.setConnectionId
+    [actions.digDeeper]: workers.digDeeper
   }),
 
   takeLatest: ({ actions, workers }) => ({
@@ -143,6 +136,7 @@ export default kea({
 
     [actions.clear]: workers.refreshData,
     [actions.urlChanged]: workers.refreshData,
+    [actions.setConnectionId]: workers.refreshData,
     [actions.setColumnsAndFilter]: workers.refreshData,
     [actions.setColumns]: workers.refreshData,
     [actions.removeColumnWithIndex]: workers.refreshData,
@@ -170,32 +164,30 @@ export default kea({
     [actions.setGraphTimeGroup]: workers.setGraphTimeGroup
   }),
 
+  events: ({ actions }) => ({
+    beforeMount: () => {
+      window.document.title = 'Insights Explorer'
+    },
+    afterMount: () => {
+      actions.urlChanged(urlToState(window.location.search), true)
+    }
+  }),
+
+  listeners: ({ actions, values }) => ({
+    [actions.urlChanged]: ({ connection }) => {
+      const { connectionString } = values
+
+      if (connectionString !== connection) {
+        const [connectionId, subsetId] = (connection || '').split('--', 2)
+        actions.setConnectionId(connectionId, subsetId)
+      }
+
+      actions.refreshData(true)
+    }
+  }),
+
   start: function * () {
-    const { setConnections, setConnectionId, openAddConnection } = this.actions
-
-    window.document.title = 'Insights Explorer'
-
-    const connections = yield connectionsService.find()
-
-    if (connections.total === 0) {
-      yield put(openAddConnection(true))
-      return
-    }
-
-    yield put(setConnections(connections))
-
-    const connectionInUrl = urlToState(window.location.search).connection
-    let connectionId
-
-    if (connectionInUrl && connections.filter(c => c._id === connectionInUrl).length > 0) {
-      connectionId = connectionInUrl
-      yield put(setConnectionId(connectionId))
-      yield call(this.workers.loadStructure, connectionId)
-    }
-
     yield fork(this.workers.loadFavourites)
-
-    yield call(this.workers.urlToState, { payload: { pathname: window.location.pathname, search: window.location.search, firstLoad: true } })
   },
 
   workers: {
@@ -206,60 +198,26 @@ export default kea({
       yield put(favouritesLoaded(response.data))
     },
 
-    loadStructure: function * (connectionId) {
-      const { setStructure } = this.actions
-
-      try {
-        const connections = yield explorerLogic.get('connections')
-        const connection = connections[connectionId]
-
-        if (!connection) {
-          if (!connectionId) {
-            message.error(`Connection with ID "${connectionId}" not found!`)
-          }
-          yield put(setStructure({}))
-          return
-        }
-
-        const structure = yield structureService.get(connection._id)
-        yield put(setStructure(structure))
-      } catch (e) {
-        message.error('Error loading database structure for connection!')
-        yield put(setStructure({}))
-      }
-    },
-
-    setConnectionId: function * (action) {
-      const { clear } = this.actions
-      const { connectionId } = action.payload
-      const urlValues = urlToState(window.location.search)
-      const { structure } = this.values
-
-      if (urlValues.connection !== connectionId || !structure || Object.keys(structure).length === 0) {
-        yield call(this.workers.loadStructure, connectionId)
-        yield put(clear())
-      }
-    },
-
     refreshData: function * (action) {
-      const { setResults, setPagination, setLoading, clearLoading, openTreeNode, closeTreeNode, urlChanged, requestExport } = this.actions
+      const { setResults, setPagination, setLoading, clearLoading, openTreeNode, closeTreeNode, requestExport } = this.actions
 
-      if (action.type !== urlChanged.toString()) {
+      if (!action.payload.fromUrl) {
         yield delay(50) // throttle unless coming from an url change
       }
 
       const {
-        connectionId,
         url, columns, offsetTarget, offset, limitTarget, limit, sort, filter, graphTimeFilter,
         facetsCount, facetsColumn, exportTitle, graphControls, graph
-      } = yield explorerLogic.fetch('connectionId', 'url', 'columns', 'offset', 'limit', 'offsetTarget', 'limitTarget', 'sort', 'filter', 'graphTimeFilter', 'facetsCount', 'facetsColumn', 'exportTitle', 'graphControls', 'graph')
+      } = yield explorerLogic.fetch('url', 'columns', 'offset', 'limit', 'offsetTarget', 'limitTarget', 'sort', 'filter', 'graphTimeFilter', 'facetsCount', 'facetsColumn', 'exportTitle', 'graphControls', 'graph')
+
+      const { connectionString } = yield connectionsLogic.fetch('connectionString')
 
       // if paginating and fetching what is currently there (horizontal scroll)
       if (action.type === setPagination.toString() && action.payload.offset === offset && action.payload.limit === limit) {
         return
       }
 
-      if (action.type !== urlChanged.toString() && `${window.location.pathname}${window.location.search}` !== url) {
+      if (!action.payload.fromUrl && `${window.location.pathname}${window.location.search}` !== url) {
         yield put(push(url))
       }
 
@@ -277,7 +235,7 @@ export default kea({
       if (columns.length > 0) {
         try {
           const params = {
-            connection: connectionId,
+            connection: connectionString || '',
 
             columns,
             sort,
@@ -340,26 +298,9 @@ export default kea({
       const { urlChanged } = this.actions
       const { search } = action.payload.location || action.payload
 
-      if (Object.keys(yield explorerLogic.get('connections')).length === 0) {
-        yield take(this.actions.setConnections)
-      }
+      const urlValues = urlToState(search)
 
-      const values = urlToState(search)
-
-      // fetch a new structure if the connection changes
-      const oldConnectionId = yield explorerLogic.get('connectionId')
-      const newConnectionId = values.connectionId
-
-      if (newConnectionId && newConnectionId !== oldConnectionId) {
-        const connections = yield explorerLogic.get('connections')
-        if (connections[newConnectionId]) {
-          yield call(this.workers.loadStructure, newConnectionId)
-        } else {
-          message.error(`Connection with ID "${newConnectionId}" not found!`)
-        }
-      }
-
-      yield put(urlChanged(values))
+      yield put(urlChanged(urlValues))
     },
 
     digDeeper: function * (action) {

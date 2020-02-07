@@ -29,13 +29,11 @@ export default kea({
     ],
     values: [
       viewsLogic, ['sortedViews'],
-      connectionLogic, ['connections', 'connectionId']
+      connectionLogic, ['connections', 'connectionId', 'structure', 'connectionString']
     ]
   },
 
   actions: () => ({
-    setStructure: structure => ({ structure }),
-
     setColumnsAndFilter: (columns, filter) => ({ columns, filter }),
     setColumns: columns => ({ columns }),
     addColumn: column => ({ column }),
@@ -49,12 +47,12 @@ export default kea({
     setGraphControls: (graphControls) => ({ graphControls }),
 
     setExportTitle: (exportTitle) => ({ exportTitle }),
-    urlChanged: values => (values),
+    urlChanged: (values, initialLoad = false) => ({ ...values, initialLoad }),
 
     digDeeper: row => ({ row }),
 
     clear: true,
-    refreshData: true,
+    refreshData: (fromUrl = false) => ({ fromUrl }),
     clearColumnWidths: true,
 
     setLoading: true,
@@ -96,10 +94,6 @@ export default kea({
   reducers: ({ actions }) => ({
     search: ['', PropTypes.string, {
       [actions.setSearch]: (_, payload) => payload.search
-    }],
-    // shape of each model
-    structure: [{}, PropTypes.object, {
-      [actions.setStructure]: (_, payload) => payload.structure
     }],
     // tree state
     treeNodeFilterOpen: [null, PropTypes.string, {
@@ -372,12 +366,12 @@ export default kea({
 
     url: [
       () => [
-        selectors.connectionId, selectors.columns, selectors.sort, selectors.treeState, selectors.graphTimeFilter,
+        selectors.connectionString, selectors.columns, selectors.sort, selectors.treeState, selectors.graphTimeFilter,
         selectors.facetsColumn, selectors.facetsCount, selectors.filter, selectors.graphControls
       ],
-      (connection, columns, sort, treeState, graphTimeFilter, facetsColumn, facetsCount, filter, graphControls) => {
+      (connectionString, columns, sort, treeState, graphTimeFilter, facetsColumn, facetsCount, filter, graphControls) => {
         return stateToUrl({
-          connection: connection,
+          connection: connectionString,
           columns: columns.join(','),
           sort: sort || '',
           treeState: Object.keys(treeState).join(','),
@@ -392,8 +386,8 @@ export default kea({
     ],
 
     recommendedViews: [
-      () => [selectors.connectionId, selectors.selectedModel, selectors.structure, selectors.modelFavourites],
-      (connection, selectedModel, structure, modelFavourites) => {
+      () => [selectors.connectionString, selectors.selectedModel, selectors.structure, selectors.modelFavourites],
+      (connectionString, selectedModel, structure, modelFavourites) => {
         if (!selectedModel) {
           return []
         }
@@ -412,7 +406,7 @@ export default kea({
           key: 'ids',
           name: 'count',
           url: stateToUrl({
-            connection: connection,
+            connection: connectionString,
             columns: `${selectedModel}.${primaryKeyField}!!count`,
             sort: '',
             treeState: `${selectedModel}`,
@@ -436,7 +430,7 @@ export default kea({
           key: 'all',
           name: 'all rows with favourites',
           url: stateToUrl({
-            connection: connection,
+            connection: connectionString,
             columns: arrayUniq([`${selectedModel}.${primaryKeyField}`].concat(modelFavourites || [])).join(','),
             sort: `-${selectedModel}.${primaryKeyField}`,
             treeState: `${selectedModel}`,
@@ -462,7 +456,7 @@ export default kea({
             key: 'created_at',
             name: 'last 365 days',
             url: stateToUrl({
-              connection: connection,
+              connection: connectionString,
               columns: `${selectedModel}.${primaryKeyField}!!count,${selectedModel}.created_at!day`,
               sort: '',
               treeState: `${selectedModel}`,
@@ -486,7 +480,7 @@ export default kea({
             key: 'yoy_12',
             name: '12 month y-o-y',
             url: stateToUrl({
-              connection: connection,
+              connection: connectionString,
               columns: `${selectedModel}.${primaryKeyField}!!count,${selectedModel}.created_at!month`,
               sort: '',
               treeState: `${selectedModel}`,
@@ -519,12 +513,4 @@ export default kea({
       yield put(push(url))
     }
   }),
-
-  listeners: ({ actions, values }) => ({
-    [actions.urlChanged]: ({ connection }) => {
-      if (values.connectionId !== connection) {
-        actions.setConnectionId(connection)
-      }
-    }
-  })
 })
