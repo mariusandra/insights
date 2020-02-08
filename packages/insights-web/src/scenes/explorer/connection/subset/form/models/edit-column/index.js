@@ -66,6 +66,7 @@ function EditColumn ({ closeEdit, visible, form: { getFieldDecorator, validateFi
       visible={visible}
       destroyOnClose
       onCancel={closeEdit}
+      keyboard={false}
       title={<>{editingModel} <Icon type="right" /> {editingField || 'New Field'}</>}
       footer={[
         <Button key="delete" type='link' style={{ float: 'left' }}>
@@ -136,11 +137,11 @@ function EditColumn ({ closeEdit, visible, form: { getFieldDecorator, validateFi
             <>
               <Form.Item label='My key' extra={<span>Column on database table for <strong>{editingModel}</strong></span>}>
                 {getFieldDecorator('metaMyKey', {
-                  initialValue: fieldData.meta ? fieldData.meta.my_key : '',
+                  initialValue: (fieldData.meta ? fieldData.meta.my_key : '') || editingField,
                   rules: [
                     {
                       required: true,
-                      message: 'Please select a key',
+                      message: 'Please enter a key on this model',
                     }
                   ]
                 })(
@@ -172,7 +173,7 @@ function EditColumn ({ closeEdit, visible, form: { getFieldDecorator, validateFi
                   rules: [
                     {
                       required: true,
-                      message: 'Please select a model',
+                      message: 'Please enter a key on the linked model',
                     }
                   ]
                 })(
@@ -211,7 +212,7 @@ function EditColumn ({ closeEdit, visible, form: { getFieldDecorator, validateFi
                     }
                   ]
                 })(
-                  <Mentions rows="3" prefix='${' placeholder="" split=''>
+                  <Mentions rows="3" prefix='${' placeholder='' split=''>
                     {modelFields.map(f => <Mentions.Option key={f} value={f}>{f}</Mentions.Option>)}
                   </Mentions>
                 )}

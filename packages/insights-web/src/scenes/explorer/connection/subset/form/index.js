@@ -30,6 +30,7 @@ function SubsetForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFi
       visible={isSubsetOpen}
       title={subset ? (subset._id ? `Configure "${subset.name}"` : 'New Subset') : 'Loading Subset...'}
       onCancel={closeSubset}
+      keyboard={false}
       canOutsideClickClose
       width='85%'
       footer={[
