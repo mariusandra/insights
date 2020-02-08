@@ -16,6 +16,9 @@
   .ignore-tag {
     margin-left: 5px;
   }
+  .new-tag {
+    margin-left: 5px;
+  }
 
   .tree-column-row {
     display: flex;
@@ -26,6 +29,9 @@
       .anticon-idcard {
         margin-left: 5px;
         color: #888;
+      }
+      &.new-column {
+        font-weight: bold;
       }
     }
     .column-meta {

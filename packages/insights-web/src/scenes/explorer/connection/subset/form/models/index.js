@@ -15,9 +15,10 @@ const ModelTitle = ({ model, ignoredColumnCount }) => {
 const FieldTitle = ({ structure, model, field, editColumn }) => {
   return (
     <div className='tree-column-row'>
-      <span className='column-key'>
+      <span className={`column-key${field.newField ? ' new-column' : ''}`}>
         {field.key}
-        {field.meta.index === 'primary_key' ? <Tooltip title="Primary Key"><Icon type="idcard" /></Tooltip> : ''}
+        {field.meta.index === 'primary_key' ? <Tooltip title="Primary Key"><Icon type="idcard" /></Tooltip> : null}
+        {field.newField ? <Tag className='new-tag' color='red'>new</Tag> : null}
       </span>
       <div className='column-meta'>
         {field.type === 'link' && structure[model].columns[field.meta.my_key] && structure[model].columns[field.meta.my_key].index === 'primary_key' ? (
@@ -28,13 +29,14 @@ const FieldTitle = ({ structure, model, field, editColumn }) => {
           <Tag color='geekblue'>
             <Icon type="link" /> {field.meta.my_key} <Icon type="ellipsis" />  {field.meta.model}.{field.meta.model_key}
           </Tag>
-        ) : field.type === 'column' ? (
-          <Tag color='orange'>
-            <Icon type={columnIcon[field.meta.type] || 'question-circle'} /> {field.meta.type}
-          </Tag>
         ) : field.type === 'custom' ? (
           <Tag color='green'>
             <Icon type='code' /> {field.meta.sql}
+          </Tag>
+        ) : null}
+        {field.type === 'column' || field.type === 'custom' ? (
+          <Tag color='orange'>
+            <Icon type={columnIcon[field.meta.type] || 'question-circle'} /> {field.meta.type}
           </Tag>
         ) : null}
         <Icon type='edit' onClick={() => editColumn(`${model}.${field.key}`)}  />
