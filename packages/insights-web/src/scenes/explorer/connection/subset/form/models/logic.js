@@ -85,12 +85,19 @@ export default kea({
     addCustomField: (model) => ({ model }),
     editColumn: (column) => ({ column }),
     closeEdit: true,
-    toggle: true
+    toggle: true,
+    saveNewField: (model, key, type, meta) => ({ model, key, type, meta })
   }),
 
   reducers: ({ actions }) => ({
     newFields: [{}, {
-
+      [actions.saveNewField]: (state, { model, key, type, meta }) => ({
+        ...state,
+        [model]: {
+          ...state[model],
+          [key]: { key, type, meta, newField: true }
+        }
+      })
     }],
     checkedKeys: [[], {
       [actions.editSubset]: () => ([]),
@@ -109,14 +116,15 @@ export default kea({
       structure => Object.keys(structure).sort(naturalCompare)
     ],
     sortedStructure: [
-      () => [selectors.structure],
-      (structure) => {
+      () => [selectors.structure, selectors.newFields],
+      (structure, newFields) => {
         const newStructure = {}
         Object.entries(structure).sort((a, b) => naturalCompare(a[0], b[0])).forEach(([model, { custom, columns, links }]) => {
           newStructure[model] = [
             ...Object.entries(custom).map(([key, meta]) => ({ key, type: 'custom', meta })),
             ...Object.entries(columns).map(([key, meta]) => ({ key, type: 'column', meta })),
-            ...Object.entries(links).map(([key, meta]) => ({ key, type: 'link', meta }))
+            ...Object.entries(links).map(([key, meta]) => ({ key, type: 'link', meta })),
+            ...(newFields[model] ? Object.values(newFields[model]) : [])
           ].sort((a, b) => naturalCompare(a.key, b.key))
         })
         return newStructure
@@ -236,6 +244,10 @@ export default kea({
       } else {
         actions.setCheckedKeys(getAllFields(values.structure))
       }
+    },
+
+    [actions.saveNewField]: () => {
+      actions.closeEdit()
     }
   })
 })

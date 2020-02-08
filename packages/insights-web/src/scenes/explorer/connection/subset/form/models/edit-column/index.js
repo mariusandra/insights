@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, Form, Icon, Input, Mentions, Modal, Select } from 'antd'
-import { kea, useValues } from 'kea'
+import { kea, useActions, useValues } from 'kea'
 
 import modelsLogic from '../logic'
 
@@ -59,6 +59,7 @@ const logic = kea({
 
 function EditColumn ({ closeEdit, visible, form: { getFieldDecorator, validateFieldsAndScroll, getFieldValue } }) {
   const { models, editingModel, editingField, fieldData, modelFields } = useValues(logic)
+  const { saveNewField } = useActions(modelsLogic)
   const type = getFieldValue('type') || (fieldData ? fieldData.type || 'custom' : 'custom')
 
   const handleSave = (e) => {
@@ -66,7 +67,24 @@ function EditColumn ({ closeEdit, visible, form: { getFieldDecorator, validateFi
 
     validateFieldsAndScroll((err, values) => {
       if (!err) {
-        console.log(values)
+        let meta = { type: values.metaType }
+
+        if (values.type === 'custom') {
+          meta.sql = values.metaSql
+        }
+
+        if (values.type === 'link') {
+          meta.my_key = values.metaMyKey
+          meta.model = values.metaModel
+          meta.model_key = values.metaModelKey
+        }
+
+        if (editingField) {
+          console.log(values)
+          console.error('Not yet supported')
+        } else {
+          saveNewField(editingModel, values.column, values.type, meta)
+        }
       }
     })
   }
