@@ -88,7 +88,10 @@ export default kea({
     toggle: true
   }),
 
-  reducers: ({ actions, selectors }) => ({
+  reducers: ({ actions }) => ({
+    newFields: [{}, {
+
+    }],
     checkedKeys: [[], {
       [actions.editSubset]: () => ([]),
       [actions.setCheckedKeys]: (_, payload) => payload.checkedKeys,

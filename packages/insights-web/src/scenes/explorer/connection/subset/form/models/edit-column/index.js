@@ -61,6 +61,16 @@ function EditColumn ({ closeEdit, visible, form: { getFieldDecorator, validateFi
   const { models, editingModel, editingField, fieldData, modelFields } = useValues(logic)
   const type = getFieldValue('type') || (fieldData ? fieldData.type || 'custom' : 'custom')
 
+  const handleSave = (e) => {
+    e.preventDefault()
+
+    validateFieldsAndScroll((err, values) => {
+      if (!err) {
+        console.log(values)
+      }
+    })
+  }
+
   return (
     <Modal
       visible={visible}
@@ -76,7 +86,7 @@ function EditColumn ({ closeEdit, visible, form: { getFieldDecorator, validateFi
         <Button key="back" onClick={closeEdit}>
           Cancel
         </Button>,
-        <Button key="submit" type="primary" loading={false} onClick={closeEdit}>
+        <Button key="submit" type="primary" loading={false} onClick={handleSave}>
           Save
         </Button>,
       ]}>
@@ -89,7 +99,14 @@ function EditColumn ({ closeEdit, visible, form: { getFieldDecorator, validateFi
               rules: [
                 {
                   required: true,
-                  message: 'Please input a name!',
+                  message: 'Please input a name for the field!',
+                },
+                (rule, value, callback) => {
+                  if (modelFields.includes(value)) {
+                    callback(`The field "${value}" is already in use on ${editingModel}!`)
+                  } else {
+                    callback()
+                  }
                 }
               ]
             })(<Input placeholder='column_name' style={{width: '100%'}} />)}
@@ -212,7 +229,7 @@ function EditColumn ({ closeEdit, visible, form: { getFieldDecorator, validateFi
                     }
                   ]
                 })(
-                  <Mentions rows="3" prefix='${' placeholder='' split=''>
+                  <Mentions rows="3" prefix='${' placeholder='' split='' style={{ fontFamily: 'monospace' }}>
                     {modelFields.map(f => <Mentions.Option key={f} value={f}>{f}</Mentions.Option>)}
                   </Mentions>
                 )}
