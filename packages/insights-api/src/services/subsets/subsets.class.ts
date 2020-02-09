@@ -9,10 +9,10 @@ export interface SubsetData {
   name: string,
   addNewModels: boolean,
   addNewFields: boolean,
-  selection: {
+  selection?: {
     [key: string]: false | { [key: string]: boolean }
   },
-  newFields: {
+  newFields?: {
     [key: string]: {
       [key: string]: {
         key: string,

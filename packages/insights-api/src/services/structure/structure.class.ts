@@ -7,7 +7,7 @@ import { SubsetData } from '../subsets/subsets.class'
 interface ServiceOptions {}
 
 function applySubsetToStructure (structure: IStructure, subset: SubsetData) {
-  const { selection, addNewModels, addNewFields, newFields } = subset
+  const { selection = {}, addNewModels, addNewFields, newFields = {} } = subset
 
   const newStructure = {}
 
