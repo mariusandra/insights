@@ -1,10 +1,10 @@
 import React from 'react'
-import { Button, Form, Icon, Input, Mentions, Modal, Select } from 'antd'
+import { Button, Checkbox, Form, Icon, Input, Mentions, Modal, Select } from 'antd'
 import { kea, useActions, useValues } from 'kea'
 
 import modelsLogic from '../logic'
 
-const columnTypes = ['string', 'boolean', 'time', 'date', 'number', 'unknown']
+const columnTypes = ['string', 'number', 'boolean', 'time', 'date', 'unknown']
 
 export const columnIcon = {
   number: 'number',
@@ -68,6 +68,12 @@ function EditField ({ closeEdit, visible, form: { getFieldDecorator, validateFie
           meta.my_key = values.metaMyKey
           meta.model = values.metaModel
           meta.model_key = values.metaModelKey
+        }
+
+        if (values.type === 'column') {
+          if (values.metaPrimaryKey) {
+            meta.index = 'primary_key'
+          }
         }
 
         if (editingField) {
@@ -161,6 +167,13 @@ function EditField ({ closeEdit, visible, form: { getFieldDecorator, validateFie
                     {columnTypes.map(type => <Select.Option key={type} value={type}><Icon type={columnIcon[type] || 'unknown-circle'} /> {type}</Select.Option>)}
                   </Select>
                 )}
+              </Form.Item>
+
+              <Form.Item wrapperCol={{ offset: 5, span: 19 }}>
+                {getFieldDecorator('metaPrimaryKey', {
+                  initialValue: (fieldData.meta ? fieldData.meta.index : '') === 'primary_key',
+                  valuePropName: 'checked'
+                })(<Checkbox>Primary Key</Checkbox>)}
               </Form.Item>
             </>
           ) : null}
