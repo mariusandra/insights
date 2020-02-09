@@ -1,6 +1,7 @@
 export type ColumnType = 'string' | 'boolean' | 'time' | 'date' | 'number' | 'unknown'
 export type AggregationType = 'count' | 'sum' | 'min' | 'max' | 'avg'
 export type TruncationType = 'hour' | 'day' | 'week' | 'month' | 'quarter' | 'year'
+export type FieldType = 'column' | 'custom' | 'link'
 
 export interface StructureColumn {
   type: ColumnType,

@@ -1,5 +1,6 @@
 import { Service, NedbServiceOptions } from 'feathers-nedb';
 import { Application } from '../../declarations';
+import {FieldType, StructureColumn, StructureCustom, StructureLink} from "../../insights/definitions";
 
 export interface SubsetData {
   _id?: string,
@@ -8,7 +9,18 @@ export interface SubsetData {
   name: string,
   addNewModels: boolean,
   addNewFields: boolean,
-  selection: { [key: string]: false | { [key: string]: boolean } }
+  selection: {
+    [key: string]: false | { [key: string]: boolean }
+  },
+  newFields: {
+    [key: string]: {
+      [key: string]: {
+        key: string,
+        type: FieldType,
+        meta: StructureColumn | StructureCustom | StructureLink
+      }
+    }
+  }
 }
 
 export class Subsets extends Service<SubsetData> {

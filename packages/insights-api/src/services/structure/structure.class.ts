@@ -7,7 +7,7 @@ import { SubsetData } from '../subsets/subsets.class'
 interface ServiceOptions {}
 
 function applySubsetToStructure (structure: IStructure, subset: SubsetData) {
-  const { selection, addNewModels, addNewFields } = subset
+  const { selection, addNewModels, addNewFields, newFields } = subset
 
   const newStructure = {}
 
@@ -32,6 +32,20 @@ function applySubsetToStructure (structure: IStructure, subset: SubsetData) {
           })
         }
       })
+
+      if (newFields[modelKey]) {
+        Object.values(newFields[modelKey]).forEach(field => {
+          if (field.type === 'custom') {
+            newModel.custom[field.key] = field.meta
+          }
+          if (field.type === 'column') {
+            newModel.columns[field.key] = field.meta
+          }
+          if (field.type === 'link') {
+            newModel.links[field.key] = field.meta
+          }
+        })
+      }
 
       newStructure[modelKey] = newModel
     } else if (typeof selection[modelKey] === 'undefined' && addNewModels) {
