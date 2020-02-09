@@ -18,7 +18,7 @@ export const columnIcon = {
 export const fieldIcon = {
   column: 'tag',
   link: 'link',
-  custom: 'form'
+  custom: 'code'
 }
 
 const fieldExample = '${field}' // eslint-disable-line
@@ -26,20 +26,10 @@ const fieldExample2 = "${first_name} || ' ' || ${last_name}" // eslint-disable-l
 
 const logic = kea({
   connect: {
-    values: [modelsLogic, ['editingColumn', 'sortedStructure']]
+    values: [modelsLogic, ['editingModel', 'editingField', 'sortedStructure']]
   },
 
   selectors: ({ selectors }) => ({
-    editingModel: [
-      () => [selectors.editingColumn],
-      (editingColumn) => editingColumn ? editingColumn.split('.', 2)[0] : ''
-    ],
-
-    editingField: [
-      () => [selectors.editingColumn],
-      (editingColumn) => editingColumn ? editingColumn.split('.', 2)[1] : ''
-    ],
-
     models: [
       () => [selectors.sortedStructure],
       (sortedStructure) => Object.keys(sortedStructure),
@@ -57,9 +47,10 @@ const logic = kea({
   })
 })
 
-function EditColumn ({ closeEdit, visible, form: { getFieldDecorator, validateFieldsAndScroll, getFieldValue } }) {
-  const { models, editingModel, editingField, fieldData, modelFields } = useValues(logic)
-  const { saveNewField } = useActions(modelsLogic)
+function EditField ({ closeEdit, visible, form: { getFieldDecorator, validateFieldsAndScroll, getFieldValue } }) {
+  const { models, fieldData, modelFields } = useValues(logic)
+  const { editingModel, editingField, editingFieldType } = useValues(modelsLogic)
+  const { saveNewField, saveEditedNewField } = useActions(modelsLogic)
   const type = getFieldValue('type') || (fieldData ? fieldData.type || 'custom' : 'custom')
 
   const handleSave = (e) => {
@@ -80,8 +71,12 @@ function EditColumn ({ closeEdit, visible, form: { getFieldDecorator, validateFi
         }
 
         if (editingField) {
-          console.log(values)
-          console.error('Not yet supported')
+          if (editingFieldType === 'new') {
+            saveEditedNewField(editingModel, editingField, values.column, values.type, meta)
+          } else {
+            console.log(values)
+            console.error('Not yet supported')
+          }
         } else {
           saveNewField(editingModel, values.column, values.type, meta)
         }
@@ -276,4 +271,4 @@ function EditColumn ({ closeEdit, visible, form: { getFieldDecorator, validateFi
   )
 }
 
-export default Form.create({ name: 'databaseColumn' })(EditColumn)
+export default Form.create({ name: 'databaseColumn' })(EditField)

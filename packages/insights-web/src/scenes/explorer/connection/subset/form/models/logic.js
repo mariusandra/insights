@@ -83,10 +83,11 @@ export default kea({
     setCheckedKeysRaw: (checkedKeys) => ({ checkedKeys }),
     setCheckedKeys: (checkedKeys) => ({ checkedKeys }),
     addCustomField: (model) => ({ model }),
-    editColumn: (column) => ({ column }),
+    editField: (model, fieldKey, editType) => ({ model, fieldKey, editType }),
     closeEdit: true,
     toggle: true,
-    saveNewField: (model, key, type, meta) => ({ model, key, type, meta })
+    saveNewField: (model, key, type, meta) => ({ model, key, type, meta }),
+    saveEditedNewField: (model, oldKey, key, type, meta) => ({ model, oldKey, key, type, meta }),
   }),
 
   reducers: ({ actions }) => ({
@@ -97,16 +98,42 @@ export default kea({
           ...state[model],
           [key]: { key, type, meta, newField: true }
         }
-      })
+      }),
+      [actions.saveEditedNewField]: (state, { model, oldKey, key, type, meta }) => {
+        const { [oldKey]: oldNewField, ...otherFields } = state[model]
+        return {
+          ...state,
+          [model]: {
+            ...otherFields,
+            [key]: { key, type, meta, newField: true }
+          }
+        }
+      }
     }],
     checkedKeys: [[], {
       [actions.editSubset]: () => ([]),
       [actions.setCheckedKeys]: (_, payload) => payload.checkedKeys,
     }],
-    editingColumn: [null, {
+    editingModel: [null, {
       [actions.addCustomField]: (_, payload) => payload.model,
-      [actions.editColumn]: (_, payload) => payload.column,
-      [actions.closeEdit]: () => null
+      [actions.editField]: (_, payload) => payload.model,
+      [actions.closeEdit]: () => null,
+      [actions.saveNewField]: () => null,
+      [actions.saveEditedNewField]: () => null
+    }],
+    editingField: [null, {
+      [actions.addCustomField]: () => null,
+      [actions.editField]: (_, payload) => payload.fieldKey,
+      [actions.closeEdit]: () => null,
+      [actions.saveNewField]: () => null,
+      [actions.saveEditedNewField]: () => null
+    }],
+    editingFieldType: [null, {
+      [actions.addCustomField]: () => 'new',
+      [actions.editField]: (_, payload) => payload.editType,
+      [actions.closeEdit]: () => null,
+      [actions.saveNewField]: () => null,
+      [actions.saveEditedNewField]: () => null
     }]
   }),
 
@@ -121,10 +148,10 @@ export default kea({
         const newStructure = {}
         Object.entries(structure).sort((a, b) => naturalCompare(a[0], b[0])).forEach(([model, { custom, columns, links }]) => {
           newStructure[model] = [
-            ...Object.entries(custom).map(([key, meta]) => ({ key, type: 'custom', meta })),
-            ...Object.entries(columns).map(([key, meta]) => ({ key, type: 'column', meta })),
-            ...Object.entries(links).map(([key, meta]) => ({ key, type: 'link', meta })),
-            ...(newFields[model] ? Object.values(newFields[model]) : [])
+            ...Object.entries(custom).map(([key, meta]) => ({ key, type: 'custom', meta, editType: 'old' })),
+            ...Object.entries(columns).map(([key, meta]) => ({ key, type: 'column', meta, editType: 'old' })),
+            ...Object.entries(links).map(([key, meta]) => ({ key, type: 'link', meta, editType: 'old' })),
+            ...(newFields[model] ? Object.values(newFields[model]).map(f => ({ ...f, editType: 'new' })) : [])
           ].sort((a, b) => naturalCompare(a.key, b.key))
         })
         return newStructure
@@ -244,10 +271,6 @@ export default kea({
       } else {
         actions.setCheckedKeys(getAllFields(values.structure))
       }
-    },
-
-    [actions.saveNewField]: () => {
-      actions.closeEdit()
     }
   })
 })

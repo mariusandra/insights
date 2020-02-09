@@ -3,7 +3,7 @@ import './styles.scss'
 import React from 'react'
 import { useActions, useValues } from 'kea'
 import { Tree, Icon, Tag, Button, Tooltip } from 'antd'
-import EditColumn, { columnIcon, fieldIcon } from './edit-column'
+import EditField, { columnIcon, fieldIcon } from './edit-field'
 
 import logic from './logic'
 
@@ -12,7 +12,7 @@ const ModelTitle = ({ model, ignoredColumnCount }) => {
   return <span>{model} {diff > 0 ? <Tag className='ignore-tag'>{diff} field{diff === 1 ? '' : 's'} ignored</Tag> : null}</span>
 }
 
-const FieldTitle = ({ structure, model, field, editColumn }) => {
+const FieldTitle = ({ structure, model, field, editField }) => {
   return (
     <div className='tree-column-row'>
       <span className={`column-key${field.newField ? ' new-column' : ''}`}>
@@ -38,15 +38,15 @@ const FieldTitle = ({ structure, model, field, editColumn }) => {
             <Icon type={columnIcon[field.meta.type] || 'code'} /> {field.meta.sql}
           </Tag>
         ) : null}
-        <Icon type='edit' onClick={() => editColumn(`${model}.${field.key}`)}  />
+        <Icon type='edit' onClick={() => editField(model, field.key, field.editType)}  />
       </div>
     </div>
   )
 }
 
 export default function Models () {
-  const { sortedModels, structure, sortedStructure, checkedModelsLookup, checkedKeys, editingColumn, ignoredColumnCount } = useValues(logic)
-  const { setCheckedKeysRaw, addCustomField, editColumn, closeEdit, toggle } = useActions(logic)
+  const { sortedModels, structure, sortedStructure, checkedModelsLookup, checkedKeys, editingFieldType, ignoredColumnCount } = useValues(logic)
+  const { setCheckedKeysRaw, addCustomField, editField, closeEdit, toggle } = useActions(logic)
 
   return (
     <div>
@@ -77,7 +77,7 @@ export default function Models () {
                 disabled={field.type === 'link' && !checkedModelsLookup[field.meta.model]}
                 switcherIcon={<Icon type={fieldIcon[field.type]} />}
                 key={`${model}.${field.key}`}
-                title={<FieldTitle structure={structure} model={model} field={field} editColumn={editColumn} />}
+                title={<FieldTitle structure={structure} model={model} field={field} editField={editField} />}
               />
             ))}
 
@@ -92,7 +92,7 @@ export default function Models () {
         ))}
       </Tree>
 
-      <EditColumn visible={!!editingColumn} column={editingColumn} closeEdit={closeEdit} />
+      <EditField visible={!!editingFieldType} closeEdit={closeEdit} />
     </div>
   )
 }
