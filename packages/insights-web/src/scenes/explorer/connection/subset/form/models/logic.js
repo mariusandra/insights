@@ -88,6 +88,7 @@ export default kea({
     toggle: true,
     saveNewField: (model, key, type, meta) => ({ model, key, type, meta }),
     saveEditedNewField: (model, oldKey, key, type, meta) => ({ model, oldKey, key, type, meta }),
+    deleteNewField: (model, key) => ({ model, key })
   }),
 
   reducers: ({ actions }) => ({
@@ -108,6 +109,15 @@ export default kea({
             [key]: { key, type, meta, newField: true }
           }
         }
+      },
+      [actions.deleteNewField]: (state, { model, key }) => {
+        const { [key]: oldNewField, ...otherFields } = state[model]
+        return {
+          ...state,
+          [model]: {
+            ...otherFields,
+          }
+        }
       }
     }],
     checkedKeys: [[], {
@@ -119,6 +129,7 @@ export default kea({
       [actions.editField]: (_, payload) => payload.model,
       [actions.closeEdit]: () => null,
       [actions.saveNewField]: () => null,
+      [actions.deleteNewField]: () => null,
       [actions.saveEditedNewField]: () => null
     }],
     editingField: [null, {
@@ -126,6 +137,7 @@ export default kea({
       [actions.editField]: (_, payload) => payload.fieldKey,
       [actions.closeEdit]: () => null,
       [actions.saveNewField]: () => null,
+      [actions.deleteNewField]: () => null,
       [actions.saveEditedNewField]: () => null
     }],
     editingFieldType: [null, {
@@ -133,6 +145,7 @@ export default kea({
       [actions.editField]: (_, payload) => payload.editType,
       [actions.closeEdit]: () => null,
       [actions.saveNewField]: () => null,
+      [actions.deleteNewField]: () => null,
       [actions.saveEditedNewField]: () => null
     }]
   }),

@@ -50,7 +50,7 @@ const logic = kea({
 function EditField ({ closeEdit, visible, form: { getFieldDecorator, validateFieldsAndScroll, getFieldValue } }) {
   const { models, fieldData, modelFields } = useValues(logic)
   const { editingModel, editingField, editingFieldType } = useValues(modelsLogic)
-  const { saveNewField, saveEditedNewField } = useActions(modelsLogic)
+  const { saveNewField, saveEditedNewField, deleteNewField } = useActions(modelsLogic)
   const type = getFieldValue('type') || (fieldData ? fieldData.type || 'custom' : 'custom')
 
   const handleSave = (e) => {
@@ -92,10 +92,12 @@ function EditField ({ closeEdit, visible, form: { getFieldDecorator, validateFie
       keyboard={false}
       title={<>{editingModel} <Icon type="right" /> {editingField || 'New Field'}</>}
       footer={[
-        <Button key="delete" type='link' style={{ float: 'left' }}>
-          <Icon type='delete' theme="filled" />
-          Delete
-        </Button>,
+        editingFieldType === 'new' ? (
+          <Button key="delete" type='link' style={{ float: 'left' }} onClick={() => deleteNewField(editingModel, editingField)}>
+            <Icon type='delete' theme="filled" />
+            Delete
+          </Button>
+        ) : null,
         <Button key="back" onClick={closeEdit}>
           Cancel
         </Button>,
