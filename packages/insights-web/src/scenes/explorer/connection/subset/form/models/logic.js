@@ -10,18 +10,21 @@ const arrayToObjectKeys = (arr, defaultValue = true) => {
 }
 
 function checkedKeysForSubsetAndStructure (subset, structure) {
-  const { addNewModels, addNewFields, newFields } = subset
+  const { addNewModels, addNewFields, newFields, editedFields } = subset
   const selection = subset.selection || {}
 
   let checkedKeys = []
 
   Object.entries(structure).forEach(([model, modelStructure]) => {
+    const skipOld = editedFields[model] ? Object.keys(editedFields[model]) : []
     const modelKeys = [
       ...Object.keys(modelStructure.columns),
       ...Object.keys(modelStructure.links),
-      ...Object.keys(modelStructure.custom),
+      ...Object.keys(modelStructure.custom)
+    ].filter(k => !skipOld.includes(k)).concat([
+      ...(editedFields[model] ? Object.values(editedFields[model]).map(f => f.key) : []),
       ...(newFields && newFields[model] ? Object.keys(newFields[model]) : [])
-    ]
+    ])
 
     if (typeof selection[model] === 'object') {
       let allSelected = true
@@ -130,6 +133,13 @@ export default kea({
       [actions.saveEditedNewField]: (state, { model, oldKey, key }) => {
         if (state.includes(`${model}.${oldKey}`)) {
           return state.filter(c => c !== `${model}.${oldKey}`).concat([`${model}.${key}`])
+        } else {
+          return state
+        }
+      },
+      [actions.saveEditedOldField]: (state, { model, originalKey, key }) => {
+        if (state.includes(`${model}.${originalKey}`)) {
+          return state.filter(c => c !== `${model}.${originalKey}`).concat([`${model}.${key}`])
         } else {
           return state
         }
@@ -279,6 +289,7 @@ export default kea({
     [actions.fullSubsetLoaded]: ({ subset, structure }) => {
       const checkedKeys = checkedKeysForSubsetAndStructure(subset, structure)
       actions.setNewFields(subset.newFields || {})
+      actions.setEditedFields(subset.editedFields || {})
       actions.setCheckedKeys(checkedKeys)
     },
 

@@ -20,6 +20,16 @@ export interface SubsetData {
         meta: StructureColumn | StructureCustom | StructureLink
       }
     }
+  },
+  editedFields: {
+    [key: string]: {
+      [key: string]: {
+        key: string,
+        originalKey: string,
+        type: FieldType,
+        meta: StructureColumn | StructureCustom | StructureLink
+      }
+    }
   }
 }
 
