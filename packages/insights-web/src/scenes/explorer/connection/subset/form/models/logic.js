@@ -67,13 +67,16 @@ export default kea({
   actions: () => ({
     setCheckedKeysRaw: (checkedKeys) => ({ checkedKeys }),
     setCheckedKeys: (checkedKeys) => ({ checkedKeys }),
+    setEditedFields: (editedFields) => ({ editedFields }),
     setNewFields: (newFields) => ({ newFields }),
+
     addCustomField: (model) => ({ model }),
-    editField: (model, fieldKey, editType) => ({ model, fieldKey, editType }),
+    editField: (model, fieldKey, editType, originalKey) => ({ model, fieldKey, editType, originalKey }),
     closeEdit: true,
     toggle: true,
     saveNewField: (model, key, type, meta) => ({ model, key, type, meta }),
     saveEditedNewField: (model, oldKey, key, type, meta) => ({ model, oldKey, key, type, meta }),
+    saveEditedOldField: (model, originalKey, key, type, meta) => ({ model, originalKey, key, type, meta }),
     deleteNewField: (model, key) => ({ model, key })
   }),
 
@@ -107,6 +110,18 @@ export default kea({
         }
       }
     }],
+    editedFields: [{}, {
+      [actions.setEditedFields]: (_, payload) => payload.editedFields,
+      [actions.saveEditedOldField]: (state, { model, originalKey, key, type, meta }) => {
+        return {
+          ...state,
+          [model]: {
+            ...(state[model] || {}),
+            [originalKey]: { key, type, meta, editedField: true }
+          }
+        }
+      },
+    }],
     checkedKeys: [[], {
       [actions.editSubset]: () => ([]),
       [actions.setCheckedKeys]: (_, payload) => payload.checkedKeys,
@@ -126,7 +141,8 @@ export default kea({
       [actions.closeEdit]: () => null,
       [actions.saveNewField]: () => null,
       [actions.deleteNewField]: () => null,
-      [actions.saveEditedNewField]: () => null
+      [actions.saveEditedNewField]: () => null,
+      [actions.saveEditedOldField]: () => null
     }],
     editingField: [null, {
       [actions.addCustomField]: () => null,
@@ -134,7 +150,8 @@ export default kea({
       [actions.closeEdit]: () => null,
       [actions.saveNewField]: () => null,
       [actions.deleteNewField]: () => null,
-      [actions.saveEditedNewField]: () => null
+      [actions.saveEditedNewField]: () => null,
+      [actions.saveEditedOldField]: () => null
     }],
     editingFieldType: [null, {
       [actions.addCustomField]: () => 'new',
@@ -142,7 +159,8 @@ export default kea({
       [actions.closeEdit]: () => null,
       [actions.saveNewField]: () => null,
       [actions.deleteNewField]: () => null,
-      [actions.saveEditedNewField]: () => null
+      [actions.saveEditedNewField]: () => null,
+      [actions.saveEditedOldField]: () => null
     }]
   }),
 
@@ -152,17 +170,23 @@ export default kea({
       structure => Object.keys(structure).sort(naturalCompare)
     ],
     sortedStructure: [
-      () => [selectors.structure, selectors.newFields],
-      (structure, newFields) => {
+      () => [selectors.structure, selectors.newFields, selectors.editedFields],
+      (structure, newFields, editedFields) => {
         const newStructure = {}
+
         Object.entries(structure).sort((a, b) => naturalCompare(a[0], b[0])).forEach(([model, { custom, columns, links }]) => {
+          const skipOld = editedFields[model] ? Object.keys(editedFields[model]) : []
+
           newStructure[model] = [
             ...Object.entries(custom).map(([key, meta]) => ({ key, type: 'custom', meta, editType: 'old' })),
             ...Object.entries(columns).map(([key, meta]) => ({ key, type: 'column', meta, editType: 'old' })),
-            ...Object.entries(links).map(([key, meta]) => ({ key, type: 'link', meta, editType: 'old' })),
+            ...Object.entries(links).map(([key, meta]) => ({ key, type: 'link', meta, editType: 'old' }))
+          ].filter(k => !skipOld.includes(k.key)).concat([
+            ...(editedFields[model] ? Object.entries(editedFields[model]).map(([originalKey, f]) => ({ ...f, originalKey, editType: 'old' })) : []),
             ...(newFields[model] ? Object.values(newFields[model]).map(f => ({ ...f, editType: 'new' })) : [])
-          ].sort((a, b) => naturalCompare(a.key, b.key))
+          ]).sort((a, b) => naturalCompare(a.key, b.key))
         })
+
         return newStructure
       }
     ],

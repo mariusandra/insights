@@ -50,7 +50,7 @@ const logic = kea({
 function EditField ({ closeEdit, visible, form: { getFieldDecorator, validateFieldsAndScroll, getFieldValue } }) {
   const { models, fieldData, modelFields } = useValues(logic)
   const { editingModel, editingField, editingFieldType } = useValues(modelsLogic)
-  const { saveNewField, saveEditedNewField, deleteNewField } = useActions(modelsLogic)
+  const { saveNewField, saveEditedNewField, saveEditedOldField, deleteNewField } = useActions(modelsLogic)
   const type = getFieldValue('type') || (fieldData ? fieldData.type || 'custom' : 'custom')
 
   const handleSave = (e) => {
@@ -80,8 +80,7 @@ function EditField ({ closeEdit, visible, form: { getFieldDecorator, validateFie
           if (editingFieldType === 'new') {
             saveEditedNewField(editingModel, editingField, values.column, values.type, meta)
           } else {
-            console.log(values)
-            console.error('Not yet supported')
+            saveEditedOldField(editingModel, fieldData.originalKey || fieldData.key, values.column, values.type, meta)
           }
         } else {
           saveNewField(editingModel, values.column, values.type, meta)

@@ -34,7 +34,8 @@
           color: hsl(210, 21%, 39%);
         }
       }
-      &.new-column {
+      &.new-column,
+      &.edited-column {
         font-weight: bold;
       }
     }
