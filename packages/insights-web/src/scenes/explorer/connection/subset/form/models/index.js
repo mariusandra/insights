@@ -11,7 +11,16 @@ import FieldRow from './field-row'
 import logic from './logic'
 
 export default function Models () {
-  const { sortedModels, structure, sortedStructure, checkedModelsLookup, checkedKeys, editingFieldType, ignoredColumnCount } = useValues(logic)
+  const {
+    sortedModels,
+    structure,
+    sortedStructure,
+    checkedModelsLookup,
+    checkedKeys,
+    editingFieldType,
+    ignoredColumnCount,
+    addedColumnCount
+  } = useValues(logic)
   const { setCheckedKeysRaw, addCustomField, editField, closeEdit, toggle } = useActions(logic)
 
   return (
@@ -36,7 +45,7 @@ export default function Models () {
           <Tree.TreeNode
             key={model}
             showLine
-            title={<ModelRow model={model} ignoredColumnCount={ignoredColumnCount} sortedStructure={sortedStructure} />}
+            title={<ModelRow model={model} ignoredColumnCount={ignoredColumnCount[model] || 0} addedColumnCount={addedColumnCount[model] || 0} sortedStructure={sortedStructure} />}
           >
             {sortedStructure[model].map(field => (
               <Tree.TreeNode

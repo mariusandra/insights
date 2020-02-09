@@ -221,6 +221,18 @@ export default kea({
         return ignoredColumnCount
       }
     ],
+    addedColumnCount: [
+      () => [selectors.sortedStructure, selectors.newFields],
+      (sortedStructure, newFields) => {
+        const addedColumnCount = {}
+
+        Object.keys(sortedStructure).forEach(model => {
+          addedColumnCount[model] = newFields[model] ? Object.keys(newFields[model]).length : 0
+        })
+
+        return addedColumnCount
+      }
+    ],
     allFields: [
       () => [selectors.sortedStructure],
       (sortedStructure) => {
