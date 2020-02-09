@@ -14,15 +14,15 @@ export default function FieldRow ({ structure, model, field, editField }) {
       <div className='column-meta'>
         {field.type === 'link' && structure[model].columns[field.meta.my_key] && structure[model].columns[field.meta.my_key].index === 'primary_key' ? (
           <Tag color='geekblue'>
-            <Icon type="link" /> {field.meta.model}.{field.meta.model_key} <Icon type="ellipsis" />  {field.meta.my_key}
+            <Icon type="link" /> <span>{field.meta.model}.{field.meta.model_key} <Icon type="ellipsis" />  {field.meta.my_key}</span>
           </Tag>
         ) : field.type === 'link' ? (
           <Tag color='geekblue'>
-            <Icon type="link" /> {field.meta.my_key} <Icon type="ellipsis" />  {field.meta.model}.{field.meta.model_key}
+            <Icon type="link" /> <span>{field.meta.my_key} <Icon type="ellipsis" /> {field.meta.model}.{field.meta.model_key}</span>
           </Tag>
         ) : field.type === 'column' ? (
           <Tag color='orange'>
-            <Icon type={columnIcon[field.meta.type] || 'question-circle'} /> {field.meta.type}
+            <Icon type={columnIcon[field.meta.type] || 'question-circle'} /> <span>{field.meta.type}</span>
           </Tag>
         ) : field.type === 'custom' ? (
           <Tag color='green'>

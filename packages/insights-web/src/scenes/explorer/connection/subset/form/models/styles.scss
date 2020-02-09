@@ -44,11 +44,10 @@
       .ant-tag {
         display: inline-flex;
         white-space: normal;
-        i.anticon {
+        > i.anticon {
           margin: 4px 4px 4px 0px;
-          padding: 0;
         }
-        code {
+        > code {
           white-space: pre-wrap;
         }
       }
