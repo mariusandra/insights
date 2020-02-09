@@ -123,6 +123,15 @@ export default kea({
     checkedKeys: [[], {
       [actions.editSubset]: () => ([]),
       [actions.setCheckedKeys]: (_, payload) => payload.checkedKeys,
+      [actions.saveNewField]: (state, { model, key }) => state.concat([`${model}.${key}`]),
+      [actions.deleteNewField]: (state, { model, key }) => state.filter(c => c !== `${model}.${key}`),
+      [actions.saveEditedNewField]: (state, { model, oldKey, key }) => {
+        if (state.includes(`${model}.${oldKey}`)) {
+          return state.filter(c => c !== `${model}.${oldKey}`).concat([`${model}.${key}`])
+        } else {
+          return state
+        }
+      }
     }],
     editingModel: [null, {
       [actions.addCustomField]: (_, payload) => payload.model,
