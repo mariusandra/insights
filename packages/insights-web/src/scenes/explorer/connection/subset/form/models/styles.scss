@@ -42,7 +42,15 @@
     .column-meta {
       max-width: calc(75% - 80px);
       .ant-tag {
+        display: inline-flex;
         white-space: normal;
+        i.anticon {
+          margin: 4px 4px 4px 0px;
+          padding: 0;
+        }
+        code {
+          white-space: pre-wrap;
+        }
       }
       .anticon-edit {
         color: hsl(210, 10%, 80%);
@@ -52,9 +60,6 @@
         cursor: pointer;
         vertical-align: top;
         margin-top: 6px;
-      }
-      code {
-        white-space: pre-wrap;
       }
     }
   }
