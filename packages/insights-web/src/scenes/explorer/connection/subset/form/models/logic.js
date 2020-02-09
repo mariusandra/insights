@@ -239,7 +239,6 @@ export default kea({
         let allFields = []
 
         Object.entries(sortedStructure).forEach(([model, fieldsObject]) => {
-          console.log(fieldsObject)
           allFields = [
             ...allFields,
             model,
