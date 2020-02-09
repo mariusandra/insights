@@ -22,6 +22,7 @@
 
   .tree-column-row {
     display: flex;
+
     .column-key {
       width: 200px;
       min-width: 25%;
@@ -37,19 +38,23 @@
         font-weight: bold;
       }
     }
+
     .column-meta {
       max-width: calc(75% - 80px);
       .ant-tag {
         white-space: normal;
       }
       .anticon-edit {
-        color: #cccccc;
+        color: hsl(210, 10%, 80%);
+        &:hover {
+          color: hsl(210, 21%, 39%);
+        }
         cursor: pointer;
         vertical-align: top;
         margin-top: 6px;
-        &:hover {
-          color: #2e5b85;
-        }
+      }
+      code {
+        white-space: pre-wrap;
       }
     }
   }

@@ -26,7 +26,7 @@ export default function FieldRow ({ structure, model, field, editField }) {
           </Tag>
         ) : field.type === 'custom' ? (
           <Tag color='green'>
-            <Icon type={columnIcon[field.meta.type] || 'code'} /> {field.meta.sql}
+            <Icon type={columnIcon[field.meta.type] || 'code'} /> <code>{field.meta.sql}</code>
           </Tag>
         ) : null}
         <Icon type='edit' onClick={() => editField(model, field.key, field.editType)}  />
