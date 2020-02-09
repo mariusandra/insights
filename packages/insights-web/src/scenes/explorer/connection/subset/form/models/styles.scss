@@ -4,7 +4,7 @@
     cursor: initial;
   }
   li .ant-tree-node-content-wrapper:hover {
-    background: #eeeeee;
+    background: hsl(210, 40%, 96%);
   }
   .ant-tree-checkbox-inner {
     transition-duration: 0.1s;
@@ -26,9 +26,12 @@
       width: 200px;
       min-width: 25%;
       white-space: initial;
-      .anticon-idcard {
+      .anticon {
         margin-left: 5px;
-        color: #888;
+        color: hsl(210, 21%, 48%);
+        &:hover {
+          color: hsl(210, 21%, 39%);
+        }
       }
       &.new-column {
         font-weight: bold;

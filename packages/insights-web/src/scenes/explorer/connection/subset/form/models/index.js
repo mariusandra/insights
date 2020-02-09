@@ -2,47 +2,13 @@ import './styles.scss'
 
 import React from 'react'
 import { useActions, useValues } from 'kea'
-import { Tree, Icon, Tag, Button, Tooltip } from 'antd'
-import EditField, { columnIcon, fieldIcon } from './edit-field'
+import { Tree, Icon, Button } from 'antd'
+import EditField, { fieldIcon } from './edit-field'
+
+import ModelRow from './model-row'
+import FieldRow from './field-row'
 
 import logic from './logic'
-
-const ModelTitle = ({ model, ignoredColumnCount }) => {
-  const diff = ignoredColumnCount[model] || 0
-  return <span>{model} {diff > 0 ? <Tag className='ignore-tag'>{diff} field{diff === 1 ? '' : 's'} ignored</Tag> : null}</span>
-}
-
-const FieldTitle = ({ structure, model, field, editField }) => {
-  return (
-    <div className='tree-column-row'>
-      <span className={`column-key${field.newField ? ' new-column' : ''}`}>
-        {field.key}
-        {field.meta.index === 'primary_key' ? <Tooltip title="Primary Key"><Icon type="idcard" /></Tooltip> : null}
-        {field.newField ? <Tag className='new-tag' color='red'>new</Tag> : null}
-      </span>
-      <div className='column-meta'>
-        {field.type === 'link' && structure[model].columns[field.meta.my_key] && structure[model].columns[field.meta.my_key].index === 'primary_key' ? (
-          <Tag color='geekblue'>
-            <Icon type="link" /> {field.meta.model}.{field.meta.model_key} <Icon type="ellipsis" />  {field.meta.my_key}
-          </Tag>
-        ) : field.type === 'link' ? (
-          <Tag color='geekblue'>
-            <Icon type="link" /> {field.meta.my_key} <Icon type="ellipsis" />  {field.meta.model}.{field.meta.model_key}
-          </Tag>
-        ) : field.type === 'column' ? (
-          <Tag color='orange'>
-            <Icon type={columnIcon[field.meta.type] || 'question-circle'} /> {field.meta.type}
-          </Tag>
-        ) : field.type === 'custom' ? (
-          <Tag color='green'>
-            <Icon type={columnIcon[field.meta.type] || 'code'} /> {field.meta.sql}
-          </Tag>
-        ) : null}
-        <Icon type='edit' onClick={() => editField(model, field.key, field.editType)}  />
-      </div>
-    </div>
-  )
-}
 
 export default function Models () {
   const { sortedModels, structure, sortedStructure, checkedModelsLookup, checkedKeys, editingFieldType, ignoredColumnCount } = useValues(logic)
@@ -70,14 +36,14 @@ export default function Models () {
           <Tree.TreeNode
             key={model}
             showLine
-            title={<ModelTitle model={model} ignoredColumnCount={ignoredColumnCount} sortedStructure={sortedStructure} />}
+            title={<ModelRow model={model} ignoredColumnCount={ignoredColumnCount} sortedStructure={sortedStructure} />}
           >
             {sortedStructure[model].map(field => (
               <Tree.TreeNode
                 disabled={field.type === 'link' && !checkedModelsLookup[field.meta.model]}
                 switcherIcon={<Icon type={fieldIcon[field.type]} />}
                 key={`${model}.${field.key}`}
-                title={<FieldTitle structure={structure} model={model} field={field} editField={editField} />}
+                title={<FieldRow structure={structure} model={model} field={field} editField={editField} />}
               />
             ))}
 
