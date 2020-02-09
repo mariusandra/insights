@@ -9,24 +9,8 @@ const arrayToObjectKeys = (arr, defaultValue = true) => {
   return obj
 }
 
-const getAllFields = (structure) => {
-  let allFields = []
-
-  Object.values(structure).forEach(model => {
-    allFields = [
-      ...allFields,
-      model.model,
-      ...Object.keys(model.columns).map(column => `${model.model}.${column}`),
-      ...Object.keys(model.links).map(link => `${model.model}.${link}`),
-      ...Object.keys(model.custom).map(key => `${model.model}.${key}`)
-    ]
-  })
-
-  return allFields
-}
-
 function checkedKeysForSubsetAndStructure (subset, structure) {
-  const { addNewModels, addNewFields } = subset
+  const { addNewModels, addNewFields, newFields } = subset
   const selection = subset.selection || {}
 
   let checkedKeys = []
@@ -35,7 +19,8 @@ function checkedKeysForSubsetAndStructure (subset, structure) {
     const modelKeys = [
       ...Object.keys(modelStructure.columns),
       ...Object.keys(modelStructure.links),
-      ...Object.keys(modelStructure.custom)
+      ...Object.keys(modelStructure.custom),
+      ...(newFields && newFields[model] ? Object.keys(newFields[model]) : [])
     ]
 
     if (typeof selection[model] === 'object') {
@@ -82,6 +67,7 @@ export default kea({
   actions: () => ({
     setCheckedKeysRaw: (checkedKeys) => ({ checkedKeys }),
     setCheckedKeys: (checkedKeys) => ({ checkedKeys }),
+    setNewFields: (newFields) => ({ newFields }),
     addCustomField: (model) => ({ model }),
     editField: (model, fieldKey, editType) => ({ model, fieldKey, editType }),
     closeEdit: true,
@@ -93,6 +79,7 @@ export default kea({
 
   reducers: ({ actions }) => ({
     newFields: [{}, {
+      [actions.setNewFields]: (_, payload) => payload.newFields,
       [actions.saveNewField]: (state, { model, key, type, meta }) => ({
         ...state,
         [model]: {
@@ -233,12 +220,30 @@ export default kea({
 
         return ignoredColumnCount
       }
+    ],
+    allFields: [
+      () => [selectors.sortedStructure],
+      (sortedStructure) => {
+        let allFields = []
+
+        Object.entries(sortedStructure).forEach(([model, fieldsObject]) => {
+          console.log(fieldsObject)
+          allFields = [
+            ...allFields,
+            model,
+            ...fieldsObject.map(field => `${model}.${field.key}`)
+          ]
+        })
+
+        return allFields
+      }
     ]
   }),
 
   listeners: ({ actions, values }) => ({
     [actions.fullSubsetLoaded]: ({ subset, structure }) => {
       const checkedKeys = checkedKeysForSubsetAndStructure(subset, structure)
+      actions.setNewFields(subset.newFields || {})
       actions.setCheckedKeys(checkedKeys)
     },
 
@@ -291,7 +296,7 @@ export default kea({
       if (values.checkedKeys.length > 0) {
         actions.setCheckedKeys([])
       } else {
-        actions.setCheckedKeys(getAllFields(values.structure))
+        actions.setCheckedKeys(values.allFields)
       }
     }
   })

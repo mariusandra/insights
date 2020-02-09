@@ -13,7 +13,7 @@ const subsetsService = client.service('subsets')
 export default kea({
   connect: {
     values: [
-      modelsLogic, ['subsetSelection'],
+      modelsLogic, ['subsetSelection', 'newFields'],
       connectionsLogic, ['subset', 'connectionId']
     ],
     actions: [
@@ -30,14 +30,14 @@ export default kea({
 
   listeners: ({ actions, values }) => ({
     [actions.saveSubset]: async ({ formValues }) => {
-      const { subsetSelection, subset: { _id: subsetId }, connectionId } = values
+      const { subsetSelection, newFields, subset: { _id: subsetId }, connectionId } = values
 
       let subset
 
       if (subsetId) {
-        subset = await subsetsService.patch(subsetId, { ...formValues, selection: subsetSelection })
+        subset = await subsetsService.patch(subsetId, { ...formValues, selection: subsetSelection, newFields })
       } else {
-        subset = await subsetsService.create({ ...formValues, type: 'custom', connectionId, selection: subsetSelection })
+        subset = await subsetsService.create({ ...formValues, type: 'custom', connectionId, selection: subsetSelection, newFields })
       }
 
       actions.subsetEdited(subset)
