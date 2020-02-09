@@ -7,7 +7,7 @@ import { SubsetData } from '../subsets/subsets.class'
 interface ServiceOptions {}
 
 function applySubsetToStructure (structure: IStructure, subset: SubsetData) {
-  const { selection = {}, addNewModels, addNewFields, newFields = {} } = subset
+  const { selection = {}, addNewModels, addNewFields, newFields = {}, editedFields = {} } = subset
 
   const newStructure = {}
 
@@ -20,18 +20,38 @@ function applySubsetToStructure (structure: IStructure, subset: SubsetData) {
         custom: {}
       };
 
+      const skipOldEditedFields = editedFields[modelKey] ? Object.keys(editedFields[modelKey]) : [];
+
       (['links', 'columns', 'custom']).forEach(typeKey => {
         if (modelStructure[typeKey]) {
           Object.entries(modelStructure[typeKey]).forEach(([fieldKey, fieldData]) => {
             if (
-              selection[modelKey][fieldKey] === true ||
-              (typeof selection[modelKey][fieldKey] === 'undefined' && addNewFields)
+              !skipOldEditedFields.includes(fieldKey) && (
+                selection[modelKey][fieldKey] === true ||
+                (typeof selection[modelKey][fieldKey] === 'undefined' && addNewFields)
+              )
             ) {
               newModel[typeKey][fieldKey] = fieldData
             }
           })
         }
       })
+
+      // const newFields = Object.values(editedFields[modelKey] || []).concat(Object.values(newFields[modelKey]) || [])
+
+      if (editedFields[modelKey]) {
+        Object.values(editedFields[modelKey]).forEach(field => {
+          if (field.type === 'custom') {
+            newModel.custom[field.key] = field.meta
+          }
+          if (field.type === 'column') {
+            newModel.columns[field.key] = field.meta
+          }
+          if (field.type === 'link') {
+            newModel.links[field.key] = field.meta
+          }
+        })
+      }
 
       if (newFields[modelKey]) {
         Object.values(newFields[modelKey]).forEach(field => {
