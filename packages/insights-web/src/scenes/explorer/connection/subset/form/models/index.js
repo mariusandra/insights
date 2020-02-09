@@ -29,14 +29,13 @@ const FieldTitle = ({ structure, model, field, editColumn }) => {
           <Tag color='geekblue'>
             <Icon type="link" /> {field.meta.my_key} <Icon type="ellipsis" />  {field.meta.model}.{field.meta.model_key}
           </Tag>
-        ) : field.type === 'custom' ? (
-          <Tag color='green'>
-            <Icon type='code' /> {field.meta.sql}
-          </Tag>
-        ) : null}
-        {field.type === 'column' || field.type === 'custom' ? (
+        ) : field.type === 'column' ? (
           <Tag color='orange'>
             <Icon type={columnIcon[field.meta.type] || 'question-circle'} /> {field.meta.type}
+          </Tag>
+        ) : field.type === 'custom' ? (
+          <Tag color='green'>
+            <Icon type={columnIcon[field.meta.type] || 'code'} /> {field.meta.sql}
           </Tag>
         ) : null}
         <Icon type='edit' onClick={() => editColumn(`${model}.${field.key}`)}  />
