@@ -5,12 +5,12 @@ import React from 'react'
 export default function FieldRow ({ structure, model, field, editField }) {
   return (
     <div className='tree-column-row'>
-      <span className={`column-key${field.newField ? ' new-column' : ''}${field.editedField ? ' edited-column' : ''}`}>
+      <span className={`column-key${field.editType === 'new' ? ' new-column' : ''}${field.editType === 'edited' ? ' edited-column' : ''}`}>
         {field.key}
         {field.meta.index === 'primary_key' ? <Tooltip title="Primary Key"><Icon type="idcard" /></Tooltip> : null}
-        {field.newField ? <Tooltip title="Manually Added Field"><Icon type="user-add" /></Tooltip> : null}
-        {field.editedField ? <Tooltip title="Changes Made"><Icon type="setting" /></Tooltip> : null}
-        {field.editedField && field.originalKey !== field.key ? <Tooltip title={`Renamed from "${field.originalKey}"`}><Icon type="interaction" /></Tooltip> : null}
+        {field.editType === 'new' ? <Tooltip title="Manually Added Field"><Icon type="user-add" /></Tooltip> : null}
+        {field.editType === 'edited' ? <Tooltip title="Changes Made"><Icon type="setting" /></Tooltip> : null}
+        {field.editType === 'edited' && field.originalKey !== field.key ? <Tooltip title={`Renamed from "${field.originalKey}"`}><Icon type="interaction" /></Tooltip> : null}
       </span>
 
       <div className='column-meta'>

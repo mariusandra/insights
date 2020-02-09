@@ -26,7 +26,7 @@ const fieldExample2 = "${first_name} || ' ' || ${last_name}" // eslint-disable-l
 
 const logic = kea({
   connect: {
-    values: [modelsLogic, ['editingModel', 'editingField', 'sortedStructure']]
+    values: [modelsLogic, ['editingModel', 'editingField', 'editingFieldType', 'sortedStructure']]
   },
 
   selectors: ({ selectors }) => ({
@@ -43,14 +43,21 @@ const logic = kea({
     modelFields: [
       () => [selectors.sortedStructure, selectors.editingModel, selectors.editingField],
       (sortedStructure, model, field) => sortedStructure[model] ? sortedStructure[model].map(s => s.key).filter(k => k !== field) : []
+    ],
+
+    canClearEdits: [
+      () => [selectors.editingFieldType, selectors.modelFields, selectors.fieldData],
+      (editingFieldType, modelFields, fieldData) =>
+        editingFieldType === 'edited' &&
+        (fieldData.key === fieldData.originalKey || !modelFields.includes(fieldData.originalKey))
     ]
   })
 })
 
 function EditField ({ closeEdit, visible, form: { getFieldDecorator, validateFieldsAndScroll, getFieldValue } }) {
-  const { models, fieldData, modelFields } = useValues(logic)
+  const { models, fieldData, modelFields, canClearEdits } = useValues(logic)
   const { editingModel, editingField, editingFieldType } = useValues(modelsLogic)
-  const { saveNewField, saveEditedNewField, saveEditedOldField, deleteNewField } = useActions(modelsLogic)
+  const { saveNewField, saveEditedNewField, saveEditedOldField, deleteNewField, deleteEditedField } = useActions(modelsLogic)
   const type = getFieldValue('type') || (fieldData ? fieldData.type || 'custom' : 'custom')
 
   const handleSave = (e) => {
@@ -79,7 +86,7 @@ function EditField ({ closeEdit, visible, form: { getFieldDecorator, validateFie
         if (editingField) {
           if (editingFieldType === 'new') {
             saveEditedNewField(editingModel, editingField, values.column, values.type, meta)
-          } else {
+          } else { // 'old' or 'edited'
             saveEditedOldField(editingModel, fieldData.originalKey || fieldData.key, values.column, values.type, meta)
           }
         } else {
@@ -97,10 +104,22 @@ function EditField ({ closeEdit, visible, form: { getFieldDecorator, validateFie
       keyboard={false}
       title={<>{editingModel} <Icon type="right" /> {editingField || 'New Field'}</>}
       footer={[
-        editingFieldType === 'new' ? (
+        editingFieldType === 'new' && editingField ? (
           <Button key="delete" type='link' style={{ float: 'left' }} onClick={() => deleteNewField(editingModel, editingField)}>
             <Icon type='delete' theme="filled" />
             Delete
+          </Button>
+        ) : null,
+        editingFieldType === 'edited' ? (
+          <Button
+            disabled={!canClearEdits}
+            key="delete"
+            type='link'
+            style={{ float: 'left' }}
+            title={canClearEdits ? '' : `Can not rename field back to "${fieldData.originalKey}"`}
+            onClick={() => deleteEditedField(editingModel, fieldData.originalKey, fieldData.key)}>
+            <Icon type='delete' theme="filled" />
+            Clear Edit
           </Button>
         ) : null,
         <Button key="back" onClick={closeEdit}>

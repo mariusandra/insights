@@ -80,7 +80,8 @@ export default kea({
     saveNewField: (model, key, type, meta) => ({ model, key, type, meta }),
     saveEditedNewField: (model, oldKey, key, type, meta) => ({ model, oldKey, key, type, meta }),
     saveEditedOldField: (model, originalKey, key, type, meta) => ({ model, originalKey, key, type, meta }),
-    deleteNewField: (model, key) => ({ model, key })
+    deleteNewField: (model, key) => ({ model, key }),
+    deleteEditedField: (model, originalKey, key) => ({ model, originalKey, key })
   }),
 
   reducers: ({ actions }) => ({
@@ -124,12 +125,28 @@ export default kea({
           }
         }
       },
+      [actions.deleteEditedField]: (state, { model, originalKey }) => {
+        const { [originalKey]: oldNewField, ...otherFields } = state[model]
+        return {
+          ...state,
+          [model]: {
+            ...otherFields,
+          }
+        }
+      }
     }],
     checkedKeys: [[], {
       [actions.editSubset]: () => ([]),
       [actions.setCheckedKeys]: (_, payload) => payload.checkedKeys,
       [actions.saveNewField]: (state, { model, key }) => state.concat([`${model}.${key}`]),
       [actions.deleteNewField]: (state, { model, key }) => state.filter(c => c !== `${model}.${key}`),
+      [actions.deleteEditedField]: (state, { model, originalKey, key }) => {
+        if (originalKey !== key && state.includes(`${model}.${key}`)) {
+          return state.filter(c => c !== `${model}.${key}`).concat([`${model}.${originalKey}`])
+        } else {
+          return state
+        }
+      },
       [actions.saveEditedNewField]: (state, { model, oldKey, key }) => {
         if (state.includes(`${model}.${oldKey}`)) {
           return state.filter(c => c !== `${model}.${oldKey}`).concat([`${model}.${key}`])
@@ -152,7 +169,8 @@ export default kea({
       [actions.saveNewField]: () => null,
       [actions.deleteNewField]: () => null,
       [actions.saveEditedNewField]: () => null,
-      [actions.saveEditedOldField]: () => null
+      [actions.saveEditedOldField]: () => null,
+      [actions.deleteEditedField]: () => null
     }],
     editingField: [null, {
       [actions.addCustomField]: () => null,
@@ -161,7 +179,8 @@ export default kea({
       [actions.saveNewField]: () => null,
       [actions.deleteNewField]: () => null,
       [actions.saveEditedNewField]: () => null,
-      [actions.saveEditedOldField]: () => null
+      [actions.saveEditedOldField]: () => null,
+      [actions.deleteEditedField]: () => null
     }],
     editingFieldType: [null, {
       [actions.addCustomField]: () => 'new',
@@ -170,7 +189,8 @@ export default kea({
       [actions.saveNewField]: () => null,
       [actions.deleteNewField]: () => null,
       [actions.saveEditedNewField]: () => null,
-      [actions.saveEditedOldField]: () => null
+      [actions.saveEditedOldField]: () => null,
+      [actions.deleteEditedField]: () => null
     }]
   }),
 
@@ -192,7 +212,7 @@ export default kea({
             ...Object.entries(columns).map(([key, meta]) => ({ key, type: 'column', meta, editType: 'old' })),
             ...Object.entries(links).map(([key, meta]) => ({ key, type: 'link', meta, editType: 'old' }))
           ].filter(k => !skipOld.includes(k.key)).concat([
-            ...(editedFields[model] ? Object.entries(editedFields[model]).map(([originalKey, f]) => ({ ...f, originalKey, editType: 'old' })) : []),
+            ...(editedFields[model] ? Object.entries(editedFields[model]).map(([originalKey, f]) => ({ ...f, originalKey, editType: 'edited' })) : []),
             ...(newFields[model] ? Object.values(newFields[model]).map(f => ({ ...f, editType: 'new' })) : [])
           ]).sort((a, b) => naturalCompare(a.key, b.key))
         })
@@ -265,6 +285,18 @@ export default kea({
         })
 
         return addedColumnCount
+      }
+    ],
+    editedColumnCount: [
+      () => [selectors.sortedStructure, selectors.editedFields],
+      (sortedStructure, editedFields) => {
+        const editedColumnCount = {}
+
+        Object.keys(sortedStructure).forEach(model => {
+          editedColumnCount[model] = editedFields[model] ? Object.keys(editedFields[model]).length : 0
+        })
+
+        return editedColumnCount
       }
     ],
     allFields: [

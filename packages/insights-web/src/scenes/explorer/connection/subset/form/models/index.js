@@ -19,6 +19,7 @@ export default function Models () {
     checkedKeys,
     editingFieldType,
     ignoredColumnCount,
+    editedColumnCount,
     addedColumnCount
   } = useValues(logic)
   const { setCheckedKeysRaw, addCustomField, editField, closeEdit, toggle } = useActions(logic)
@@ -45,7 +46,15 @@ export default function Models () {
           <Tree.TreeNode
             key={model}
             showLine
-            title={<ModelRow model={model} ignoredColumnCount={ignoredColumnCount[model] || 0} addedColumnCount={addedColumnCount[model] || 0} sortedStructure={sortedStructure} />}
+            title={
+              <ModelRow
+                model={model}
+                ignoredColumnCount={ignoredColumnCount[model] || 0}
+                editedColumnCount={editedColumnCount[model] || 0}
+                addedColumnCount={addedColumnCount[model] || 0}
+                sortedStructure={sortedStructure}
+              />
+            }
           >
             {sortedStructure[model].map(field => (
               <Tree.TreeNode
