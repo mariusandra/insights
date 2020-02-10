@@ -16,7 +16,7 @@ export default function FieldRow ({ structure, model, field, editField }) {
       <div className='column-meta'>
         {field.type === 'link' && structure[model].columns[field.meta.my_key] && structure[model].columns[field.meta.my_key].index === 'primary_key' ? (
           <Tag color='geekblue'>
-            <Icon type="link" /> <span>{field.meta.model}.{field.meta.model_key} <Icon type="ellipsis" />  {field.meta.my_key}</span>
+            <Icon type="link" /> <span>{field.meta.model}.{field.meta.model_key} <Icon type="ellipsis" /> {field.meta.my_key}</span>
           </Tag>
         ) : field.type === 'link' ? (
           <Tag color='geekblue'>

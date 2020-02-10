@@ -81,7 +81,10 @@ export default kea({
     saveEditedNewField: (model, oldKey, key, type, meta) => ({ model, oldKey, key, type, meta }),
     saveEditedOldField: (model, originalKey, key, type, meta) => ({ model, originalKey, key, type, meta }),
     deleteNewField: (model, key) => ({ model, key }),
-    deleteEditedField: (model, originalKey, key) => ({ model, originalKey, key })
+    deleteEditedField: (model, originalKey, key) => ({ model, originalKey, key }),
+
+    showJSON: true,
+    hideJSON: true
   }),
 
   reducers: ({ actions }) => ({
@@ -137,26 +140,26 @@ export default kea({
     }],
     checkedKeys: [[], {
       [actions.editSubset]: () => ([]),
-      [actions.setCheckedKeys]: (_, payload) => payload.checkedKeys,
-      [actions.saveNewField]: (state, { model, key }) => state.concat([`${model}.${key}`]),
+      [actions.setCheckedKeys]: (_, payload) => payload.checkedKeys.filter(ck => ck.split('.').length >= 2).sort(),
+      [actions.saveNewField]: (state, { model, key }) => state.concat([`${model}.${key}`]).sort(),
       [actions.deleteNewField]: (state, { model, key }) => state.filter(c => c !== `${model}.${key}`),
       [actions.deleteEditedField]: (state, { model, originalKey, key }) => {
         if (originalKey !== key && state.includes(`${model}.${key}`)) {
-          return state.filter(c => c !== `${model}.${key}`).concat([`${model}.${originalKey}`])
+          return state.filter(c => c !== `${model}.${key}`).concat([`${model}.${originalKey}`]).sort()
         } else {
           return state
         }
       },
       [actions.saveEditedNewField]: (state, { model, oldKey, key }) => {
         if (state.includes(`${model}.${oldKey}`)) {
-          return state.filter(c => c !== `${model}.${oldKey}`).concat([`${model}.${key}`])
+          return state.filter(c => c !== `${model}.${oldKey}`).concat([`${model}.${key}`]).sort()
         } else {
           return state
         }
       },
       [actions.saveEditedOldField]: (state, { model, originalKey, key }) => {
         if (state.includes(`${model}.${originalKey}`)) {
-          return state.filter(c => c !== `${model}.${originalKey}`).concat([`${model}.${key}`])
+          return state.filter(c => c !== `${model}.${originalKey}`).concat([`${model}.${key}`]).sort()
         } else {
           return state
         }
@@ -191,6 +194,10 @@ export default kea({
       [actions.saveEditedNewField]: () => null,
       [actions.saveEditedOldField]: () => null,
       [actions.deleteEditedField]: () => null
+    }],
+    showingJSON: [null, {
+      [actions.showJSON]: () => true,
+      [actions.hideJSON]: () => false
     }]
   }),
 
@@ -307,13 +314,20 @@ export default kea({
         Object.entries(sortedStructure).forEach(([model, fieldsObject]) => {
           allFields = [
             ...allFields,
-            model,
             ...fieldsObject.map(field => `${model}.${field.key}`)
           ]
         })
 
         return allFields
       }
+    ],
+    defaultJSON: [
+      () => [selectors.newFields, selectors.editedFields, selectors.checkedKeys],
+      (newFields, editedFields, checkedKeys) => JSON.stringify({
+        newFields,
+        editedFields,
+        checkedKeys
+      }, null, 2)
     ]
   }),
 

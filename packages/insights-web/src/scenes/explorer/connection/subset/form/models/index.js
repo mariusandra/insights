@@ -9,6 +9,7 @@ import ModelRow from './model-row'
 import FieldRow from './field-row'
 
 import logic from './logic'
+import JSON from './json'
 
 export default function Models () {
   const {
@@ -20,15 +21,17 @@ export default function Models () {
     editingFieldType,
     ignoredColumnCount,
     editedColumnCount,
-    addedColumnCount
+    addedColumnCount,
+    showingJSON
   } = useValues(logic)
-  const { setCheckedKeysRaw, addCustomField, editField, closeEdit, toggle } = useActions(logic)
+  const { setCheckedKeysRaw, addCustomField, editField, closeEdit, toggle, showJSON } = useActions(logic)
 
   return (
     <div>
       <h3>
         Select models and fields to include in this subset
-        <Button type='link' onClick={toggle}>Toggle All</Button>
+        <Button type='link' onClick={toggle}>Toggle All Fields</Button>
+        <Button type='link' onClick={showJSON}>Edit JSON</Button>
       </h3>
 
       <Tree
@@ -77,6 +80,7 @@ export default function Models () {
       </Tree>
 
       <EditField visible={!!editingFieldType} closeEdit={closeEdit} />
+      <JSON visible={showingJSON} />
     </div>
   )
 }
