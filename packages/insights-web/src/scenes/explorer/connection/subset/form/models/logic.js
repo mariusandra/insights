@@ -10,7 +10,7 @@ const arrayToObjectKeys = (arr, defaultValue = true) => {
 }
 
 function checkedKeysForSubsetAndStructure (subset, structure) {
-  const { addNewModels, addNewFields, newFields, editedFields } = subset
+  const { addNewModels, addNewFields, newFields = {}, editedFields = {} } = subset
   const selection = subset.selection || {}
 
   let checkedKeys = []
