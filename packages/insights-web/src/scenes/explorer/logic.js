@@ -72,6 +72,9 @@ export default kea({
 
     setGraphTimeFilter: (graphTimeFilter) => ({ graphTimeFilter }),
 
+    openModel: model => ({ model }),
+    closeModel: true,
+    focusSearch: true,
     openTreeNodeFilter: (path) => ({ path }),
 
     openTreeNode: (path) => ({ path }),
@@ -515,4 +518,33 @@ export default kea({
       yield put(push(url))
     }
   }),
+
+  listeners: ({ actions, values }) => ({
+    [actions.openModel]: async ({ model }) => {
+      actions.openTreeNode(model)
+      actions.setSearch('')
+
+      // get the id column for this model
+      const { structure } = values
+      const primaryKey = structure[model].primary_key
+
+      // and add it with a count as the default
+      if (primaryKey) {
+        actions.addColumn(`${model}.${primaryKey}!!count`)
+      }
+      actions.focusSearch()
+    },
+
+    [actions.closeModel]: async () => {
+      actions.clear()
+      actions.setSearch('')
+      actions.focusSearch()
+      console.log('focus search !!')
+    },
+
+    [actions.focusSearch]: async () => {
+      const search = document.getElementById('sidebar-model-field-search')
+      search && search.focus()
+    }
+  })
 })
