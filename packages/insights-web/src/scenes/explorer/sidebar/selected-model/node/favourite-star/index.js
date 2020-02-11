@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'kea'
 import PropTypes from 'prop-types'
-import { Icon } from 'antd'
+import { Icon, Tooltip } from 'antd'
 import explorerLogic from 'scenes/explorer/logic'
 
 const connection = {
@@ -44,7 +44,9 @@ class FavouriteStar extends Component {
       <span
         className={`favourite-star${favourites[path] ? ' in-favourites' : ' not-in-favourites'}`}
         onClick={this.toggleFavourite}>
-         <Icon type="star" theme={favourites[path] ? "filled" : ''} />
+         <Tooltip placement={'left'} overlay={<span>{favourites[path] ? 'This field is pinned!' : 'Pin this field'}</span>}>
+           <Icon type="pushpin" theme={favourites[path] ? "filled" : ''} />
+         </Tooltip>
       </span>
     )
   }

@@ -27,43 +27,40 @@
   .ant-tree li .ant-tree-node-content-wrapper {
     color: #333;
     min-width: calc(100% - 24px);
-    .favourite-star {
-      margin-left: 5px;
-      &.not-in-favourites {
-        //display: none;
-      }
-      &.not-in-favourites i {
-        color: hsla(39, 36%, 60%, 1);
-        &:hover {
-          color: hsla(39, 36%, 50%, 1);
+    .model-field-controls {
+      float: right;
+
+      .favourite-star {
+        margin-left: 5px;
+
+        &.not-in-favourites i {
+          color: hsla(3, 72%, 83%, 1);
+
+          &:hover {
+            color: hsla(3, 77%, 42%, 1);
+          }
+        }
+
+        &.in-favourites i {
+          color: hsla(3, 77%, 42%, 1);
         }
       }
 
-      &.in-favourites i {
-        color: hsla(39, 94%, 57%, 1);
-      }
-    }
-    .filter-button {
-      //display: none;
-      margin-left: 5px;
-      float: right;
+      .filter-button {
+        margin-left: 5px;
 
-      i {
-        color: hsla(209, 39%, 65%, 1);
-      }
-      &:hover i {
-        color: hsla(209, 32%, 40%, 1)
+        i {
+          color: hsla(209, 39%, 65%, 1);
+        }
+
+        &:hover i, &.filter-filled i {
+          color: hsla(209, 32%, 40%, 1)
+        }
       }
     }
   }
   .ant-tree li .ant-tree-node-content-wrapper:hover {
     background: hsla(209, 34%, 85%, 1);
-    .favourite-star.not-in-favourites {
-      display: inline-block;
-    }
-    .filter-button {
-      display: inline-block;
-    }
   }
   .ant-tree-switcher {
     i.anticon {

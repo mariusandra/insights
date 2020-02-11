@@ -65,7 +65,7 @@ function renderTreeNodes ({ key, path, field, localSearch, model, focusSearch, s
         {field.type === 'link' ? (
           <span className='model-link-tag'><Icon type='link' /> {field.meta.model}</span>
         ) : (
-          <span>
+          <span className='model-field-controls'>
             <FavouriteStar path={path} />
             <FilterButton path={path} />
           </span>

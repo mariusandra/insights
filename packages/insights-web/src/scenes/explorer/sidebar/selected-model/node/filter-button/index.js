@@ -6,7 +6,7 @@ import Tooltip from 'rc-tooltip'
 import OneFilter from 'scenes/explorer/filter/one-filter'
 
 import explorerLogic from 'scenes/explorer/logic'
-import { Icon } from 'antd'
+import { Icon, Tooltip as AntTooltip } from 'antd'
 
 const connection = {
   actions: [
@@ -72,7 +72,7 @@ class FilterButton extends Component {
             column={path}
             forceOpen
             onClose={this.closeFilter}>
-            <span className='filter-button' onClick={this.closeFilter}><Icon type="filter" theme='filled' /></span>
+            <span className='filter-button filter-filled' onClick={this.closeFilter}><Icon type="filter" theme='filled' /></span>
           </OneFilter>
         )
       } else {
@@ -103,13 +103,15 @@ class FilterButton extends Component {
                 </div>
               </div>
             )}>
-            <span className='filter-button' onClick={this.closeFilter}><Icon type="filter" theme='filled' /></span>
+            <span className='filter-button filter-filled' onClick={this.closeFilter}><Icon type="filter" theme='filled' /></span>
           </Tooltip>
         )
       }
     } else {
       return (
-        <span className='filter-button' onClick={this.openFilter}><Icon type="filter" /></span>
+        <AntTooltip placement={'right'} overlay={<span>{filterCount > 0 ? 'Filtered' : 'Filter'} by: <br />- {path}</span>}>
+          <span className={`filter-button${filterCount > 0 ? ' filter-filled' : ''}`} onClick={this.openFilter}><Icon type="filter" theme={filterCount > 0 ? 'filled' : ''} /></span>
+        </AntTooltip>
       )
     }
   }
