@@ -6,6 +6,7 @@ import Tooltip from 'rc-tooltip'
 import OneFilter from 'scenes/explorer/filter/one-filter'
 
 import explorerLogic from 'scenes/explorer/logic'
+import { Icon } from 'antd'
 
 const connection = {
   actions: [
@@ -71,7 +72,7 @@ class FilterButton extends Component {
             column={path}
             forceOpen
             onClose={this.closeFilter}>
-            <span onClick={this.closeFilter}>Filter</span>
+            <span className='filter-button' onClick={this.closeFilter}><Icon type="filter" theme='filled' /></span>
           </OneFilter>
         )
       } else {
@@ -102,13 +103,13 @@ class FilterButton extends Component {
                 </div>
               </div>
             )}>
-            <span onClick={this.closeFilter}>Filter</span>
+            <span className='filter-button' onClick={this.closeFilter}><Icon type="filter" theme='filled' /></span>
           </Tooltip>
         )
       }
     } else {
       return (
-        <span onClick={this.openFilter}>Filter</span>
+        <span className='filter-button' onClick={this.openFilter}><Icon type="filter" /></span>
       )
     }
   }

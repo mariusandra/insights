@@ -24,7 +24,7 @@ export default function FieldRow ({ structure, model, field, editField }) {
           </Tag>
         ) : field.type === 'column' ? (
           <Tag color='orange'>
-            <Icon type={columnIcon[field.meta.type] || 'question-circle'} /> <span>{field.meta.type}</span>
+              <Icon type={columnIcon[field.meta.type] || 'question-circle'} /> <span>{field.meta.type}</span>
           </Tag>
         ) : field.type === 'custom' ? (
           <Tag color='green'>

@@ -166,33 +166,14 @@ class Node extends Component {
 
     if (!collapsed) {
       if (links) {
-        if (links.incoming && links.outgoing) {
-          Object.entries(links.outgoing).forEach(([link, linkData]) => {
-            if (structure[linkData.model]) {
-              regularChildren.push({
-                model: linkData.model,
-                connection: link
-              })
-            }
-          })
-          Object.entries(links.incoming).forEach(([link, linkData]) => {
-            if (structure[linkData.model]) {
-              regularChildren.push({
-                model: linkData.model,
-                connection: link
-              })
-            }
-          })
-        } else {
-          Object.entries(links).forEach(([link, linkData]) => {
-            if (structure[linkData.model]) {
-              regularChildren.push({
-                model: linkData.model,
-                connection: link
-              })
-            }
-          })
-        }
+        Object.entries(links).forEach(([link, linkData]) => {
+          if (structure[linkData.model]) {
+            regularChildren.push({
+              model: linkData.model,
+              connection: link
+            })
+          }
+        })
       }
 
       if (columns) {

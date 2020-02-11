@@ -77,6 +77,7 @@ export default kea({
     focusSearch: true,
     openTreeNodeFilter: (path) => ({ path }),
 
+    setExpandedKeys: (expandedKeys) => ({ expandedKeys }),
     openTreeNode: (path) => ({ path }),
     closeTreeNode: (path) => ({ path }),
     collapseChildNodes: (path) => ({ path }),
@@ -103,6 +104,13 @@ export default kea({
       [actions.openTreeNodeFilter]: (_, payload) => payload.path
     }],
     treeState: [{}, PropTypes.object, {
+      [actions.setExpandedKeys]: (_, { expandedKeys }) => {
+        const expandedObject = {}
+        for (const key of expandedKeys) {
+          expandedObject[key] = true
+        }
+        return expandedObject
+      },
       [actions.openTreeNode]: (state, payload) => Object.assign({}, state, { [payload.path]: true }),
       [actions.closeTreeNode]: (state, payload) => {
         const { [payload.path]: discard, ...rest } = state // eslint-disable-line
@@ -310,6 +318,12 @@ export default kea({
       PropTypes.array
     ],
 
+    expandedKeys: [
+      () => [selectors.treeState],
+      (treeState) => Object.keys(treeState),
+      PropTypes.string
+    ],
+
     selectedModel: [
       () => [selectors.treeState],
       (treeState) => {
@@ -388,127 +402,6 @@ export default kea({
         })
       },
       PropTypes.string
-    ],
-
-    recommendedViews: [
-      () => [selectors.connectionString, selectors.selectedModel, selectors.structure, selectors.modelFavourites],
-      (connectionString, selectedModel, structure, modelFavourites) => {
-        if (!selectedModel) {
-          return []
-        }
-
-        const modelStructure = structure[selectedModel]
-
-        if (!modelStructure) {
-          return []
-        }
-
-        const primaryKeyField = modelStructure.primary_key
-
-        const urls = []
-
-        urls.push({
-          key: 'ids',
-          name: 'count',
-          url: stateToUrl({
-            connection: connectionString,
-            columns: `${selectedModel}.${primaryKeyField}!!count`,
-            sort: '',
-            treeState: `${selectedModel}`,
-            graphTimeFilter: 'last-365',
-            facetsColumn: '',
-            facetsCount: 6,
-            filter: [],
-            graphControls: {
-              type: 'area',
-              sort: '123',
-              cumulative: false,
-              percentages: false,
-              labels: false,
-              compareWith: 0,
-              compareWithPercentageLine: true
-            }
-          })
-        })
-
-        urls.push({
-          key: 'all',
-          name: 'all rows with favourites',
-          url: stateToUrl({
-            connection: connectionString,
-            columns: arrayUniq([`${selectedModel}.${primaryKeyField}`].concat(modelFavourites || [])).join(','),
-            sort: `-${selectedModel}.${primaryKeyField}`,
-            treeState: `${selectedModel}`,
-            graphTimeFilter: 'last-365',
-            facetsColumn: '',
-            facetsCount: 6,
-            filter: [],
-            graphControls: {
-              type: 'area',
-              sort: '123',
-              cumulative: false,
-              percentages: false,
-              labels: false,
-              compareWith: 0,
-              compareWithPercentageLine: true
-            }
-          })
-        })
-
-        const createdAt = modelStructure.columns && modelStructure.columns.created_at
-        if (createdAt) {
-          urls.push({
-            key: 'created_at',
-            name: 'last 365 days',
-            url: stateToUrl({
-              connection: connectionString,
-              columns: `${selectedModel}.${primaryKeyField}!!count,${selectedModel}.created_at!day`,
-              sort: '',
-              treeState: `${selectedModel}`,
-              graphTimeFilter: 'last-365',
-              facetsColumn: '',
-              facetsCount: 6,
-              filter: [],
-              graphControls: {
-                type: 'bar',
-                sort: '123',
-                cumulative: false,
-                percentages: false,
-                labels: false,
-                compareWith: 0,
-                compareWithPercentageLine: true
-              }
-            })
-          })
-
-          urls.push({
-            key: 'yoy_12',
-            name: '12 month y-o-y',
-            url: stateToUrl({
-              connection: connectionString,
-              columns: `${selectedModel}.${primaryKeyField}!!count,${selectedModel}.created_at!month`,
-              sort: '',
-              treeState: `${selectedModel}`,
-              graphTimeFilter: 'last-365',
-              facetsColumn: '',
-              facetsCount: 6,
-              filter: [],
-              graphControls: {
-                type: 'bar',
-                sort: '123',
-                cumulative: false,
-                percentages: false,
-                labels: false,
-                compareWith: 12,
-                compareWithPercentageLine: true
-              }
-            })
-          })
-        }
-
-        return urls
-      },
-      PropTypes.array
     ]
   }),
 

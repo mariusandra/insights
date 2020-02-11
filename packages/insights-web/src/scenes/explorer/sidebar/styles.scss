@@ -1,10 +1,82 @@
 .explorer-tree {
-  .bp3-menu {
-    background: none;
-  }
-
   &.selected-model {
     padding: 10px;
+  }
+
+  .ant-tree {
+    color: #333;
+  }
+  .ant-tree.ant-tree-show-line li span.ant-tree-switcher {
+    background: none;
+  }
+  .ant-tree li {
+    padding-top: 1px;
+    padding-bottom: 1px;
+  }
+  .ant-tree-child-tree > li:first-child {
+    padding-top: 2px;
+  }
+  .ant-tree > .ant-tree-treenode-switcher-open {
+    padding-bottom: 20px;
+  }
+
+  .ant-tree > .ant-tree-treenode-switcher-close {
+    padding-bottom: 20px;
+  }
+
+  .ant-tree li .ant-tree-node-content-wrapper {
+    color: #333;
+    min-width: calc(100% - 24px);
+    .favourite-star {
+      margin-left: 5px;
+      &.not-in-favourites {
+        //display: none;
+      }
+      &.not-in-favourites i {
+        color: hsla(39, 36%, 60%, 1);
+        &:hover {
+          color: hsla(39, 36%, 50%, 1);
+        }
+      }
+
+      &.in-favourites i {
+        color: hsla(39, 94%, 57%, 1);
+      }
+    }
+    .filter-button {
+      //display: none;
+      margin-left: 5px;
+      float: right;
+
+      i {
+        color: hsla(209, 39%, 65%, 1);
+      }
+      &:hover i {
+        color: hsla(209, 32%, 40%, 1)
+      }
+    }
+  }
+  .ant-tree li .ant-tree-node-content-wrapper:hover {
+    background: hsla(209, 34%, 85%, 1);
+    .favourite-star.not-in-favourites {
+      display: inline-block;
+    }
+    .filter-button {
+      display: inline-block;
+    }
+  }
+  .ant-tree-switcher {
+    i.anticon {
+      color: hsla(209, 36%, 84%, 1);
+      &.ant-tree-switcher-icon {
+        color: #333;
+      }
+    }
+  }
+
+  .model-link-tag {
+    margin-left: 5px;
+    color: hsla(209, 45%, 52%, 1);
   }
 
   button {

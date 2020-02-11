@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'kea'
 import PropTypes from 'prop-types'
-
+import { Icon } from 'antd'
 import explorerLogic from 'scenes/explorer/logic'
 
 const connection = {
@@ -41,7 +41,11 @@ class FavouriteStar extends Component {
     const { path, favourites } = this.props
 
     return (
-      <span onClick={this.toggleFavourite}>{favourites[path] ? '⭐' : '☆'}</span>
+      <span
+        className={`favourite-star${favourites[path] ? ' in-favourites' : ' not-in-favourites'}`}
+        onClick={this.toggleFavourite}>
+         <Icon type="star" theme={favourites[path] ? "filled" : ''} />
+      </span>
     )
   }
 }

@@ -17,7 +17,7 @@ export default function Sidebar () {
   const { setSearch, focusSearch } = useActions(explorerLogic)
 
   // eslint-disable-next-line
-  useEffect(() => { focusSearch() }, [])
+  useEffect(() => { window.setTimeout(focusSearch, 100) }, [])
 
   return (
     <Layout>
