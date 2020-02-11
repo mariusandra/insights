@@ -78,7 +78,7 @@ function renderTreeNodes ({ key, path, field, localSearch, model, focusSearch, s
               isLeaf={field && field.type !== 'link'}
               title={title}
               className={field ? `field-type-${field.type}` : ''}
-              switcherIcon={field && field.type !== 'link' ? <Icon type={columnIcon[field.meta.type] || 'question-circle'} /> : null}>
+              switcherIcon={field && field.type !== 'link' ? <Icon type={field.meta.index === 'primary_key' ? 'idcard' : (columnIcon[field.meta.type] || 'question-circle')} /> : null}>
       {treeState[path] && childNodes.
         filter(child => !localSearch || stringIn(localSearch.split(' ')[0], `${path}.${child.key}`)).
         map(child => {
