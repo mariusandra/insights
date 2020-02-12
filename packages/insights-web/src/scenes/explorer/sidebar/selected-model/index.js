@@ -28,6 +28,11 @@ const stringIn = (search, string) => {
   return i >= s.length
 }
 
+function stringInFieldKey (search, path) {
+  const [, ...rest] = path.split('.')
+  return stringIn(search, rest.join('.'))
+}
+
 function renderTreeNodes ({ title, columns, path, field, localSearch, model, focusSearch, sortedStructure, treeState, fieldClicked }) {
   const childNodes = Object.values(sortedStructure[model] || {})
 
@@ -59,7 +64,7 @@ function renderTreeNodes ({ title, columns, path, field, localSearch, model, foc
               switcherIcon={field && field.type !== 'link' ? <Icon type={field.meta.index === 'primary_key' ? 'idcard' : (columnIcon[field.meta.type] || 'question-circle')} /> : null}>
       {treeState[path] &&
         childNodes
-          .filter(child => !localSearch || localSearch === ' ' || stringIn(localSearch.split(' ')[0], `${path}.${child.key}`))
+          .filter(child => stringInFieldKey(localSearch.split(' ')[1] || '', `${path}.${child.key}`))
           .map(child => {
             return renderTreeNodes({
               path: `${path}.${child.key}`,
@@ -116,7 +121,7 @@ export default function SelectedModel () {
           key="...pinned"
           switcherIcon={<Icon type='pushpin' theme="filled" />}
         >
-          {modelFavourites.map(path => {
+          {modelFavourites.filter(path => !search || stringInFieldKey(search, path)).map(path => {
             const field = getSortedMeta(path, sortedStructureObject)
             const [, ...rest] = path.split('.')
             return renderTreeNodes({
