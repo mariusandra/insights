@@ -108,9 +108,26 @@ export default function SelectedModel () {
         selectedKeys={[]}
         onSelect={(([key]) => treeClicked(key))}
       >
-        {/*<TreeNode title={<><span>Saved views</span> <small>(0)</small></>} key="...saved">*/}
-        {/*  <TreeNode title="id" switcherIcon={<Icon type='idcard' />} key="saved-1" />*/}
-        {/*</TreeNode>*/}
+        <TreeNode
+          title={
+            <>
+              {savedViews.length === 0 ? <span>Saved views </span> : <strong>Saved views </strong>}
+              <small>({ savedViews.length })</small>
+            </>
+          }
+          className='saved-views'
+          key="...saved"
+          switcherIcon={<Icon type='star' theme={savedViews.length > 0 ? "filled" : ''} />}
+        >
+          {savedViews.filter(view => !search || stringInFieldKey(search, view.name)).map(view => (
+            <TreeNode
+              key={`...saved.${view._id}`}
+              title={view.name}
+              switcherIcon={<Icon type="star" />}
+            />
+          ))}
+        </TreeNode>
+
         <TreeNode
           title={
             <>
@@ -139,7 +156,8 @@ export default function SelectedModel () {
             })
           })}
         </TreeNode>
-        {renderTreeNodes({
+
+        {sortedStructure[selectedModel] ? [renderTreeNodes({
           title: selectedModel,
           path: selectedModel,
           localSearch: ' ' + search,
@@ -149,32 +167,8 @@ export default function SelectedModel () {
           fieldClicked,
           columns,
           treeState
-        })}
+        })] : []}
       </Tree>
-
-      <div className='node' style={{marginBottom: 10}}>
-        <div className='node-entry'>
-          <div className='node-icon has-children open' />
-          <div className='node-title'>
-            Saved views <small className='count-tag'>({savedViews.length})</small>
-          </div>
-        </div>
-        <div className='node-children'>
-          {savedViews.map(view => (
-            <div key={view._id} className='node'>
-              <div className='node-entry'>
-                <div className='node-icon no-children' />
-                <div
-                  className='node-title'
-                  onClick={() => openView(view._id)}
-                  style={{ fontWeight: url === view.path ? 'bold' : 'normal' }}>
-                  {view.name}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   )
 }
