@@ -13,7 +13,7 @@ import locationSelector from 'lib/selectors/location'
 import HighlightText from 'lib/utils/highlight-text'
 import FavouriteStar from './favourite-star'
 import FilterButton from './filter-button'
-import getMeta from '../../../../lib/explorer/get-meta'
+import { getSortedMeta } from '../../../../lib/explorer/get-sorted-meta'
 
 const { TreeNode } = Tree;
 
@@ -28,13 +28,13 @@ const stringIn = (search, string) => {
   return i >= s.length
 }
 
-function renderTreeNodes ({ key, path, field, localSearch, model, focusSearch, sortedStructure, treeState }) {
+function renderTreeNodes ({ title, path, field, localSearch, model, focusSearch, sortedStructure, treeState }) {
   const childNodes = Object.values(sortedStructure[model] || {})
 
-  const title = field
+  const titleComponent = field
     ? (
       <>
-        {localSearch ? <HighlightText highlight={localSearch}>{key}</HighlightText> : key}
+        {localSearch ? <HighlightText highlight={localSearch}>{title}</HighlightText> : title}
         {' '}
         {field.type === 'link' ? (
           <span className='model-link-tag'><Icon type='link' /> {field.meta.model}</span>
@@ -50,7 +50,7 @@ function renderTreeNodes ({ key, path, field, localSearch, model, focusSearch, s
   return (
     <TreeNode key={path}
               isLeaf={field && field.type !== 'link'}
-              title={title}
+              title={titleComponent}
               className={field ? `field-type-${field.type}` : ''}
               switcherIcon={field && field.type !== 'link' ? <Icon type={field.meta.index === 'primary_key' ? 'idcard' : (columnIcon[field.meta.type] || 'question-circle')} /> : null}>
       {treeState[path] && childNodes.
@@ -61,7 +61,7 @@ function renderTreeNodes ({ key, path, field, localSearch, model, focusSearch, s
             field: child,
             model: child.meta && child.meta.model,
             localSearch: localSearch.split(' ').slice(1).join(' '),
-            key: child.key,
+            title: child.key,
             focusSearch: focusSearch,
             sortedStructure,
             treeState
@@ -72,7 +72,7 @@ function renderTreeNodes ({ key, path, field, localSearch, model, focusSearch, s
 }
 
 export default function SelectedModel () {
-  const { structure, sortedStructure, selectedModel, savedViews, modelFavourites, search, treeState, expandedKeys } = useValues(explorerLogic)
+  const { sortedStructure, sortedStructureObject, selectedModel, savedViews, modelFavourites, search, treeState, expandedKeys } = useValues(explorerLogic)
   const { closeModel, focusSearch, openUrl, closeTreeNode, openTreeNode, setExpandedKeys } = useActions(explorerLogic)
 
   const { openView } = useActions(viewsLogic)
@@ -103,10 +103,27 @@ export default function SelectedModel () {
         {/*<TreeNode title={<><span>Saved views</span> <small>(0)</small></>} key="...saved">*/}
         {/*  <TreeNode title="id" switcherIcon={<Icon type='idcard' />} key="saved-1" />*/}
         {/*</TreeNode>*/}
-        {/*<TreeNode title={<><span>Favourite fields</span> <small>(0)</small></>} key="...favourite">*/}
-        {/*  <TreeNode title="id" switcherIcon={<Icon type='idcard' />} key="favourite-1" />*/}
-        {/*</TreeNode>*/}
-        {renderTreeNodes({ key: selectedModel, path: selectedModel, localSearch: search, model: selectedModel, focusSearch, sortedStructure, treeState, closeTreeNode, openTreeNode })}
+        <TreeNode title={
+          <>
+            <strong><Icon type='pushpin' theme="filled" /> Pinned Fields </strong> <small>({modelFavourites.length})</small>
+          </>
+        } key="...pinned">
+          {modelFavourites.map(path => {
+            const field = getSortedMeta(path, sortedStructureObject)
+            const [_, ...rest] = path.split('.')
+            return renderTreeNodes({
+              field,
+              title: rest.join('.'),
+              path: path,
+              localSearch: '',
+              model: field && field.meta ? field.meta.model : '',
+              focusSearch,
+              sortedStructure,
+              treeState
+            })
+          })}
+        </TreeNode>
+        {renderTreeNodes({ title: selectedModel, path: selectedModel, localSearch: search, model: selectedModel, focusSearch, sortedStructure, treeState })}
       </Tree>
 
       <div className='node' style={{marginBottom: 10}}>

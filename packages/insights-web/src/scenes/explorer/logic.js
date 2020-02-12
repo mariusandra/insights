@@ -325,6 +325,22 @@ export default kea({
       }
     ],
 
+    sortedStructureObject: [
+      () => [selectors.sortedStructure],
+      (sortedStructure) => {
+        const newStructure = {}
+
+        Object.entries(sortedStructure).forEach(([model, structure]) => {
+          const newModelStructure = {}
+          Object.values(structure).forEach(field => {
+            newModelStructure[field.key] = { ...field, model }
+          })
+          newStructure[model] = newModelStructure
+        })
+        return newStructure
+      }
+    ],
+
     models: [
       () => [selectors.structure],
       (structure) => {
