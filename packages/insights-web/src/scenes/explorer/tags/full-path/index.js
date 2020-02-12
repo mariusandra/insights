@@ -1,0 +1,17 @@
+import './styles.scss'
+
+import React from 'react'
+import { Icon } from 'antd'
+
+export function FullPath ({ path }) {
+  return (
+    <div className='full-path-explorer-tag'>
+      {path.split('.').map((part, index) => (
+        <div key={index} className={index === 0 ? 'root' : 'part'}>
+          {index > 0 ? <Icon type='link' /> : <Icon type='filter' />}
+          <span style={{ paddingLeft: index > 0 ? 10 : 5 }}>{index > 0 ? '.' : ''}{part}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
