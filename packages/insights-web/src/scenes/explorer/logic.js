@@ -15,7 +15,8 @@ export default kea({
 
   connect: {
     actions: [
-      connectionLogic, ['setConnections', 'setConnectionId']
+      connectionLogic, ['setConnections', 'setConnectionId'],
+      viewsLogic, ['openView', 'openNew as openNewView']
     ],
     values: [
       viewsLogic, ['sortedViews'],
@@ -496,10 +497,18 @@ export default kea({
       }
 
       if (path === values.selectedModel || path.indexOf('...') === 0) {
-        if (values.treeState[path]) {
-          actions.closeTreeNode(path)
+        if (path.indexOf('...saved.') === 0) {
+          if (path === '...saved.SAVE_NEW') {
+            actions.openNewView()
+          } else {
+            actions.openView(path.substring('...saved.'.length))
+          }
         } else {
-          actions.openTreeNode(path)
+          if (values.treeState[path]) {
+            actions.closeTreeNode(path)
+          } else {
+            actions.openTreeNode(path)
+          }
         }
         return
       }

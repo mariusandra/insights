@@ -6,7 +6,6 @@ import { Button, Tree, Icon } from 'antd'
 import { columnIcon } from '../../connection/subset/form/models/edit-field'
 
 import explorerLogic from 'scenes/explorer/logic'
-import viewsLogic from 'scenes/header/views/logic'
 import { useSelector } from 'react-redux'
 import locationSelector from 'lib/selectors/location'
 import HighlightText from 'lib/utils/highlight-text'
@@ -86,7 +85,6 @@ export default function SelectedModel () {
   const { columns, sortedStructure, sortedStructureObject, selectedModel, savedViews, modelFavourites, search, treeState, expandedKeys } = useValues(explorerLogic)
   const { closeModel, focusSearch, treeClicked, fieldClicked, setExpandedKeys } = useActions(explorerLogic)
 
-  const { openView } = useActions(viewsLogic)
   const { pathname: urlPath, search: urlSearch } = useSelector(locationSelector)
 
   const url = urlPath + urlSearch
@@ -122,10 +120,15 @@ export default function SelectedModel () {
           {savedViews.filter(view => !search || stringInFieldKey(search, view.name)).map(view => (
             <TreeNode
               key={`...saved.${view._id}`}
-              title={view.name}
+              title={url === view.path ? <strong>{view.name}</strong> : view.name}
               switcherIcon={<Icon type="star" />}
             />
           ))}
+          <TreeNode
+            key={`...saved.SAVE_NEW`}
+            title={<span className='save-new-view'>Save this view</span>}
+            switcherIcon={<Icon type="plus" />}
+          />
         </TreeNode>
 
         <TreeNode

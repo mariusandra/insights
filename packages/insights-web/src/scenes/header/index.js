@@ -12,7 +12,6 @@ import CopyQuery from './copy-query'
 import authLogic from 'scenes/auth'
 import headerLogic from 'scenes/header/logic'
 import sceneSaga from 'scenes/header/saga'
-import viewsSaga from 'scenes/header/views/saga'
 import { Modal } from 'antd'
 
 const locationSelector = state => state.router.location
@@ -35,7 +34,6 @@ function openDashboards () {
 
 export default function HeaderScene () {
   useMountedLogic(sceneSaga)
-  useMountedLogic(viewsSaga)
 
   const [pathHistory, updatePathHistory] = useReducer(pathHistoryReducer, {})
   const { pathname, search } = useSelector(locationSelector)
