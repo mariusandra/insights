@@ -395,8 +395,11 @@ export default kea({
     ],
 
     fullFieldsTreeFull: [
-      () => [selectors.treeState, selectors.sortedStructureObject, selectors.selectedModel, selectors.search, selectors.savedViews, selectors.modelFavourites],
-      (treeState, sortedStructureObject, selectedModel, search, savedViews, modelFavourites) => {
+      () => [
+        selectors.treeState, selectors.sortedStructureObject, selectors.selectedModel, selectors.search,
+        selectors.savedViews, selectors.modelFavourites, selectors.filteredModels
+      ],
+      (treeState, sortedStructureObject, selectedModel, search, savedViews, modelFavourites, filteredModels) => {
         const state = []
         let index = 0
 
@@ -404,6 +407,21 @@ export default kea({
           path: '...',
           key: '...',
           children: []
+        }
+
+        if (!selectedModel) {
+          filteredModels.forEach(model => {
+            const node = {
+              path: model,
+              key: model,
+              model: model,
+              index: index++,
+              children: []
+            }
+            rootLeaf.children.push(node)
+          })
+
+          return { treeArray: rootLeaf.children, tree: rootLeaf }
         }
 
         // saved views
@@ -769,10 +787,12 @@ export default kea({
     },
 
     [actions.enterSelection]: () => {
-      const { selectedKey, currentlySelectedField } = values
+      const { selectedKey, currentlySelectedField, selectedModel } = values
 
       if (selectedKey && currentlySelectedField) {
-        if (currentlySelectedField.field && currentlySelectedField.field.type !== 'link') {
+        if (currentlySelectedField.model && !selectedModel) {
+          actions.openModel(currentlySelectedField.model)
+        } else if (currentlySelectedField.field && currentlySelectedField.field.type !== 'link') {
           actions.fieldClicked(currentlySelectedField.field, selectedKey, true)
         } else {
           actions.treeClicked(selectedKey, true)

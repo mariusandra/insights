@@ -135,12 +135,14 @@
   }
 
   .model-list {
-    .model-list-item {
-      padding: 6px 10px;
-      cursor: pointer;
-      &:hover {
-        background: #cedfeb;
-      }
+    padding: 0 10px 40px 10px;
+    .ant-tree > .ant-tree-treenode-switcher-close {
+      padding: 0;
+    }
+    .ant-tree-title strong {
+      text-decoration: underline;
+      color: hsla(210, 100%, 45%, 1);
+      font-weight: bold;
     }
   }
 }

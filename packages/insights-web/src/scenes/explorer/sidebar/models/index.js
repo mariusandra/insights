@@ -1,16 +1,18 @@
 import React from 'react'
 import { useActions, useValues } from 'kea'
 
-import { Empty } from 'antd'
+import { Empty, Icon, Tree } from 'antd'
 
 import HighlightText from 'lib/utils/highlight-text'
 
 import connectionLogic from '../../connection/logic'
 import explorerLogic from '../../logic'
 
+const { TreeNode } = Tree;
+
 export default function Models () {
   const { connectionId } = useValues(connectionLogic)
-  const { models, filteredModels, search } = useValues(explorerLogic)
+  const { models, filteredModels, search, selectedKey } = useValues(explorerLogic)
   const { openModel } = useActions(explorerLogic)
 
   if (!connectionId) {
@@ -23,11 +25,22 @@ export default function Models () {
 
   return (
     <div className='model-list'>
-      {filteredModels.map(model => (
-        <div key={model} onClick={() => openModel(model)} className='model-list-item'>
-          {search ? <HighlightText highlight={search}>{model}</HighlightText> : model}
-        </div>
-      ))}
+      <Tree
+        showIcon
+        blockNode
+        switcherIcon={<Icon type="database" />}
+        selectable
+        selectedKeys={[selectedKey]}
+        onSelect={([model]) => openModel(model)}
+      >
+        {filteredModels.map(model => (
+          <TreeNode
+            title={search ? <HighlightText highlight={search}>{model}</HighlightText> : model}
+            key={model}
+            switcherIcon={<Icon type='folder' />}
+          />
+        ))}
+      </Tree>
     </div>
   )
 }
