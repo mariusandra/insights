@@ -13,7 +13,7 @@
 // }
 
 export default function (url) {
-  const { filter, graphControls, ...restOfUrl } = url
+  const { filter, graphControls, treeState, columns, ...restOfUrl } = url
 
   let params = Object.assign({}, restOfUrl)
 
@@ -25,6 +25,12 @@ export default function (url) {
 
   if (graphControls) {
     params.graphControls = JSON.stringify(graphControls)
+  }
+  if (treeState) {
+    params.treeState = Object.entries(treeState).map(([key, enabled]) => `${enabled ? '' : '!'}${key}`).join(',')
+  }
+  if (columns) {
+    params.columns = columns.join(',')
   }
 
   const anythingSelected = Object.values(params).filter(v => v).length > 0

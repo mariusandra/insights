@@ -109,6 +109,9 @@ export default kea({
         Object.keys(state).filter(path => path !== payload.path && path.indexOf(`${payload.path}.`) !== 0).forEach(s => {
           newTreeState[s] = true
         })
+        if (payload.path.split('.').length === 1) {
+          newTreeState[payload.path] = false
+        }
         return newTreeState
       },
       [actions.collapseChildNodes]: (state, payload) => {
@@ -355,9 +358,11 @@ export default kea({
     ],
 
     selectedModel: [
-      () => [selectors.treeState],
-      (treeState) => {
-        return Object.keys(treeState).length > 0 ? Object.keys(treeState)[0].split('.')[0] : null
+      () => [selectors.treeState, selectors.columns, selectors.sort],
+      (treeState, columns, sort) => {
+        return ((sort.indexOf('-') === 0 ? sort.substring(1) : sort) || '').split('.')[0] || // columnFromSort
+               (Object.keys(treeState).length > 0 ? Object.keys(treeState)[0].split('.')[0] : null) || // columnFromTreeState
+               (columns.length > 0 ? columns[0].split('.')[0] : null) // columnFromColumns
       },
       PropTypes.string
     ],
@@ -421,9 +426,9 @@ export default kea({
       (connectionString, columns, sort, treeState, graphTimeFilter, facetsColumn, facetsCount, filter, graphControls) => {
         return stateToUrl({
           connection: connectionString,
-          columns: columns.join(','),
+          columns: columns,
           sort: sort || '',
-          treeState: Object.keys(treeState).join(','),
+          treeState: treeState,
           graphTimeFilter: graphTimeFilter || '',
           facetsColumn: facetsColumn || '',
           facetsCount: facetsCount || '',

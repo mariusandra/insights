@@ -26,7 +26,13 @@ export default function urlToState (path) {
       if (key === 'columns') {
         values[key] = value.split(',')
       } else if (key === 'treeState') {
-        value.split(',').filter(v => v).forEach(v => { values[key][v] = true })
+        value.split(',').filter(v => v).forEach(v => {
+          if (v.indexOf('!') === 0) {
+            values[key][v.substring(1)] = false
+          } else {
+            values[key][v] = true
+          }
+        })
       } else if (key === 'graphControls') {
         try {
           values.graphControls = JSON.parse(value)
