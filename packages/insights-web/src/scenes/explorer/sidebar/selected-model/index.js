@@ -31,9 +31,7 @@ function stringInFieldKey (search, path) {
   return stringIn(search, rest.join('.'))
 }
 
-function renderTreeNodes ({ title, columns, path, field, localSearch, model, focusSearch, sortedStructure, treeState, fieldClicked }) {
-  const childNodes = Object.values(sortedStructure[model] || {})
-
+function renderTreeNodes ({ title, columns, path, field, localSearch, model, focusSearch, sortedStructure, treeState, fieldClicked, treeNode }) {
   const isSelected = columns.includes(path) || columns.some(s => s.indexOf(`${path}.`) >= 0) || columns.some(s => s.indexOf(`${path}!`) >= 0)
 
   const titleComponent = field
@@ -59,30 +57,29 @@ function renderTreeNodes ({ title, columns, path, field, localSearch, model, foc
               isLeaf={field && field.type !== 'link'}
               title={titleComponent}
               className={`tree-node${isSelected ? ' tree-node-selected' : ''}${field ? ` field-type-${field.type}` : ''}`}
-              switcherIcon={field && field.type !== 'link' ? <Icon type={field.meta.index === 'primary_key' ? 'idcard' : (columnIcon[field.meta.type] || 'question-circle')} /> : null}>
-      {(treeState[path] || path === model) &&
-        childNodes
-          .filter(child => stringInFieldKey(localSearch.split(' ')[1] || '', `${path}.${child.key}`))
-          .map(child => {
-            return renderTreeNodes({
-              path: `${path}.${child.key}`,
-              field: child,
-              model: child.meta && child.meta.model,
-              localSearch: localSearch.split(' ').slice(1).join(' '),
-              title: child.key,
-              focusSearch: focusSearch,
-              sortedStructure,
-              fieldClicked,
-              columns,
-              treeState
-            })
-        })}
+              switcherIcon={field && field.type !== 'link' ? <Icon type={field.meta ? (field.meta.index === 'primary_key' ? 'idcard' : (columnIcon[field.meta.type] || 'question-circle')) : 'question-circle'} /> : null}>
+      {treeNode && treeNode.children.map(child => {
+        const { field } = child
+        return renderTreeNodes({
+          path: `${path}.${field.key}`,
+          field: field,
+          model: field.meta && field.meta.model,
+          localSearch: localSearch.split(' ').slice(1).join(' '),
+          title: field.key,
+          focusSearch: focusSearch,
+          sortedStructure,
+          fieldClicked,
+          columns,
+          treeState,
+          treeNode: child
+        })
+      })}
     </TreeNode>
   )
 }
 
 export default function SelectedModel () {
-  const { columns, sortedStructure, sortedStructureObject, selectedModel, savedViews, modelFavourites, search, treeState, expandedKeys, selectedKey } = useValues(explorerLogic)
+  const { columns, sortedStructure, sortedStructureObject, selectedModel, savedViews, modelFavourites, search, treeState, expandedKeys, selectedKey, fullFieldsTree } = useValues(explorerLogic)
   const { closeModel, focusSearch, treeClicked, fieldClicked, setExpandedKeys } = useActions(explorerLogic)
 
   const { pathname: urlPath, search: urlSearch } = useSelector(locationSelector)
@@ -170,6 +167,7 @@ export default function SelectedModel () {
           fieldClicked,
           columns,
           treeState,
+          treeNode: fullFieldsTree
         })] : []}
       </Tree>
     </div>

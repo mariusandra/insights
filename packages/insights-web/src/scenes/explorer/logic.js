@@ -68,8 +68,8 @@ export default kea({
     focusSearch: true,
     openTreeNodeFilter: (path) => ({ path }),
 
-    fieldClicked: (field, path) => ({ field, path }),
-    treeClicked: (path) => ({ path }),
+    fieldClicked: (field, path, viaKeyboard) => ({ field, path, viaKeyboard }),
+    treeClicked: (path, viaKeyboard) => ({ path, viaKeyboard }),
     setExpandedKeys: (expandedKeys) => ({ expandedKeys }),
     openTreeNode: (path) => ({ path }),
     closeTreeNode: (path) => ({ path }),
@@ -99,6 +99,16 @@ export default kea({
     }],
     selectedKey: ['', PropTypes.string, {
       [actions.setSelectedKey]: (_, { key }) => key,
+      [actions.fieldClicked]: (state, { viaKeyboard }) => viaKeyboard ? state : '',
+      [actions.treeClicked]: (state, { viaKeyboard }) => viaKeyboard ? state : '',
+      [actions.clear]: () => '',
+    }],
+    nextDefaultSelectedKey: ['', PropTypes.string, {
+      [actions.openTreeNode]: (_, { path }) => path,
+      [actions.closeTreeNode]: (_, { path }) => path,
+      [actions.fieldClicked]: (_, { path }) => path,
+      [actions.treeClicked]: (_, { path }) => path,
+      [actions.setSelectedKey]: (state, { key }) => key === '' ? '' : state,
       [actions.clear]: () => '',
     }],
     // tree state
@@ -383,48 +393,85 @@ export default kea({
       PropTypes.string
     ],
 
-    fullFieldsTree: [
-      () => [selectors.treeState, selectors.sortedStructureObject, selectors.selectedModel],
-      (treeState, sortedStructureObject, selectedModel) => {
+    fullFieldsTreeFull: [
+      () => [selectors.treeState, selectors.sortedStructureObject, selectors.selectedModel, selectors.search],
+      (treeState, sortedStructureObject, selectedModel, search) => {
         const state = []
         let index = 0
-        state.push({
+        const rootLeaf = {
           path: `${selectedModel}`,
           key: selectedModel,
-          index: index++
-        })
-        function pushForModel (pathSoFar, model) {
-          Object.entries(sortedStructureObject[model]).forEach(([key, field]) => {
+          index: index++,
+          depth: 0
+        }
+        state.push(rootLeaf)
+
+        function pushForModel (pathSoFar, model, localSearch) {
+          const leafState = []
+          Object.entries(sortedStructureObject[model] || {}).forEach(([key, field]) => {
+            const mostLocalSearch = localSearch ? localSearch.split(' ')[0] : ''
+
+            const stringIn = (search, string) => {
+              let i = 0
+              const s = search.toLowerCase()
+              string.toLowerCase().split('').forEach(letter => {
+                if (i < s.length && s[i] === letter) {
+                  i++
+                }
+              })
+              return i >= s.length
+            }
+
+            if (mostLocalSearch && !stringIn(mostLocalSearch, key)) {
+              return
+            }
+
             const path = `${pathSoFar}.${key}`
-            state.push({
+            const leaf = {
               path,
               key,
               field,
-              index: index++
-            })
+              index: index++,
+              children: []
+            }
+            state.push(leaf)
+            leafState.push(leaf)
+
             if (field.type === 'link' && treeState[path]) {
-              pushForModel(path, field.meta.model)
+              leaf.children = pushForModel(path, field.meta.model, localSearch.split(' ').slice(1).join(' '))
             }
           })
+          return leafState
         }
-        pushForModel(selectedModel, selectedModel)
-        console.log(state)
-        return state
+
+        rootLeaf.children = pushForModel(selectedModel, selectedModel, search)
+
+        return { treeArray: state, tree: rootLeaf }
       }
     ],
 
-    fullFieldLookup: [
-      () => [selectors.fullFieldsTree],
-      (fullFieldsTree) => {
+    fullFieldsArray: [
+      () => [selectors.fullFieldsTreeFull],
+      ({ treeArray }) => treeArray
+    ],
+
+    fullFieldsTree: [
+      () => [selectors.fullFieldsTreeFull],
+      ({ tree }) => tree
+    ],
+
+    fullFieldsLookup: [
+      () => [selectors.fullFieldsArray],
+      (fullFieldsArray) => {
         const lookupObject = {}
-        fullFieldsTree.forEach(leaf => { lookupObject[leaf.path] = leaf })
+        fullFieldsArray.forEach(leaf => { lookupObject[leaf.path] = leaf })
         return lookupObject
       }
     ],
 
     currentlySelectedField: [
-      () => [selectors.fullFieldLookup, selectors.selectedKey],
-      (fullFieldLookup, selectedKey) => fullFieldLookup[selectedKey]
+      () => [selectors.fullFieldsLookup, selectors.selectedKey],
+      (fullFieldsLookup, selectedKey) => fullFieldsLookup[selectedKey]
     ],
 
     selectedModel: [
@@ -544,7 +591,7 @@ export default kea({
       search && search.focus()
     },
 
-    [actions.treeClicked]: async ({ path }) => {
+    [actions.treeClicked]: async ({ path, viaKeyboard }) => {
       if (!path) {
         return
       }
@@ -562,6 +609,7 @@ export default kea({
           } else {
             actions.openTreeNode(path)
           }
+          actions.focusSearch()
         }
         return
       }
@@ -577,7 +625,10 @@ export default kea({
       } else {
         actions.openTreeNode(path)
       }
+
+      actions.focusSearch()
     },
+
     [actions.fieldClicked]: async ({ field, path }) => {
       if (field.type === 'link') {
         return
@@ -604,40 +655,62 @@ export default kea({
     },
 
     [actions.moveSelectionUp]: () => {
-      const { selectedKey, fullFieldsTree, currentlySelectedField } = values
+      const { selectedKey, nextDefaultSelectedKey, fullFieldsArray, fullFieldsLookup, currentlySelectedField } = values
 
-      if (fullFieldsTree.length === 0) {
+      if (fullFieldsArray.length === 0) {
         actions.setSelectedKey('')
       } else if (!selectedKey || !currentlySelectedField) {
-        actions.setSelectedKey(fullFieldsTree[fullFieldsTree.length - 1].path)
+        if (nextDefaultSelectedKey) {
+          const field = fullFieldsLookup[nextDefaultSelectedKey]
+          if (field) {
+            const newIndex = (field.index - 1 + fullFieldsArray.length) % fullFieldsArray.length
+            actions.setSelectedKey(fullFieldsArray[newIndex].path)
+          } else {
+            actions.setSelectedKey(fullFieldsArray[fullFieldsArray.length - 1].path)
+          }
+        } else {
+          actions.setSelectedKey(fullFieldsArray[fullFieldsArray.length - 1].path)
+        }
       } else {
         const { index } = currentlySelectedField
-        const newIndex = (index - 1 + fullFieldsTree.length) % fullFieldsTree.length
-        actions.setSelectedKey(fullFieldsTree[newIndex].path)
+        const newIndex = (index - 1 + fullFieldsArray.length) % fullFieldsArray.length
+        actions.setSelectedKey(fullFieldsArray[newIndex].path)
       }
     },
 
     [actions.moveSelectionDown]: () => {
-      const { selectedKey, fullFieldsTree, currentlySelectedField } = values
+      const { selectedKey, nextDefaultSelectedKey, fullFieldsArray, fullFieldsLookup, currentlySelectedField } = values
 
-      if (fullFieldsTree.length === 0) {
+      if (fullFieldsArray.length === 0) {
         actions.setSelectedKey('')
       } else if (!selectedKey || !currentlySelectedField) {
-        actions.setSelectedKey(fullFieldsTree[0].path)
+        if (nextDefaultSelectedKey) {
+          const field = fullFieldsLookup[nextDefaultSelectedKey]
+          if (field) {
+            const newIndex = (field.index + 1) % fullFieldsArray.length
+            actions.setSelectedKey(fullFieldsArray[newIndex].path)
+          } else {
+            actions.setSelectedKey(fullFieldsArray[0].path)
+          }
+        } else {
+          actions.setSelectedKey(fullFieldsArray[0].path)
+        }
       } else {
         const { index } = currentlySelectedField
-        const newIndex = (index + 1) % fullFieldsTree.length
-        actions.setSelectedKey(fullFieldsTree[newIndex].path)
+        const newIndex = (index + 1) % fullFieldsArray.length
+        actions.setSelectedKey(fullFieldsArray[newIndex].path)
       }
     },
 
     [actions.enterSelection]: () => {
-      const { selectedKey, fullFieldsTree, currentlySelectedField } = values
+      const { selectedKey, currentlySelectedField } = values
 
-      if (currentlySelectedField.field && currentlySelectedField.field.type !== 'link') {
-        actions.fieldClicked(currentlySelectedField.field, selectedKey)
-      } else {
-        actions.treeClicked(selectedKey)
+      if (selectedKey && currentlySelectedField) {
+        if (currentlySelectedField.field && currentlySelectedField.field.type !== 'link') {
+          actions.fieldClicked(currentlySelectedField.field, selectedKey, true)
+        } else {
+          actions.treeClicked(selectedKey, true)
+        }
       }
     }
 

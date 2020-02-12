@@ -30,6 +30,7 @@ export default function Sidebar () {
             <Input.Search
               id='sidebar-model-field-search'
               placeholder='Type to search...'
+              autoComplete="off"
               value={search}
               onKeyDown={e => {
                 if (e.keyCode === 13 || e.keyCode === 38 || e.keyCode === 40) {
