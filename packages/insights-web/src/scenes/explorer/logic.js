@@ -352,8 +352,24 @@ export default kea({
     ],
 
     expandedKeys: [
-      () => [selectors.treeState],
-      (treeState) => Object.keys(treeState),
+      () => [selectors.treeState, selectors.selectedModel, selectors.sortedStructureObject],
+      (treeState, selectedModel, sortedStructureObject) => {
+        if (Object.keys(sortedStructureObject).length === 0) {
+          return []
+        }
+        const expandedKeys = Object.keys(treeState).filter(key => {
+          if (!treeState[key]) {
+            return false
+          }
+          if (key.indexOf('...') === 0 || key === selectedModel) {
+            return true
+          }
+          const structure = getSortedMeta(key, sortedStructureObject)
+          return !!structure
+        })
+
+        return expandedKeys
+      },
       PropTypes.string
     ],
 
@@ -475,7 +491,16 @@ export default kea({
     },
 
     [actions.treeClicked]: async ({ path }) => {
-      if (!path || path.indexOf('...') === 0) {
+      if (!path) {
+        return
+      }
+
+      if (path === values.selectedModel || path.indexOf('...') === 0) {
+        if (values.treeState[path]) {
+          actions.closeTreeNode(path)
+        } else {
+          actions.openTreeNode(path)
+        }
         return
       }
 

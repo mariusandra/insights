@@ -114,6 +114,7 @@ export default kea({
         'setFacetsCount',
         'setGraphControls',
         'requestExport',
+        'setExpandedKeys',
 
         'addFavouriteRequest',
         'addFavouriteSuccess',
@@ -157,6 +158,7 @@ export default kea({
     [actions.requestExport]: workers.refreshData,
     [actions.openTreeNode]: workers.refreshData,
     [actions.closeTreeNode]: workers.refreshData,
+    [actions.setExpandedKeys]: workers.refreshData,
 
     [actions.addFavouriteRequest]: workers.addFavouriteRequest,
     [actions.removeFavouriteRequest]: workers.removeFavouriteRequest,
@@ -199,7 +201,7 @@ export default kea({
     },
 
     refreshData: function * (action) {
-      const { setResults, setPagination, setLoading, clearLoading, openTreeNode, closeTreeNode, requestExport } = this.actions
+      const { setResults, setPagination, setLoading, clearLoading, openTreeNode, closeTreeNode, setExpandedKeys, requestExport } = this.actions
 
       if (!action.payload.fromUrl) {
         yield delay(50) // throttle unless coming from an url change
@@ -228,7 +230,7 @@ export default kea({
         window.document.title = 'Insights Explorer'
       }
 
-      if (action.type === openTreeNode.toString() || action.type === closeTreeNode.toString()) {
+      if (action.type === openTreeNode.toString() || action.type === closeTreeNode.toString() || action.type === setExpandedKeys.toString()) {
         return // nothing to reload
       }
 
