@@ -27,6 +27,19 @@
   .ant-tree li .ant-tree-node-content-wrapper {
     color: #333;
     min-width: calc(100% - 24px);
+    .sidebar-field-title {
+      display: flex;
+      width: 100%;
+      .field-title {
+        flex: 1;
+      }
+      &.sidebar-field-type-link {
+        width: auto;
+        .field-title {
+          flex: 0;
+        }
+      }
+    }
     .model-field-controls {
       float: right;
 
@@ -74,6 +87,10 @@
   .model-link-tag {
     margin-left: 5px;
     color: hsla(209, 45%, 52%, 1);
+  }
+
+  .field-title.field-selected {
+    font-weight: bold;
   }
 
   button {

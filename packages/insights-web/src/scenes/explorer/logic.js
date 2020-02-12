@@ -79,6 +79,7 @@ export default kea({
     focusSearch: true,
     openTreeNodeFilter: (path) => ({ path }),
 
+    fieldClicked: (field, path) => ({ field, path }),
     treeClicked: (path) => ({ path }),
     setExpandedKeys: (expandedKeys) => ({ expandedKeys }),
     openTreeNode: (path) => ({ path }),
@@ -476,26 +477,45 @@ export default kea({
     },
 
     [actions.treeClicked]: async ({ path }) => {
-      if (path.indexOf('...') === 0) {
+      if (!path || path.indexOf('...') === 0) {
         return
       }
 
       const field = getSortedMeta(path, values.sortedStructureObject)
 
-      if (!field) {
+      if (!field || field.type !== 'link') {
         return
       }
 
+      if (values.treeState[path]) {
+        actions.closeTreeNode(path)
+      } else {
+        actions.openTreeNode(path)
+      }
+    },
+    [actions.fieldClicked]: async ({ field, path }) => {
       if (field.type === 'link') {
-        if (values.treeState[path]) {
-          actions.closeTreeNode(path)
-        } else {
-          actions.openTreeNode(path)
-        }
         return
       }
 
-      console.log('clicked', field)
+      const { columns } = values
+      const isSelected = columns.includes(path) || columns.some(s => s.indexOf(`${path}.`) >= 0) || columns.some(s => s.indexOf(`${path}!`) >= 0)
+
+      if (isSelected) {
+        actions.removeColumnsWithPath(path)
+      } else {
+        if (field.meta && field.meta.type === 'time') {
+          const column = `${path}!day`
+          actions.addColumn(column)
+          actions.setSort(`-${column}`)
+        } else {
+          actions.addColumn(path)
+        }
+
+        actions.setSearch('')
+      }
+
+      actions.focusSearch()
     }
   })
 })
