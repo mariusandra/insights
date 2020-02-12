@@ -89,6 +89,9 @@
     }
   }
 
+  .pinned-keys > .ant-tree-switcher i.anticon {
+    color: hsla(3, 77%, 42%, 1);
+  }
   .tree-node-selected > .ant-tree-switcher i.anticon {
     color: hsla(209, 66%, 39%, 1);
   }

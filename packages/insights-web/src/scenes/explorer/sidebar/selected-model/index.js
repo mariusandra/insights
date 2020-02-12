@@ -115,11 +115,13 @@ export default function SelectedModel () {
         <TreeNode
           title={
             <>
-              <span>Pinned Fields </span> <small>({modelFavourites.length})</small>
+            {modelFavourites.length === 0 ? <span>Pinned Fields </span> : <strong>Pinned Fields </strong>}
+             <small>({ modelFavourites.length })</small>
             </>
           }
+          className='pinned-keys'
           key="...pinned"
-          switcherIcon={<Icon type='pushpin' theme="filled" />}
+          switcherIcon={<Icon type='pushpin' theme={modelFavourites.length > 0 ? "filled" : ''} />}
         >
           {modelFavourites.filter(path => !search || stringInFieldKey(search, path)).map(path => {
             const field = getSortedMeta(path, sortedStructureObject)
