@@ -73,16 +73,12 @@ function renderTreeNodes ({ title, path, field, localSearch, model, focusSearch,
 
 export default function SelectedModel () {
   const { sortedStructure, sortedStructureObject, selectedModel, savedViews, modelFavourites, search, treeState, expandedKeys } = useValues(explorerLogic)
-  const { closeModel, focusSearch, openUrl, closeTreeNode, openTreeNode, setExpandedKeys } = useActions(explorerLogic)
+  const { closeModel, focusSearch, treeClicked, openUrl, closeTreeNode, openTreeNode, setExpandedKeys } = useActions(explorerLogic)
 
   const { openView } = useActions(viewsLogic)
   const { pathname: urlPath, search: urlSearch } = useSelector(locationSelector)
 
   const url = urlPath + urlSearch
-
-  function onTreeClick (key) {
-    console.log(key)
-  }
 
   return (
     <div>

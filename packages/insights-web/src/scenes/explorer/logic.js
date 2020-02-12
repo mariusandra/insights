@@ -8,6 +8,7 @@ import connectionLogic from './connection/logic'
 import viewsLogic from 'scenes/header/views/logic'
 import stateToUrl from 'lib/explorer/state-to-url'
 import naturalCompare from 'string-natural-compare'
+import { getSortedMeta } from 'lib/explorer/get-sorted-meta'
 
 const arrayUniq = (array) => {
   const cache = {}
@@ -78,6 +79,7 @@ export default kea({
     focusSearch: true,
     openTreeNodeFilter: (path) => ({ path }),
 
+    treeClicked: (path) => ({ path }),
     setExpandedKeys: (expandedKeys) => ({ expandedKeys }),
     openTreeNode: (path) => ({ path }),
     closeTreeNode: (path) => ({ path }),
@@ -466,12 +468,34 @@ export default kea({
       actions.clear()
       actions.setSearch('')
       actions.focusSearch()
-      console.log('focus search !!')
     },
 
     [actions.focusSearch]: async () => {
       const search = document.getElementById('sidebar-model-field-search')
       search && search.focus()
+    },
+
+    [actions.treeClicked]: async ({ path }) => {
+      if (path.indexOf('...') === 0) {
+        return
+      }
+
+      const field = getSortedMeta(path, values.sortedStructureObject)
+
+      if (!field) {
+        return
+      }
+
+      if (field.type === 'link') {
+        if (values.treeState[path]) {
+          actions.closeTreeNode(path)
+        } else {
+          actions.openTreeNode(path)
+        }
+        return
+      }
+
+      console.log('clicked', field)
     }
   })
 })

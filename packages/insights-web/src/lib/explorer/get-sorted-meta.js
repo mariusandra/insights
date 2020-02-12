@@ -19,11 +19,11 @@ export function getSortedMeta (column, sortedStructureObject) {
       }
     } else {
       if (lastModel[pathPart]) {
-        if (lastModel[pathPart].type === 'link') {
+        if (index === path.split('.').length - 1) {
+          field = lastModel[pathPart]
+        } else if (lastModel[pathPart].type === 'link') {
           lastModelType = lastModel[pathPart].meta.model
           lastModel = sortedStructureObject[lastModelType]
-        } else if (index === path.split('.').length - 1) {
-          field = lastModel[pathPart]
         } else {
           throw new Error(`Error, link "${pathPart}" in path "${path}" is not of type "link". ${JSON.stringify(lastModel[pathPart])}`)
         }
