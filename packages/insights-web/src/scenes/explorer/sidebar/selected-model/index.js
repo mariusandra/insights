@@ -80,12 +80,14 @@ function renderTreeNodes ({ title, columns, path, field, localSearch, model, foc
 }
 
 export default function SelectedModel () {
-  const { columns, sortedStructure, sortedStructureObject, selectedModel, savedViews, modelFavourites, search, treeState, expandedKeys, selectedKey, fullFieldsTree } = useValues(explorerLogic)
+  const { columns, sortedStructure, selectedModel, savedViews, modelFavourites, search, treeState, expandedKeys, selectedKey, fullFieldsTree } = useValues(explorerLogic)
   const { closeModel, focusSearch, treeClicked, fieldClicked, setExpandedKeys } = useActions(explorerLogic)
 
   const { pathname: urlPath, search: urlSearch } = useSelector(locationSelector)
 
   const url = urlPath + urlSearch
+
+  const [viewNode, pinnedNode, fieldNode] = fullFieldsTree.children
 
   return (
     <div>
@@ -115,18 +117,19 @@ export default function SelectedModel () {
           key="...saved"
           switcherIcon={<Icon type='star' theme={savedViews.length > 0 ? "filled" : ''} />}
         >
-          {savedViews.filter(view => !search || stringInFieldKey(search, view.name)).map(view => (
+          {viewNode.children.map(({ view, key }) => key === 'SAVE_NEW' ? (
+            <TreeNode
+              key={`...saved.SAVE_NEW`}
+              title={<span className='save-new-view'>Save this view</span>}
+              switcherIcon={<Icon type="plus" />}
+            />
+          ) : (
             <TreeNode
               key={`...saved.${view._id}`}
               title={url === view.path ? <strong>{view.name}</strong> : view.name}
               switcherIcon={<Icon type="star" />}
             />
           ))}
-          <TreeNode
-            key={`...saved.SAVE_NEW`}
-            title={<span className='save-new-view'>Save this view</span>}
-            switcherIcon={<Icon type="plus" />}
-          />
         </TreeNode>
 
         <TreeNode
@@ -140,13 +143,12 @@ export default function SelectedModel () {
           key="...pinned"
           switcherIcon={<Icon type='pushpin' theme={modelFavourites.length > 0 ? "filled" : ''} />}
         >
-          {modelFavourites.filter(path => !search || stringInFieldKey(search, path)).map(path => {
-            const field = getSortedMeta(path, sortedStructureObject)
-            const [, ...rest] = path.split('.')
+          {pinnedNode.children.map(({ field, localPath }) => {
+            const [, ...rest] = localPath.split('.')
             return renderTreeNodes({
               field,
               title: rest.join('.'),
-              path: `...pinned.${path}`,
+              path: `...pinned.${localPath}`,
               localSearch: search,
               model: field && field.meta ? field.meta.model : '',
               focusSearch,
@@ -168,7 +170,7 @@ export default function SelectedModel () {
           fieldClicked,
           columns,
           treeState,
-          treeNode: fullFieldsTree
+          treeNode: fieldNode
         })] : []}
       </Tree>
     </div>

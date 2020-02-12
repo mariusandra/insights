@@ -394,33 +394,96 @@ export default kea({
     ],
 
     fullFieldsTreeFull: [
-      () => [selectors.treeState, selectors.sortedStructureObject, selectors.selectedModel, selectors.search],
-      (treeState, sortedStructureObject, selectedModel, search) => {
+      () => [selectors.treeState, selectors.sortedStructureObject, selectors.selectedModel, selectors.search, selectors.savedViews, selectors.modelFavourites],
+      (treeState, sortedStructureObject, selectedModel, search, savedViews, modelFavourites) => {
         const state = []
         let index = 0
+
         const rootLeaf = {
+          path: '...',
+          key: '...',
+          children: []
+        }
+
+        // saved views
+
+        const savedRoot = {
+          path: '...saved',
+          key: '...saved',
+          index: index++,
+          children: []
+        }
+        state.push(savedRoot)
+        rootLeaf.children.push(savedRoot)
+
+        if (treeState['...saved']) {
+          savedViews.filter(view => !search || stringInFieldKey(search, view.name)).forEach(view => {
+            const savedNode = {
+              path: `...saved.${view._id}`,
+              key: view._id,
+              view: view,
+              index: index++,
+              children: []
+            }
+            state.push(savedNode)
+            savedRoot.children.push(savedNode)
+          })
+        }
+
+        const saveView = {
+          path: '...saved.SAVE_NEW',
+          key: 'SAVE_NEW',
+          index: index++,
+          children: []
+        }
+        state.push(saveView)
+        savedRoot.children.push(saveView)
+
+        // pinned fields
+
+        const pinnedRoot = {
+          path: '...pinned',
+          key: '...pinned',
+          index: index++,
+          children: []
+        }
+        state.push(pinnedRoot)
+        rootLeaf.children.push(pinnedRoot)
+
+        if (treeState['...pinned']) {
+          modelFavourites.filter(path => !search || stringInFieldKey(search, path)).forEach(path => {
+            const field = getSortedMeta(path, sortedStructureObject)
+            const [, ...rest] = path.split('.')
+
+            const pinnedNode = {
+              path: `...pinned.${path}`,
+              localPath: path,
+              key: rest.join('.'),
+              field,
+              index: index++,
+              children: []
+            }
+
+            state.push(pinnedNode)
+            pinnedRoot.children.push(pinnedNode)
+          })
+        }
+
+        // fields
+
+        const fieldsRoot = {
           path: `${selectedModel}`,
           key: selectedModel,
           index: index++,
-          depth: 0
+          children: []
         }
-        state.push(rootLeaf)
+        state.push(fieldsRoot)
+        rootLeaf.children.push(fieldsRoot)
 
         function pushForModel (pathSoFar, model, localSearch) {
           const leafState = []
           Object.entries(sortedStructureObject[model] || {}).forEach(([key, field]) => {
             const mostLocalSearch = localSearch ? localSearch.split(' ')[0] : ''
-
-            const stringIn = (search, string) => {
-              let i = 0
-              const s = search.toLowerCase()
-              string.toLowerCase().split('').forEach(letter => {
-                if (i < s.length && s[i] === letter) {
-                  i++
-                }
-              })
-              return i >= s.length
-            }
 
             if (mostLocalSearch && !stringIn(mostLocalSearch, key)) {
               return
@@ -444,7 +507,7 @@ export default kea({
           return leafState
         }
 
-        rootLeaf.children = pushForModel(selectedModel, selectedModel, search)
+        fieldsRoot.children = pushForModel(selectedModel, selectedModel, search)
 
         return { treeArray: state, tree: rootLeaf }
       }
@@ -714,6 +777,29 @@ export default kea({
         }
       }
     }
-
   })
 })
+
+
+const stringIn = (search, string) => {
+  let i = 0
+  const s = search.toLowerCase()
+  string.toLowerCase().split('').forEach(letter => {
+    if (i < s.length && s[i] === letter) {
+      i++
+    }
+  })
+  return i >= s.length
+}
+
+function stringInFieldKey (search, path) {
+  let localPath = path
+  if (path.indexOf('...saved.') === 0) {
+    localPath = path.substring('...saved.'.length)
+  }
+  if (path.indexOf('...pinned.') === 0) {
+    localPath = path.substring('...pinned.'.length)
+  }
+  const [, ...rest] = localPath.split('.')
+  return stringIn(search, rest.join('.'))
+}
