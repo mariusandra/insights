@@ -82,7 +82,7 @@ function renderTreeNodes ({ title, columns, path, field, localSearch, model, foc
 }
 
 export default function SelectedModel () {
-  const { columns, sortedStructure, sortedStructureObject, selectedModel, savedViews, modelFavourites, search, treeState, expandedKeys } = useValues(explorerLogic)
+  const { columns, sortedStructure, sortedStructureObject, selectedModel, savedViews, modelFavourites, search, treeState, expandedKeys, selectedKey } = useValues(explorerLogic)
   const { closeModel, focusSearch, treeClicked, fieldClicked, setExpandedKeys } = useActions(explorerLogic)
 
   const { pathname: urlPath, search: urlSearch } = useSelector(locationSelector)
@@ -103,7 +103,7 @@ export default function SelectedModel () {
         expandedKeys={expandedKeys}
         onExpand={setExpandedKeys}
         selectable
-        selectedKeys={[]}
+        selectedKeys={[selectedKey]}
         onSelect={(([key]) => treeClicked(key))}
       >
         <TreeNode

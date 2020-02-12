@@ -85,12 +85,21 @@ export default kea({
     removeFavouriteSuccess: (path) => ({ path }),
     favouritesLoaded: (favourites) => ({ favourites }),
 
-    openUrl: (url) => ({ url })
+    openUrl: (url) => ({ url }),
+
+    moveSelectionUp: true,
+    moveSelectionDown: true,
+    enterSelection: true,
+    setSelectedKey: key => ({ key })
   }),
 
   reducers: ({ actions }) => ({
     search: ['', PropTypes.string, {
       [actions.setSearch]: (_, payload) => payload.search
+    }],
+    selectedKey: ['', PropTypes.string, {
+      [actions.setSelectedKey]: (_, { key }) => key,
+      [actions.clear]: () => '',
     }],
     // tree state
     treeNodeFilterOpen: [null, PropTypes.string, {
@@ -374,6 +383,50 @@ export default kea({
       PropTypes.string
     ],
 
+    fullFieldsTree: [
+      () => [selectors.treeState, selectors.sortedStructureObject, selectors.selectedModel],
+      (treeState, sortedStructureObject, selectedModel) => {
+        const state = []
+        let index = 0
+        state.push({
+          path: `${selectedModel}`,
+          key: selectedModel,
+          index: index++
+        })
+        function pushForModel (pathSoFar, model) {
+          Object.entries(sortedStructureObject[model]).forEach(([key, field]) => {
+            const path = `${pathSoFar}.${key}`
+            state.push({
+              path,
+              key,
+              field,
+              index: index++
+            })
+            if (field.type === 'link' && treeState[path]) {
+              pushForModel(path, field.meta.model)
+            }
+          })
+        }
+        pushForModel(selectedModel, selectedModel)
+        console.log(state)
+        return state
+      }
+    ],
+
+    fullFieldLookup: [
+      () => [selectors.fullFieldsTree],
+      (fullFieldsTree) => {
+        const lookupObject = {}
+        fullFieldsTree.forEach(leaf => { lookupObject[leaf.path] = leaf })
+        return lookupObject
+      }
+    ],
+
+    currentlySelectedField: [
+      () => [selectors.fullFieldLookup, selectors.selectedKey],
+      (fullFieldLookup, selectedKey) => fullFieldLookup[selectedKey]
+    ],
+
     selectedModel: [
       () => [selectors.treeState, selectors.columns, selectors.sort],
       (treeState, columns, sort) => {
@@ -548,6 +601,45 @@ export default kea({
       }
 
       actions.focusSearch()
+    },
+
+    [actions.moveSelectionUp]: () => {
+      const { selectedKey, fullFieldsTree, currentlySelectedField } = values
+
+      if (fullFieldsTree.length === 0) {
+        actions.setSelectedKey('')
+      } else if (!selectedKey || !currentlySelectedField) {
+        actions.setSelectedKey(fullFieldsTree[fullFieldsTree.length - 1].path)
+      } else {
+        const { index } = currentlySelectedField
+        const newIndex = (index - 1 + fullFieldsTree.length) % fullFieldsTree.length
+        actions.setSelectedKey(fullFieldsTree[newIndex].path)
+      }
+    },
+
+    [actions.moveSelectionDown]: () => {
+      const { selectedKey, fullFieldsTree, currentlySelectedField } = values
+
+      if (fullFieldsTree.length === 0) {
+        actions.setSelectedKey('')
+      } else if (!selectedKey || !currentlySelectedField) {
+        actions.setSelectedKey(fullFieldsTree[0].path)
+      } else {
+        const { index } = currentlySelectedField
+        const newIndex = (index + 1) % fullFieldsTree.length
+        actions.setSelectedKey(fullFieldsTree[newIndex].path)
+      }
+    },
+
+    [actions.enterSelection]: () => {
+      const { selectedKey, fullFieldsTree, currentlySelectedField } = values
+
+      if (currentlySelectedField.field && currentlySelectedField.field.type !== 'link') {
+        actions.fieldClicked(currentlySelectedField.field, selectedKey)
+      } else {
+        actions.treeClicked(selectedKey)
+      }
     }
+
   })
 })

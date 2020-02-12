@@ -14,7 +14,7 @@ import SelectedModel from './selected-model'
 
 export default function Sidebar () {
   const { search, selectedModel } = useValues(explorerLogic)
-  const { setSearch, focusSearch } = useActions(explorerLogic)
+  const { setSearch, focusSearch, moveSelectionUp, moveSelectionDown, enterSelection } = useActions(explorerLogic)
 
   // eslint-disable-next-line
   useEffect(() => { window.setTimeout(focusSearch, 100) }, [])
@@ -31,6 +31,20 @@ export default function Sidebar () {
               id='sidebar-model-field-search'
               placeholder='Type to search...'
               value={search}
+              onKeyDown={e => {
+                if (e.keyCode === 13 || e.keyCode === 38 || e.keyCode === 40) {
+                  e.preventDefault()
+                  if (e.keyCode === 38) {
+                    moveSelectionUp()
+                  }
+                  if (e.keyCode === 40) {
+                    moveSelectionDown()
+                  }
+                  if (e.keyCode === 13) {
+                    enterSelection()
+                  }
+                }
+              }}
               onChange={e => setSearch(e.target.value)}
             />
           </div>
