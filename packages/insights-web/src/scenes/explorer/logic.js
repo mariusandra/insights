@@ -10,18 +10,6 @@ import stateToUrl from 'lib/explorer/state-to-url'
 import naturalCompare from 'string-natural-compare'
 import { getSortedMeta } from 'lib/explorer/get-sorted-meta'
 
-const arrayUniq = (array) => {
-  const cache = {}
-  let newArray = []
-  for (var elem of array) {
-    if (!cache[elem]) {
-      newArray.push(elem)
-    }
-    cache[elem] = true
-  }
-  return newArray
-}
-
 export default kea({
   path: () => ['scenes', 'explorer', 'index'],
 
@@ -117,8 +105,11 @@ export default kea({
       },
       [actions.openTreeNode]: (state, payload) => Object.assign({}, state, { [payload.path]: true }),
       [actions.closeTreeNode]: (state, payload) => {
-        const { [payload.path]: discard, ...rest } = state // eslint-disable-line
-        return rest
+        const newTreeState = {}
+        Object.keys(state).filter(path => path !== payload.path && path.indexOf(`${payload.path}.`) !== 0).forEach(s => {
+          newTreeState[s] = true
+        })
+        return newTreeState
       },
       [actions.collapseChildNodes]: (state, payload) => {
         const collapseFrom = `${payload.path}.`
@@ -317,11 +308,13 @@ export default kea({
         const newStructure = {}
 
         Object.entries(structure).sort((a, b) => naturalCompare(a[0], b[0])).forEach(([model, { custom, columns, links }]) => {
-          newStructure[model] = [
+          const fields = [
             ...Object.entries(custom).map(([key, meta]) => ({ key, type: 'custom', meta, editType: 'old' })),
             ...Object.entries(columns).map(([key, meta]) => ({ key, type: 'column', meta, editType: 'old' })),
             ...Object.entries(links).map(([key, meta]) => ({ key, type: 'link', meta, editType: 'old' }))
           ].sort((a, b) => naturalCompare(a.key, b.key))
+
+          newStructure[model] = fields.filter(f => f.meta.index === 'primary_key').concat(fields.filter(f => f.meta.index !== 'primary_key'))
         })
 
         return newStructure

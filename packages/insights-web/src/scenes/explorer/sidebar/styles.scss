@@ -32,6 +32,11 @@
       width: 100%;
       .field-title {
         flex: 1;
+        strong {
+          text-decoration: underline;
+          color: hsla(210, 100%, 45%, 1);
+          font-weight: bold;
+        }
       }
       &.sidebar-field-type-link {
         width: auto;
@@ -82,6 +87,10 @@
         color: #333;
       }
     }
+  }
+
+  .tree-node-selected > .ant-tree-switcher i.anticon {
+    color: hsla(209, 66%, 39%, 1);
   }
 
   .model-link-tag {

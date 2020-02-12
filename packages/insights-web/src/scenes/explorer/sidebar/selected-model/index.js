@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import { kea, useActions, useValues } from 'kea'
+import React from 'react'
+import { useActions, useValues } from 'kea'
 
-import { Button, Tree, Icon, Tag } from 'antd'
+import { Button, Tree, Icon } from 'antd'
 
 import OldNode from './old-node'
 import { columnIcon } from '../../connection/subset/form/models/edit-field'
@@ -55,23 +55,24 @@ function renderTreeNodes ({ title, columns, path, field, localSearch, model, foc
     <TreeNode key={path}
               isLeaf={field && field.type !== 'link'}
               title={titleComponent}
-              className={field ? `field-type-${field.type}` : ''}
+              className={`tree-node${isSelected ? ' tree-node-selected' : ''}${field ? ` field-type-${field.type}` : ''}`}
               switcherIcon={field && field.type !== 'link' ? <Icon type={field.meta.index === 'primary_key' ? 'idcard' : (columnIcon[field.meta.type] || 'question-circle')} /> : null}>
-      {treeState[path] && childNodes.
-        filter(child => !localSearch || stringIn(localSearch.split(' ')[0], `${path}.${child.key}`)).
-        map(child => {
-          return renderTreeNodes({
-            path: `${path}.${child.key}`,
-            field: child,
-            model: child.meta && child.meta.model,
-            localSearch: localSearch.split(' ').slice(1).join(' '),
-            title: child.key,
-            focusSearch: focusSearch,
-            sortedStructure,
-            fieldClicked,
-            columns,
-            treeState
-          })
+      {treeState[path] &&
+        childNodes
+          .filter(child => !localSearch || localSearch === ' ' || stringIn(localSearch.split(' ')[0], `${path}.${child.key}`))
+          .map(child => {
+            return renderTreeNodes({
+              path: `${path}.${child.key}`,
+              field: child,
+              model: child.meta && child.meta.model,
+              localSearch: localSearch.split(' ').slice(1).join(' '),
+              title: child.key,
+              focusSearch: focusSearch,
+              sortedStructure,
+              fieldClicked,
+              columns,
+              treeState
+            })
         })}
     </TreeNode>
   )
@@ -79,7 +80,7 @@ function renderTreeNodes ({ title, columns, path, field, localSearch, model, foc
 
 export default function SelectedModel () {
   const { columns, sortedStructure, sortedStructureObject, selectedModel, savedViews, modelFavourites, search, treeState, expandedKeys } = useValues(explorerLogic)
-  const { closeModel, focusSearch, treeClicked, fieldClicked, openUrl, closeTreeNode, openTreeNode, setExpandedKeys } = useActions(explorerLogic)
+  const { closeModel, focusSearch, treeClicked, fieldClicked, setExpandedKeys } = useActions(explorerLogic)
 
   const { openView } = useActions(viewsLogic)
   const { pathname: urlPath, search: urlSearch } = useSelector(locationSelector)
@@ -117,12 +118,12 @@ export default function SelectedModel () {
         >
           {modelFavourites.map(path => {
             const field = getSortedMeta(path, sortedStructureObject)
-            const [_, ...rest] = path.split('.')
+            const [, ...rest] = path.split('.')
             return renderTreeNodes({
               field,
               title: rest.join('.'),
               path: path,
-              localSearch: '',
+              localSearch: search,
               model: field && field.meta ? field.meta.model : '',
               focusSearch,
               sortedStructure,
@@ -135,7 +136,7 @@ export default function SelectedModel () {
         {renderTreeNodes({
           title: selectedModel,
           path: selectedModel,
-          localSearch: search,
+          localSearch: ' ' + search,
           model: selectedModel,
           focusSearch,
           sortedStructure,
