@@ -12,8 +12,9 @@ import { useSelector } from 'react-redux'
 import locationSelector from 'lib/selectors/location'
 import naturalCompare from 'string-natural-compare'
 import HighlightText from 'lib/utils/highlight-text'
-import FavouriteStar from './node/favourite-star'
-import FilterButton from './node/filter-button'
+import FavouriteStar from './favourite-star'
+import FilterButton from './filter-button'
+import getMeta from '../../../../lib/explorer/get-meta'
 
 const { TreeNode } = Tree;
 

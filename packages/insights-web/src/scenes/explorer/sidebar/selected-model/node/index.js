@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'kea'
 import PropTypes from 'prop-types'
 
-import FilterButton from './filter-button'
-import FavouriteStar from './favourite-star'
+import FilterButton from '../filter-button'
+import FavouriteStar from '../favourite-star'
 
 import getMeta from 'lib/explorer/get-meta'
 
