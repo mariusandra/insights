@@ -64,7 +64,7 @@ export default kea({
     setGraphTimeFilter: (graphTimeFilter) => ({ graphTimeFilter }),
 
     openModel: model => ({ model }),
-    closeModel: true,
+    closeModel: model => ({ model }),
     focusSearch: true,
     openTreeNodeFilter: (path) => ({ path }),
 
@@ -101,7 +101,7 @@ export default kea({
       [actions.setSelectedKey]: (_, { key }) => key,
       [actions.fieldClicked]: (state, { viaKeyboard }) => viaKeyboard ? state : '',
       [actions.treeClicked]: (state, { viaKeyboard }) => viaKeyboard ? state : '',
-      [actions.clear]: () => '',
+      [actions.closeModel]: (state, { model }) => model
     }],
     nextDefaultSelectedKey: ['', PropTypes.string, {
       [actions.openTreeNode]: (_, { path }) => path,
@@ -688,7 +688,11 @@ export default kea({
           }
         } else {
           if (values.treeState[path]) {
-            actions.closeTreeNode(path)
+            if (path === values.selectedModel) {
+              actions.closeModel(path)
+            } else {
+              actions.closeTreeNode(path)
+            }
           } else {
             actions.openTreeNode(path)
           }
@@ -796,6 +800,22 @@ export default kea({
           actions.fieldClicked(currentlySelectedField.field, selectedKey, true)
         } else {
           actions.treeClicked(selectedKey, true)
+        }
+      }
+    },
+
+    [actions.setSearch]: ({ search }) => {
+      const { fullFieldsArray, selectedModel } = values
+      if (!selectedModel && search) {
+        if (fullFieldsArray && fullFieldsArray[0] && fullFieldsArray[0].path) {
+          actions.setSelectedKey(fullFieldsArray[0].path)
+        }
+      }
+
+      if (selectedModel && search) {
+        const firstField = fullFieldsArray.find(a => a.path.indexOf('...saved') !== 0 && a.path !== '...pinned' && a.path !== selectedModel)
+        if (firstField && firstField.path) {
+          actions.setSelectedKey(firstField.path)
         }
       }
     }

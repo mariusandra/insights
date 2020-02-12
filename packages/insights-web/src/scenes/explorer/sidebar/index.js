@@ -21,8 +21,10 @@ export default function Sidebar () {
     window.setTimeout(focusSearch, 100)
   }, [])
   useEffect(() => {
-    const element = document.querySelector('.ant-tree-node-selected')
-    element && element.scrollIntoView({behavior: "auto", block: "nearest"})
+    window.setTimeout(() => {
+      const element = document.querySelector('.ant-tree-node-selected')
+      element && element.scrollIntoView({behavior: "auto", block: "nearest"})
+    }, 100)
   }, [selectedKey])
 
   return (

@@ -28,16 +28,15 @@ export default function Models () {
       <Tree
         showIcon
         blockNode
-        switcherIcon={<Icon type="database" />}
         selectable
         selectedKeys={[selectedKey]}
-        onSelect={([model]) => openModel(model)}
+        onSelect={([model]) => openModel(model || selectedKey)}
       >
         {filteredModels.map(model => (
           <TreeNode
             title={search ? <HighlightText highlight={search}>{model}</HighlightText> : model}
             key={model}
-            switcherIcon={<Icon type='folder' />}
+            switcherIcon={<Icon type='right' style={{ color: 'hsla(209, 66%, 54%, 1)' }} />}
           />
         ))}
       </Tree>
