@@ -109,6 +109,7 @@ export default kea({
       [actions.fieldClicked]: (_, { path }) => path,
       [actions.treeClicked]: (_, { path }) => path,
       [actions.setSelectedKey]: (state, { key }) => key === '' ? '' : state,
+      [actions.openView]: (_, { id }) => `...saved.${id}`,
       [actions.clear]: () => '',
     }],
     // tree state
@@ -665,6 +666,7 @@ export default kea({
             actions.openNewView()
           } else {
             actions.openView(path.substring('...saved.'.length))
+            actions.focusSearch()
           }
         } else {
           if (values.treeState[path]) {
