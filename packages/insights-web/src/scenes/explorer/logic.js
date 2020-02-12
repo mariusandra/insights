@@ -465,7 +465,8 @@ export default kea({
 
   listeners: ({ actions, values }) => ({
     [actions.openModel]: async ({ model }) => {
-      actions.openTreeNode(model)
+      // actions.openTreeNode(model)
+      actions.setExpandedKeys([model, '...pinned', '...saved'])
       actions.setSearch('')
 
       // get the id column for this model
