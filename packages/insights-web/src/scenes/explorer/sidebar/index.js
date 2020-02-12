@@ -13,11 +13,17 @@ import Models from './models'
 import SelectedModel from './selected-model'
 
 export default function Sidebar () {
-  const { search, selectedModel } = useValues(explorerLogic)
+  const { search, selectedModel, selectedKey } = useValues(explorerLogic)
   const { setSearch, focusSearch, moveSelectionUp, moveSelectionDown, enterSelection } = useActions(explorerLogic)
 
   // eslint-disable-next-line
-  useEffect(() => { window.setTimeout(focusSearch, 100) }, [])
+  useEffect(() => {
+    window.setTimeout(focusSearch, 100)
+  }, [])
+  useEffect(() => {
+    const element = document.querySelector('.ant-tree-node-selected')
+    element && element.scrollIntoView({behavior: "auto", block: "nearest"})
+  }, [selectedKey])
 
   return (
     <Layout>
