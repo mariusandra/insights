@@ -3,7 +3,6 @@ import { useActions, useValues } from 'kea'
 
 import { Button, Tree, Icon } from 'antd'
 
-import OldNode from './old-node'
 import { columnIcon } from '../../connection/subset/form/models/edit-field'
 
 import explorerLogic from 'scenes/explorer/logic'
@@ -176,32 +175,6 @@ export default function SelectedModel () {
           ))}
         </div>
       </div>
-
-      <div className='node' style={{marginBottom: 10}}>
-        <div className='node-entry'>
-          <div className='node-icon has-children open' />
-          <div className='node-title'>
-            Favourite fields <small className='count-tag'>({modelFavourites.length})</small>
-          </div>
-        </div>
-        <div className='node-children'>
-          {modelFavourites.map(favourite => (
-            <OldNode
-              key={favourite}
-              path={favourite}
-              localSearch=''
-              connection={favourite.substring(selectedModel.length + 1)}
-              focusSearch={focusSearch} />
-          ))}
-        </div>
-      </div>
-
-      <OldNode key={selectedModel}
-               path={selectedModel}
-               localSearch={search}
-               model={selectedModel}
-               focusSearch={focusSearch} />
-
     </div>
   )
 }
