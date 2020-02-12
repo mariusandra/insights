@@ -23,7 +23,6 @@
   .ant-tree > .ant-tree-treenode-switcher-close {
     padding-bottom: 20px;
   }
-
   .ant-tree li .ant-tree-node-content-wrapper {
     color: #333;
     min-width: calc(100% - 24px);
@@ -80,6 +79,13 @@
   .ant-tree li .ant-tree-node-content-wrapper:hover {
     background: hsla(209, 34%, 85%, 1);
   }
+  .ant-tree li .ant-tree-node-content-wrapper.ant-tree-node-selected {
+    background: hsla(210, 67%, 83%, 1);
+  }
+  .ant-tree li .ant-tree-node-content-wrapper.ant-tree-node-selected:hover {
+    background: hsla(210, 67%, 83%, 1);
+  }
+
   .ant-tree-switcher {
     i.anticon {
       color: hsla(209, 36%, 84%, 1);
