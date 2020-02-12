@@ -3,6 +3,7 @@ import { connect } from 'kea'
 import PropTypes from 'prop-types'
 import { Icon, Tooltip } from 'antd'
 import explorerLogic from 'scenes/explorer/logic'
+import { FullPath } from 'scenes/explorer/tags/full-path'
 
 const connection = {
   actions: [
@@ -44,7 +45,12 @@ class FavouriteStar extends Component {
       <span
         className={`favourite-star${favourites[path] ? ' in-favourites' : ' not-in-favourites'}`}
         onClick={this.toggleFavourite}>
-         <Tooltip placement={'left'} overlay={<span>{favourites[path] ? 'This field is pinned!' : 'Pin this field'}</span>}>
+         <Tooltip placement={'left'} overlay={
+           <span>
+             {favourites[path] ? 'This field is pinned!' : 'Pin this field'}
+             <FullPath path={path} rootIcon='pushpin' rootIconTheme={favourites[path] ? 'filled' : ''} />
+           </span>
+         }>
            <Icon type="pushpin" theme={favourites[path] ? "filled" : ''} />
          </Tooltip>
       </span>
