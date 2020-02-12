@@ -11,25 +11,8 @@ import locationSelector from 'lib/selectors/location'
 import HighlightText from 'lib/utils/highlight-text'
 import FavouriteStar from './favourite-star'
 import FilterButton from './filter-button'
-import { getSortedMeta } from '../../../../lib/explorer/get-sorted-meta'
 
 const { TreeNode } = Tree;
-
-const stringIn = (search, string) => {
-  let i = 0
-  const s = search.toLowerCase()
-  string.toLowerCase().split('').forEach(letter => {
-    if (i < s.length && s[i] === letter) {
-      i++
-    }
-  })
-  return i >= s.length
-}
-
-function stringInFieldKey (search, path) {
-  const [, ...rest] = path.split('.')
-  return stringIn(search, rest.join('.'))
-}
 
 function renderTreeNodes ({ title, columns, path, field, localSearch, model, focusSearch, sortedStructure, treeState, fieldClicked, treeNode }) {
   const fieldPath = path.indexOf('...pinned.') === 0 ? path.substring('...pinned.'.length) : path
