@@ -7,6 +7,7 @@ import { push } from 'connected-react-router'
 import connectionLogic from './connection/logic'
 import viewsLogic from 'scenes/header/views/logic'
 import stateToUrl from 'lib/explorer/state-to-url'
+import naturalCompare from 'string-natural-compare'
 
 const arrayUniq = (array) => {
   const cache = {}
@@ -307,6 +308,23 @@ export default kea({
   }),
 
   selectors: ({ selectors }) => ({
+    sortedStructure: [
+      () => [selectors.structure],
+      (structure) => {
+        const newStructure = {}
+
+        Object.entries(structure).sort((a, b) => naturalCompare(a[0], b[0])).forEach(([model, { custom, columns, links }]) => {
+          newStructure[model] = [
+            ...Object.entries(custom).map(([key, meta]) => ({ key, type: 'custom', meta, editType: 'old' })),
+            ...Object.entries(columns).map(([key, meta]) => ({ key, type: 'column', meta, editType: 'old' })),
+            ...Object.entries(links).map(([key, meta]) => ({ key, type: 'link', meta, editType: 'old' }))
+          ].sort((a, b) => naturalCompare(a.key, b.key))
+        })
+
+        return newStructure
+      }
+    ],
+
     models: [
       () => [selectors.structure],
       (structure) => {

@@ -3,46 +3,19 @@ import { kea, useActions, useValues } from 'kea'
 
 import { Button, Tree, Icon, Tag } from 'antd'
 
-import Node from './node'
+import OldNode from './old-node'
 import { columnIcon } from '../../connection/subset/form/models/edit-field'
 
 import explorerLogic from 'scenes/explorer/logic'
 import viewsLogic from 'scenes/header/views/logic'
 import { useSelector } from 'react-redux'
 import locationSelector from 'lib/selectors/location'
-import naturalCompare from 'string-natural-compare'
 import HighlightText from 'lib/utils/highlight-text'
 import FavouriteStar from './favourite-star'
 import FilterButton from './filter-button'
 import getMeta from '../../../../lib/explorer/get-meta'
 
 const { TreeNode } = Tree;
-
-const logic = kea({
-  connect: {
-    values: [
-      explorerLogic, ['structure', 'selectedModel']
-    ]
-  },
-  selectors: ({ selectors }) => ({
-    sortedStructure: [
-      () => [selectors.structure],
-      (structure) => {
-        const newStructure = {}
-
-        Object.entries(structure).sort((a, b) => naturalCompare(a[0], b[0])).forEach(([model, { custom, columns, links }]) => {
-          newStructure[model] = [
-            ...Object.entries(custom).map(([key, meta]) => ({ key, type: 'custom', meta, editType: 'old' })),
-            ...Object.entries(columns).map(([key, meta]) => ({ key, type: 'column', meta, editType: 'old' })),
-            ...Object.entries(links).map(([key, meta]) => ({ key, type: 'link', meta, editType: 'old' }))
-          ].sort((a, b) => naturalCompare(a.key, b.key))
-        })
-
-        return newStructure
-      }
-    ],
-  })
-})
 
 const stringIn = (search, string) => {
   let i = 0
@@ -99,10 +72,8 @@ function renderTreeNodes ({ key, path, field, localSearch, model, focusSearch, s
 }
 
 export default function SelectedModel () {
-  const { selectedModel, savedViews, modelFavourites, search, treeState, expandedKeys } = useValues(explorerLogic)
+  const { structure, sortedStructure, selectedModel, savedViews, modelFavourites, search, treeState, expandedKeys } = useValues(explorerLogic)
   const { closeModel, focusSearch, openUrl, closeTreeNode, openTreeNode, setExpandedKeys } = useActions(explorerLogic)
-
-  const { sortedStructure } = useValues(logic)
 
   const { openView } = useActions(viewsLogic)
   const { pathname: urlPath, search: urlSearch } = useSelector(locationSelector)
@@ -171,7 +142,7 @@ export default function SelectedModel () {
         </div>
         <div className='node-children'>
           {modelFavourites.map(favourite => (
-            <Node
+            <OldNode
               key={favourite}
               path={favourite}
               localSearch=''
@@ -181,11 +152,11 @@ export default function SelectedModel () {
         </div>
       </div>
 
-      <Node key={selectedModel}
-            path={selectedModel}
-            localSearch={search}
-            model={selectedModel}
-            focusSearch={focusSearch} />
+      <OldNode key={selectedModel}
+               path={selectedModel}
+               localSearch={search}
+               model={selectedModel}
+               focusSearch={focusSearch} />
 
     </div>
   )
