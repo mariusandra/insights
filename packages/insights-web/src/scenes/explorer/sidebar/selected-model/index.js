@@ -61,7 +61,7 @@ function renderTreeNodes ({ title, columns, path, field, localSearch, model, foc
               title={titleComponent}
               className={`tree-node${isSelected ? ' tree-node-selected' : ''}${field ? ` field-type-${field.type}` : ''}`}
               switcherIcon={field && field.type !== 'link' ? <Icon type={field.meta.index === 'primary_key' ? 'idcard' : (columnIcon[field.meta.type] || 'question-circle')} /> : null}>
-      {treeState[path] &&
+      {(treeState[path] || path === model) &&
         childNodes
           .filter(child => stringInFieldKey(localSearch.split(' ')[1] || '', `${path}.${child.key}`))
           .map(child => {
@@ -166,7 +166,7 @@ export default function SelectedModel () {
           sortedStructure,
           fieldClicked,
           columns,
-          treeState
+          treeState,
         })] : []}
       </Tree>
     </div>

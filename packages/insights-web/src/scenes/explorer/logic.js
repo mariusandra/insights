@@ -360,7 +360,7 @@ export default kea({
     selectedModel: [
       () => [selectors.treeState, selectors.columns, selectors.sort],
       (treeState, columns, sort) => {
-        return ((sort.indexOf('-') === 0 ? sort.substring(1) : sort) || '').split('.')[0] || // columnFromSort
+        return ((sort && sort.indexOf('-') === 0 ? sort.substring(1) : sort) || '').split('.')[0] || // columnFromSort
                (Object.keys(treeState).length > 0 ? Object.keys(treeState)[0].split('.')[0] : null) || // columnFromTreeState
                (columns.length > 0 ? columns[0].split('.')[0] : null) // columnFromColumns
       },
