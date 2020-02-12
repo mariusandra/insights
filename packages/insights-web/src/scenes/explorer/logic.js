@@ -635,17 +635,18 @@ export default kea({
       }
 
       const { columns } = values
-      const isSelected = columns.includes(path) || columns.some(s => s.indexOf(`${path}.`) >= 0) || columns.some(s => s.indexOf(`${path}!`) >= 0)
+      const fieldPath = path.indexOf('...pinned.') === 0 ? path.substring('...pinned.'.length) : path
+      const isSelected = columns.includes(fieldPath) || columns.some(s => s.indexOf(`${fieldPath}.`) >= 0) || columns.some(s => s.indexOf(`${fieldPath}!`) >= 0)
 
       if (isSelected) {
-        actions.removeColumnsWithPath(path)
+        actions.removeColumnsWithPath(fieldPath)
       } else {
         if (field.meta && field.meta.type === 'time') {
-          const column = `${path}!day`
+          const column = `${fieldPath}!day`
           actions.addColumn(column)
           actions.setSort(`-${column}`)
         } else {
-          actions.addColumn(path)
+          actions.addColumn(fieldPath)
         }
 
         actions.setSearch('')

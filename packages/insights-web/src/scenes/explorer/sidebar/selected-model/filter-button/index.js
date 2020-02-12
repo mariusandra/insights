@@ -38,8 +38,9 @@ class FilterButton extends Component {
   addAnotherFilter = () => {
     const { path } = this.props
     const { addFilter } = this.props.actions
+    const fieldPath = path.indexOf('...pinned.') === 0 ? path.substring('...pinned.'.length) : path
 
-    addFilter({ key: path, value: '' })
+    addFilter({ key: fieldPath, value: '' })
   }
 
   openFilter = () => {
@@ -58,9 +59,11 @@ class FilterButton extends Component {
   render () {
     const { path, treeNodeFilterOpen, filterKeys, filter } = this.props
 
-    const filterIndex = filterKeys.indexOf(path)
+    const fieldPath = path.indexOf('...pinned.') === 0 ? path.substring('...pinned.'.length) : path
+
+    const filterIndex = filterKeys.indexOf(fieldPath)
     const filterOpen = treeNodeFilterOpen === path
-    const filterCount = filterKeys.filter(k => k === path).length
+    const filterCount = filterKeys.filter(k => k === fieldPath).length
 
     if (filterOpen) {
       if (filterCount === 1 || filterCount === 0) {
@@ -69,7 +72,7 @@ class FilterButton extends Component {
             placement='right'
             index={filterIndex}
             value={filterIndex >= 0 ? filter[filterIndex].value : undefined}
-            column={path}
+            column={fieldPath}
             forceOpen
             onClose={this.closeFilter}>
             <span className='filter-button filter-filled' onClick={this.closeFilter}><Icon type="filter" theme='filled' /></span>
@@ -85,7 +88,7 @@ class FilterButton extends Component {
             overlay={(
               <div>
                 {filter.map(({ key, value }) => {
-                  if (key !== path) {
+                  if (key !== fieldPath) {
                     i += 1
                     return null
                   }

@@ -32,7 +32,8 @@ function stringInFieldKey (search, path) {
 }
 
 function renderTreeNodes ({ title, columns, path, field, localSearch, model, focusSearch, sortedStructure, treeState, fieldClicked, treeNode }) {
-  const isSelected = columns.includes(path) || columns.some(s => s.indexOf(`${path}.`) >= 0) || columns.some(s => s.indexOf(`${path}!`) >= 0)
+  const fieldPath = path.indexOf('...pinned.') === 0 ? path.substring('...pinned.'.length) : path
+  const isSelected = columns.includes(fieldPath) || columns.some(s => s.indexOf(`${fieldPath}.`) >= 0) || columns.some(s => s.indexOf(`${fieldPath}!`) >= 0)
 
   const titleComponent = field
     ? (
@@ -45,7 +46,7 @@ function renderTreeNodes ({ title, columns, path, field, localSearch, model, foc
           <span className='model-link-tag'><Icon type='link' /> {field.meta.model}</span>
         ) : (
           <span className='model-field-controls'>
-            <FavouriteStar path={path} />
+            <FavouriteStar path={fieldPath} />
             <FilterButton path={path} />
           </span>
         )}
@@ -145,7 +146,7 @@ export default function SelectedModel () {
             return renderTreeNodes({
               field,
               title: rest.join('.'),
-              path: path,
+              path: `...pinned.${path}`,
               localSearch: search,
               model: field && field.meta ? field.meta.model : '',
               focusSearch,
