@@ -9,7 +9,7 @@ import explorerLogic from 'scenes/explorer/logic'
 import { useSelector } from 'react-redux'
 import locationSelector from 'lib/selectors/location'
 import HighlightText from 'lib/utils/highlight-text'
-import FavouriteStar from './favourite-star'
+import Pin from './pin'
 import FilterButton from './filter-button'
 
 const { TreeNode } = Tree;
@@ -29,7 +29,7 @@ function renderTreeNodes ({ title, columns, path, field, localSearch, model, foc
           <span className='model-link-tag'><Icon type='link' /> {field.meta.model}</span>
         ) : (
           <span className='model-field-controls'>
-            <FavouriteStar path={fieldPath} />
+            <Pin path={fieldPath} />
             <FilterButton path={path} />
           </span>
         )}

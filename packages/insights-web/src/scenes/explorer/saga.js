@@ -341,7 +341,9 @@ export default kea({
       const { addFavouriteSuccess } = this.actions
       const { path } = action.payload
 
-      const favourite = yield favouritesService.create({ path })
+      const connectionId = yield explorerLogic.get('connectionId')
+      const subsetId = yield explorerLogic.get('subsetId')
+      const favourite = yield favouritesService.create({ model: path.split('.')[0], path, connectionId, subsetId })
 
       if (favourite) {
         yield put(addFavouriteSuccess(path, favourite))

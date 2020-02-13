@@ -17,7 +17,7 @@ const connection = {
     ]
   ]
 }
-class FavouriteStar extends Component {
+class Pin extends Component {
   static propTypes = {
     path: PropTypes.string
   }
@@ -49,5 +49,5 @@ class FavouriteStar extends Component {
     )
   }
 }
-const ConnectedFavouriteStar = connect(connection)(FavouriteStar)
-export default ConnectedFavouriteStar
+const ConnectedPin = connect(connection)(Pin)
+export default ConnectedPin

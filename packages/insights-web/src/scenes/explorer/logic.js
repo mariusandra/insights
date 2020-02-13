@@ -573,10 +573,10 @@ export default kea({
     ],
 
     modelFavourites: [
-      () => [selectors.selectedModel, selectors.favourites],
-      (model, favourites) => {
+      () => [selectors.connectionId, selectors.subsetId, selectors.selectedModel, selectors.favourites],
+      (connectionId, subsetId, model, favourites) => {
         if (favourites) {
-          return Object.keys(favourites).filter(k => k.indexOf(model + '.') === 0).sort()
+          return Object.values(favourites).filter(f => f.model === model && f.subsetId === subsetId && f.connectionId === connectionId).map(f => f.path).sort()
         }
         return []
       },
