@@ -678,6 +678,10 @@ export default kea({
         return
       }
 
+      if (path === values.treeNodeFilterOpen) {
+        return
+      }
+
       if (path === values.selectedModel || path.indexOf('...') === 0) {
         if (path.indexOf('...saved.') === 0) {
           if (path === '...saved.SAVE_NEW') {
