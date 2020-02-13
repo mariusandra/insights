@@ -36,7 +36,7 @@ export default function Models () {
           <TreeNode
             title={search ? <HighlightText highlight={search}>{model}</HighlightText> : model}
             key={model}
-            switcherIcon={<Icon type='right' style={{ color: 'hsla(209, 66%, 54%, 1)' }} />}
+            switcherIcon={<Icon type='right' style={{ color: 'hsla(209, 66%, 54%, 1)', transform: "scale(0.833)" }} />}
           />
         ))}
       </Tree>
