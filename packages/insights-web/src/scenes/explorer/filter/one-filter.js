@@ -6,7 +6,7 @@ import moment from 'moment'
 import DateTime from 'react-datetime'
 import 'react-datetime/css/react-datetime.css'
 
-import Tooltip from 'rc-tooltip'
+import { Popover, Icon, Button } from 'antd'
 import getMeta from 'lib/explorer/get-meta'
 
 import explorerLogic from 'scenes/explorer/logic'
@@ -197,15 +197,11 @@ class OneFilter extends Component {
 
   renderFilter = (meta) => {
     const { index, value, forceOpen } = this.props
-    const { removeFilter } = this.actions
 
     const columnFilter = value
 
     return (
       <div className='filter-options' style={{minWidth: 100}}>
-        {index >= 0 && !forceOpen ? (
-          <span style={{float: 'right', cursor: 'pointer', color: 'red', fontWeight: 'bold'}} onClick={() => removeFilter(index)}>X</span>
-        ) : null}
         <div>
           <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: !columnFilter ? 'bold' : 'normal'}} onClick={() => this.setFilter('')}>Anything</span>
         </div>
@@ -231,7 +227,8 @@ class OneFilter extends Component {
   }
 
   render () {
-    const { column, value, columnsMeta, structure, placement, forceOpen, children } = this.props
+    const { index, column, value, columnsMeta, structure, placement, forceOpen, children } = this.props
+    const { removeFilter } = this.actions
 
     const [ path, transform, aggregate ] = column.split('!')
     const meta = columnsMeta[column] || { ...getMeta(path, structure), transform, aggregate }
@@ -241,18 +238,28 @@ class OneFilter extends Component {
     const overlay = this.renderFilter(meta)
 
     return (
-      <Tooltip
-        {...(forceOpen ? { visible: true } : {})}
+      <Popover
+        content={overlay}
+        title={
+          <span>
+            {index >= 0 && !forceOpen ? (
+              <Button type='link' className='filter-popover-delete' onClick={() => removeFilter(index)}>
+                <Icon type='delete' /> Remove
+              </Button>
+            ) : null}
+            {path}
+          </span>
+        }
+        trigger='hover'
         placement={placement || 'bottomLeft'}
-        trigger={['hover']}
-        overlay={overlay}
-        onVisibleChange={this.handleTooltip}>
+        {...(forceOpen ? { visible: true } : {})}
+      >
         {children || (
           <span className='filter-preview-element'>
             {localKey}: {value.replace('equals:', '')}
           </span>
         )}
-      </Tooltip>
+      </Popover>
     )
   }
 }
