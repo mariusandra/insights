@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'kea'
 
-import Tooltip from 'rc-tooltip'
+import { Popover, Icon } from 'antd'
 
 import explorerLogic from 'scenes/explorer/logic'
 
@@ -75,12 +75,12 @@ class TableSettings extends Component {
     }
 
     return (
-      <Tooltip placement='bottomLeft' trigger={['hover']} overlay={overlay} onVisibleChange={this.handleTooltip}>
+      <Popover placement='bottomLeft' trigger={'hover'} content={overlay} onVisibleChange={this.handleTooltip}>
         <div className={className}
           onClick={this.handleSort}>
-          ☰
+          <Icon type='menu' />
         </div>
-      </Tooltip>
+      </Popover>
     )
   }
 }

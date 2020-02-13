@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'kea'
 import PropTypes from 'prop-types'
 
-import Tooltip from 'rc-tooltip'
+import { Popover } from 'antd'
 
 import ColumnSettings from './column-settings'
 
@@ -87,7 +87,12 @@ class TableHeader extends Component {
     const localPath = (column.split('!')[0] || '').replace(/^[^.]+\./, '').split('.').reverse().join(' < ')
 
     return (
-      <Tooltip placement='bottomLeft' trigger={['hover']} overlay={overlay} onVisibleChange={this.handleTooltip}>
+      <Popover
+        placement='bottomLeft'
+        trigger='hover'
+        content={overlay}
+        onVisibleChange={this.handleTooltip}
+      >
         <div className={className} onClick={this.handleSort}>
           {meta && meta.aggregate && (
             <span className='filter-aggregate'>{meta.aggregate}</span>
@@ -100,7 +105,7 @@ class TableHeader extends Component {
           )}
           {localPath}
         </div>
-      </Tooltip>
+      </Popover>
     )
   }
 }
