@@ -334,6 +334,8 @@ export default class Results {
         conditions.push(this.adapter.filterEquals(meta.sql, meta.type, 'true'))
       } else if (meta.type === 'boolean' && condition === 'false') {
         conditions.push(this.adapter.filterEquals(meta.sql, meta.type, 'false'))
+      } else if (condition === 'equals') {
+        conditions.push(this.adapter.filterEquals(meta.sql, meta.type, ''))
       } else if (condition.indexOf('equals:') === 0) {
         conditions.push(this.adapter.filterEquals(meta.sql, meta.type, condition.substring(7)))
       } else if (condition.indexOf('contains:') === 0) {

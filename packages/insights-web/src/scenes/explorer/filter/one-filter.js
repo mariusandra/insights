@@ -38,8 +38,12 @@ function filterTag ({ field, value }) {
   }
 
   if (fieldType !== 'true' && fieldType !== 'false' && fieldType !== 'null' && fieldType !== 'not null' && fieldValue === '') {
-    filterText = <span style={{ opacity: 0.5 }}>Anything</span>
-    iconTheme = ''
+    if (fieldType === 'equals') {
+      filterText = <span style={{ opacity: 0.5 }}>Empty String</span>
+    } else {
+      filterText = <span style={{opacity: 0.5}}>Anything</span>
+      iconTheme = ''
+    }
   }
 
   const [fieldName, mod1, mod2] = (field || '').split('!', 3)
@@ -85,8 +89,8 @@ class OneFilter extends Component {
 
     if (index === -1) {
       addFilter({ key: column, value })
-    } else if (value === '' && forceOpen) {
-      removeFilter(index)
+    // } else if (value === '' && forceOpen) {
+    //   removeFilter(index)
     } else {
       setFilter(index, value)
     }
@@ -120,7 +124,7 @@ class OneFilter extends Component {
           {fieldType === 'equals' ? (
             <Input
               autoFocus
-              placeholder='abc'
+              placeholder='Empty String'
               value={fieldValue}
               onChange={e => this.setFilter(e.target.value === '' ? '' : `equals:${e.target.value}`)}
               style={{ width: 150, marginLeft: 10 }}
@@ -302,21 +306,24 @@ class OneFilter extends Component {
     const fieldValue = fieldValues.join(':') || ''
 
     return (
-      <Radio.Group onChange={e => this.setFilter(e.target.value)} value={fieldType}>
-        <RadioClick setFilter={this.setFilter} value=''>
-          Anything
-        </RadioClick>
-        <RadioClick setFilter={this.setFilter} value='not null'>
-          Present (not null)
-        </RadioClick>
-        <RadioClick setFilter={this.setFilter} value='null'>
-          Empty (null)
-        </RadioClick>
+      <div>
+        <Radio.Group onChange={e => this.setFilter(e.target.value)} value={fieldType}>
+          <RadioClick setFilter={this.setFilter} value=''>
+            Anything
+          </RadioClick>
+          <RadioClick setFilter={this.setFilter} value='not null'>
+            Present (not null)
+          </RadioClick>
+          <RadioClick setFilter={this.setFilter} value='null'>
+            Empty (null)
+          </RadioClick>
 
-        {meta.type === 'boolean' ? this.renderBooleanFilter(meta, fieldType, fieldValue) : null}
-        {meta.type === 'string' ? this.renderStringFilter(meta, fieldType, fieldValue) : null}
-        {meta.type === 'number' ? this.renderNumberFilter(meta, fieldType, fieldValue) : null}
-        {meta.type === 'time' || meta.type === 'date' ? this.renderTimeFilter(meta, fieldType, fieldValue) : null}
+          {meta.type === 'boolean' ? this.renderBooleanFilter(meta, fieldType, fieldValue) : null}
+          {meta.type === 'string' ? this.renderStringFilter(meta, fieldType, fieldValue) : null}
+          {meta.type === 'number' ? this.renderNumberFilter(meta, fieldType, fieldValue) : null}
+          {meta.type === 'time' || meta.type === 'date' ? this.renderTimeFilter(meta, fieldType, fieldValue) : null}
+        </Radio.Group>
+
         {value !== '' && index >= 0 && forceOpen ? (
           <div style={{ marginTop: 20 }}>
             <Button onClick={this.addAnotherFilter}>
@@ -324,7 +331,8 @@ class OneFilter extends Component {
             </Button>
           </div>
         ) : null}
-      </Radio.Group>
+
+      </div>
     )
   }
 

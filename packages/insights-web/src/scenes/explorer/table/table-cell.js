@@ -46,6 +46,14 @@ export default (props) => {
     }
   }
 
+  if (value === '') {
+    displayValue = <span style={{ opacity: 0.5 }}>Empty String</span>
+  } else if (value === null) {
+    displayValue = <span style={{ opacity: 0.5 }}>NULL</span>
+  } else if (value === undefined) {
+    displayValue = <span style={{ opacity: 0.5 }}>undefined</span>
+  }
+
   if (meta && meta.aggregate) {
     return (
       <Cell {...cellProps} className='cell-body'>
