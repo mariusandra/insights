@@ -107,6 +107,10 @@ class OneFilter extends Component {
   }
 
   setFilter = (value) => {
+    if (value && value.indexOf(':') === -1 && this.state.filterValue.indexOf(value) === 0) {
+      return
+    }
+
     this.setState({ filterValue: value })
   }
 
@@ -301,14 +305,12 @@ class OneFilter extends Component {
         <RadioClick setFilter={this.setFilter} value='date_range'>
           Between
           {fieldType === 'date_range' ? (
-            <div>
-              <DatePicker.RangePicker
-                autoFocus
-                value={[startDate, endDate]}
-                style={{ width: 240, marginLeft: 25 }}
-                onChange={([start, end]) => this.setFilter(start && end ? `date_range:${start.format('YYYY-MM-DD')}:${end.format('YYYY-MM-DD')}` : '')}
-              />
-            </div>
+            <DatePicker.RangePicker
+              autoFocus
+              value={[startDate, endDate]}
+              style={{ width: 240, marginLeft: 10 }}
+              onChange={([start, end]) => this.setFilter(start && end ? `date_range:${start.format('YYYY-MM-DD')}:${end.format('YYYY-MM-DD')}` : '')}
+            />
           ) : null}
         </RadioClick>
       </>
