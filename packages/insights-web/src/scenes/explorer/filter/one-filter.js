@@ -11,6 +11,16 @@ import explorerLogic from 'scenes/explorer/logic'
 const sanitizeNumber = (str) => str.replace(/[^0-9.]/g, '')
 const sanitizeListNumber = (str) => str.replace(/[^0-9., ]/g, '')
 
+function RadioClick ({ value, setFilter, children }) {
+  return (
+    <Radio className='filter-radio-popup' value={value}>
+      <span onClick={() => setFilter(value)} style={{ display: 'inline-block', width: '100%' }}>
+        {children}
+      </span>
+    </Radio>
+  )
+}
+
 function filterTag ({ field, value }) {
   const [fieldType, ...fieldValues] = (value || '').split(':')
   const fieldValue = fieldValues.join(':') || ''
@@ -92,12 +102,12 @@ class OneFilter extends Component {
   renderBooleanFilter = (meta, fieldType, fieldValue) => {
     return (
       <>
-        <Radio className='filter-radio-popup' value='true'>
+        <RadioClick setFilter={this.setFilter} value='true'>
           True
-        </Radio>
-        <Radio className='filter-radio-popup' value='false'>
+        </RadioClick>
+        <RadioClick setFilter={this.setFilter} value='false'>
           False
-        </Radio>
+        </RadioClick>
       </>
     )
   }
@@ -105,7 +115,7 @@ class OneFilter extends Component {
   renderStringFilter = (meta, fieldType, fieldValue) => {
     return (
       <>
-        <Radio className='filter-radio-popup' value='equals'>
+        <RadioClick setFilter={this.setFilter} value='equals'>
           Equals
           {fieldType === 'equals' ? (
             <Input
@@ -116,9 +126,9 @@ class OneFilter extends Component {
               style={{ width: 150, marginLeft: 10 }}
             />
           ) : null}
-        </Radio>
+        </RadioClick>
 
-        <Radio className='filter-radio-popup' value='contains'>
+        <RadioClick setFilter={this.setFilter} value='contains'>
           Contains
           {fieldType === 'contains' ? (
             <Input
@@ -129,9 +139,9 @@ class OneFilter extends Component {
               style={{ width: 150, marginLeft: 10 }}
             />
           ) : null}
-        </Radio>
+        </RadioClick>
 
-        <Radio className='filter-radio-popup' value='in'>
+        <RadioClick setFilter={this.setFilter} value='in'>
           In list
           {fieldType === 'in' ? (
             <Input
@@ -142,9 +152,9 @@ class OneFilter extends Component {
               style={{ width: 150, marginLeft: 10 }}
             />
           ) : null}
-        </Radio>
+        </RadioClick>
 
-        <Radio className='filter-radio-popup' value='not_in'>
+        <RadioClick setFilter={this.setFilter} value='not_in'>
           Not in list
           {fieldType === 'not_in' ? (
             <Input
@@ -155,7 +165,7 @@ class OneFilter extends Component {
               style={{ width: 150, marginLeft: 10 }}
             />
           ) : null}
-        </Radio>
+        </RadioClick>
       </>
     )
   }
@@ -163,7 +173,7 @@ class OneFilter extends Component {
   renderNumberFilter = (meta, fieldType, fieldValue) => {
     return (
       <>
-        <Radio className='filter-radio-popup' value='equals'>
+        <RadioClick setFilter={this.setFilter} value='equals'>
           Equals
           {fieldType === 'equals' ? (
             <Input
@@ -174,9 +184,9 @@ class OneFilter extends Component {
               style={{ width: 100, marginLeft: 10 }}
             />
           ) : null}
-        </Radio>
+        </RadioClick>
 
-        <Radio className='filter-radio-popup' value='in'>
+        <RadioClick setFilter={this.setFilter} value='in'>
           In list
           {fieldType === 'in' ? (
             <Input
@@ -187,9 +197,9 @@ class OneFilter extends Component {
               style={{ width: 100, marginLeft: 10 }}
             />
           ) : null}
-        </Radio>
+        </RadioClick>
 
-        <Radio className='filter-radio-popup' value='not_in'>
+        <RadioClick setFilter={this.setFilter} value='not_in'>
           Not in list
           {fieldType === 'not_in' ? (
             <Input
@@ -200,9 +210,9 @@ class OneFilter extends Component {
               style={{ width: 100, marginLeft: 10 }}
             />
           ) : null}
-        </Radio>
+        </RadioClick>
 
-        <Radio className='filter-radio-popup' value='between'>
+        <RadioClick setFilter={this.setFilter} value='between'>
           Between
           {fieldType === 'between' ? (
             <>
@@ -227,7 +237,7 @@ class OneFilter extends Component {
               />
             </>
           ) : null}
-        </Radio>
+        </RadioClick>
       </>
     )
   }
@@ -245,7 +255,6 @@ class OneFilter extends Component {
       if (endStr) {
         endDate = moment(endStr)
       }
-      console.log(startDate, endDate)
     }
 
     if (fieldType === 'equals') {
@@ -256,7 +265,7 @@ class OneFilter extends Component {
 
     return (
       <>
-        <Radio className='filter-radio-popup' value='equals'>
+        <RadioClick setFilter={this.setFilter} value='equals'>
           Equals
           {fieldType === 'equals' ? (
             <DatePicker
@@ -266,9 +275,9 @@ class OneFilter extends Component {
               onChange={(date, dateString) => this.setFilter(date ? `equals:${date.format('YYYY-MM-DD')}` : '')}
             />
           ) : null}
-        </Radio>
+        </RadioClick>
 
-        <Radio className='filter-radio-popup' value='date_range'>
+        <RadioClick setFilter={this.setFilter} value='date_range'>
           Between
           {fieldType === 'date_range' ? (
             <div>
@@ -280,7 +289,7 @@ class OneFilter extends Component {
               />
             </div>
           ) : null}
-        </Radio>
+        </RadioClick>
       </>
     )
   }
@@ -294,15 +303,15 @@ class OneFilter extends Component {
 
     return (
       <Radio.Group onChange={e => this.setFilter(e.target.value)} value={fieldType}>
-        <Radio className='filter-radio-popup' value=''>
+        <RadioClick setFilter={this.setFilter} value=''>
           Anything
-        </Radio>
-        <Radio className='filter-radio-popup' value='not null'>
+        </RadioClick>
+        <RadioClick setFilter={this.setFilter} value='not null'>
           Present (not null)
-        </Radio>
-        <Radio className='filter-radio-popup' value='null'>
+        </RadioClick>
+        <RadioClick setFilter={this.setFilter} value='null'>
           Empty (null)
-        </Radio>
+        </RadioClick>
 
         {meta.type === 'boolean' ? this.renderBooleanFilter(meta, fieldType, fieldValue) : null}
         {meta.type === 'string' ? this.renderStringFilter(meta, fieldType, fieldValue) : null}
