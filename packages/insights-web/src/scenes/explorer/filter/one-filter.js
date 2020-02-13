@@ -6,7 +6,7 @@ import moment from 'moment'
 import DateTime from 'react-datetime'
 import 'react-datetime/css/react-datetime.css'
 
-import { Popover, Icon, Button } from 'antd'
+import { Popover, Icon, Button, Radio, Input, Tooltip } from 'antd'
 import getMeta from 'lib/explorer/get-meta'
 
 import explorerLogic from 'scenes/explorer/logic'
@@ -97,43 +97,71 @@ class OneFilter extends Component {
     )
   }
 
-  renderNumberFilter = (meta, columnFilter) => {
+  renderNumberFilter = (meta, fieldType, fieldValue) => {
     return (
-      <div>
-        <div className='filter-with-inputs'>
-          <span style={{fontWeight: columnFilter && columnFilter.indexOf('equals:') === 0 ? 'bold' : 'normal'}}>Equals:</span>
-          <input type='text' placeholder='123' value={columnFilter && columnFilter.indexOf('equals:') === 0 ? columnFilter.substring(7) : ''} onChange={(e) => this.setFilter(e.target.value === '' ? '' : `equals:${sanitizeNumber(e.target.value)}`)} />
-        </div>
-        <div className='filter-with-inputs'>
-          <span style={{fontWeight: columnFilter && columnFilter.indexOf('in:') === 0 ? 'bold' : 'normal'}}>In list:</span>
-          <input type='text' placeholder='1, 2, 3' value={columnFilter && columnFilter.indexOf('in:') === 0 ? columnFilter.substring(3) : ''} onChange={(e) => this.setFilter(e.target.value === '' ? '' : `in:${sanitizeListNumber(e.target.value)}`)} />
-        </div>
-        <div className='filter-with-inputs'>
-          <span style={{fontWeight: columnFilter && columnFilter.indexOf('not_in:') === 0 ? 'bold' : 'normal'}}>Not in:</span>
-          <input type='text' placeholder='a, b, c' value={columnFilter && columnFilter.indexOf('not_in:') === 0 ? columnFilter.substring(7) : ''} onChange={(e) => this.setFilter(e.target.value === '' ? '' : `not_in:${sanitizeListNumber(e.target.value)}`)} />
-        </div>
-        <div className='filter-with-inputs'>
-          <span style={{fontWeight: columnFilter && columnFilter.indexOf('between:') === 0 ? 'bold' : 'normal'}}>Between:</span>
-          <input
-            className='half'
-            placeholder='- ∞'
-            type='text'
-            value={columnFilter && columnFilter.indexOf('between:') === 0 ? columnFilter.split(':')[1] : ''}
-            onChange={(e) => {
-              const str = `${sanitizeNumber(e.target.value || '')}:${(columnFilter || '').split(':')[2] || ''}`
-              this.setFilter(str === ':' ? '' : `between:${str}`)
-            }} />
-          <input
-            className='half'
-            placeholder='+ ∞'
-            type='text'
-            value={columnFilter && columnFilter.indexOf('between:') === 0 ? columnFilter.split(':')[2] : ''}
-            onChange={(e) => {
-              const str = `${(columnFilter || '').split(':')[1] || ''}:${sanitizeNumber(e.target.value || '')}`
-              this.setFilter(str === ':' ? '' : `between:${str}`)
-            }} />
-        </div>
-      </div>
+      <>
+        <Radio className='filter-radio-popup' value='equals'>
+          Equals
+          {fieldType === 'equals' ? (
+            <Input
+              placeholder='123'
+              value={fieldType === 'equals' ? fieldValue : ''}
+              onChange={e => this.setFilter(e.target.value === '' ? '' : `equals:${sanitizeNumber(e.target.value)}`)}
+              style={{ width: 100, marginLeft: 10 }}
+            />
+          ) : null}
+        </Radio>
+
+        <Radio className='filter-radio-popup' value='in'>
+          In list
+          {fieldType === 'in' ? (
+            <Input
+              placeholder='1, 2, 3'
+              value={fieldType === 'in' ? fieldValue : ''}
+              onChange={e => this.setFilter(e.target.value === '' ? '' : `in:${sanitizeListNumber(e.target.value)}`)}
+              style={{ width: 100, marginLeft: 10 }}
+            />
+          ) : null}
+        </Radio>
+
+        <Radio className='filter-radio-popup' value='not_in'>
+          Not in list
+          {fieldType === 'not_in' ? (
+            <Input
+              placeholder='a, b, c'
+              value={fieldType === 'not_in' ? fieldValue : ''}
+              onChange={e => this.setFilter(e.target.value === '' ? '' : `not_in:${sanitizeListNumber(e.target.value)}`)}
+              style={{ width: 100, marginLeft: 10 }}
+            />
+          ) : null}
+        </Radio>
+
+        <Radio className='filter-radio-popup' value='between'>
+          Between
+          {fieldType === 'between' ? (
+            <>
+              <Input
+                placeholder='- 999'
+                value={fieldValue.split(':', 2)[0]}
+                onChange={e => {
+                  const str = `${sanitizeNumber(e.target.value || '')}:${fieldValue.split(':')[1] || ''}`
+                  this.setFilter(str === ':' ? '' : `between:${str}`)
+                }}
+                style={{ width: 100, marginLeft: 10 }}
+              />
+              <Input
+                placeholder='+ 999'
+                value={fieldValue.split(':', 2)[1]}
+                onChange={(e) => {
+                  const str = `${fieldValue.split(':')[0] || ''}:${sanitizeNumber(e.target.value || '')}`
+                  this.setFilter(str === ':' ? '' : `between:${str}`)
+                }}
+                style={{ width: 100, marginLeft: 10 }}
+              />
+            </>
+          ) : null}
+        </Radio>
+      </>
     )
   }
 
@@ -197,23 +225,26 @@ class OneFilter extends Component {
 
   renderFilter = (meta) => {
     const { index, value, forceOpen } = this.props
-
     const columnFilter = value
 
+    const [fieldType, ...fieldValues] = (columnFilter || '').split(':')
+    const fieldValue = fieldValues.join(':') || ''
+
     return (
-      <div className='filter-options' style={{minWidth: 100}}>
-        <div>
-          <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: !columnFilter ? 'bold' : 'normal'}} onClick={() => this.setFilter('')}>Anything</span>
-        </div>
-        <div>
-          <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: columnFilter === 'not null' ? 'bold' : 'normal'}} onClick={() => this.setFilter('not null')}>Present</span>
-        </div>
-        <div>
-          <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: columnFilter === 'null' ? 'bold' : 'normal'}} onClick={() => this.setFilter('null')}>Empty</span>
-        </div>
+      <Radio.Group onChange={e => this.setFilter(e.target.value)} value={fieldType}>
+        <Radio className='filter-radio-popup' value=''>
+          Anything
+        </Radio>
+        <Radio className='filter-radio-popup' value='not null'>
+          Present (not null)
+        </Radio>
+        <Radio className='filter-radio-popup' value='null'>
+          Empty (null)
+        </Radio>
+
         {meta.type === 'boolean' ? this.renderBooleanFilter(meta, columnFilter) : null}
         {meta.type === 'string' ? this.renderStringFilter(meta, columnFilter) : null}
-        {meta.type === 'number' ? this.renderNumberFilter(meta, columnFilter) : null}
+        {meta.type === 'number' ? this.renderNumberFilter(meta, fieldType, fieldValue) : null}
         {meta.type === 'time' || meta.type === 'date' ? this.renderTimeFilter(meta, columnFilter) : null}
         {value !== '' && index >= 0 && forceOpen ? (
           <div
@@ -222,7 +253,7 @@ class OneFilter extends Component {
             Add another filter
           </div>
         ) : null}
-      </div>
+      </Radio.Group>
     )
   }
 
@@ -243,9 +274,11 @@ class OneFilter extends Component {
         title={
           <span>
             {index >= 0 && !forceOpen ? (
-              <Button type='link' className='filter-popover-delete' onClick={() => removeFilter(index)}>
-                <Icon type='delete' /> Remove
-              </Button>
+              <Tooltip title='Remove filter'>
+                <Button type='link' className='filter-popover-delete' onClick={() => removeFilter(index)}>
+                  <Icon type='delete' />
+                </Button>
+              </Tooltip>
             ) : null}
             {path}
           </span>
