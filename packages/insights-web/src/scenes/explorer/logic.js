@@ -385,8 +385,12 @@ export default kea({
           if (key.indexOf('...') === 0 || key === selectedModel) {
             return true
           }
-          const structure = getSortedMeta(key, sortedStructureObject)
-          return !!structure
+          try {
+            const structure = getSortedMeta(key, sortedStructureObject)
+            return !!structure
+          } catch (e) {
+            return false
+          }
         })
 
         return expandedKeys
@@ -471,20 +475,22 @@ export default kea({
 
         if (treeState['...pinned']) {
           modelFavourites.filter(path => !search || stringInFieldKey(search, path)).forEach(path => {
-            const field = getSortedMeta(path, sortedStructureObject)
-            const [, ...rest] = path.split('.')
+            try {
+              const field = getSortedMeta(path, sortedStructureObject)
+              const [, ...rest] = path.split('.')
 
-            const pinnedNode = {
-              path: `...pinned.${path}`,
-              localPath: path,
-              key: rest.join('.'),
-              field,
-              index: index++,
-              children: []
-            }
+              const pinnedNode = {
+                path: `...pinned.${path}`,
+                localPath: path,
+                key: rest.join('.'),
+                field,
+                index: index++,
+                children: []
+              }
 
-            state.push(pinnedNode)
-            pinnedRoot.children.push(pinnedNode)
+              state.push(pinnedNode)
+              pinnedRoot.children.push(pinnedNode)
+            } catch (e) {}
           })
         }
 
@@ -705,7 +711,10 @@ export default kea({
         return
       }
 
-      const field = getSortedMeta(path, values.sortedStructureObject)
+      let field
+      try {
+        field = getSortedMeta(path, values.sortedStructureObject)
+      } catch (e) {}
 
       if (!field || field.type !== 'link') {
         return
