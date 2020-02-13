@@ -74,26 +74,61 @@ class OneFilter extends Component {
     )
   }
 
-  renderStringFilter = (meta, columnFilter) => {
+  renderStringFilter = (meta, fieldType, fieldValue) => {
     return (
-      <div>
-        <div className='filter-with-inputs'>
-          <span style={{fontWeight: columnFilter && columnFilter.indexOf('equals:') === 0 ? 'bold' : 'normal'}}>Equals:</span>
-          <input type='text' value={columnFilter && columnFilter.indexOf('equals:') === 0 ? columnFilter.substring(7) : ''} onChange={(e) => this.setFilter(e.target.value === '' ? '' : `equals:${e.target.value}`)} />
-        </div>
-        <div className='filter-with-inputs'>
-          <span style={{fontWeight: columnFilter && columnFilter.indexOf('contains:') === 0 ? 'bold' : 'normal'}}>Contains:</span>
-          <input type='text' value={columnFilter && columnFilter.indexOf('contains:') === 0 ? columnFilter.substring(9) : ''} onChange={(e) => this.setFilter(e.target.value === '' ? '' : `contains:${e.target.value}`)} />
-        </div>
-        <div className='filter-with-inputs'>
-          <span style={{fontWeight: columnFilter && columnFilter.indexOf('in:') === 0 ? 'bold' : 'normal'}}>In list:</span>
-          <input type='text' placeholder='1, 2, 3' value={columnFilter && columnFilter.indexOf('in:') === 0 ? columnFilter.substring(3) : ''} onChange={(e) => this.setFilter(e.target.value === '' ? '' : `in:${e.target.value}`)} />
-        </div>
-        <div className='filter-with-inputs'>
-          <span style={{fontWeight: columnFilter && columnFilter.indexOf('not_in:') === 0 ? 'bold' : 'normal'}}>Not in:</span>
-          <input type='text' placeholder='a, b, c' value={columnFilter && columnFilter.indexOf('not_in:') === 0 ? columnFilter.substring(7) : ''} onChange={(e) => this.setFilter(e.target.value === '' ? '' : `not_in:${e.target.value}`)} />
-        </div>
-      </div>
+      <>
+        <Radio className='filter-radio-popup' value='equals'>
+          Equals
+          {fieldType === 'equals' ? (
+            <Input
+              autoFocus
+              placeholder='abc'
+              value={fieldType === 'equals' ? fieldValue : ''}
+              onChange={e => this.setFilter(e.target.value === '' ? '' : `equals:${e.target.value}`)}
+              style={{ width: 100, marginLeft: 10 }}
+            />
+          ) : null}
+        </Radio>
+
+        <Radio className='filter-radio-popup' value='contains'>
+          Contains
+          {fieldType === 'contains' ? (
+            <Input
+              autoFocus
+              placeholder='abc'
+              value={fieldType === 'contains' ? fieldValue : ''}
+              onChange={e => this.setFilter(e.target.value === '' ? '' : `contains:${e.target.value}`)}
+              style={{ width: 100, marginLeft: 10 }}
+            />
+          ) : null}
+        </Radio>
+
+        <Radio className='filter-radio-popup' value='in'>
+          In list
+          {fieldType === 'in' ? (
+            <Input
+              autoFocus
+              placeholder='1, 2, 3'
+              value={fieldType === 'in' ? fieldValue : ''}
+              onChange={e => this.setFilter(e.target.value === '' ? '' : `in:${e.target.value}`)}
+              style={{ width: 100, marginLeft: 10 }}
+            />
+          ) : null}
+        </Radio>
+
+        <Radio className='filter-radio-popup' value='not_in'>
+          Not in list
+          {fieldType === 'not_in' ? (
+            <Input
+              autoFocus
+              placeholder='a, b, c'
+              value={fieldType === 'not_in' ? fieldValue : ''}
+              onChange={e => this.setFilter(e.target.value === '' ? '' : `not_in:${e.target.value}`)}
+              style={{ width: 100, marginLeft: 10 }}
+            />
+          ) : null}
+        </Radio>
+      </>
     )
   }
 
@@ -104,6 +139,7 @@ class OneFilter extends Component {
           Equals
           {fieldType === 'equals' ? (
             <Input
+              autoFocus
               placeholder='123'
               value={fieldType === 'equals' ? fieldValue : ''}
               onChange={e => this.setFilter(e.target.value === '' ? '' : `equals:${sanitizeNumber(e.target.value)}`)}
@@ -116,6 +152,7 @@ class OneFilter extends Component {
           In list
           {fieldType === 'in' ? (
             <Input
+              autoFocus
               placeholder='1, 2, 3'
               value={fieldType === 'in' ? fieldValue : ''}
               onChange={e => this.setFilter(e.target.value === '' ? '' : `in:${sanitizeListNumber(e.target.value)}`)}
@@ -128,6 +165,7 @@ class OneFilter extends Component {
           Not in list
           {fieldType === 'not_in' ? (
             <Input
+              autoFocus
               placeholder='a, b, c'
               value={fieldType === 'not_in' ? fieldValue : ''}
               onChange={e => this.setFilter(e.target.value === '' ? '' : `not_in:${sanitizeListNumber(e.target.value)}`)}
@@ -141,6 +179,7 @@ class OneFilter extends Component {
           {fieldType === 'between' ? (
             <>
               <Input
+                autoFocus
                 placeholder='- 999'
                 value={fieldValue.split(':', 2)[0]}
                 onChange={e => {
@@ -230,6 +269,8 @@ class OneFilter extends Component {
     const [fieldType, ...fieldValues] = (columnFilter || '').split(':')
     const fieldValue = fieldValues.join(':') || ''
 
+    console.log(fieldType, fieldValue)
+
     return (
       <Radio.Group onChange={e => this.setFilter(e.target.value)} value={fieldType}>
         <Radio className='filter-radio-popup' value=''>
@@ -243,7 +284,7 @@ class OneFilter extends Component {
         </Radio>
 
         {meta.type === 'boolean' ? this.renderBooleanFilter(meta, columnFilter) : null}
-        {meta.type === 'string' ? this.renderStringFilter(meta, columnFilter) : null}
+        {meta.type === 'string' ? this.renderStringFilter(meta, fieldType, fieldValue) : null}
         {meta.type === 'number' ? this.renderNumberFilter(meta, fieldType, fieldValue) : null}
         {meta.type === 'time' || meta.type === 'date' ? this.renderTimeFilter(meta, columnFilter) : null}
         {value !== '' && index >= 0 && forceOpen ? (
