@@ -21,7 +21,7 @@ function RadioClick ({ value, setFilter, children }) {
   )
 }
 
-function filterTag ({ field, value, openFilter }) {
+function FilterTag ({ field, value, openFilter, removeFilter }) {
   const [fieldType, ...fieldValues] = (value || '').split(':')
   const fieldValue = fieldValues.join(':') || ''
 
@@ -49,7 +49,7 @@ function filterTag ({ field, value, openFilter }) {
   const [fieldName, mod1, mod2] = (field || '').split('!', 3)
 
   return (
-    <Tag onClick={openFilter} className='filter-tag'>
+    <Tag onClick={openFilter} onClose={removeFilter} visible closable={!!removeFilter} className='filter-tag'>
       <Icon type='filter' theme={iconTheme} style={{ marginRight: 5, color: 'hsl(209, 32%, 40%)' }} />
       <strong>{fieldName}{mod1 ? ` (${mod1})` : ''}{mod2 ? ` (${mod2})` : ''}:</strong> {filterText}
     </Tag>
@@ -93,13 +93,13 @@ class OneFilter extends Component {
   }
 
   saveFilter = (value) => {
-    const { index, column } = this.props
-    const { setFilter, addFilter, openTreeNodeFilter } = this.actions
+    const { index, column, forceOpen } = this.props
+    const { setFilter, addFilter, removeFilter } = this.actions
 
     if (index === -1) {
       addFilter({ key: column, value })
-    // } else if (value === '' && forceOpen) {
-    //   removeFilter(index)
+    } else if (value === '' && forceOpen) {
+      removeFilter(index)
     } else {
       setFilter(index, value)
     }
@@ -112,9 +112,12 @@ class OneFilter extends Component {
 
   addAnotherFilter = () => {
     const { column } = this.props
-    const { addFilter } = this.actions
+    const { addFilter, openTreeNodeFilter } = this.actions
+
+    const [ path, , ] = column.split('!')
 
     addFilter({ key: column, value: '' })
+    openTreeNodeFilter(`...tree.X.${path}`)
   }
 
   renderBooleanFilter = (meta, fieldType, fieldValue) => {
@@ -314,7 +317,6 @@ class OneFilter extends Component {
 
   renderFilter = (meta) => {
     const { index, value, forceOpen } = this.props
-    const { openTreeNodeFilter } = this.actions
     const { filterValue } = this.state
 
     const [fieldType, ...fieldValues] = (filterValue || value || '').split(':') || ''
@@ -339,15 +341,15 @@ class OneFilter extends Component {
           {meta.type === 'time' || meta.type === 'date' ? this.renderTimeFilter(meta, fieldType, fieldValue) : null}
         </Radio.Group>
 
-        {value !== '' && index >= 0 && forceOpen ? (
-          <div style={{ marginTop: 20 }}>
-            <Button onClick={this.addAnotherFilter}>
-              <Icon type='plus' /> Add another filter
-            </Button>
-          </div>
-        ) : null}
+        <div style={{ marginTop: 20, marginBottom: 5 }}>
+          {value !== '' && index >= 0 && forceOpen ? (
+            <div style={{ float: 'right' }}>
+              <Button onClick={this.addAnotherFilter}>
+                <Icon type='plus' />
+              </Button>
+            </div>
+          ) : null}
 
-        <div style={{ marginTop: 20 }}>
           <Button type='primary' onClick={() => this.saveFilter(filterValue || value || '')} disabled={!filterValue || filterValue === value}>
             Save
           </Button>
@@ -365,9 +367,9 @@ class OneFilter extends Component {
     const { openTreeNodeFilter } = this.actions
 
     if (!visible) {
-      if (treeNodeFilterOpen && treeNodeFilterOpen.indexOf('...tree.') === 0 && treeNodeFilterOpen.indexOf('...tree.0.') !== 0) {
+      if (treeNodeFilterOpen && treeNodeFilterOpen.indexOf('...tree.') === 0 && treeNodeFilterOpen.indexOf('...tree.X.') !== 0) {
         const path = treeNodeFilterOpen.substring('...tree.'.length).split('.').slice(1).join('.')
-        openTreeNodeFilter(`...tree.0.${path}`)
+        openTreeNodeFilter(`...tree.X.${path}`)
       } else {
         openTreeNodeFilter('')
       }
@@ -401,6 +403,7 @@ class OneFilter extends Component {
 
     return (
       <Popover
+        key={`${index}.${column}`}
         content={overlay}
         title={title}
         trigger='click'
@@ -408,7 +411,14 @@ class OneFilter extends Component {
         visible={isOpen}
         onVisibleChange={this.handleVisibleChange}
       >
-        {children || filterTag({ field: localKey, value: value, openFilter: () => openTreeNodeFilter(`${filterPrefix || index}.${column}`) })}
+        <span>
+          {children || <FilterTag
+            field={localKey}
+            value={value}
+            openFilter={() => openTreeNodeFilter(`${filterPrefix || index}.${column}`)}
+            removeFilter={index >= 0 ? () => { removeFilter(index) } : undefined}
+          />}
+        </span>
       </Popover>
     )
   }

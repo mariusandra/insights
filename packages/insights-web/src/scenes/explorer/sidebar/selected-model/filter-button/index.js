@@ -8,7 +8,7 @@ import explorerLogic from 'scenes/explorer/logic'
 import { Button, Icon, Popover } from 'antd'
 
 function pathInTreeFilter (path, treeNodeFilterOpen) {
-  return treeNodeFilterOpen === `...tree.0.${path}` ||
+  return treeNodeFilterOpen === `...tree.X.${path}` ||
     (treeNodeFilterOpen && treeNodeFilterOpen.indexOf('...tree.') === 0 && treeNodeFilterOpen.substring('...tree.'.length).split('.').slice(1).join('.') === path)
 }
 
@@ -51,7 +51,7 @@ class FilterButton extends Component {
     const { path } = this.props
     const { openTreeNodeFilter } = this.props.actions
 
-    openTreeNodeFilter(`...tree.0.${path}`)
+    openTreeNodeFilter(`...tree.X.${path}`)
   }
 
   closeFilter = () => {
@@ -78,7 +78,7 @@ class FilterButton extends Component {
             value={filterIndex >= 0 ? filter[filterIndex].value : undefined}
             column={fieldPath}
             forceOpen
-            filterPrefix='...tree.0'
+            filterPrefix='...tree.X'
             onClose={this.closeFilter}>
             <span className='filter-button filter-filled' onClick={this.closeFilter}><Icon type="filter" theme='filled' /></span>
           </OneFilter>
@@ -102,11 +102,11 @@ class FilterButton extends Component {
                   }
 
                   return (
-                    <div key={i} style={{ marginBottom: 15 }}>
+                    <div key={`${i}.${key}.${value}`} style={{ marginBottom: 15 }}>
                       <OneFilter filterPrefix={`...tree.${i}`} column={key} value={value} index={i++} placement='right' />
                     </div>
                   )
-                })}
+                }).filter(v => v)}
                 <div style={{ marginTop: 20 }}>
                   <Button onClick={this.addAnotherFilter}>
                     <Icon type='plus' /> Add another filter
