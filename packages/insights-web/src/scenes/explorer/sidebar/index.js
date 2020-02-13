@@ -14,7 +14,7 @@ import SelectedModel from './selected-model'
 
 export default function Sidebar () {
   const { search, selectedModel, selectedKey } = useValues(explorerLogic)
-  const { setSearch, focusSearch, moveSelectionUp, moveSelectionDown, enterSelection } = useActions(explorerLogic)
+  const { setSearch, focusSearch, moveSelectionUp, moveSelectionDown, enterSelection, closeModel, setSelectedKey } = useActions(explorerLogic)
 
   // eslint-disable-next-line
   useEffect(() => {
@@ -41,6 +41,16 @@ export default function Sidebar () {
               autoComplete="off"
               value={search}
               onKeyDown={e => {
+                if (e.keyCode === 8) {
+                  if (search === '') {
+                    e.preventDefault()
+                    if (selectedKey === selectedModel) {
+                      closeModel(selectedModel)
+                    } else {
+                      setSelectedKey(selectedModel)
+                    }
+                  }
+                }
                 if (e.keyCode === 13 || e.keyCode === 38 || e.keyCode === 40) {
                   e.preventDefault()
                   if (e.keyCode === 38) {
