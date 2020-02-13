@@ -593,7 +593,7 @@ export default kea({
     filteredModels: [
       () => [selectors.models, selectors.search],
       (models, search) => {
-        return models.sort().filter(m => !search || m.toLowerCase().includes(search.toLowerCase()))
+        return models.sort().filter(m => !search || stringIn(search.toLowerCase(), m.toLowerCase()))
       },
       PropTypes.array
     ],

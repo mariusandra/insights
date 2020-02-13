@@ -35,6 +35,7 @@
     "redux": "4.0.5",
     "redux-saga": "1.1.3",
     "reselect": "4.0.0",
+    "scroll-into-view": "^1.14.1",
     "socket.io-client": "^2.3.0",
     "string-natural-compare": "^3.0.1",
     "typescript": "3.7.5"

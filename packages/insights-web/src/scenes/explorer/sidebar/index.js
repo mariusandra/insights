@@ -3,6 +3,7 @@ import './styles.scss'
 import React, { useEffect } from 'react'
 import { useActions, useValues } from 'kea'
 import { Layout } from 'react-flex-layout'
+import scrollIntoView from 'scroll-into-view'
 
 import { Input } from 'antd'
 
@@ -20,12 +21,11 @@ export default function Sidebar () {
   useEffect(() => {
     window.setTimeout(focusSearch, 100)
   }, [])
+
   useEffect(() => {
-    window.setTimeout(() => {
-      const element = document.querySelector('.ant-tree-node-selected')
-      element && element.scrollIntoView({behavior: "auto", block: "nearest"})
-    }, 100)
-  }, [selectedKey])
+    const element = document.querySelector('.ant-tree-node-selected')
+    element && scrollIntoView(element, { time: 0, align: { top: 0.3, left: 0, leftOffset: +1000 } })
+  }, [selectedKey, selectedModel])
 
   return (
     <Layout>

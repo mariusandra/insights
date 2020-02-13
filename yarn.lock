@@ -8974,10 +8974,10 @@ inquirer@^7.0.0:
     strip-ansi "^5.1.0"
     through "^2.3.6"
 
-insights-api@0.0.12:
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/insights-api/-/insights-api-0.0.12.tgz#84a2e9df0ce687014120538151a199fad05e0f2e"
-  integrity sha512-vUJBAWdu/y8g7EoXNCtbCG3zGoXD9vfGgu1DCraRNLV/6yN1coXIn1SRiyoUjYbcOXhEiYV/+yZDr1nPh3B7zw==
+insights-api@0.0.14:
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/insights-api/-/insights-api-0.0.14.tgz#296c34ee44fc838a67403d9e6ec396e53dd66f39"
+  integrity sha512-rNVx+x0zwNpswYWmZV1lXf5AOQZfKiwDSQFKfFGz6bL+FRt75wCPxiKrVZFUItrAPZmgVphWlAAL8r1SiNx1xw==
   dependencies:
     "@feathersjs/authentication" "^4.5.0"
     "@feathersjs/authentication-local" "^4.5.0"
@@ -8991,6 +8991,7 @@ insights-api@0.0.12:
     compression "^1.7.4"
     cors "^2.8.5"
     feathers-nedb "^5.1.0"
+    helmet "^3.20.0"
     js-yaml "^3.13.1"
     moment "^2.24.0"
     nedb "^1.8.0"
@@ -15113,6 +15114,11 @@ scoped-regex@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/scoped-regex/-/scoped-regex-1.0.0.tgz#a346bb1acd4207ae70bd7c0c7ca9e566b6baddb8"
   integrity sha1-o0a7Gs1CB65wvXwMfKnlZra63bg=
+
+scroll-into-view@^1.14.1:
+  version "1.14.1"
+  resolved "https://registry.yarnpkg.com/scroll-into-view/-/scroll-into-view-1.14.1.tgz#ca8e152228088d50fca7a266d3757141ba917fa2"
+  integrity sha512-50Ynbg3igEFY2bCa5Iv4H+t9dqCmG+Y10LnaaSIjPR13+KFtvFRr+Wmq0foGoyJmn8K+8My+ZFbEIZ2JUorxcA==
 
 scss-tokenizer@^0.2.3:
   version "0.2.3"
