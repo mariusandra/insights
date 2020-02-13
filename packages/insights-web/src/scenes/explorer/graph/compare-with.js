@@ -41,10 +41,10 @@ const logic = kea({
 
 export default function CompareWith () {
   const { graphControls, graphTimeGroup } = useValues(explorerLogic)
-  const { setGraphControls, showLess } = useActions(explorerLogic)
+  const { setGraphControls } = useActions(explorerLogic)
 
   const { moreShown } = useValues(logic)
-  const { showMore } = useActions(logic)
+  const { showMore, showLess } = useActions(logic)
 
   const { compareWith, compareWithPercentageLine } = graphControls
 

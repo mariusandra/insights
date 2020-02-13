@@ -2,6 +2,7 @@ import './styles.scss'
 
 import React from 'react'
 import { useActions, useValues } from 'kea'
+import { Icon, Tooltip } from 'antd'
 
 import explorerLogic from 'scenes/explorer/logic'
 
@@ -15,50 +16,67 @@ export default function ControlsRight () {
 
   return (
     <div className='right'>
-      <span
-        className={cumulative ? 'control selected' : 'control'}
-        onClick={() => setGraphControls({ cumulative: !cumulative })}>
-        +
-      </span>
+      <Tooltip title='Show Cumulative Data'>
+        <span
+          className={cumulative ? 'control selected' : 'control'}
+          onClick={() => setGraphControls({ cumulative: !cumulative })}>
+          <Icon type="rise" />
+        </span>
+      </Tooltip>
 
-      <span
-        className={percentages ? 'control selected' : 'control'}
-        onClick={() => setGraphControls({ percentages: !percentages })}>
-        %
-      </span>
+      <Tooltip title='Show as a percentage from the whole'>
+        <span
+          className={percentages ? 'control selected' : 'control'}
+          onClick={() => setGraphControls({ percentages: !percentages })}>
+          <Icon type="percentage" />
+        </span>
+      </Tooltip>
 
-      <span
-        className={prediction ? 'control selected' : 'control'}
-        title={`Show prediction for the last ${graphTimeGroup}`}
-        onClick={() => setGraphControls({ prediction: !prediction })}>
-        **#
-      </span>
+      <Tooltip title={`Show prediction for the last ${graphTimeGroup} in the graph tooltip`}>
+        <span
+          className={prediction ? 'control selected' : 'control'}
+          onClick={() => setGraphControls({ prediction: !prediction })}>
+          <Icon type="question" />
+        </span>
+      </Tooltip>
 
-      <span
-        className={labels ? 'control selected' : 'control'}
-        onClick={() => setGraphControls({ labels: !labels })}>
-        labels
-      </span>
+      <Tooltip title={`Show Labels`}>
+        <span
+          className={labels ? 'control selected' : 'control'}
+          onClick={() => setGraphControls({ labels: !labels })}>
+          <Icon type="ordered-list" />
+        </span>
+      </Tooltip>
 
       <span className='control-group' onClick={() => setGraphControls({ sort: sort === 'abc' ? '123' : 'abc' })}>
-        <span className={sort === '123' ? 'control selected' : 'control'}>
-          123
-        </span>
-        <span className={sort === 'abc' ? 'control selected' : 'control'}>
-          abc
-        </span>
+        <Tooltip title={`Sort by value`}>
+          <span className={sort === '123' ? 'control selected' : 'control'}>
+            <Icon type="number" />
+          </span>
+        </Tooltip>
+        <Tooltip title={`Sort alphabetically`}>
+          <span className={sort === 'abc' ? 'control selected' : 'control'}>
+            <Icon type="sort-ascending" />
+          </span>
+        </Tooltip>
       </span>
 
       <span className='control-group'>
-        <span className={type === 'area' ? 'control selected' : 'control'} onClick={() => setGraphControls({ type: 'area', compareWith: 0 })}>
-          area
-        </span>
-        <span className={type === 'bar' ? 'control selected' : 'control'} onClick={() => setGraphControls({ type: 'bar' })}>
-          bar
-        </span>
-        <span className={type === 'line' ? 'control selected' : 'control'} onClick={() => setGraphControls({ type: 'line', compareWith: 0 })}>
-          line
-        </span>
+        <Tooltip title='Area Chart'>
+          <span className={type === 'area' ? 'control selected' : 'control'} onClick={() => setGraphControls({ type: 'area', compareWith: 0 })}>
+            <Icon type="area-chart" />
+          </span>
+        </Tooltip>
+        <Tooltip title='Bar Chart'>
+          <span className={type === 'bar' ? 'control selected' : 'control'} onClick={() => setGraphControls({ type: 'bar' })}>
+            <Icon type="bar-chart" />
+          </span>
+        </Tooltip>
+        <Tooltip title='Line Chart'>
+          <span className={type === 'line' ? 'control selected' : 'control'} onClick={() => setGraphControls({ type: 'line', compareWith: 0 })}>
+            <Icon type="line-chart" />
+          </span>
+        </Tooltip>
       </span>
     </div>
   )

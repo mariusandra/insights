@@ -33,14 +33,17 @@
       display: inline-block;
       text-align: center;
 
+      &:hover {
+        background: #ddd;
+      }
+
       &.selected {
         color: #f5f8fa;
         background: #384b5a;
         border-color: #384b5a;
-      }
-
-      &:hover {
-        background: #ddd;
+        &:hover {
+          background: #384b5a;
+        }
       }
     }
 
