@@ -10,6 +10,8 @@ import stateToUrl from 'lib/explorer/state-to-url'
 import naturalCompare from 'string-natural-compare'
 import { getSortedMeta } from 'lib/explorer/get-sorted-meta'
 
+const DEFAULT_TIMEGROUP = 'month'
+
 export default kea({
   path: () => ['scenes', 'explorer', 'index'],
 
@@ -751,7 +753,7 @@ export default kea({
         actions.removeColumnsWithPath(fieldPath)
       } else {
         if (field.meta && field.meta.type === 'time') {
-          const column = `${fieldPath}!day`
+          const column = `${fieldPath}!${DEFAULT_TIMEGROUP}`
           actions.addColumn(column)
           actions.setSort(`-${column}`)
         } else {
