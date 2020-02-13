@@ -62,31 +62,6 @@ export default kea({
       () => [selectors.views],
       (views) => Object.values(views).sort((a, b) => a.name.localeCompare(b.name)),
       PropTypes.array
-    ],
-
-    groupedViews: [
-      () => [selectors.sortedViews],
-      (sortedViews) => {
-        let groups = {}
-        sortedViews.forEach(view => {
-          let model = ''
-          const viewState = urlToState(view.path)
-          if (viewState.columns && viewState.columns[0]) {
-            model = viewState.columns[0].split('.')[0]
-          }
-          if (model) {
-            if (!groups[model]) {
-              groups[model] = []
-            }
-            groups[model].push(view)
-          }
-        })
-
-        let groupKeys = Object.keys(groups).sort((a, b) => a.localeCompare(b))
-
-        return groupKeys.map(key => ({ group: key, views: groups[key] }))
-      },
-      PropTypes.array
     ]
   }),
 

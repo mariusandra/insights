@@ -1,13 +1,49 @@
 import './styles.scss'
 
 import React from 'react'
-import { useActions, useValues } from 'kea'
+import { kea, useActions, useValues } from 'kea'
 import { Icon } from 'antd'
 
+import urlToState from 'lib/explorer/url-to-state'
+import explorerLogic from 'scenes/explorer/logic'
 import viewsLogic from 'scenes/header/views/logic'
+import PropTypes from 'prop-types'
+
+const logic = kea({
+  connect: {
+    values: [explorerLogic, ['subsetViews']]
+  },
+
+  selectors: ({ selectors }) => ({
+    groupedViews: [
+      () => [selectors.subsetViews],
+      (subsetViews) => {
+        let groups = {}
+        subsetViews.forEach(view => {
+          let model = ''
+          const viewState = urlToState(view.path)
+          if (viewState.columns && viewState.columns[0]) {
+            model = viewState.columns[0].split('.')[0]
+          }
+          if (model) {
+            if (!groups[model]) {
+              groups[model] = []
+            }
+            groups[model].push(view)
+          }
+        })
+
+        let groupKeys = Object.keys(groups).sort((a, b) => a.localeCompare(b))
+
+        return groupKeys.map(key => ({ group: key, views: groups[key] }))
+      },
+      PropTypes.array
+    ]
+  })
+})
 
 export default function Welcome () {
-  const { groupedViews } = useValues(viewsLogic)
+  const { groupedViews } = useValues(logic)
   const { openView } = useActions(viewsLogic)
 
   return (

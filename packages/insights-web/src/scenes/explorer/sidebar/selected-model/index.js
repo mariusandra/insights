@@ -63,7 +63,7 @@ function renderTreeNodes ({ title, columns, path, field, localSearch, model, foc
 }
 
 export default function SelectedModel () {
-  const { columns, sortedStructure, selectedModel, savedViews, modelFavourites, search, treeState, expandedKeys, selectedKey, fullFieldsTree } = useValues(explorerLogic)
+  const { columns, sortedStructure, selectedModel, selectedModelViews, modelFavourites, search, treeState, expandedKeys, selectedKey, fullFieldsTree } = useValues(explorerLogic)
   const { closeModel, focusSearch, treeClicked, fieldClicked, setExpandedKeys } = useActions(explorerLogic)
 
   const { pathname: urlPath, search: urlSearch } = useSelector(locationSelector)
@@ -92,13 +92,13 @@ export default function SelectedModel () {
         <TreeNode
           title={
             <>
-              {savedViews.length === 0 ? <span>Saved views </span> : <strong>Saved views </strong>}
-              <small>({ savedViews.length })</small>
+              {selectedModelViews.length === 0 ? <span>Saved views </span> : <strong>Saved views </strong>}
+              <small>({ selectedModelViews.length })</small>
             </>
           }
           className='saved-views'
           key="...saved"
-          switcherIcon={<Icon type='star' theme={savedViews.length > 0 ? "filled" : ''} />}
+          switcherIcon={<Icon type='star' theme={selectedModelViews.length > 0 ? "filled" : ''} />}
         >
           {viewNode.children.map(({ view, key }) => key === 'SAVE_NEW' ? (
             <TreeNode

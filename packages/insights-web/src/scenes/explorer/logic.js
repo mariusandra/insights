@@ -401,9 +401,9 @@ export default kea({
     fullFieldsTreeFull: [
       () => [
         selectors.treeState, selectors.sortedStructureObject, selectors.selectedModel, selectors.search,
-        selectors.savedViews, selectors.modelFavourites, selectors.filteredModels
+        selectors.selectedModelViews, selectors.modelFavourites, selectors.filteredModels
       ],
-      (treeState, sortedStructureObject, selectedModel, search, savedViews, modelFavourites, filteredModels) => {
+      (treeState, sortedStructureObject, selectedModel, search, selectedModelViews, modelFavourites, filteredModels) => {
         const state = []
         let index = 0
 
@@ -440,7 +440,7 @@ export default kea({
         rootLeaf.children.push(savedRoot)
 
         if (treeState['...saved']) {
-          savedViews.filter(view => !search || stringInFieldKey(search, view.name)).forEach(view => {
+          selectedModelViews.filter(view => !search || stringInFieldKey(search, view.name)).forEach(view => {
             const savedNode = {
               path: `...saved.${view._id}`,
               key: view._id,
@@ -583,13 +583,22 @@ export default kea({
       PropTypes.array
     ],
 
-    savedViews: [
-      () => [selectors.connectionId, selectors.subsetId, selectors.selectedModel, selectors.sortedViews],
-      (connectionId, subsetId, model, sortedViews) => {
+    subsetViews: [
+      () => [selectors.connectionId, selectors.subsetId, selectors.sortedViews],
+      (connectionId, subsetId, sortedViews) => {
         if (sortedViews) {
-          return sortedViews.filter(view => view.connectionId === connectionId &&
-                                            view.subsetId === subsetId &&
-                                            view.path.indexOf(`&columns=${model}.`) >= 0)
+          return sortedViews.filter(view => view.connectionId === connectionId && view.subsetId === subsetId)
+        }
+        return []
+      },
+      PropTypes.array
+    ],
+
+    selectedModelViews: [
+      () => [selectors.selectedModel, selectors.subsetViews],
+      (selectedModel, subsetViews) => {
+        if (subsetViews) {
+          return subsetViews.filter(view => view.path.indexOf(`&columns=${selectedModel}.`) >= 0)
         }
         return []
       },
