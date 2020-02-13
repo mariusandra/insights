@@ -47,7 +47,7 @@ class Filter extends Component {
           </span>
           <span className='filter-preview'>
             {filter.map(({ key, value }) => (
-              <OneFilter key={i} column={key} value={value} index={i++} />
+              <OneFilter key={`${i}.${key}`} filterPrefix={`...filters.${i}`} column={key} value={value} index={i++} />
             ))}
             {filter.length === 0 ? (
               <span className='filter-placeholder'>Add filter conditions from the column headers or the tree</span>

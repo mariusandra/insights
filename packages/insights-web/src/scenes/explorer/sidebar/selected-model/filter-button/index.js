@@ -7,6 +7,11 @@ import OneFilter from 'scenes/explorer/filter/one-filter'
 import explorerLogic from 'scenes/explorer/logic'
 import { Button, Icon, Popover } from 'antd'
 
+function pathInTreeFilter (path, treeNodeFilterOpen) {
+  return treeNodeFilterOpen === `...tree.0.${path}` ||
+    (treeNodeFilterOpen && treeNodeFilterOpen.indexOf('...tree.') === 0 && treeNodeFilterOpen.substring('...tree.'.length).split('.').slice(1).join('.') === path)
+}
+
 const connection = {
   actions: [
     explorerLogic, [
@@ -31,7 +36,7 @@ class FilterButton extends Component {
     return nextProps.path !== this.props.path ||
            nextProps.filterKeys !== this.props.filterKeys ||
            nextProps.filter !== this.props.filter ||
-           (nextProps.treeNodeFilterOpen === nextProps.path) !== (this.props.treeNodeFilterOpen === this.props.path)
+           pathInTreeFilter(nextProps.path, nextProps.treeNodeFilterOpen) !== pathInTreeFilter(this.props.path, this.props.treeNodeFilterOpen)
   }
 
   addAnotherFilter = () => {
@@ -46,7 +51,7 @@ class FilterButton extends Component {
     const { path } = this.props
     const { openTreeNodeFilter } = this.props.actions
 
-    openTreeNodeFilter(path)
+    openTreeNodeFilter(`...tree.0.${path}`)
   }
 
   closeFilter = () => {
@@ -61,7 +66,7 @@ class FilterButton extends Component {
     const fieldPath = path.indexOf('...pinned.') === 0 ? path.substring('...pinned.'.length) : path
 
     const filterIndex = filterKeys.indexOf(fieldPath)
-    const filterOpen = treeNodeFilterOpen === path
+    const filterOpen = pathInTreeFilter(path, treeNodeFilterOpen)
     const filterCount = filterKeys.filter(k => k === fieldPath).length
 
     if (filterOpen) {
@@ -73,6 +78,7 @@ class FilterButton extends Component {
             value={filterIndex >= 0 ? filter[filterIndex].value : undefined}
             column={fieldPath}
             forceOpen
+            filterPrefix='...tree.0'
             onClose={this.closeFilter}>
             <span className='filter-button filter-filled' onClick={this.closeFilter}><Icon type="filter" theme='filled' /></span>
           </OneFilter>
@@ -83,7 +89,9 @@ class FilterButton extends Component {
         return (
           <Popover
             visible
+            trigger='click'
             title={fieldPath}
+            onVisibleChange={visible => !visible && this.closeFilter()}
             placement='right'
             content={(
               <div>
@@ -94,8 +102,8 @@ class FilterButton extends Component {
                   }
 
                   return (
-                    <div key={i} style={{marginBottom: 5}}>
-                      <OneFilter column={key} value={value} index={i++} placement='right' />
+                    <div key={i} style={{ marginBottom: 15 }}>
+                      <OneFilter filterPrefix={`...tree.${i}`} column={key} value={value} index={i++} placement='right' />
                     </div>
                   )
                 })}

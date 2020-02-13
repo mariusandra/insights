@@ -114,7 +114,8 @@ export default kea({
     }],
     // tree state
     treeNodeFilterOpen: [null, PropTypes.string, {
-      [actions.openTreeNodeFilter]: (_, payload) => payload.path
+      [actions.openTreeNodeFilter]: (_, payload) => payload.path,
+      [actions.removeFilter]: () => null
     }],
     treeState: [{}, PropTypes.object, {
       [actions.setExpandedKeys]: (_, { expandedKeys }) => {

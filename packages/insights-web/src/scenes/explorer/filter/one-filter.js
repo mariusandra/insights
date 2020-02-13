@@ -21,7 +21,7 @@ function RadioClick ({ value, setFilter, children }) {
   )
 }
 
-function filterTag ({ field, value }) {
+function filterTag ({ field, value, openFilter }) {
   const [fieldType, ...fieldValues] = (value || '').split(':')
   const fieldValue = fieldValues.join(':') || ''
 
@@ -49,7 +49,7 @@ function filterTag ({ field, value }) {
   const [fieldName, mod1, mod2] = (field || '').split('!', 3)
 
   return (
-    <Tag>
+    <Tag onClick={openFilter} className='filter-tag'>
       <Icon type='filter' theme={iconTheme} style={{ marginRight: 5, color: 'hsl(209, 32%, 40%)' }} />
       <strong>{fieldName}{mod1 ? ` (${mod1})` : ''}{mod2 ? ` (${mod2})` : ''}:</strong> {filterText}
     </Tag>
@@ -61,14 +61,16 @@ const logic = connect({
     explorerLogic, [
       'addFilter',
       'setFilter',
+      'openTreeNodeFilter',
       'removeFilter'
     ]
   ],
-  props: [
+  values: [
     explorerLogic, [
       'sort',
       'columnsMeta',
-      'structure'
+      'structure',
+      'treeNodeFilterOpen'
     ]
   ]
 })
@@ -83,9 +85,16 @@ class OneFilter extends Component {
     onClose: PropTypes.func
   }
 
-  setFilter = (value) => {
-    const { index, column, forceOpen } = this.props
-    const { setFilter, addFilter, removeFilter } = this.actions
+  constructor(props) {
+    super(props)
+    this.state = {
+      filterValue: ''
+    }
+  }
+
+  saveFilter = (value) => {
+    const { index, column } = this.props
+    const { setFilter, addFilter, openTreeNodeFilter } = this.actions
 
     if (index === -1) {
       addFilter({ key: column, value })
@@ -94,6 +103,11 @@ class OneFilter extends Component {
     } else {
       setFilter(index, value)
     }
+    this.handleVisibleChange(false)
+  }
+
+  setFilter = (value) => {
+    this.setState({ filterValue: value })
   }
 
   addAnotherFilter = () => {
@@ -300,9 +314,10 @@ class OneFilter extends Component {
 
   renderFilter = (meta) => {
     const { index, value, forceOpen } = this.props
-    const columnFilter = value
+    const { openTreeNodeFilter } = this.actions
+    const { filterValue } = this.state
 
-    const [fieldType, ...fieldValues] = (columnFilter || '').split(':')
+    const [fieldType, ...fieldValues] = (filterValue || value || '').split(':') || ''
     const fieldValue = fieldValues.join(':') || ''
 
     return (
@@ -332,41 +347,68 @@ class OneFilter extends Component {
           </div>
         ) : null}
 
+        <div style={{ marginTop: 20 }}>
+          <Button type='primary' onClick={() => this.saveFilter(filterValue || value || '')} disabled={!filterValue || filterValue === value}>
+            Save
+          </Button>
+
+          <Button type='link' onClick={() => { this.setState({ filterValue: null }); this.handleVisibleChange(false) }}>
+            {filterValue && filterValue !== value ? 'Cancel' : 'Close'}
+          </Button>
+        </div>
       </div>
     )
   }
 
+  handleVisibleChange = (visible) => {
+    const { treeNodeFilterOpen } = this.props
+    const { openTreeNodeFilter } = this.actions
+
+    if (!visible) {
+      if (treeNodeFilterOpen && treeNodeFilterOpen.indexOf('...tree.') === 0 && treeNodeFilterOpen.indexOf('...tree.0.') !== 0) {
+        const path = treeNodeFilterOpen.substring('...tree.'.length).split('.').slice(1).join('.')
+        openTreeNodeFilter(`...tree.0.${path}`)
+      } else {
+        openTreeNodeFilter('')
+      }
+    }
+  }
+
   render () {
-    const { index, column, value, columnsMeta, structure, placement, forceOpen, children } = this.props
-    const { removeFilter } = this.actions
+    const { index, column, value, columnsMeta, structure, placement, forceOpen, children, treeNodeFilterOpen, filterPrefix = '' } = this.props
+    const { removeFilter, openTreeNodeFilter } = this.actions
 
     const [ path, transform, aggregate ] = column.split('!')
     const meta = columnsMeta[column] || { ...getMeta(path, structure), transform, aggregate }
 
     const localKey = column.split('.').slice(-1).join('.')
 
+    const isOpen = forceOpen || treeNodeFilterOpen === `${filterPrefix || index}.${column}`
+
     const overlay = this.renderFilter(meta)
+    const title = (
+      <span className='insights-filter-title'>
+        {index >= 0 ? (
+          <Tooltip title='Remove filter'>
+            <Button type='link' className='filter-popover-delete' onClick={() => { removeFilter(index); this.handleVisibleChange(false) }}>
+              <Icon type='delete' />
+            </Button>
+          </Tooltip>
+        ) : null}
+        {path}
+      </span>
+    )
 
     return (
       <Popover
         content={overlay}
-        title={
-          <span className='insights-filter-title'>
-            {index >= 0 && !forceOpen ? (
-              <Tooltip title='Remove filter'>
-                <Button type='link' className='filter-popover-delete' onClick={() => removeFilter(index)}>
-                  <Icon type='close' />
-                </Button>
-              </Tooltip>
-            ) : null}
-            {path}
-          </span>
-        }
-        trigger='hover'
+        title={title}
+        trigger='click'
         placement={placement || 'bottomLeft'}
-        {...(forceOpen ? { visible: true } : {})}
+        visible={isOpen}
+        onVisibleChange={this.handleVisibleChange}
       >
-        {children || filterTag({ field: localKey, value: value })}
+        {children || filterTag({ field: localKey, value: value, openFilter: () => openTreeNodeFilter(`${filterPrefix || index}.${column}`) })}
       </Popover>
     )
   }
