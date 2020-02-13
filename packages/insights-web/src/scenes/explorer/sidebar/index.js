@@ -41,6 +41,11 @@ export default function Sidebar () {
               autoComplete="off"
               value={search}
               onKeyDown={e => {
+                if (e.keyCode === 27) {
+                  e.preventDefault()
+                  setSearch('')
+                  setSelectedKey(selectedModel)
+                }
                 if (e.keyCode === 8) {
                   if (search === '') {
                     e.preventDefault()
