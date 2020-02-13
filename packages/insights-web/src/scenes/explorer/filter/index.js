@@ -43,7 +43,7 @@ class Filter extends Component {
       <div className='insights-filter' ref='filter'>
         <div className='filter-header'>
           <span className='header-text'>
-            Filter:
+            Filters:
           </span>
           <span className='filter-preview'>
             {filter.map(({ key, value }) => (

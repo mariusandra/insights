@@ -3,13 +3,44 @@ import { connect } from 'kea'
 import PropTypes from 'prop-types'
 import moment from 'moment'
 
-import { Popover, Icon, Button, Radio, Input, Tooltip, DatePicker } from 'antd'
+import { Popover, Icon, Button, Radio, Input, Tooltip, DatePicker, Tag } from 'antd'
 import getMeta from 'lib/explorer/get-meta'
 
 import explorerLogic from 'scenes/explorer/logic'
 
 const sanitizeNumber = (str) => str.replace(/[^0-9.]/g, '')
 const sanitizeListNumber = (str) => str.replace(/[^0-9., ]/g, '')
+
+function filterTag ({ field, value }) {
+  const [fieldType, ...fieldValues] = (value || '').split(':')
+  const fieldValue = fieldValues.join(':') || ''
+
+  let iconTheme = 'filled'
+  let filterText = `${fieldType} ${fieldValue}`
+
+  if (fieldType === 'equals') {
+    filterText = fieldValue
+  }
+
+  if (fieldType === 'date_range') {
+    const [from, to] = fieldValue.split(':', 2)
+    filterText = <span>{from} <Icon type='ellipsis' /> {to}</span>
+  }
+
+  if (fieldType !== 'true' && fieldType !== 'false' && fieldType !== 'null' && fieldType !== 'not null' && fieldValue === '') {
+    filterText = <span style={{ opacity: 0.5 }}>Anything</span>
+    iconTheme = ''
+  }
+
+  const [fieldName, mod1, mod2] = (field || '').split('!', 3)
+
+  return (
+    <Tag>
+      <Icon type='filter' theme={iconTheme} style={{ marginRight: 5, color: 'hsl(209, 32%, 40%)' }} />
+      <strong>{fieldName}{mod1 ? ` (${mod1})` : ''}{mod2 ? ` (${mod2})` : ''}:</strong> {filterText}
+    </Tag>
+  )
+}
 
 const logic = connect({
   actions: [
@@ -261,8 +292,6 @@ class OneFilter extends Component {
     const [fieldType, ...fieldValues] = (columnFilter || '').split(':')
     const fieldValue = fieldValues.join(':') || ''
 
-    console.log(fieldType, fieldValue)
-
     return (
       <Radio.Group onChange={e => this.setFilter(e.target.value)} value={fieldType}>
         <Radio className='filter-radio-popup' value=''>
@@ -280,10 +309,10 @@ class OneFilter extends Component {
         {meta.type === 'number' ? this.renderNumberFilter(meta, fieldType, fieldValue) : null}
         {meta.type === 'time' || meta.type === 'date' ? this.renderTimeFilter(meta, fieldType, fieldValue) : null}
         {value !== '' && index >= 0 && forceOpen ? (
-          <div
-            onClick={this.addAnotherFilter}
-            style={{paddingTop: 10, marginTop: 10, borderTop: '1px solid green', cursor: 'pointer', color: 'green'}}>
-            Add another filter
+          <div style={{ marginTop: 20 }}>
+            <Button onClick={this.addAnotherFilter}>
+              <Icon type='plus' /> Add another filter
+            </Button>
           </div>
         ) : null}
       </Radio.Group>
@@ -309,7 +338,7 @@ class OneFilter extends Component {
             {index >= 0 && !forceOpen ? (
               <Tooltip title='Remove filter'>
                 <Button type='link' className='filter-popover-delete' onClick={() => removeFilter(index)}>
-                  <Icon type='delete' />
+                  <Icon type='close' />
                 </Button>
               </Tooltip>
             ) : null}
@@ -320,11 +349,7 @@ class OneFilter extends Component {
         placement={placement || 'bottomLeft'}
         {...(forceOpen ? { visible: true } : {})}
       >
-        {children || (
-          <span className='filter-preview-element'>
-            {localKey}: {value.replace('equals:', '')}
-          </span>
-        )}
+        {children || filterTag({ field: localKey, value: value })}
       </Popover>
     )
   }

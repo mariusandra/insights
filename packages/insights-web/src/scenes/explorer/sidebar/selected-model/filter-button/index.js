@@ -2,11 +2,10 @@ import React, { Component } from 'react'
 import { connect } from 'kea'
 import PropTypes from 'prop-types'
 
-import Tooltip from 'rc-tooltip'
 import OneFilter from 'scenes/explorer/filter/one-filter'
 
 import explorerLogic from 'scenes/explorer/logic'
-import { Icon } from 'antd'
+import { Button, Icon, Popover } from 'antd'
 
 const connection = {
   actions: [
@@ -82,10 +81,11 @@ class FilterButton extends Component {
         let i = 0
 
         return (
-          <Tooltip
+          <Popover
             visible
-            placement={'right'}
-            overlay={(
+            title={fieldPath}
+            placement='right'
+            content={(
               <div>
                 {filter.map(({ key, value }) => {
                   if (key !== fieldPath) {
@@ -99,15 +99,15 @@ class FilterButton extends Component {
                     </div>
                   )
                 })}
-                <div
-                  onClick={this.addAnotherFilter}
-                  style={{paddingTop: 10, marginTop: 10, borderTop: '1px solid green', cursor: 'pointer', color: 'green'}}>
-                  Add another filter
+                <div style={{ marginTop: 20 }}>
+                  <Button onClick={this.addAnotherFilter}>
+                    <Icon type='plus' /> Add another filter
+                  </Button>
                 </div>
               </div>
             )}>
             <span className='filter-button filter-filled' onClick={this.closeFilter}><Icon type="filter" theme='filled' /></span>
-          </Tooltip>
+          </Popover>
         )
       }
     } else {
