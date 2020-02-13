@@ -3,10 +3,7 @@ import { connect } from 'kea'
 import PropTypes from 'prop-types'
 import moment from 'moment'
 
-import DateTime from 'react-datetime'
-import 'react-datetime/css/react-datetime.css'
-
-import { Popover, Icon, Button, Radio, Input, Tooltip } from 'antd'
+import { Popover, Icon, Button, Radio, Input, Tooltip, DatePicker } from 'antd'
 import getMeta from 'lib/explorer/get-meta'
 
 import explorerLogic from 'scenes/explorer/logic'
@@ -61,16 +58,16 @@ class OneFilter extends Component {
     addFilter({ key: column, value: '' })
   }
 
-  renderBooleanFilter = (meta, columnFilter) => {
+  renderBooleanFilter = (meta, fieldType, fieldValue) => {
     return (
-      <div>
-        <div>
-          <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: columnFilter === 'equals:true' ? 'bold' : 'normal'}} onClick={() => this.setFilter('equals:true')}>True</span>
-        </div>
-        <div>
-          <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: columnFilter === 'equals:false' ? 'bold' : 'normal'}} onClick={() => this.setFilter('equals:false')}>False</span>
-        </div>
-      </div>
+      <>
+        <Radio className='filter-radio-popup' value='true'>
+          True
+        </Radio>
+        <Radio className='filter-radio-popup' value='false'>
+          False
+        </Radio>
+      </>
     )
   }
 
@@ -83,9 +80,9 @@ class OneFilter extends Component {
             <Input
               autoFocus
               placeholder='abc'
-              value={fieldType === 'equals' ? fieldValue : ''}
+              value={fieldValue}
               onChange={e => this.setFilter(e.target.value === '' ? '' : `equals:${e.target.value}`)}
-              style={{ width: 100, marginLeft: 10 }}
+              style={{ width: 150, marginLeft: 10 }}
             />
           ) : null}
         </Radio>
@@ -96,9 +93,9 @@ class OneFilter extends Component {
             <Input
               autoFocus
               placeholder='abc'
-              value={fieldType === 'contains' ? fieldValue : ''}
+              value={fieldValue}
               onChange={e => this.setFilter(e.target.value === '' ? '' : `contains:${e.target.value}`)}
-              style={{ width: 100, marginLeft: 10 }}
+              style={{ width: 150, marginLeft: 10 }}
             />
           ) : null}
         </Radio>
@@ -109,9 +106,9 @@ class OneFilter extends Component {
             <Input
               autoFocus
               placeholder='1, 2, 3'
-              value={fieldType === 'in' ? fieldValue : ''}
+              value={fieldValue}
               onChange={e => this.setFilter(e.target.value === '' ? '' : `in:${e.target.value}`)}
-              style={{ width: 100, marginLeft: 10 }}
+              style={{ width: 150, marginLeft: 10 }}
             />
           ) : null}
         </Radio>
@@ -122,9 +119,9 @@ class OneFilter extends Component {
             <Input
               autoFocus
               placeholder='a, b, c'
-              value={fieldType === 'not_in' ? fieldValue : ''}
+              value={fieldValue}
               onChange={e => this.setFilter(e.target.value === '' ? '' : `not_in:${e.target.value}`)}
-              style={{ width: 100, marginLeft: 10 }}
+              style={{ width: 150, marginLeft: 10 }}
             />
           ) : null}
         </Radio>
@@ -141,7 +138,7 @@ class OneFilter extends Component {
             <Input
               autoFocus
               placeholder='123'
-              value={fieldType === 'equals' ? fieldValue : ''}
+              value={fieldValue}
               onChange={e => this.setFilter(e.target.value === '' ? '' : `equals:${sanitizeNumber(e.target.value)}`)}
               style={{ width: 100, marginLeft: 10 }}
             />
@@ -154,7 +151,7 @@ class OneFilter extends Component {
             <Input
               autoFocus
               placeholder='1, 2, 3'
-              value={fieldType === 'in' ? fieldValue : ''}
+              value={fieldValue}
               onChange={e => this.setFilter(e.target.value === '' ? '' : `in:${sanitizeListNumber(e.target.value)}`)}
               style={{ width: 100, marginLeft: 10 }}
             />
@@ -167,7 +164,7 @@ class OneFilter extends Component {
             <Input
               autoFocus
               placeholder='a, b, c'
-              value={fieldType === 'not_in' ? fieldValue : ''}
+              value={fieldValue}
               onChange={e => this.setFilter(e.target.value === '' ? '' : `not_in:${sanitizeListNumber(e.target.value)}`)}
               style={{ width: 100, marginLeft: 10 }}
             />
@@ -204,61 +201,56 @@ class OneFilter extends Component {
     )
   }
 
-  renderTimeFilter = (meta, columnFilter) => {
+  renderTimeFilter = (meta, fieldType, fieldValue) => {
     let equalsDate = null
     let startDate = null
     let endDate = null
 
-    if (columnFilter && columnFilter.indexOf('date_range:') === 0) {
-      let [, startStr, endStr] = columnFilter.split(':')
+    if (fieldType === 'date_range') {
+      let [startStr, endStr] = fieldValue.split(':')
       if (startStr) {
         startDate = moment(startStr)
       }
       if (endStr) {
         endDate = moment(endStr)
       }
+      console.log(startDate, endDate)
     }
 
-    if (columnFilter && columnFilter.indexOf('equals:') === 0) {
-      let [, equalsStr] = columnFilter.split(':')
-      if (equalsStr) {
-        equalsDate = moment(equalsStr)
+    if (fieldType === 'equals') {
+      if (fieldValue) {
+        equalsDate = moment(fieldValue)
       }
     }
 
     return (
-      <div>
-        <div className='filter-with-inputs'>
-          <span style={{fontWeight: columnFilter && columnFilter.indexOf('equals:') === 0 ? 'bold' : 'normal'}}>Equals:</span>
-          <DateTime value={equalsDate}
-            dateFormat='YYYY-MM-DD'
-            timeFormat={false}
-            className='full'
-            closeOnSelect
-            onChange={(date) => this.setFilter(date ? `equals:${date.format('YYYY-MM-DD')}` : '')} />
-        </div>
-        <div className='filter-with-inputs'>
-          <span style={{fontWeight: columnFilter && columnFilter.indexOf('date_range:') === 0 ? 'bold' : 'normal'}}>Between:</span>
-          <DateTime value={startDate}
-            dateFormat='YYYY-MM-DD'
-            timeFormat={false}
-            className='half'
-            closeOnSelect
-            onChange={(date) => {
-              const str = `${date ? date.format('YYYY-MM-DD') : ''}:${endDate ? endDate.format('YYYY-MM-DD') : ''}`
-              this.setFilter(str === ':' ? '' : `date_range:${str}`)
-            }} />
-          <DateTime value={endDate}
-            dateFormat='YYYY-MM-DD'
-            timeFormat={false}
-            className='half'
-            closeOnSelect
-            onChange={(date) => {
-              const str = `${startDate ? startDate.format('YYYY-MM-DD') : ''}:${date ? date.format('YYYY-MM-DD') : ''}`
-              this.setFilter(str === ':' ? '' : `date_range:${str}`)
-            }} />
-        </div>
-      </div>
+      <>
+        <Radio className='filter-radio-popup' value='equals'>
+          Equals
+          {fieldType === 'equals' ? (
+            <DatePicker
+              autoFocus
+              value={equalsDate}
+              style={{ width: 140, marginLeft: 10 }}
+              onChange={(date, dateString) => this.setFilter(date ? `equals:${date.format('YYYY-MM-DD')}` : '')}
+            />
+          ) : null}
+        </Radio>
+
+        <Radio className='filter-radio-popup' value='date_range'>
+          Between
+          {fieldType === 'date_range' ? (
+            <div>
+              <DatePicker.RangePicker
+                autoFocus
+                value={[startDate, endDate]}
+                style={{ width: 240, marginLeft: 25 }}
+                onChange={([start, end]) => this.setFilter(start && end ? `date_range:${start.format('YYYY-MM-DD')}:${end.format('YYYY-MM-DD')}` : '')}
+              />
+            </div>
+          ) : null}
+        </Radio>
+      </>
     )
   }
 
@@ -283,10 +275,10 @@ class OneFilter extends Component {
           Empty (null)
         </Radio>
 
-        {meta.type === 'boolean' ? this.renderBooleanFilter(meta, columnFilter) : null}
+        {meta.type === 'boolean' ? this.renderBooleanFilter(meta, fieldType, fieldValue) : null}
         {meta.type === 'string' ? this.renderStringFilter(meta, fieldType, fieldValue) : null}
         {meta.type === 'number' ? this.renderNumberFilter(meta, fieldType, fieldValue) : null}
-        {meta.type === 'time' || meta.type === 'date' ? this.renderTimeFilter(meta, columnFilter) : null}
+        {meta.type === 'time' || meta.type === 'date' ? this.renderTimeFilter(meta, fieldType, fieldValue) : null}
         {value !== '' && index >= 0 && forceOpen ? (
           <div
             onClick={this.addAnotherFilter}
@@ -313,7 +305,7 @@ class OneFilter extends Component {
       <Popover
         content={overlay}
         title={
-          <span>
+          <span className='insights-filter-title'>
             {index >= 0 && !forceOpen ? (
               <Tooltip title='Remove filter'>
                 <Button type='link' className='filter-popover-delete' onClick={() => removeFilter(index)}>

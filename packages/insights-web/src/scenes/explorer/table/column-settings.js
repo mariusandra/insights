@@ -3,7 +3,6 @@ import { connect } from 'kea'
 import PropTypes from 'prop-types'
 import { Select } from 'antd'
 
-import 'react-datetime/css/react-datetime.css'
 import range from 'lib/utils/range'
 
 import getMeta from 'lib/explorer/get-meta'

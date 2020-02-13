@@ -36,6 +36,11 @@
   border: 1px solid #ddd;
 }
 
+.insights-filter-title {
+  min-width: 250px;
+  display: block;
+}
+
 .filter-popover-delete {
   float: right;
   line-height: 20px;
@@ -43,6 +48,7 @@
   margin-left: 12px;
   padding: 0;
 }
+
 
 .filter-radio-popup {
   display: block;
