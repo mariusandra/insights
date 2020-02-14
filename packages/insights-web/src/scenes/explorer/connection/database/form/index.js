@@ -128,7 +128,7 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll, get
             ]
           })(
             <Select showSearch style={{width: '100%'}}>
-              {timezones.map(timezone => <Select.Option key={timezone} value={timezone}><Icon timezone={'unknown-circle'} /> {timezone}</Select.Option>)}
+              {timezones.map(timezone => <Select.Option key={timezone} value={timezone}>{timezone}</Select.Option>)}
             </Select>
           )}
         </Form.Item>
