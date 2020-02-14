@@ -3,9 +3,10 @@ import { connect } from 'kea'
 import PropTypes from 'prop-types'
 
 import OneFilter from 'scenes/explorer/filter/one-filter'
+import { ColumnFilters } from 'scenes/explorer/filter/column-filters'
 
 import explorerLogic from 'scenes/explorer/logic'
-import { Button, Icon, Popover } from 'antd'
+import { Icon, Popover } from 'antd'
 
 function pathInTreeFilter (path, treeNodeFilterOpen) {
   return treeNodeFilterOpen === `...tree.X.${path}` ||
@@ -26,31 +27,6 @@ const connection = {
       'filter'
     ]
   ]
-}
-
-export function ColumnFilters ({ filter, path, onAddClick }) {
-  let i = 0
-  let hasFilters = false
-  return <div>
-    {filter.map(({key, value}) => {
-      if (key !== path) {
-        i += 1
-        return null
-      }
-      hasFilters = true
-      return (
-        <div key={`${i}.${key}.${value}`} style={{marginBottom: 15}}>
-          <OneFilter filterPrefix={`...tree.${i}`} column={key} value={value} index={i++} placement='right'/>
-        </div>
-      )
-    }).filter(v => v)}
-
-    <div style={{ marginTop: hasFilters ? 20 : 0 }}>
-      <Button onClick={onAddClick}>
-        <Icon type='plus'/> Add {hasFilters ? 'another' : 'a'} filter
-      </Button>
-    </div>
-  </div>
 }
 
 class FilterButton extends Component {
@@ -118,7 +94,7 @@ class FilterButton extends Component {
             onVisibleChange={visible => !visible && this.closeFilter()}
             placement='right'
             content={(
-              <ColumnFilters filter={filter} path={fieldPath} onAddClick={this.addAnotherFilter}/>
+              <ColumnFilters filter={filter} path={fieldPath} onAddClick={this.addAnotherFilter} filterPrefixString='tree' />
             )}>
             <span className='filter-button filter-filled' onClick={this.closeFilter}><Icon type="filter" theme='filled' /></span>
           </Popover>

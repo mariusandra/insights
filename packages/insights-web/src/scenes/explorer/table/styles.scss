@@ -238,6 +238,24 @@
   font-size: 14px;
   min-width: 200px;
 
+  .column-settings-header {
+    display: flex;
+    width: 100%;
+    .title {
+      font-weight: bold;
+      flex: 1;
+    }
+    .remove {
+      text-align: right;
+      text-decoration: underline;
+      cursor: pointer;
+      float: right;
+      white-space: nowrap;
+      color: hsl(3, 77%, 42%);
+      margin-left: 15px;
+    }
+  }
+
   .filter-options {
     border-top: 1px solid #e0e0e0;
     margin: 12px -16px 0 -16px;

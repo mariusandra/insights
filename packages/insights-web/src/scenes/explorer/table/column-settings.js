@@ -6,9 +6,9 @@ import { Select, Tag, Icon } from 'antd'
 import range from 'lib/utils/range'
 
 import getMeta from 'lib/explorer/get-meta'
+import { ColumnFilters } from 'scenes/explorer/filter/column-filters'
 
 import explorerLogic from 'scenes/explorer/logic'
-import { ColumnFilters } from '../sidebar/selected-model/filter-button'
 
 const logic = connect({
   actions: [
@@ -152,7 +152,7 @@ class TableHeader extends Component {
 
     return (
       <div className='filter-options'>
-        <ColumnFilters path={path} filter={filter}  onAddClick={() => addEmptyFilter(column)}  />
+        <ColumnFilters path={path} filter={filter}  onAddClick={() => addEmptyFilter(column)} filterPrefixString='column' />
       </div>
     )
   }
@@ -163,18 +163,20 @@ class TableHeader extends Component {
     const [ path, transform, aggregate ] = column.split('!')
     const meta = columnsMeta[column] || { ...getMeta(path, structure), transform, aggregate }
 
-    const key = path.split('.')[path.split('.').length - 1]
+    const localPath = path.replace(/^[^.]+\./, '').split('.').reverse().join(' < ')
 
     return (
       <div className='column-settings'>
-        <div>
-          <span style={{ textDecoration: 'underline', cursor: 'pointer', float: 'right', color: 'hsl(3, 77%, 42%)', marginLeft: 15 }} onClick={this.handleRemove}>
-            <Icon type='delete' style={{ marginRight: 5 }} />
-            Remove
-          </span>
-          <div style={{ fontWeight: 'bold' }}>
-            {meta && meta.model ? `${meta.model}.${key}` : key}
+        <div className='column-settings-header'>
+          <div className='title'>
+            {localPath}
           </div>
+          <span className='remove'>
+            <span onClick={this.handleRemove}>
+              <Icon type='delete' style={{ marginRight: 5 }} />
+              Remove
+            </span>
+          </span>
         </div>
         {meta ? (
           <div>
