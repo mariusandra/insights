@@ -41,7 +41,9 @@ const logic = connect({
       'setVisibleRows',
       'setColumnWidth',
       'setColumns',
-      'digDeeper'
+      'digDeeper',
+      'addFilter',
+      'removeFiltersByKey'
     ]
   ],
   props: [
@@ -52,6 +54,7 @@ const logic = connect({
       'count',
       'offset',
       'limit',
+      'filter',
       'columnWidths',
       'scrollingResetCounter'
     ]
@@ -120,8 +123,8 @@ class ExplorerTable extends Component {
   }
 
   render () {
-    const { columnWidths, columns, columnsMeta, results, count, offset, containerWidth } = this.props
-    const { setColumnWidth, digDeeper } = this.props.actions
+    const { columnWidths, columns, columnsMeta, results, count, offset, containerWidth, filter } = this.props
+    const { setColumnWidth, digDeeper, addFilter, removeFiltersByKey } = this.props.actions
     const { scrollToRow } = this.state
 
     if (columns.length === 0) {
@@ -154,23 +157,31 @@ class ExplorerTable extends Component {
             )}
             fixed
             width={Math.max(`${count}`.length * 10 + 18, 30)} />
-          {columns.map(s => [s, columnsMeta[s], i++]).map(([column, meta, i]) => (
-            <Column key={column}
-              header={<Cell><TableHeader index={i} column={column} /></Cell>}
-              columnKey={column}
-              isResizable
-              isReorderable
-              cell={props => (
-                <TableCell results={results}
-                  row={props.rowIndex}
-                  index={i}
-                  offset={offset}
-                  meta={meta}
-                  digDeeper={digDeeper} />
-              )}
-              width={columnWidths[column] || defaultColumnWidth(meta)}
-              flexGrow={typeof columnWidths[column] === 'undefined' ? 1 : null} />
-          ))}
+          {columns.map(s => [s, columnsMeta[s], i++]).map(([column, meta, i]) => {
+            const columnFilter = filter.find(f => f.key === column)
+            return (
+              <Column key={column}
+                header={<Cell><TableHeader index={i} column={column} /></Cell>}
+                columnKey={column}
+                isResizable
+                isReorderable
+                cell={props => (
+                  <TableCell
+                    results={results}
+                    row={props.rowIndex}
+                    index={i}
+                    offset={offset}
+                    meta={meta}
+                    column={column}
+                    columnFilter={columnFilter}
+                    addFilter={addFilter}
+                    removeFiltersByKey={removeFiltersByKey}
+                    digDeeper={digDeeper} />
+                )}
+                width={columnWidths[column] || defaultColumnWidth(meta)}
+                flexGrow={typeof columnWidths[column] === 'undefined' ? 1 : null} />
+            )
+          })}
         </Table>
       </div>
     )

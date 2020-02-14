@@ -46,6 +46,10 @@
 .public_fixedDataTable_horizontalScrollbar .public_Scrollbar_mainHorizontal {
   background-color: #fff;
 }
+.fixedDataTableCellLayout_wrap1, .fixedDataTableCellLayout_wrap2, .fixedDataTableCellLayout_wrap3, .public_fixedDataTableCell_cellContent {
+  display: block;
+  width: 100%;
+}
 
 
 /**
@@ -199,6 +203,33 @@
     line-height: 18px;
     overflow: hidden;
     white-space: nowrap;
+    width: 100%;
+    max-width: 100%;
+
+    .cell-body-flex {
+      display: flex;
+      position: relative;
+      width: 100%;
+      max-width: 100%;
+
+      .cell-body-text {
+        flex: 1;
+        max-width: 100%;
+        padding-right: 4px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .cell-body-tools {
+        .table-filter-icon {
+          color: hsl(209, 39%, 65%);
+          cursor: pointer;
+          &:hover, &.table-filter-icon-filled {
+            color: hsl(209, 32%, 40%);
+          }
+        }
+      }
+    }
   }
   &.filter-active {
     color: blue;
@@ -306,7 +337,6 @@
     }
   }
 }
-
 .recharts-tooltip-wrapper {
   z-index: 999;
   line-height: 18px;

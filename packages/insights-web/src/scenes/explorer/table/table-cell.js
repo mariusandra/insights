@@ -2,10 +2,24 @@ import React from 'react'
 
 import moment from 'moment'
 
+import { Icon } from 'antd'
 import { Cell } from 'fixed-data-table-2'
 
+export function columnToValue (column, meta, value) {
+  if (value && meta && (meta.type === 'time' || meta.type === 'date') && (meta.transform || column.split('!')[1])) {
+    const date = moment(value).startOf(meta.transform === 'week' ? 'isoWeek' : meta.transform || column.split('!')[1]).format('YYYY-MM-DD')
+    return date
+  } else {
+    return value
+  }
+}
+
+export function columnToFilter (column, meta, value) {
+  return { key: column, value: `equals:${columnToValue(column, meta, value)}` }
+}
+
 export default (props) => {
-  const { results, row, index, offset, meta, digDeeper, ...cellProps } = props
+  const { results, column, row, index, offset, meta, digDeeper, columnFilter, addFilter, removeFiltersByKey, ...cellProps } = props
 
   const rowColumns = results[row - offset]
 
@@ -62,13 +76,24 @@ export default (props) => {
     )
   }
 
+  const hasLocalFilter = columnFilter && `equals:${columnToValue(column, meta, value)}` === columnFilter.value
+
   return (
     <Cell {...cellProps} className='cell-body'>
-      {link
-        ? <a href={link} target='_blank' rel="noopener noreferrer" className={className}>{displayValue}</a>
-        : className
-          ? <span className={className}>{displayValue}</span>
-          : <span>{displayValue}</span>}
+      <div className='cell-body-flex'>
+        <div className='cell-body-text'>
+          {link
+            ? <a href={link} target='_blank' rel="noopener noreferrer" className={className}>{displayValue}</a>
+            : className
+              ? <span className={className}>{displayValue}</span>
+              : <>{displayValue}</>}
+        </div>
+        <div className='cell-body-tools'>
+          <span className={`table-filter-icon${hasLocalFilter ? ' table-filter-icon-filled' : ''}`} onClick={() => hasLocalFilter ? removeFiltersByKey(column) : addFilter(columnToFilter(column, meta, value))}>
+            <Icon type='filter' theme={hasLocalFilter ? 'filled' : ''} />
+          </span>
+        </div>
+      </div>
     </Cell>
   )
 }
