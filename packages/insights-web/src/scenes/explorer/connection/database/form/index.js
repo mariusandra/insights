@@ -46,7 +46,7 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll, get
 
   const initial = isEditOpen ? editingConnection : { timezone: defaultTimezone }
 
-  const [showAdvanced, setShowAdvanced] = useState(initial.structurePath || initial.timeout || initial.timezone)
+  const [showAdvanced, setShowAdvanced] = useState(initial.structurePath || initial.timeout)
 
   return (
     <Modal
@@ -136,14 +136,6 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll, get
         {showAdvanced ? (
           <>
             <Form.Item
-              label='insights.yml'
-              extra='Leave empty to autodetect the database structure'>
-              {getFieldDecorator('structurePath', {
-                initialValue: initial.structurePath || ''
-              })(<Input placeholder='/Users/yourname/projects/code/insights.yml' style={{width: '100%'}} onBlur={runTest} />)}
-            </Form.Item>
-
-            <Form.Item
               label='Timeout'
               extra='Statement timeout in seconds'>
               {getFieldDecorator('timeout', {
@@ -156,6 +148,14 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll, get
                   }
                 ]
               })(<Input placeholder='15' type='number' style={{width: '100%'}} />)}
+            </Form.Item>
+
+            <Form.Item
+              label='insights.yml'
+              extra='Leave empty to autodetect the database structure'>
+              {getFieldDecorator('structurePath', {
+                initialValue: initial.structurePath || ''
+              })(<Input placeholder='/Users/yourname/projects/code/insights.yml' style={{width: '100%'}} onBlur={runTest} />)}
             </Form.Item>
           </>
         ) : (
