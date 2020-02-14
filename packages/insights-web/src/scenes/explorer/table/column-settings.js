@@ -8,6 +8,7 @@ import range from 'lib/utils/range'
 import getMeta from 'lib/explorer/get-meta'
 
 import explorerLogic from 'scenes/explorer/logic'
+import { ColumnFilters } from '../sidebar/selected-model/filter-button'
 
 const logic = connect({
   actions: [
@@ -147,24 +148,11 @@ class TableHeader extends Component {
   renderFilter (meta) {
     const { filter, column } = this.props
     const { removeFiltersByKey, addEmptyFilter } = this.actions
-
-    const filterInUse = filter.some(({ key, value }) => key === column)
+    const [ path, transform, aggregate ] = column.split('!')
 
     return (
       <div className='filter-options'>
-        Filter:
-        {' '}
-        <span style={{textDecoration: 'underline', cursor: 'pointer'}} onClick={() => addEmptyFilter(column)}>
-          add
-        </span>
-        {filterInUse ? (
-          <span>
-            {' | '}
-            <span style={{textDecoration: 'underline', cursor: 'pointer'}} onClick={() => removeFiltersByKey(column)}>
-              remove
-            </span>
-          </span>
-        ) : null}
+        <ColumnFilters path={path} filter={filter}  onAddClick={() => addEmptyFilter(column)}  />
       </div>
     )
   }

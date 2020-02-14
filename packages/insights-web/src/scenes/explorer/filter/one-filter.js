@@ -346,9 +346,11 @@ class OneFilter extends Component {
         <div style={{ marginTop: 20, marginBottom: 5 }}>
           {value !== '' && index >= 0 && forceOpen ? (
             <div style={{ float: 'right' }}>
-              <Button onClick={this.addAnotherFilter}>
-                <Icon type='plus' />
-              </Button>
+              <Tooltip title='Add another filter'>
+                <Button onClick={this.addAnotherFilter}>
+                  <Icon type='plus' /><Icon type='filter' />
+                </Button>
+              </Tooltip>
             </div>
           ) : null}
 

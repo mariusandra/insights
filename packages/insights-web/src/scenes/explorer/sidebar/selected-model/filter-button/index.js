@@ -27,6 +27,32 @@ const connection = {
     ]
   ]
 }
+
+export function ColumnFilters ({ filter, path, onAddClick }) {
+  let i = 0
+  let hasFilters = false
+  return <div>
+    {filter.map(({key, value}) => {
+      if (key !== path) {
+        i += 1
+        return null
+      }
+      hasFilters = true
+      return (
+        <div key={`${i}.${key}.${value}`} style={{marginBottom: 15}}>
+          <OneFilter filterPrefix={`...tree.${i}`} column={key} value={value} index={i++} placement='right'/>
+        </div>
+      )
+    }).filter(v => v)}
+
+    <div style={{ marginTop: hasFilters ? 20 : 0 }}>
+      <Button onClick={onAddClick}>
+        <Icon type='plus'/> Add {hasFilters ? 'another' : 'a'} filter
+      </Button>
+    </div>
+  </div>
+}
+
 class FilterButton extends Component {
   static propTypes = {
     path: PropTypes.string
@@ -94,25 +120,7 @@ class FilterButton extends Component {
             onVisibleChange={visible => !visible && this.closeFilter()}
             placement='right'
             content={(
-              <div>
-                {filter.map(({ key, value }) => {
-                  if (key !== fieldPath) {
-                    i += 1
-                    return null
-                  }
-
-                  return (
-                    <div key={`${i}.${key}.${value}`} style={{ marginBottom: 15 }}>
-                      <OneFilter filterPrefix={`...tree.${i}`} column={key} value={value} index={i++} placement='right' />
-                    </div>
-                  )
-                }).filter(v => v)}
-                <div style={{ marginTop: 20 }}>
-                  <Button onClick={this.addAnotherFilter}>
-                    <Icon type='plus' /> Add another filter
-                  </Button>
-                </div>
-              </div>
+              <ColumnFilters filter={filter} path={fieldPath} onAddClick={this.addAnotherFilter}/>
             )}>
             <span className='filter-button filter-filled' onClick={this.closeFilter}><Icon type="filter" theme='filled' /></span>
           </Popover>
