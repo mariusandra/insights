@@ -669,12 +669,26 @@ export default kea({
       actions.setSearch('')
 
       // get the id column for this model
-      const { structure } = values
-      const primaryKey = structure[model].primary_key
+      const { structure, sortedStructure } = values
+      const primaryKey = structure[model] && structure[model].primary_key
 
       // and add it with a count as the default
       if (primaryKey) {
         actions.addColumn(`${model}.${primaryKey}!!count`)
+
+        const dateColumns = Object.values(sortedStructure[model]
+                                  .filter(m => m.type === 'column' || m.type === 'custom'))
+                                  .filter(m => m.meta && (m.meta.type === 'date' || m.meta.type === 'time'))
+                                  .map(m => m.key)
+
+        if (dateColumns.includes('created_at')) {
+          actions.addColumn(`${model}.created_at!month!`)
+          actions.setSort(`-${model}.created_at!month!`)
+        } else if (dateColumns.length > 0) {
+          actions.addColumn(`${model}.${dateColumns[0]}!month!`)
+          actions.setSort(`-${model}.${dateColumns[0]}!month!`)
+        }
+
       }
       actions.focusSearch()
     },
