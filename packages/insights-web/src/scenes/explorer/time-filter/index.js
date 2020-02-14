@@ -3,10 +3,13 @@ import { useActions, useValues } from 'kea'
 import { Select } from 'antd'
 
 import explorerLogic from 'scenes/explorer/logic'
+import moment from 'moment'
 
 export default function TimeFilter () {
   const { graphTimeFilter } = useValues(explorerLogic)
   const { setGraphTimeFilter } = useActions(explorerLogic)
+
+  const year = moment().year()
 
   const graphTimeFilters = [
     ['All time', 'all-time'],
@@ -18,15 +21,12 @@ export default function TimeFilter () {
     ['This month', 'this-month'],
     ['Last month', 'last-month'],
     ['Yesterday', 'yesterday'],
-    ['Today', 'today'],
-    ['2019', '2019'],
-    ['2018', '2018'],
-    ['2017', '2017'],
-    ['2016', '2016'],
-    ['2015', '2015'],
-    ['2014', '2014'],
-    ['2013', '2013']
+    ['Today', 'today']
   ]
+
+  for (let i = year; i >= year - 7; i--) {
+    graphTimeFilters.push([`${i}`, `${i}`])
+  }
 
   return (
     <div style={{display: 'inline-block'}}>

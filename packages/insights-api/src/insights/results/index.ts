@@ -850,7 +850,7 @@ function getTimesFromString (timeFilter, smooth = 0, timeGroup = 'day') {
   let lastDate
 
   if (timeFilter.match(/^20[0-9][0-9]$/)) {
-    const year = timeFilter.to_i
+    const year = parseInt(timeFilter)
     firstDate = moment(`${year}-01-01`).add(-smooth, 'days')
     lastDate = moment(`${year + 1}-01-01`).add(-1, 'day')
   } else if (timeFilter === 'this-month-so-far') {
@@ -882,6 +882,10 @@ function getTimesFromString (timeFilter, smooth = 0, timeGroup = 'day') {
     const parts = timeFilter.split('-to-').map(t => moment(t))
     firstDate = parts[0]
     lastDate = parts[1]
+  }
+
+  if (!firstDate || !lastDate) {
+    return []
   }
 
   return [firstDate.format('YYYY-MM-DD'), lastDate.format('YYYY-MM-DD')]

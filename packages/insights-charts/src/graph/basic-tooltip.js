@@ -72,7 +72,7 @@ export default class BasicTooltip extends Component {
     const showCompare = !!compareWith && compareWith !== 0 && compareWith !== '0'
     const showPrediction = prediction && moment().startOf(timeGroup === 'week' ? 'isoWeek' : timeGroup).format('YYYY-MM-DD') === time
 
-    if (active) {
+    if (active && payload) {
       const visiblePayload = payload.filter(item => item.dataKey.indexOf('__hidden') < 0).filter(i => i.dataKey.indexOf('compareWith:') < 0)
       const compareWithPayload = showCompare ? payload.filter(item => item.dataKey.indexOf('__hidden') < 0).filter(i => i.dataKey.indexOf('compareWith::') === 0) : []
 
