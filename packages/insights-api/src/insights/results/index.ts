@@ -482,7 +482,7 @@ export default class Results {
     let compareWithFirstDate
     let compareWithLastDate
 
-    if (compareWith) {
+    if (compareWith && firstDate && lastDate) {
       compareWithFirstDate = moment(firstDate).subtract(compareWith, timeGroup).startOf(timeGroup).format('YYYY-MM-DD')
       compareWithLastDate = moment(lastDate).subtract(compareWith, timeGroup).endOf(timeGroup).format('YYYY-MM-DD')
     }
