@@ -16,7 +16,8 @@ const scenes = {
   explorer: require('./explorer').default,
   login: require('./login').default,
   users: require('./users').default,
-  settings: require('./settings').default
+  settings: require('./settings').default,
+  urls: require('./urls').default
 }
 
 const routes = {
@@ -24,7 +25,8 @@ const routes = {
   '/': 'explorer',
   '/login': 'login',
   '/users': 'users',
-  '/settings': 'settings'
+  '/settings': 'settings',
+  '/url/:url': 'urls'
 }
 
 export default combineScenesAndRoutes(scenes, routes)
