@@ -6,9 +6,7 @@ It's a work in progress and you're brave for checking it out! Cheers!
 
 Please consider sponsoring if you would like this product to succeed!
 
-![Screenshot of the Explorer](https://github.com/mariusandra/insights/raw/old-rails-version/doc/screenshot-views.png)
-
-![Screenshot of the Dashboard](https://github.com/mariusandra/insights/raw/old-rails-version/doc/screenshot-dashboard.png)
+![Insights Explorer](https://user-images.githubusercontent.com/53387/74511997-90bea500-4f07-11ea-8566-ffd5e9c96e27.png)
 
 ## Disclaimer and Security Notice!
 
