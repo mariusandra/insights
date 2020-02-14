@@ -20,7 +20,7 @@ export default function Sidebar () {
   // eslint-disable-next-line
   useEffect(() => {
     window.setTimeout(focusSearch, 100)
-  }, [])
+  }, [focusSearch])
 
   useEffect(() => {
     const element = document.querySelector('.ant-tree-node-selected')

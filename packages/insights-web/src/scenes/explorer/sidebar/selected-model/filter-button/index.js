@@ -110,8 +110,6 @@ class FilterButton extends Component {
           </OneFilter>
         )
       } else {
-        let i = 0
-
         return (
           <Popover
             visible

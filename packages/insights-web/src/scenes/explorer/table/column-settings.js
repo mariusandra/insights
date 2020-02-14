@@ -145,10 +145,10 @@ class TableHeader extends Component {
     )
   }
 
-  renderFilter (meta) {
+  renderFilter () {
     const { filter, column } = this.props
-    const { removeFiltersByKey, addEmptyFilter } = this.actions
-    const [ path, transform, aggregate ] = column.split('!')
+    const { addEmptyFilter } = this.actions
+    const [ path, ] = column.split('!')
 
     return (
       <div className='filter-options'>
