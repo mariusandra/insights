@@ -22,7 +22,7 @@ export default function Models () {
   }
 
   if (models.length === 0) {
-    return <Empty description='No tables found in this connection' style={{ marginTop: 60 }} />
+    return <Empty description='No Models exported by this connection...' style={{ marginTop: 60 }} />
   }
 
   return (

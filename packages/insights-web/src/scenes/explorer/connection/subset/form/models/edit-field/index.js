@@ -148,7 +148,7 @@ function EditField ({ closeEdit, visible, form: { getFieldDecorator, validateFie
                   }
                 }
               ]
-            })(<Input autocomplete='off' placeholder='column_name' style={{width: '100%'}} />)}
+            })(<Input autoComplete='off' placeholder='column_name' style={{width: '100%'}} />)}
           </Form.Item>
 
           <Form.Item label='Field type'>

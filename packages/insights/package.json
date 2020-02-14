@@ -1,7 +1,7 @@
 {
   "name": "insights",
   "description": "Desktop and Self-Hosted \"SQL-not-required\" data analytics and visualisation tool.",
-  "version": "0.0.60",
+  "version": "0.0.61",
   "homepage": "",
   "main": "app",
   "license": "MIT",
@@ -45,7 +45,7 @@
   "peerDependencies": {},
   "dependencies": {
     "commander": "^4.1.0",
-    "insights-api": "0.0.17",
+    "insights-api": "0.0.18",
     "prompt-promise": "^1.0.3"
   }
 }

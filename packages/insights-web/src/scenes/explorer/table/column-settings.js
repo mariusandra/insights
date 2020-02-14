@@ -9,6 +9,7 @@ import getMeta from 'lib/explorer/get-meta'
 import { ColumnFilters } from 'scenes/explorer/filter/column-filters'
 
 import explorerLogic from 'scenes/explorer/logic'
+import { AggregateList } from '../sidebar/selected-model/aggregate'
 
 const logic = connect({
   actions: [
@@ -114,37 +115,6 @@ class TableHeader extends Component {
     )
   }
 
-  renderAggregate (meta) {
-    const { index, column } = this.props
-    const { setTransform } = this.actions
-
-    const [ , transform, aggregate ] = column.split('!')
-
-    if (meta.index !== 'primary_key' && meta.type !== 'string' && meta.type !== 'number') {
-      return null
-    }
-
-    return (
-      <div className='filter-options'>
-        {meta.index === 'primary_key' ? (
-          <Tag color={aggregate === 'count' ? 'hsl(209, 32%, 40%)' : ''} onClick={() => setTransform(index, transform, aggregate === 'count' ? '' : 'count')} style={{ cursor: 'pointer' }}>Count</Tag>
-        ) : null}
-        {meta.type === 'string' || meta.type === 'number' ? (
-          <>
-            <Tag color={aggregate === 'min' ? 'hsl(209, 32%, 40%)' : ''} onClick={() => setTransform(index, transform, aggregate === 'min' ? '' : 'min')} style={{ cursor: 'pointer' }}>Min</Tag>
-            <Tag color={aggregate === 'max' ? 'hsl(209, 32%, 40%)' : ''} onClick={() => setTransform(index, transform, aggregate === 'max' ? '' : 'max')} style={{ cursor: 'pointer' }}>Max</Tag>
-          </>
-        ) : null}
-        {meta.type === 'number' ? (
-          <>
-            <Tag color={aggregate === 'avg' ? 'hsl(209, 32%, 40%)' : ''} onClick={() => setTransform(index, transform, aggregate === 'avg' ? '' : 'avg')} style={{ cursor: 'pointer' }}>Avg</Tag>
-            <Tag color={aggregate === 'sum' ? 'hsl(209, 32%, 40%)' : ''} onClick={() => setTransform(index, transform, aggregate === 'sum' ? '' : 'sum')} style={{ cursor: 'pointer' }}>Sum</Tag>
-          </>
-        ) : null}
-      </div>
-    )
-  }
-
   renderFilter () {
     const { filter, column } = this.props
     const { addEmptyFilter } = this.actions
@@ -158,7 +128,8 @@ class TableHeader extends Component {
   }
 
   render () {
-    const { column, columnsMeta, structure } = this.props
+    const { index, column, columnsMeta, structure } = this.props
+    const { setTransform } = this.actions
 
     const [ path, transform, aggregate ] = column.split('!')
     const meta = columnsMeta[column] || { ...getMeta(path, structure), transform, aggregate }
@@ -181,7 +152,7 @@ class TableHeader extends Component {
         {meta ? (
           <div>
             {this.renderTransform(meta)}
-            {this.renderAggregate(meta)}
+            <AggregateList meta={meta} aggregate={aggregate} className='filter-options' setAggregate={value => setTransform(index, transform, aggregate === value ? '' : value)} />
             {this.renderFacets(meta)}
             {this.renderFilter(meta)}
           </div>
