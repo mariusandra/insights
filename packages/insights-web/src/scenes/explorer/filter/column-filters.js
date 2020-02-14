@@ -22,8 +22,8 @@ export function ColumnFilters ({ filter, path, onAddClick, filterPrefixString = 
       }).filter(v => v)}
 
       <div style={{ marginTop: hasFilters ? 20 : 0 }}>
-        <Button onClick={onAddClick}>
-          <Icon type='plus'/> Add {hasFilters ? 'another' : 'a'} filter
+        <Button onClick={onAddClick} size='small'>
+          <Icon type='filter'/> Add {hasFilters ? 'another' : 'a'} filter
         </Button>
       </div>
     </div>
