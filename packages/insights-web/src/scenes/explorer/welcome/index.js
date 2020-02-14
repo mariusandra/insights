@@ -53,7 +53,7 @@ export default function Welcome () {
         You're brave for checking out this early release! Thank you!
       </p>
       <p>
-        Please file all questions and bug reports on <a href='https://github.com/mariusandra/insights' target='_blank'><u>github</u></a>!
+        Please file all questions and bug reports on <a href='https://github.com/mariusandra/insights' rel="noopener noreferrer" target='_blank'><u>github</u></a>!
       </p>
       <br />
       <h2>Saved views</h2>

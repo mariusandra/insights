@@ -574,11 +574,22 @@ export default kea({
       PropTypes.string
     ],
 
-    modelFavourites: [
-      () => [selectors.connectionId, selectors.subsetId, selectors.selectedModel, selectors.favourites],
-      (connectionId, subsetId, model, favourites) => {
+    subsetPinnedFields: [
+      () => [selectors.connectionId, selectors.subsetId, selectors.favourites],
+      (connectionId, subsetId, favourites) => {
         if (favourites) {
-          return Object.values(favourites).filter(f => f.model === model && f.subsetId === subsetId && f.connectionId === connectionId).map(f => f.path).sort()
+          return Object.values(favourites).filter(f => f.subsetId === subsetId && f.connectionId === connectionId)
+        }
+        return []
+      },
+      PropTypes.array
+    ],
+
+    modelFavourites: [
+      () => [selectors.subsetPinnedFields, selectors.selectedModel, selectors.favourites],
+      (subsetPinnedFields, model, favourites) => {
+        if (favourites) {
+          return subsetPinnedFields.filter(f => f.model === model).map(f => f.path).sort()
         }
         return []
       },
@@ -667,29 +678,6 @@ export default kea({
     [actions.openModel]: async ({ model }) => {
       actions.setExpandedKeys([model, '...pinned', '...saved'])
       actions.setSearch('')
-
-      // get the id column for this model
-      const { structure, sortedStructure } = values
-      const primaryKey = structure[model] && structure[model].primary_key
-
-      // and add it with a count as the default
-      if (primaryKey) {
-        actions.addColumn(`${model}.${primaryKey}!!count`)
-
-        const dateColumns = Object.values(sortedStructure[model]
-                                  .filter(m => m.type === 'column' || m.type === 'custom'))
-                                  .filter(m => m.meta && (m.meta.type === 'date' || m.meta.type === 'time'))
-                                  .map(m => m.key)
-
-        if (dateColumns.includes('created_at')) {
-          actions.addColumn(`${model}.created_at!month!`)
-          actions.setSort(`-${model}.created_at!month!`)
-        } else if (dateColumns.length > 0) {
-          actions.addColumn(`${model}.${dateColumns[0]}!month!`)
-          actions.setSort(`-${model}.${dateColumns[0]}!month!`)
-        }
-
-      }
       actions.focusSearch()
     },
 

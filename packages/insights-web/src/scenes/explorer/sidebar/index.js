@@ -37,7 +37,7 @@ export default function Sidebar () {
           <div style={{ padding: 10 }}>
             <Input.Search
               id='sidebar-model-field-search'
-              placeholder='Type to search...'
+              placeholder={!selectedModel ? 'Search for a Model' : `Search fields in ${selectedModel}...`}
               autoComplete="off"
               value={search}
               onKeyDown={e => {
