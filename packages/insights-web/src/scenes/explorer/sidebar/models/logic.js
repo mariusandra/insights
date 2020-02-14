@@ -1,6 +1,5 @@
 import { kea } from 'kea'
 
-import connectionLogic from '../../connection/logic'
 import explorerLogic from '../../logic'
 import urlToState from '../../../../lib/explorer/url-to-state'
 

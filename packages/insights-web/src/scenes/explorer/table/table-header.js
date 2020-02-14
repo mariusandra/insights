@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'kea'
 import PropTypes from 'prop-types'
 
-import { Popover } from 'antd'
+import { Popover, Icon } from 'antd'
 
 import ColumnSettings from './column-settings'
 
@@ -85,6 +85,7 @@ class TableHeader extends Component {
     }
 
     const localPath = (column.split('!')[0] || '').replace(/^[^.]+\./, '').split('.').reverse().join(' < ')
+    const showCountWarning = meta && meta.index === 'primary_key' && !aggregate && Object.values(columnsMeta).find(m => m.type === 'date' || m.type === 'time') && !Object.values(columnsMeta).find(m => m.aggregate)
 
     return (
       <Popover
@@ -104,6 +105,7 @@ class TableHeader extends Component {
             <span className='filter-split'>split</span>
           )}
           {localPath}
+          {showCountWarning ? <Icon type="warning" style={{ color: 'hsla(42, 102%, 35%, 1)', marginLeft: 5 }} /> : null}
         </div>
       </Popover>
     )

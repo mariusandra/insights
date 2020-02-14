@@ -13,6 +13,7 @@ import Sidebar from './sidebar'
 import Table from './table'
 import Filter from './filter'
 import Welcome from './welcome'
+import Help from './help'
 
 import explorerLogic from 'scenes/explorer/logic'
 import explorerSaga from 'scenes/explorer/saga'
@@ -33,7 +34,15 @@ export default function Explorer () {
         <Sidebar />
       </Layout>
       <LayoutSplitter />
-      {selectedModel ?
+      {!selectedModel ? (
+        <Layout layoutWidth='flex'>
+          <Welcome />
+        </Layout>
+      ) : columns.length === 0 ? (
+        <Layout layoutWidth='flex'>
+          <Help />
+        </Layout>
+      ) : (
         <Layout layoutWidth='flex'>
           <Layout layoutHeight={50}>
             <div style={{padding: 10}}>
@@ -65,7 +74,7 @@ export default function Explorer () {
             <Table />
           </Layout>
         </Layout>
-        : <Layout layoutWidth='flex'><Welcome /></Layout>}
+      )}
     </Layout>
   )
 }
