@@ -14,6 +14,7 @@ import urlToState from 'lib/explorer/url-to-state'
 import delay from 'lib/utils/delay'
 
 import client from 'lib/client'
+import moment from 'moment'
 
 const resultsService = client.service('results')
 const favouritesService = client.service('favourites')
@@ -309,7 +310,7 @@ export default kea({
       const { setColumnsAndFilter } = this.actions
 
       const { row } = action.payload
-      const { results, columns } = yield explorerLogic.fetch('results', 'columns')
+      const { results, columns, structure } = yield explorerLogic.fetch('results', 'columns', 'structure')
 
       const resultRow = results[row]
 
@@ -325,10 +326,16 @@ export default kea({
           newColumns.push(path + (transform ? `!${transform}` : ''))
         } else {
           newColumns.push(column)
-          if (resultRow[i] === null) {
+          if (resultRow[i] === null || resultRow[i] === undefined) {
             newFilter.push({ key: column, value: 'null' })
           } else {
-            newFilter.push({ key: column, value: `equals:${resultRow[i]}` })
+            const columnMeta = getMeta(column, structure)
+            if (resultRow[i] && columnMeta && columnMeta.type === 'time' && transform) {
+              const date = moment(resultRow[i]).startOf(transform === 'week' ? 'isoWeek' : transform).format('YYYY-MM-DD')
+              newFilter.push({key: column, value: `equals:${date}`})
+            } else {
+              newFilter.push({key: column, value: `equals:${resultRow[i]}`})
+            }
           }
         }
         i += 1
