@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'kea'
 import PropTypes from 'prop-types'
-import { Select } from 'antd'
+import { Select, Tag, Icon } from 'antd'
 
 import range from 'lib/utils/range'
 
@@ -61,22 +61,6 @@ class TableHeader extends Component {
     }
   }
 
-  renderSort = () => {
-    const { column, sort } = this.props
-
-    const isSorted = sort === column || sort === `-${column}`
-    const descending = sort === `-${column}`
-
-    return (
-      <div>
-        {'Sort: '}
-        <span style={{textDecoration: 'underline', cursor: 'pointer'}} onClick={this.handleSort}>
-          {isSorted ? (descending ? 'descending' : 'ascending') : 'off'}
-        </span>
-      </div>
-    )
-  }
-
   renderTransform (meta) {
     const { index, column } = this.props
     const { setTransform } = this.actions
@@ -89,25 +73,14 @@ class TableHeader extends Component {
 
     return (
       <div className='filter-options'>
-        <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: !transform ? 'bold' : 'normal'}}
-          onClick={() => setTransform(index, '', aggregate)}>{meta.type === 'date' ? 'Day' : 'Time'}</span>
-        {' '}
+        <Tag color={!transform ? 'hsl(209, 32%, 40%)' : ''} onClick={() => setTransform(index, '', aggregate)} style={{ cursor: 'pointer' }}>{meta.type === 'date' ? 'Day' : 'Time'}</Tag>
         {meta.type === 'time' ? (
-          <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: transform === 'day' ? 'bold' : 'normal'}}
-            onClick={() => setTransform(index, 'day', aggregate)}>Day</span>
+          <Tag color={transform === 'day' ? 'hsl(209, 32%, 40%)' : ''} onClick={() => setTransform(index, 'day', aggregate)} style={{ cursor: 'pointer' }}>Day</Tag>
         ) : null}
-        {meta.type === 'time' ? ' ' : ''}
-        <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: transform === 'week' ? 'bold' : 'normal'}}
-          onClick={() => setTransform(index, 'week', aggregate)}>Week</span>
-        {' '}
-        <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: transform === 'month' ? 'bold' : 'normal'}}
-          onClick={() => setTransform(index, 'month', aggregate)}>Month</span>
-        {' '}
-        <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: transform === 'quarter' ? 'bold' : 'normal'}}
-          onClick={() => setTransform(index, 'quarter', aggregate)}>Quarter</span>
-        {' '}
-        <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: transform === 'year' ? 'bold' : 'normal'}}
-          onClick={() => setTransform(index, 'year', aggregate)}>Year</span>
+        <Tag color={transform === 'week' ? 'hsl(209, 32%, 40%)' : ''} onClick={() => setTransform(index, 'week', aggregate)} style={{ cursor: 'pointer' }}>Week</Tag>
+        <Tag color={transform === 'month' ? 'hsl(209, 32%, 40%)' : ''} onClick={() => setTransform(index, 'month', aggregate)} style={{ cursor: 'pointer' }}>Month</Tag>
+        <Tag color={transform === 'quarter' ? 'hsl(209, 32%, 40%)' : ''} onClick={() => setTransform(index, 'quarter', aggregate)} style={{ cursor: 'pointer' }}>Quarter</Tag>
+        <Tag color={transform === 'year' ? 'hsl(209, 32%, 40%)' : ''} onClick={() => setTransform(index, 'year', aggregate)} style={{ cursor: 'pointer' }}>Year</Tag>
       </div>
     )
   }
@@ -153,30 +126,19 @@ class TableHeader extends Component {
     return (
       <div className='filter-options'>
         {meta.index === 'primary_key' ? (
-          <span>
-            <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: aggregate === 'count' ? 'bold' : 'normal'}}
-              onClick={() => setTransform(index, transform, aggregate === 'count' ? '' : 'count')}>Count</span>
-            {' '}
-          </span>
+          <Tag color={aggregate === 'count' ? 'hsl(209, 32%, 40%)' : ''} onClick={() => setTransform(index, transform, aggregate === 'count' ? '' : 'count')} style={{ cursor: 'pointer' }}>Count</Tag>
         ) : null}
         {meta.type === 'string' || meta.type === 'number' ? (
-          <span>
-            <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: aggregate === 'min' ? 'bold' : 'normal'}}
-              onClick={() => setTransform(index, transform, aggregate === 'min' ? '' : 'min')}>Min</span>
-            {' '}
-            <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: aggregate === 'max' ? 'bold' : 'normal'}}
-              onClick={() => setTransform(index, transform, aggregate === 'max' ? '' : 'max')}>Max</span>
-            {' '}
-          </span>
+          <>
+            <Tag color={aggregate === 'min' ? 'hsl(209, 32%, 40%)' : ''} onClick={() => setTransform(index, transform, aggregate === 'min' ? '' : 'min')} style={{ cursor: 'pointer' }}>Min</Tag>
+            <Tag color={aggregate === 'max' ? 'hsl(209, 32%, 40%)' : ''} onClick={() => setTransform(index, transform, aggregate === 'max' ? '' : 'max')} style={{ cursor: 'pointer' }}>Max</Tag>
+          </>
         ) : null}
         {meta.type === 'number' ? (
-          <span>
-            <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: aggregate === 'avg' ? 'bold' : 'normal'}}
-              onClick={() => setTransform(index, transform, aggregate === 'avg' ? '' : 'avg')}>Avg</span>
-            {' '}
-            <span style={{textDecoration: 'underline', cursor: 'pointer', fontWeight: aggregate === 'sum' ? 'bold' : 'normal'}}
-              onClick={() => setTransform(index, transform, aggregate === 'sum' ? '' : 'sum')}>Sum</span>
-          </span>
+          <>
+            <Tag color={aggregate === 'avg' ? 'hsl(209, 32%, 40%)' : ''} onClick={() => setTransform(index, transform, aggregate === 'avg' ? '' : 'avg')} style={{ cursor: 'pointer' }}>Avg</Tag>
+            <Tag color={aggregate === 'sum' ? 'hsl(209, 32%, 40%)' : ''} onClick={() => setTransform(index, transform, aggregate === 'sum' ? '' : 'sum')} style={{ cursor: 'pointer' }}>Sum</Tag>
+          </>
         ) : null}
       </div>
     )
@@ -217,14 +179,14 @@ class TableHeader extends Component {
 
     return (
       <div className='column-settings'>
-        <div style={{fontWeight: 'bold'}}>
-          {meta && meta.model ? `${meta.model}.` : ''}
-          {key}
-        </div>
         <div>
-          <span style={{textDecoration: 'underline', cursor: 'pointer'}} onClick={this.handleRemove}>
+          <span style={{ textDecoration: 'underline', cursor: 'pointer', float: 'right', color: 'hsl(3, 77%, 42%)', marginLeft: 15 }} onClick={this.handleRemove}>
+            <Icon type='delete' style={{ marginRight: 5 }} />
             Remove
           </span>
+          <div style={{ fontWeight: 'bold' }}>
+            {meta && meta.model ? `${meta.model}.${key}` : key}
+          </div>
         </div>
         {meta ? (
           <div>
