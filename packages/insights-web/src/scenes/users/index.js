@@ -2,7 +2,7 @@ import './styles.scss'
 
 import React from 'react'
 import { useValues } from 'kea'
-import { Button, Table, Avatar, Tag } from "antd"
+import { Table, Avatar, Tag } from "antd"
 
 import usersLogic from './logic'
 
@@ -43,7 +43,9 @@ export default function UsersScene () {
       <br />
 
       <div>
-        <Button>New User</Button>
+        To add a new user, run in the terminal:
+        <br />
+        <code>$ insights createsuperuser</code>
       </div>
     </div>
   )
