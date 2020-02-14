@@ -21,7 +21,7 @@ export class ConnectionTest implements Partial<ServiceMethods<Data>> {
       const { url, structurePath } = params.query
 
       // check that this doesn't throw up
-      await createAdapter(url, 60000).test()
+      await createAdapter(url, 60, 'UTC').test()
 
       // if we want a structure from a file, test that it exists
       if (structurePath) {
