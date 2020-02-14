@@ -1,8 +1,6 @@
 import { ResultsParams, ResultsResponse } from '../../insights/definitions'
-import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
+import { Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
-import { ConnectionData } from '../connections/connections.class'
-import getStructure from '../../insights/structure'
 import createAdapter from '../../insights/adapter'
 import FindResults from '../../insights/results'
 
@@ -32,11 +30,11 @@ export class Results implements Partial<ServiceMethods<ResultsResponse>> {
     const [connectionId, subsetId] = connection.split('--')
 
     const connectionsResult = await connectionsService.get(connectionId)
-    const { url, timeout } = connectionsResult
+    const { url, timeout, timezone } = connectionsResult
 
     const structure = await structureService.get(connectionId, { query: { subsetId } })
 
-    const adapter = createAdapter(url, timeout)
+    const adapter = createAdapter(url, timeout, timezone)
 
     const results = new FindResults({ params: params.query, adapter, structure })
     return results.getResponse()

@@ -12,7 +12,7 @@ export default class SQLite extends SQL {
       throw new Error(`Bad date truncation '${truncation}'`)
     }
 
-    let dateSql = super.truncateDate(sql, truncation)
+    const dateSql = super.truncateDate(sql, truncation)
 
     if (truncation === 'day') {
       return `date(${dateSql})`

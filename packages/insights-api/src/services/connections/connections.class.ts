@@ -5,8 +5,9 @@ export interface ConnectionData {
   _id?: string;
   name: string;
   url: string;
-  structurePath: string;
-  timeout: number
+  structurePath?: string;
+  timeout?: number;
+  timezone?: string;
 }
 
 export class Connections extends Service<ConnectionData> {

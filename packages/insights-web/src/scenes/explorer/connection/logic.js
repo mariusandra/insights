@@ -24,10 +24,10 @@ export default kea({
     loadStructure: (connectionId, subsetId) => ({ connectionId, subsetId }),
     setStructure: structure => ({ structure }),
 
-    addConnection: ({ name, url, structurePath, timeout }) => ({ name, url, structurePath, timeout }),
+    addConnection: ({ name, url, structurePath, timeout, timezone }) => ({ name, url, structurePath, timeout, timezone }),
     connectionAdded: (connection) => ({ connection }),
 
-    editConnection: (id, name, url, structurePath, timeout) => ({ id, name, url, structurePath, timeout }),
+    editConnection: (id, name, url, structurePath, timeout, timezone) => ({ id, name, url, structurePath, timeout, timezone }),
     connectionEdited: (connection) => ({ connection }),
 
     testConnection: (url, structurePath) => ({ url, structurePath }),
@@ -317,15 +317,15 @@ export default kea({
       }
     },
 
-    [actions.addConnection]: async function ({ name, url, structurePath, timeout }) {
-      const connection = await connectionsService.create({ name, url, structurePath, timeout })
+    [actions.addConnection]: async function ({ name, url, structurePath, timeout, timezone }) {
+      const connection = await connectionsService.create({ name, url, structurePath, timeout, timezone })
       actions.connectionAdded(connection)
       actions.setConnectionId(connection._id)
       message.success(`Connection "${name}" added!`)
     },
 
-    [actions.editConnection]: async function ({ id, name, url, structurePath, timeout }) {
-      const connection = await connectionsService.patch(id, { name, url, structurePath, timeout })
+    [actions.editConnection]: async function ({ id, name, url, structurePath, timeout, timezone }) {
+      const connection = await connectionsService.patch(id, { name, url, structurePath, timeout, timezone })
       actions.connectionEdited(connection)
       message.success('Changes saved!')
     },

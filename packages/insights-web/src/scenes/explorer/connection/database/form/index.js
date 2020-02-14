@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useActions, useValues } from 'kea'
 
-import { Button, Form, Input, Modal, Icon, Tag } from "antd"
+import { Button, Form, Input, Modal, Icon, Tag, Row, Col, Select } from "antd"
 
 import Intro from './intro'
 
 import connectionsLogic from '../../logic'
+
+import { getTimezones } from './timezones'
 
 function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll, getFieldValue } }) {
   const { isAddOpen, isEditOpen, editingConnection, isSaving, didTest, isTesting, testPassed, addIntroMessage } = useValues(connectionsLogic)
@@ -18,12 +20,12 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll, get
 
     validateFieldsAndScroll((err, values) => {
       if (!err) {
-        const { name, url, structurePath, timeout } = values
+        const { name, url, structurePath, timeout, timezone } = values
 
         if (isEditOpen) {
-          editConnection(editingConnection._id, name, url, structurePath, timeout)
+          editConnection(editingConnection._id, name, url, structurePath, timeout, timezone)
         } else {
-          addConnection({name, url, structurePath, timeout})
+          addConnection({name, url, structurePath, timeout, timezone})
         }
       }
     })
@@ -38,7 +40,13 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll, get
 
   useEffect(runTest, [isEditOpen, isAddOpen])
 
-  const initial = isEditOpen ? editingConnection : {}
+
+  const defaultTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const timezones = useMemo(getTimezones, [])
+
+  const initial = isEditOpen ? editingConnection : { timezone: defaultTimezone }
+
+  const [showAdvanced, setShowAdvanced] = useState(initial.structurePath || initial.timeout || initial.timezone)
 
   return (
     <Modal
@@ -94,29 +102,6 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll, get
           })(<Input placeholder='psql://user:pass@localhost/dbname' style={{width: '100%'}} onBlur={runTest} />)}
         </Form.Item>
 
-        <Form.Item
-          label='insights.yml'
-          extra='Leave empty to autodetect the database structure'>
-          {getFieldDecorator('structurePath', {
-            initialValue: initial.structurePath || ''
-          })(<Input placeholder='/Users/yourname/projects/code/insights.yml' style={{width: '100%'}} onBlur={runTest} />)}
-        </Form.Item>
-
-        <Form.Item
-          label='Timeout'
-          extra='Statement timeout in seconds'>
-          {getFieldDecorator('timeout', {
-            initialValue: initial.timeout || '',
-            rules: [
-              {
-                type: 'number',
-                message: 'Please input a number',
-                transform: value => Number(value)
-              }
-            ]
-          })(<Input placeholder='15' type='number' style={{width: '100%'}} />)}
-        </Form.Item>
-
         <Form.Item label='Test'>
           {!didTest
             ? <Tag>Enter URL to test</Tag>
@@ -131,6 +116,55 @@ function DatabaseForm ({ form: { getFieldDecorator, validateFieldsAndScroll, get
             onClick={runTest}
             loading={isTesting}>{isTesting ? '' : testPassed ? 'Reconnect' : 'Retry'}</Button> : null}
         </Form.Item>
+
+        <Form.Item label='Timezone'>
+          {getFieldDecorator('timezone', {
+            initialValue: initial.timezone || 'UTC',
+            rules: [
+              {
+                required: true,
+                message: 'Please choose a timezone!',
+              }
+            ]
+          })(
+            <Select showSearch style={{width: '100%'}}>
+              {timezones.map(timezone => <Select.Option key={timezone} value={timezone}><Icon timezone={'unknown-circle'} /> {timezone}</Select.Option>)}
+            </Select>
+          )}
+        </Form.Item>
+
+        {showAdvanced ? (
+          <>
+            <Form.Item
+              label='insights.yml'
+              extra='Leave empty to autodetect the database structure'>
+              {getFieldDecorator('structurePath', {
+                initialValue: initial.structurePath || ''
+              })(<Input placeholder='/Users/yourname/projects/code/insights.yml' style={{width: '100%'}} onBlur={runTest} />)}
+            </Form.Item>
+
+            <Form.Item
+              label='Timeout'
+              extra='Statement timeout in seconds'>
+              {getFieldDecorator('timeout', {
+                initialValue: initial.timeout || '',
+                rules: [
+                  {
+                    type: 'number',
+                    message: 'Please input a number',
+                    transform: value => Number(value)
+                  }
+                ]
+              })(<Input placeholder='15' type='number' style={{width: '100%'}} />)}
+            </Form.Item>
+          </>
+        ) : (
+          <Row>
+            <Col span={19} offset={5}>
+              <Button onClick={() => setShowAdvanced(true)}>Show Advanced Options</Button>
+            </Col>
+          </Row>
+        )}
       </Form> : null}
     </Modal>
   )

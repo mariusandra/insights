@@ -2,13 +2,17 @@ import { ColumnType, TruncationType, AggregationType, ColumnMetadata, SqlQueryRe
 
 import moment from 'moment'
 
+import { defaultTimezone } from '../../../config'
+
 export default class SQL {
   connection: string
   timeout: number
+  timezone: string
 
-  constructor (connection: string, timeout: number) {
+  constructor (connection: string, timeout: number, timezone: string) {
     this.connection = connection
     this.timeout = timeout
+    this.timezone = timezone || defaultTimezone
   }
 
   async test () {

@@ -5,13 +5,11 @@ import escape from 'pg-escape'
 
 import SQL from './index'
 
-import { timezone } from '../../../config'
-
 export default class Postgres extends SQL {
   pool: Pool
 
-  constructor (connection: string, timeout: number) {
-    super(connection, timeout)
+  constructor (connection: string, timeout: number, timezone: string) {
+    super(connection, timeout, timezone)
 
     this.pool = new Pool({
       connectionString: connection,
@@ -35,7 +33,7 @@ export default class Postgres extends SQL {
   }
 
   convertSqlTimezone (sql: string) {
-    return `(${sql} at time zone 'UTC' at time zone '${timezone}')`
+    return `(${sql} at time zone 'UTC' at time zone '${this.timezone}')`
   }
 
   allowedDateTruncations () {
