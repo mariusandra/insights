@@ -330,7 +330,7 @@ export default kea({
             newFilter.push({ key: column, value: 'null' })
           } else {
             const columnMeta = getMeta(column, structure)
-            if (resultRow[i] && columnMeta && columnMeta.type === 'time' && transform) {
+            if (resultRow[i] && columnMeta && (columnMeta.type === 'time' || columnMeta.type === 'date') && transform) {
               const date = moment(resultRow[i]).startOf(transform === 'week' ? 'isoWeek' : transform).format('YYYY-MM-DD')
               newFilter.push({key: column, value: `equals:${date}`})
             } else {
