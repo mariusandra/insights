@@ -1,14 +1,11 @@
 # Insights
 
+![Insights Explorer](https://user-images.githubusercontent.com/53387/74577340-e68a6000-4f8e-11ea-95bf-4682f545cc8f.png)
+
 **Insights** is a self-hosted "SQL-not-required" data analytics and business intelligence tool. Featuring linkable URLs, easy data exploration, automatic joins, graphs, exports, facets (pivots), saveable views, pretty colors and a ridiculously permissive license (MIT).
 
-It's a work in progress and you're brave for checking it out! Cheers!
 
-Please consider sponsoring if you would like this product to succeed!
-
-![Insights Explorer](https://user-images.githubusercontent.com/53387/74511997-90bea500-4f07-11ea-8566-ffd5e9c96e27.png)
-
-## Disclaimer and Security Notice!
+## Important Disclaimer and Security Notice!
 
 Please be aware that is an extremely early BETA release of Insights, which has not gone any kind of security audit.
 Heck, it might be full of bugs that cause it to leak critical data.
@@ -17,7 +14,7 @@ Use on a live server at your own risk!
 
 ## Installing
 
-To install, make sure you have Node 7.6+ installed and then run:
+To install, make sure you have Node 10+ installed and then run:
 
 ```
 npm install -g insights
@@ -30,7 +27,6 @@ This creates a folder `.insights` which contains all the config and runtime data
 
 ## Coming soon
 
-* Structure editor in the interface
 * Export graphs as iframes or react components for easy embedding
 * Manage users in the interface
 * PDF and XLSX exports (they worked on the old Rails version, but have to be ported to NodeJS)
