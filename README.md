@@ -4,6 +4,8 @@
 
 **Insights** is a self-hosted "SQL-not-required" data analytics and business intelligence tool. Featuring linkable URLs, easy data exploration, automatic joins, graphs, exports, splits, saveable views, pretty colors and a ridiculously permissive license (MIT).
 
+See a [**live demo**](https://demo.insights.sh/) for Widgets Inc, a fictional e-commerce site.
+
 ## Important Disclaimer and Security Notice!
 
 Please be aware that is an extremely early BETA release of Insights, which has not gone any kind of security audit.
@@ -29,7 +31,7 @@ This creates a folder `.insights` which contains all the config and runtime data
 * PostgreSQL connection support
 * Auto-detect your database schema, including all foreign keys!
 * Connect to multiple databases
-* Edit the schema and add custom SQL field types
+* Edit the schema and add custom SQL fields right there in the interface!
 * Create subsets of your data (e.g. share only a few fields with marketing)
 * Data explorer
 * Filters on the data
@@ -53,6 +55,16 @@ This creates a folder `.insights` which contains all the config and runtime data
 * Dashboards
 * Multiple lines from different sources on one chart in the dashboard
 * Plugins?
+
+
+## Please Support
+
+Insights is built by me ([@mariusandra](https://github.com/mariusandra)) personally from my free time. If you the project cool or use it in your company, please consider giving [a small monthly donation](https://github.com/sponsors/mariusandra) to say thank you. ❤️
+
+You should [follow me on Twitter](https://twitter.com/mariusandra) to receive the latest updates.
+
+I'm also available for contract work for specific feature requests on this project.
+ 
 
 ## Development
 
