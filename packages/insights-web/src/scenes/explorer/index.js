@@ -17,12 +17,14 @@ import Help from './help'
 
 import explorerLogic from 'scenes/explorer/logic'
 import explorerSaga from 'scenes/explorer/saga'
+import layoutLogic from '../_layout/logic'
 
 export default function Explorer () {
   useMountedLogic(explorerSaga)
 
   const { isSubmitting, columns, graph, selectedModel } = useValues(explorerLogic)
   const { refreshData } = useActions(explorerLogic)
+  const { menuOpen } = useValues(layoutLogic)
 
   const [filterHeight, setFilterHeight] = useState(40)
 
@@ -30,8 +32,8 @@ export default function Explorer () {
 
   return (
     <Layout className='explorer-scene'>
-      <Layout layoutWidth={300} className='explorer-tree-bar'>
-        <Sidebar />
+      <Layout layoutWidth={menuOpen ? 300 : 1} className='explorer-tree-bar'>
+        {menuOpen ? <Sidebar /> : null}
       </Layout>
       <LayoutSplitter />
       {!selectedModel ? (

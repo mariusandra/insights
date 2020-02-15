@@ -12,7 +12,8 @@ import CopyQuery from './copy-query'
 import authLogic from 'scenes/auth'
 import headerLogic from 'scenes/header/logic'
 import sceneSaga from 'scenes/header/saga'
-import { Modal } from 'antd'
+import { Modal, Icon, Button } from 'antd'
+import layoutLogic from '../_layout/logic'
 
 const locationSelector = state => state.router.location
 
@@ -40,6 +41,8 @@ export default function HeaderScene () {
   const { user } = useValues(authLogic)
   const { openLocation } = useActions(headerLogic)
 
+  const { toggleMenu } = useActions(layoutLogic)
+
   useEffect(() => {
     const page = pathname.split('/')[1] || 'root'
     updatePathHistory({ page, url: pathname + search })
@@ -54,6 +57,7 @@ export default function HeaderScene () {
   return (
     <div className='header-navbar'>
       <div>
+        <Button onClick={toggleMenu} type='link'><Icon type='menu' style={{ color: 'white' }} /></Button>
         <span className='header-link selected' onClick={() => openLocation(pathHistory['explorer'] || `/explorer`)}>
           Explorer
         </span>
