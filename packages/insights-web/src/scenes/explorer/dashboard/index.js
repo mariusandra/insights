@@ -45,34 +45,44 @@ const logic = kea({
 
 export default function Dashboard () {
   const { groupedViews } = useValues(logic)
+  const { selectedModel } = useValues(explorerLogic)
   const { selectedConnection, selectedSubset } = useValues(connectionLogic)
+
   const { openView } = useActions(viewsLogic)
 
   return (
     <div className='explorer-dashboard'>
-      {selectedConnection || selectedSubset ? (
-        <Row gutter={30}>
-          <Col span={12}>
-            <Card bordered={false}>
-              <Statistic
-                title="Connection"
-                value={selectedConnection ? selectedConnection.name || <em>Untitled</em> : 'No Connection'}
-                valueStyle={!selectedConnection ? { color: 'hsla(209, 22%, 69%, 1)' } : {}}
-                prefix={<Icon type="database" theme='filled' />} />
-            </Card>
-          </Col>
-          <Col span={12}>
-            <Card bordered={false}>
-              <Statistic
-                title="Subset"
-                value={selectedSubset ? selectedSubset.name || <em>Untitled</em> : 'No Subset'}
-                valueStyle={!selectedSubset ? { color: 'hsla(209, 22%, 69%, 1)' } : {}}
-                prefix={<Icon type="bars" />}
-              />
-            </Card>
-          </Col>
-        </Row>
-      ) : null}
+      <Row gutter={30}>
+        <Col span={8}>
+          <Card bordered={false}>
+            <Statistic
+              title="Connection"
+              className={`with-icon${!selectedConnection ? ' no-value' : ''}`}
+              value={selectedConnection ? selectedConnection.name || <em>Untitled</em> : 'None'}
+              prefix={<Icon type="database" theme='filled' />} />
+          </Card>
+        </Col>
+        <Col span={8}>
+          <Card bordered={false}>
+            <Statistic
+              title="Subset"
+              className={`with-icon${!selectedSubset ? ' no-value' : ''}`}
+              value={selectedSubset ? selectedSubset.name || <em>Untitled</em> : 'None'}
+              prefix={<Icon type="bars" />}
+            />
+          </Card>
+        </Col>
+        <Col span={8}>
+          <Card bordered={false}>
+            <Statistic
+              title="Model"
+              className={`with-icon${!selectedModel ? ' no-value' : ''}`}
+              value={selectedModel || 'None'}
+              prefix={<Icon type="table" />}
+            />
+          </Card>
+        </Col>
+      </Row>
 
       <Row gutter={30}>
         <Col span={24}>
@@ -86,13 +96,13 @@ export default function Dashboard () {
               ) : (
                 <>
                   <p>
-                    <Icon type='table' /> Select a Model from the sidebar on the left
+                    <Icon type='table' /> Select a <u>model</u> from the sidebar on the left
                   </p>
                   <p>
-                    <Icon type='idcard' /> Select some fields in the model to explore the data
+                    <Icon type='idcard' /> Select <u>fields</u> on the model to explore data
                   </p>
                   <p>
-                    <Icon type='area-chart' /> Add an aggregation (count, sum) on a field to visualise it
+                    <Icon type='area-chart' /> Add an <u>aggregation</u> (count, sum) on a field to visualise it
                   </p>
                 </>
               )}

@@ -6,6 +6,25 @@
     margin-bottom: 30px;
   }
 
+  .ant-statistic.with-icon {
+    &.no-value {
+      .ant-statistic-content-value {
+        color: hsla(208, 13%, 75%, 1);
+      }
+      .anticon {
+        color: hsla(208, 13%, 75%, 1);
+      }
+    }
+    .ant-statistic-content-prefix {
+      float: left;
+    }
+    .ant-statistic-content-value {
+      display: inline-block;
+      width: calc(100% - 40px);
+      margin-left: 8px;
+    }
+  }
+
   .next-steps {
     font-size: 16px;
 
