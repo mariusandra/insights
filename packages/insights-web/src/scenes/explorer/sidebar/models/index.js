@@ -1,7 +1,7 @@
 import React from 'react'
 import { useActions, useValues } from 'kea'
 
-import { Empty, Icon, Tree } from 'antd'
+import { Empty, Icon, Tree, Alert } from 'antd'
 
 import HighlightText from 'lib/utils/highlight-text'
 
@@ -18,7 +18,16 @@ export default function Models () {
   const { openModel } = useActions(explorerLogic)
 
   if (!connectionId) {
-    return <p style={{ textAlign: 'center', padding: '0 20px' }}>Please select a connection</p>
+    return (
+      <Alert
+        message="Next action!"
+        description={<>Please select a <Icon type='database' /> connection.</>}
+        type="success"
+        icon={<Icon type="forward" />}
+        style={{ margin: '0px 10px' }}
+        showIcon
+      />
+    )
   }
 
   if (models.length === 0) {

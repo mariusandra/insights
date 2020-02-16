@@ -51,7 +51,7 @@ export default function Database () {
     <>
       <Dropdown overlay={menu} trigger={['click']}>
         <Button>
-          <Icon type="database" theme="filled" />
+          <Icon type="database" theme={selectedConnection ? "filled" : ''} />
           <span className='button-text'>{isLoadingConnections ? '...' : (selectedConnection ? selectedConnection.name : 'Select Connection')}</span>
           <Icon type="down" className='arrow' />
         </Button>
