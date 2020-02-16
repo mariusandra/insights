@@ -669,7 +669,7 @@ export default kea({
 
     hasGraph: [
       () => [selectors.graph],
-      graph => graph && graph.results
+      graph => graph && graph.results && graph.timeGroup
     ]
   }),
 
