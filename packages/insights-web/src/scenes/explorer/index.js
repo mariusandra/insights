@@ -40,9 +40,9 @@ export default function Explorer () {
           <Dashboard />
         </Layout>
       ) : (
-        <Layout layoutWidth='flex'>
+        <Layout layoutWidth='flex' className='explorer-table-layout'>
           <Layout layoutHeight={50}>
-            <div style={{padding: 10}}>
+            <div style={{padding: 10}} className='min-width'>
               <div className='top-controls'>
                 {columns.length > 0 ? (
                   <Button icon='reload' loading={isSubmitting} onClick={refreshData}>

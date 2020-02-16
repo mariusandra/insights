@@ -37,7 +37,20 @@
   .visible-overflow {
     overflow: visible !important;
   }
+  .explorer-next-to-sidebar {
+    min-width: 300px !important;
+  }
 }
 .explorer-dashboard-layout {
   background: hsla(209, 32%, 69%, 1);
+  overflow: hidden;
+  .explorer-dashboard {
+    min-width: 300px;
+  }
+}
+.explorer-table-layout {
+  overflow: hidden;
+  > div {
+    min-width: 300px;
+  }
 }

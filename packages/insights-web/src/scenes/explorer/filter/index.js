@@ -51,7 +51,7 @@ class Filter extends Component {
               <OneFilter key={`${i}.${key}`} filterPrefix={`...filters.${i}`} column={key} value={value} index={i++} />
             ))}
             {filter.length === 0 ? (
-              <span className='filter-placeholder'>Add filters by clicking the <Icon type='filter' /> icons next to fields or in the table headers</span>
+              <span className='filter-placeholder'>Click on <Icon type='filter' /> icons to add filters</span>
             ) : null}
           </span>
         </div>

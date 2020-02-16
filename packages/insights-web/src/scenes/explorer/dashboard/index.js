@@ -2,7 +2,7 @@ import './styles.scss'
 
 import React from 'react'
 import { kea, useActions, useValues } from 'kea'
-import { Alert, Card, Col, Icon, Row, Statistic } from 'antd'
+import { Card, Col, Icon, Row, Statistic } from 'antd'
 
 import urlToState from 'lib/explorer/url-to-state'
 import explorerLogic from 'scenes/explorer/logic'
@@ -52,37 +52,31 @@ export default function Dashboard () {
 
   return (
     <div className='explorer-dashboard'>
-      <Row gutter={30}>
-        <Col span={8}>
-          <Card bordered={false}>
+      <div className='dashboard-summary-row'>
+        <Row gutter={20}>
+          <Col xs={24} sm={24} md={12} lg={8} xl={8}>
             <Statistic
-              title="Connection"
+              title='Connection'
               className={`with-icon${!selectedConnection ? ' no-value' : ''}`}
-              value={selectedConnection ? selectedConnection.name || <em>Untitled</em> : 'None'}
-              prefix={<Icon type="database" theme='filled' />} />
-          </Card>
-        </Col>
-        <Col span={8}>
-          <Card bordered={false}>
+              value={selectedConnection ? selectedConnection.name || <em>Untitled</em> : 'Not Selected'}
+            />
+          </Col>
+          <Col xs={24} sm={24} md={12} lg={8} xl={8}>
             <Statistic
-              title="Subset"
+              title='Subset'
               className={`with-icon${!selectedSubset ? ' no-value' : ''}`}
-              value={selectedSubset ? selectedSubset.name || <em>Untitled</em> : 'None'}
-              prefix={<Icon type="bars" />}
+              value={selectedSubset ? selectedSubset.name || <em>Untitled</em> : 'Not Selected'}
             />
-          </Card>
-        </Col>
-        <Col span={8}>
-          <Card bordered={false}>
+          </Col>
+          <Col xs={24} sm={24} md={24} lg={8} xl={8}>
             <Statistic
-              title="Model"
+              title='Model'
               className={`with-icon${!selectedModel ? ' no-value' : ''}`}
-              value={selectedModel || 'None'}
-              prefix={<Icon type="table" />}
+              value={selectedModel || 'Not Selected'}
             />
-          </Card>
-        </Col>
-      </Row>
+          </Col>
+        </Row>
+      </div>
 
       <Row gutter={30}>
         <Col span={24}>
@@ -90,33 +84,39 @@ export default function Dashboard () {
             <div className='next-steps'>
               <h2>Next steps</h2>
               {!selectedConnection || !selectedSubset ? (
-                <p>
-                  <Icon type='database' /> Please select a <u>{!selectedConnection ? 'connection' : 'subset'}</u>
-                </p>
+                <div className='step-row'>
+                  <Icon type='database' />
+                  <span className='info'>Please select a <u>{!selectedConnection ? 'connection' : 'subset'}</u></span>
+                </div>
               ) : null}
               {selectedConnection && selectedSubset && !selectedModel ? (
-                <p>
-                  <Icon type='table' /> Select a <u>model</u> from the sidebar on the left
-                </p>
+                <div className='step-row'>
+                  <Icon type='table' />
+                  <span className='info'>Select a <u>model</u> from the sidebar on the left</span>
+                </div>
               ) : null}
               {selectedConnection && selectedSubset ? (
                 <>
-                  <p>
-                    <Icon type='idcard' /> Select <u>fields</u> on the model to explore data
-                  </p>
-                  <p>
-                    <Icon type='area-chart' /> Add an <u>aggregation</u> (count, sum) on a field to visualise it
-                  </p>
+                  <div className='step-row'>
+                    <Icon type='idcard' />
+                    <span className='info'>Select <u>fields</u> on the model to explore data</span>
+                  </div>
+                  <div className='step-row'>
+                    <Icon type='area-chart' />
+                    <span className='info'>Add an <u>aggregation</u> (count, sum) on a field to visualise it</span>
+                  </div>
                 </>
               ) : null}
               {selectedConnection && selectedSubset && selectedModel ? (
                 <>
-                  <p>
-                    <Icon type='filter' /> Add <u>filters</u> to drill down on the data
-                  </p>
-                  <p>
-                    <Icon type='star' /> Save <u>views</u> to find later
-                  </p>
+                  <div className='step-row'>
+                    <Icon type='filter' />
+                    <span className='info'>Add <u>filters</u> to drill down on the data</span>
+                  </div>
+                  <div className='step-row'>
+                    <Icon type='star' />
+                    <span className='info'>Save <u>views</u> to find later</span>
+                  </div>
                 </>
               ) : null}
             </div>

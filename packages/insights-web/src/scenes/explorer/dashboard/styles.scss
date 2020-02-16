@@ -6,32 +6,69 @@
     margin-bottom: 30px;
   }
 
-  .ant-statistic.with-icon {
-    &.no-value {
-      .ant-statistic-content-value {
-        color: hsla(208, 13%, 75%, 1);
-      }
-      .anticon {
-        color: hsla(208, 13%, 75%, 1);
-      }
-    }
-    .ant-statistic-content-prefix {
-      float: left;
-    }
-    .ant-statistic-content-value {
-      display: inline-block;
-      width: calc(100% - 40px);
-      margin-left: 8px;
-    }
-  }
-
   .next-steps {
     font-size: 16px;
 
+    .step-row {
+      line-height: 25px;
+      margin: 10px 0px;
+
+      .anticon {
+        color: hsla(209, 61%, 37%, 1);
+        transform: scale(0.833);
+        margin-right: 10px;
+        float: left;
+        padding-top: 4px;
+      }
+      .info {
+        display: block;
+        margin-left: 28px;
+      }
+    }
+  }
+
+  .dashboard-summary-row {
+    background: hsla(209, 53%, 31%, 1);
+    border-radius: 2px;
+    .ant-row {
+      padding: 10px 20px;
+    }
+    .ant-col {
+      padding: 10px 0;
+    }
+
+    .ant-statistic.with-icon {
+      &.no-value {
+        .ant-statistic-content-value {
+          color: hsla(209, 37%, 51%, 1);
+        }
+        .anticon {
+          color: hsla(209, 37%, 51%, 1);
+        }
+      }
+      .ant-statistic-content-prefix {
+        float: left;
+      }
+      .ant-statistic-content-value {
+        //margin-left: 15px;
+        display: block;
+        word-break: break-word;
+      }
+    }
     .anticon {
-      color: hsla(209, 61%, 37%, 1);
-      transform: scale(0.833);
-      margin-right: 10px;
+      display: none;
+    }
+    .ant-statistic-title {
+      color: white;
+      text-transform: uppercase;
+      font-weight: bold;
+      font-size: 12px;
+      color: hsla(197, 37%, 51%, 1);
+      letter-spacing: 0.4px;
+    }
+    .ant-statistic-content {
+      color: white;
+      font-size: 22px;
     }
   }
 }
