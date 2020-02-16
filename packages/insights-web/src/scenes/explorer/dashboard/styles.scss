@@ -27,6 +27,12 @@
     }
   }
 
+  img {
+    max-width: 100%;
+    margin: 14px 0 40px 0;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  }
+
   .dashboard-summary-row {
     background: hsla(209, 53%, 31%, 1);
     border-radius: 2px;

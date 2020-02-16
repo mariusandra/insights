@@ -113,52 +113,6 @@ export default function Dashboard () {
         </Row>
       </div>
 
-      <Row gutter={30}>
-        <Col span={24}>
-          <Card bordered={false}>
-            <div className='next-steps'>
-              <h2>Next steps</h2>
-              {!selectedConnection || !selectedSubset ? (
-                <div className='step-row'>
-                  <Icon type='database' />
-                  <span className='info'>Please select a <u>{!selectedConnection ? 'connection' : 'subset'}</u></span>
-                </div>
-              ) : null}
-              {selectedConnection && selectedSubset && !selectedModel ? (
-                <div className='step-row'>
-                  <Icon type='table' />
-                  <span className='info'>Select a <u>model</u> from the sidebar on the left</span>
-                </div>
-              ) : null}
-              {selectedConnection && selectedSubset ? (
-                <>
-                  <div className='step-row'>
-                    <Icon type='idcard' />
-                    <span className='info'>Select <u>fields</u> on the model to explore data</span>
-                  </div>
-                  <div className='step-row'>
-                    <Icon type='area-chart' />
-                    <span className='info'>Add an <u>aggregation</u> (count, sum) on a field to visualise it</span>
-                  </div>
-                </>
-              ) : null}
-              {selectedConnection && selectedSubset && selectedModel ? (
-                <>
-                  <div className='step-row'>
-                    <Icon type='filter' />
-                    <span className='info'>Add <u>filters</u> to drill down on the data</span>
-                  </div>
-                  <div className='step-row'>
-                    <Icon type='star' />
-                    <span className='info'>Save <u>views</u> to find later</span>
-                  </div>
-                </>
-              ) : null}
-            </div>
-          </Card>
-        </Col>
-      </Row>
-
       {selectedConnection && selectedSubset && !selectedModel ? (
         <Row gutter={30}>
           <Col span={24}>
@@ -191,6 +145,76 @@ export default function Dashboard () {
           </Col>
         </Row>
       ) : null}
+
+      <Row gutter={30}>
+        <Col span={24}>
+          <Card bordered={false}>
+            <div className='next-steps'>
+              <h2>Next steps</h2>
+              {!selectedConnection || !selectedSubset ? (
+                <div className='step-row'>
+                  <Icon type='database' />
+                  <div className='info'>Please select a <u>{!selectedConnection ? 'connection' : 'subset'}</u></div>
+                </div>
+              ) : null}
+              {selectedConnection && selectedSubset && !selectedModel ? (
+                <div className='step-row'>
+                  <Icon type='table' />
+                  <div className='info'>
+                    Select a <u>model</u> from the sidebar on the left
+                    <br/>
+                    <img src='https://user-images.githubusercontent.com/53387/74614004-29297500-5114-11ea-8682-6d4d02f57bed.png' style={{ width: 594 / 2 }} />
+                  </div>
+                </div>
+              ) : null}
+              {selectedConnection && selectedSubset ? (
+                <>
+                  <div className='step-row'>
+                    <Icon type='idcard' />
+                    <div className='info'>
+                      Select <u>fields</u> on the model to explore data
+                      <br />
+                      <img src='https://user-images.githubusercontent.com/53387/74614085-1f544180-5115-11ea-9437-26594d156c4a.png' style={{ width: 588 / 2 }} />
+                    </div>
+                  </div>
+                  <div className='step-row'>
+                    <Icon type='bars' />
+                    <div className='info'>
+                      Add an <u>aggregation</u> (count, sum) to get summaries
+                      <br />
+                      <img src='https://user-images.githubusercontent.com/53387/74614481-81fb0c80-5118-11ea-88ea-b6abdcebd4ba.png' style={{ width: 922 / 2 }} />
+                    </div>
+                  </div>
+                  <div className='step-row'>
+                    <Icon type='area-chart' />
+                    <div className='info'>
+                      Add a <u>time field</u> to get a timeline
+                      <br />
+                      <img src='https://user-images.githubusercontent.com/53387/74614565-1d8c7d00-5119-11ea-8793-07c270a34045.png' style={{ width: 1162 / 2 }} />
+                    </div>
+                  </div>
+                  <div className='step-row'>
+                    <Icon type='filter' />
+                    <div className='info'>
+                      Add <u>filters</u> to drill down on the data
+                      <br />
+                      <img src='https://user-images.githubusercontent.com/53387/74614203-33e50980-5116-11ea-912e-72dddc5c987a.png' style={{ width: 1158 / 2 }} />
+                    </div>
+                  </div>
+                  <div className='step-row'>
+                    <Icon type='star' />
+                    <div className='info'>
+                      Save <u>views</u> to find later
+                      <br />
+                      <img src='https://user-images.githubusercontent.com/53387/74614336-5592c080-5117-11ea-8c1f-9dfc10474926.png' style={{ width: 610 / 2 }} />
+                    </div>
+                  </div>
+                </>
+              ) : null}
+            </div>
+          </Card>
+        </Col>
+      </Row>
     </div>
   )
 }
