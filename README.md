@@ -1,15 +1,14 @@
 # Insights
 
-![Insights Explorer](https://user-images.githubusercontent.com/53387/74577340-e68a6000-4f8e-11ea-95bf-4682f545cc8f.png)
-
-**Insights** is a self-hosted "SQL-not-required" data analytics and business intelligence tool. Featuring linkable URLs, easy data exploration, automatic joins, graphs, exports, splits, saveable views, pretty colors and a ridiculously permissive license (MIT).
+Insights is a tool to visually explore a PostgreSQL database, with an emphasis on generating graphs that show business performance over time.
 
 See a [**live demo**](https://demo.insights.sh/) for Widgets Inc, a fictional e-commerce site.
 
+![Insights Explorer](https://user-images.githubusercontent.com/53387/74577340-e68a6000-4f8e-11ea-95bf-4682f545cc8f.png)
+
 ## Important Disclaimer and Security Notice!
 
-Please be aware that is an extremely early BETA release of Insights, which has not gone any kind of security audit.
-Heck, it might be full of bugs that cause it to leak critical data.
+Please be aware that is an extremely early BETA release of Insights, which has not gone through any kind of security audit.
 
 Use on a live server at your own risk!
 
@@ -44,13 +43,14 @@ This creates a folder `.insights` which contains all the config and runtime data
 
 ## Coming Soon
 
-* Export graphs as iframes or react components for easy embedding
+* Export charts via an API for 
+* Embed React or <iframe> components and get data through the insights API
+* Decent mobile support
 * Log in with your Google Account
 * Manage users in the interface
 * Access control for subsets
-* PDF and XLSX exports (they worked on the old Rails version, but have to be ported to NodeJS)
-* Better graph controls
-* Graphs that don't require a time column
+* PDF and XLSX exports
+* Way more and better graphs
 * View generated SQL
 * Dashboards
 * Multiple lines from different sources on one chart in the dashboard
@@ -59,11 +59,9 @@ This creates a folder `.insights` which contains all the config and runtime data
 
 ## Please Support
 
-Insights is built by me ([@mariusandra](https://github.com/mariusandra)) personally from my free time. If you the project cool or use it in your company, please consider giving [a small monthly donation](https://github.com/sponsors/mariusandra) to say thank you. ❤️
+Insights is built by me ([@mariusandra](https://github.com/mariusandra)) personally from my free time. If you find the project cool or use it in your company, please consider giving [a small monthly donation](https://github.com/sponsors/mariusandra) as thanks!
 
-You should [follow me on Twitter](https://twitter.com/mariusandra) to receive the latest updates.
-
-I'm also available for contract work for specific feature requests on this project.
+You can also [follow me on Twitter](https://twitter.com/mariusandra) to receive the latest updates.
  
 
 ## Development
