@@ -22,7 +22,8 @@ const logic = connect({
       'columnsMeta',
       'filter',
       'structure',
-      'facetsColumn'
+      'facetsColumn',
+      'hasGraph'
     ]
   ]
 })
@@ -58,7 +59,7 @@ class TableHeader extends Component {
   }
 
   render () {
-    const { index, column, sort, columnsMeta, filter, structure, facetsColumn } = this.props
+    const { index, column, sort, columnsMeta, filter, structure, facetsColumn, hasGraph } = this.props
     const { tooltipHover } = this.state
 
     const [ path, transform, aggregate ] = column.split('!')
@@ -101,7 +102,7 @@ class TableHeader extends Component {
           {meta && meta.transform && (
             <span className='filter-transform'>{meta.transform}</span>
           )}
-          {facetsColumn === column && (
+          {facetsColumn === column && hasGraph && (
             <span className='filter-split'>split</span>
           )}
           {localPath}

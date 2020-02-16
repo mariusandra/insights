@@ -30,7 +30,8 @@ const logic = connect({
       'columnsMeta',
       'structure',
       'facetsColumn',
-      'facetsCount'
+      'facetsCount',
+      'hasGraph'
     ]
   ]
 })
@@ -88,10 +89,14 @@ class TableHeader extends Component {
   }
 
   renderFacets (meta) {
-    const { facetsColumn, column, facetsCount } = this.props
+    const { facetsColumn, column, facetsCount, hasGraph } = this.props
     const { setFacetsColumn, setFacetsCount } = this.actions
 
     if (meta.type !== 'string' && meta.type !== 'boolean') {
+      return null
+    }
+
+    if (facetsColumn !== column && !hasGraph) {
       return null
     }
 

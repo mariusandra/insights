@@ -21,13 +21,11 @@ import layoutLogic from '../_layout/logic'
 export default function Explorer () {
   useMountedLogic(explorerSaga)
 
-  const { isSubmitting, columns, graph, selectedModel } = useValues(explorerLogic)
+  const { isSubmitting, columns, hasGraph, selectedModel } = useValues(explorerLogic)
   const { refreshData } = useActions(explorerLogic)
   const { menuOpen } = useValues(layoutLogic)
 
   const [filterHeight, setFilterHeight] = useState(40)
-
-  const hasGraph = graph && graph.results
 
   return (
     <Layout className={`explorer-scene${!selectedModel || columns.length === 0 ? ' with-dashboard' : ''}`}>

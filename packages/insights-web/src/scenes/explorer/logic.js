@@ -665,6 +665,11 @@ export default kea({
         })
       },
       PropTypes.string
+    ],
+
+    hasGraph: [
+      () => [selectors.graph],
+      graph => graph && graph.results
     ]
   }),
 
