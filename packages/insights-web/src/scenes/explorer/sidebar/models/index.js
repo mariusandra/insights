@@ -1,7 +1,7 @@
 import React from 'react'
 import { useActions, useValues } from 'kea'
 
-import { Empty, Icon, Tree, Alert } from 'antd'
+import { Empty, Icon, Tree } from 'antd'
 
 import HighlightText from 'lib/utils/highlight-text'
 
@@ -19,14 +19,7 @@ export default function Models () {
 
   if (!connectionId) {
     return (
-      <Alert
-        message="Next action!"
-        description={<>Please select a <Icon type='database' /> connection.</>}
-        type="success"
-        icon={<Icon type="forward" />}
-        style={{ margin: '0px 10px' }}
-        showIcon
-      />
+      <div />
     )
   }
 
@@ -42,6 +35,8 @@ export default function Models () {
         selectable
         selectedKeys={[selectedKey]}
         onSelect={([model]) => openModel(model || selectedKey)}
+        onExpand={([model]) => openModel(model || selectedKey)}
+        expandedKeys={[]}
       >
         {filteredModels.map(model => (
           <TreeNode
@@ -55,8 +50,10 @@ export default function Models () {
               </div>
             }
             key={model}
-            switcherIcon={<Icon type='right' style={{ color: 'hsla(209, 66%, 54%, 1)', transform: "scale(0.833)" }} />}
-          />
+            switcherIcon={<Icon type='table' style={{ color: 'hsla(209, 66%, 54%, 1)', transform: "scale(0.833)" }} />}
+          >
+            <TreeNode key={`${model}.inside`} />
+          </TreeNode>
         ))}
       </Tree>
     </div>

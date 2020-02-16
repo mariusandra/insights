@@ -5,16 +5,19 @@ import { useActions, useValues } from 'kea'
 import { Layout } from 'react-flex-layout'
 import scrollIntoView from 'scroll-into-view'
 
-import { Input } from 'antd'
+import { Alert, Input } from 'antd'
 
 import Connection from '../connection'
 
 import explorerLogic from 'scenes/explorer/logic'
 import Models from './models'
 import SelectedModel from './selected-model'
+import connectionLogic from '../connection/logic'
 
 export default function Sidebar () {
   const { search, selectedModel, selectedKey } = useValues(explorerLogic)
+  const { connectionId } = useValues(connectionLogic)
+
   const { setSearch, focusSearch, moveSelectionUp, moveSelectionDown, enterSelection, closeModel, setSelectedKey } = useActions(explorerLogic)
 
   // eslint-disable-next-line
@@ -35,42 +38,50 @@ export default function Sidebar () {
             <Connection />
           </div>
           <div style={{ padding: 10 }}>
-            <Input.Search
-              id='sidebar-model-field-search'
-              placeholder={!selectedModel ? 'Search for a Model' : `Search fields in ${selectedModel}...`}
-              autoComplete="off"
-              value={search}
-              onKeyDown={e => {
-                if (e.keyCode === 27) {
-                  e.preventDefault()
-                  setSearch('')
-                  setSelectedKey(selectedModel)
-                }
-                if (e.keyCode === 8) {
-                  if (search === '') {
+            {!connectionId ? (
+              <Alert
+                message="Please select a connection!"
+                type="warning"
+                showIcon
+              />
+            ) : (
+              <Input.Search
+                id='sidebar-model-field-search'
+                placeholder={!selectedModel ? 'Search for a Model' : `Search fields in ${selectedModel}...`}
+                autoComplete="off"
+                value={search}
+                onKeyDown={e => {
+                  if (e.keyCode === 27) {
                     e.preventDefault()
-                    if (selectedKey === selectedModel) {
-                      closeModel(selectedModel)
-                    } else {
-                      setSelectedKey(selectedModel)
+                    setSearch('')
+                    setSelectedKey(selectedModel)
+                  }
+                  if (e.keyCode === 8) {
+                    if (search === '') {
+                      e.preventDefault()
+                      if (selectedKey === selectedModel) {
+                        closeModel(selectedModel)
+                      } else {
+                        setSelectedKey(selectedModel)
+                      }
                     }
                   }
-                }
-                if (e.keyCode === 13 || e.keyCode === 38 || e.keyCode === 40) {
-                  e.preventDefault()
-                  if (e.keyCode === 38) {
-                    moveSelectionUp()
+                  if (e.keyCode === 13 || e.keyCode === 38 || e.keyCode === 40) {
+                    e.preventDefault()
+                    if (e.keyCode === 38) {
+                      moveSelectionUp()
+                    }
+                    if (e.keyCode === 40) {
+                      moveSelectionDown()
+                    }
+                    if (e.keyCode === 13) {
+                      enterSelection()
+                    }
                   }
-                  if (e.keyCode === 40) {
-                    moveSelectionDown()
-                  }
-                  if (e.keyCode === 13) {
-                    enterSelection()
-                  }
-                }
-              }}
-              onChange={e => setSearch(e.target.value)}
-            />
+                }}
+                onChange={e => setSearch(e.target.value)}
+              />
+            )}
           </div>
         </div>
       </Layout>

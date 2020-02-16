@@ -14,14 +14,21 @@
     background: #e8f3fd;
   }
 
+  &.with-dashboard {
+    & > .LayoutSplitter.horizontal {
+      border-left-color: #e8f3fd;
+      border-right-color: hsla(209, 32%, 69%, 1);
+    }
+  }
+
   & > .LayoutSplitter.horizontal {
     border-left-color: #e8f3fd;
     border-right-color: #ffffff;
     opacity: 1;
     background: #cedfeb;
     &:hover {
-      border-left-color: #cedfeb;
-      border-right-color: #cedfeb;
+      border-left-color: hsla(209, 19%, 47%, 1);
+      border-right-color: hsla(209, 19%, 47%, 1);
       opacity: 1;
       background: #394b59;
     }
@@ -30,4 +37,7 @@
   .visible-overflow {
     overflow: visible !important;
   }
+}
+.explorer-dashboard-layout {
+  background: hsla(209, 32%, 69%, 1);
 }

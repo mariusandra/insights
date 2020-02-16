@@ -1,0 +1,18 @@
+.explorer-dashboard {
+  padding: 10px 30px 10px 24px;
+
+  .ant-row {
+    margin-top: 30px;
+    margin-bottom: 30px;
+  }
+
+  .next-steps {
+    font-size: 16px;
+
+    .anticon {
+      color: hsla(209, 61%, 37%, 1);
+      transform: scale(0.833);
+      margin-right: 10px;
+    }
+  }
+}

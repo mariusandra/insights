@@ -42,6 +42,7 @@ export default function HeaderScene () {
   const { openLocation } = useActions(headerLogic)
 
   const { toggleMenu } = useActions(layoutLogic)
+  const { menuOpen } = useValues(layoutLogic)
 
   useEffect(() => {
     const page = pathname.split('/')[1] || 'root'
@@ -57,8 +58,8 @@ export default function HeaderScene () {
   return (
     <div className='header-navbar'>
       <div>
-        <Button onClick={toggleMenu} type='link'><Icon type='menu' style={{ color: 'white' }} /></Button>
-        <span className='header-link selected' onClick={() => openLocation(pathHistory['explorer'] || `/explorer`)}>
+        <Button onClick={page === 'explorer' ? toggleMenu : () => openLocation(pathHistory['explorer'] || `/explorer`)} type='link'><Icon type={page === 'explorer' ? (menuOpen ? 'close' : 'menu') : 'home'} style={{ color: 'white' }} /></Button>
+        <span className={`header-link ${page === 'explorer' ? 'selected' : ''}`} onClick={() => openLocation(pathHistory['explorer'] || `/explorer`)}>
           Explorer
         </span>
         <span className='header-link' onClick={openDashboards}>

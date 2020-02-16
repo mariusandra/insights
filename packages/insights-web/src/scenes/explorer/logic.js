@@ -9,6 +9,7 @@ import viewsLogic from 'scenes/header/views/logic'
 import stateToUrl from 'lib/explorer/state-to-url'
 import naturalCompare from 'string-natural-compare'
 import { getSortedMeta } from 'lib/explorer/get-sorted-meta'
+import { Modal } from 'antd'
 
 const DEFAULT_TIMEGROUP = 'month'
 
@@ -704,7 +705,14 @@ export default kea({
       if (path === values.selectedModel || path.indexOf('...') === 0) {
         if (path.indexOf('...saved.') === 0) {
           if (path === '...saved.SAVE_NEW') {
-            actions.openNewView()
+            if (values.columns.length > 0) {
+              actions.openNewView()
+            } else {
+              Modal.warning({
+                title: 'Please select some fields',
+                content: 'Can not save an empty view',
+              })
+            }
           } else {
             actions.openView(path.substring('...saved.'.length))
             actions.focusSearch()

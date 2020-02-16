@@ -10,7 +10,8 @@ module.exports = override(
     javascriptEnabled: true,
     modifyVars: {
       '@primary-color': '#2e5985', // hsla(210, 49%, 35%, 1)
-      '@border-color-base': '#cdcdcd'
+      '@border-color-base': '#cdcdcd',
+      '@heading-color': '#183149' // hsla(209, 50%, 19%, 1)
     },
   }),
 )
