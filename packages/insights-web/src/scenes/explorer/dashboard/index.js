@@ -2,13 +2,15 @@ import './styles.scss'
 
 import React from 'react'
 import { kea, useActions, useValues } from 'kea'
-import { Card, Col, Icon, Row, Statistic } from 'antd'
+import { Button, Card, Col, Icon, Row } from 'antd'
 
 import urlToState from 'lib/explorer/url-to-state'
 import explorerLogic from 'scenes/explorer/logic'
 import connectionLogic from '../connection/logic'
 import viewsLogic from 'scenes/header/views/logic'
 import PropTypes from 'prop-types'
+import Database from '../connection/database'
+import Subset from '../connection/subset'
 
 const logic = kea({
   connect: {
@@ -43,36 +45,69 @@ const logic = kea({
   })
 })
 
+function CustomStatistic({ title, className, value }) {
+  return (
+    <div className={`dashboard-statistic ${className}`}>
+      <div className='statistic-title'>{title}</div>
+      <div className='statistic-value'>{value}</div>
+    </div>
+  )
+}
+
 export default function Dashboard () {
   const { groupedViews } = useValues(logic)
   const { selectedModel } = useValues(explorerLogic)
   const { selectedConnection, selectedSubset } = useValues(connectionLogic)
 
   const { openView } = useActions(viewsLogic)
+  const { focusSearch } = useActions(explorerLogic)
 
   return (
     <div className='explorer-dashboard'>
       <div className='dashboard-summary-row'>
         <Row gutter={20}>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
-            <Statistic
+            <CustomStatistic
               title='Connection'
-              className={`with-icon${!selectedConnection ? ' no-value' : ''}`}
-              value={selectedConnection ? selectedConnection.name || <em>Untitled</em> : 'Not Selected'}
+              value={
+                <Database>
+                  <Button type='link'>
+                    {selectedConnection ? selectedConnection.name || <em>Untitled</em> : 'Not Selected'}
+                    <Icon type="caret-down" />
+                  </Button>
+                </Database>
+              }
             />
           </Col>
           <Col xs={24} sm={24} md={12} lg={8} xl={8}>
-            <Statistic
+            <CustomStatistic
               title='Subset'
               className={`with-icon${!selectedSubset ? ' no-value' : ''}`}
-              value={selectedSubset ? selectedSubset.name || <em>Untitled</em> : 'Not Selected'}
+              value={
+                selectedConnection ? (
+                  <Subset>
+                    <Button type='link'>
+                      {selectedSubset ? selectedSubset.name || <em>Untitled</em> : 'Not Selected'}
+                      <Icon type="caret-down" />
+                    </Button>
+                  </Subset>
+                ) : (
+                  <div className='ant-button'>
+                    No Connection
+                  </div>
+                )
+              }
             />
           </Col>
           <Col xs={24} sm={24} md={24} lg={8} xl={8}>
-            <Statistic
+            <CustomStatistic
               title='Model'
               className={`with-icon${!selectedModel ? ' no-value' : ''}`}
-              value={selectedModel || 'Not Selected'}
+              value={selectedModel ? (
+                <div onClick={focusSearch}>
+                  {selectedModel}
+                </div>
+              ) : 'Not Selected'}
             />
           </Col>
         </Row>

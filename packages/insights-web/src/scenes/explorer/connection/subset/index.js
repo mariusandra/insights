@@ -7,7 +7,7 @@ import { useActions, useValues } from 'kea'
 
 import connectionsLogic from 'scenes/explorer/connection/logic'
 
-export default function Subset () {
+export default function Subset ({ children }) {
   const { isLoadingSubsets, selectedSubset, otherSubsets, connectionId } = useValues(connectionsLogic)
   const { newSubset, editSubset, setConnectionId } = useActions(connectionsLogic)
 
@@ -46,11 +46,13 @@ export default function Subset () {
   return (
     <>
       <Dropdown overlay={menu} trigger={['click']}>
-        <Button>
-          <Icon type="bars" />
-          {isLoadingSubsets ? '...' : (selectedSubset ? selectedSubset.name : 'No Name')}
-          <Icon type="down" className='arrow' />
-        </Button>
+        {children || (
+          <Button>
+            <Icon type="bars" />
+            {isLoadingSubsets ? '...' : (selectedSubset ? selectedSubset.name : 'No Name')}
+            <Icon type="down" className='arrow' />
+          </Button>
+        )}
       </Dropdown>
       <SubsetForm />
     </>

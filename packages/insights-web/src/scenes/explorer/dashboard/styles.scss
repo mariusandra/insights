@@ -37,38 +37,35 @@
       padding: 10px 0;
     }
 
-    .ant-statistic.with-icon {
+    .dashboard-statistic {
       &.no-value {
-        .ant-statistic-content-value {
+        .statistic-value {
           color: hsla(209, 37%, 51%, 1);
         }
         .anticon {
           color: hsla(209, 37%, 51%, 1);
         }
       }
-      .ant-statistic-content-prefix {
-        float: left;
+      .statistic-title {
+        color: white;
+        text-transform: uppercase;
+        font-weight: bold;
+        font-size: 12px;
+        color: hsla(197, 37%, 51%, 1);
+        letter-spacing: 0.4px;
+
       }
-      .ant-statistic-content-value {
-        //margin-left: 15px;
+      .statistic-value,
+      .statistic-value > .ant-btn {
+        color: white;
+        font-size: 22px;
         display: block;
         word-break: break-word;
+        padding-left: 0px;
       }
-    }
-    .anticon {
-      display: none;
-    }
-    .ant-statistic-title {
-      color: white;
-      text-transform: uppercase;
-      font-weight: bold;
-      font-size: 12px;
-      color: hsla(197, 37%, 51%, 1);
-      letter-spacing: 0.4px;
-    }
-    .ant-statistic-content {
-      color: white;
-      font-size: 22px;
+      .anticon {
+        color: white;
+      }
     }
   }
 }

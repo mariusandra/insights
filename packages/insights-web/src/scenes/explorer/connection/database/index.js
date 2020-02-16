@@ -7,7 +7,7 @@ import DatabaseForm from './form'
 import connectionsLogic from '../logic'
 import explorerLogic from '../../logic'
 
-export default function Database () {
+export default function Database ({ children }) {
   const { selectedConnection, otherConnections, isLoadingConnections } = useValues(connectionsLogic)
 
   const { openAddConnection, openEditConnection } = useActions(connectionsLogic)
@@ -50,11 +50,13 @@ export default function Database () {
   return (
     <>
       <Dropdown overlay={menu} trigger={['click']}>
-        <Button>
-          <Icon type="database" theme={selectedConnection ? "filled" : ''} />
-          <span className='button-text'>{isLoadingConnections ? '...' : (selectedConnection ? selectedConnection.name : 'Select Connection')}</span>
-          <Icon type="down" className='arrow' />
-        </Button>
+        {children || (
+          <Button>
+            <Icon type="database" theme={selectedConnection ? "filled" : ''} />
+            <span className='button-text'>{isLoadingConnections ? '...' : (selectedConnection ? selectedConnection.name : 'Select Connection')}</span>
+            <Icon type="down" className='arrow' />
+          </Button>
+        )}
       </Dropdown>
       <DatabaseForm />
     </>
