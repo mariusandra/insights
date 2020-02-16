@@ -2,7 +2,7 @@ import './styles.scss'
 
 import React from 'react'
 import { kea, useActions, useValues } from 'kea'
-import { Card, Col, Icon, Row, Statistic } from 'antd'
+import { Alert, Card, Col, Icon, Row, Statistic } from 'antd'
 
 import urlToState from 'lib/explorer/url-to-state'
 import explorerLogic from 'scenes/explorer/logic'
@@ -91,13 +91,16 @@ export default function Dashboard () {
               <h2>Next steps</h2>
               {!selectedConnection || !selectedSubset ? (
                 <p>
-                  <Icon type='database' /> Please select a Connection
+                  <Icon type='database' /> Please select a <u>{!selectedConnection ? 'connection' : 'subset'}</u>
                 </p>
-              ) : (
+              ) : null}
+              {selectedConnection && selectedSubset && !selectedModel ? (
+                <p>
+                  <Icon type='table' /> Select a <u>model</u> from the sidebar on the left
+                </p>
+              ) : null}
+              {selectedConnection && selectedSubset ? (
                 <>
-                  <p>
-                    <Icon type='table' /> Select a <u>model</u> from the sidebar on the left
-                  </p>
                   <p>
                     <Icon type='idcard' /> Select <u>fields</u> on the model to explore data
                   </p>
@@ -105,13 +108,23 @@ export default function Dashboard () {
                     <Icon type='area-chart' /> Add an <u>aggregation</u> (count, sum) on a field to visualise it
                   </p>
                 </>
-              )}
+              ) : null}
+              {selectedConnection && selectedSubset && selectedModel ? (
+                <>
+                  <p>
+                    <Icon type='filter' /> Add <u>filters</u> to drill down on the data
+                  </p>
+                  <p>
+                    <Icon type='star' /> Save <u>views</u> to find later
+                  </p>
+                </>
+              ) : null}
             </div>
           </Card>
         </Col>
       </Row>
 
-      {selectedConnection && selectedSubset ? (
+      {selectedConnection && selectedSubset && !selectedModel ? (
         <Row gutter={30}>
           <Col span={24}>
             <Card bordered={false}>

@@ -13,7 +13,6 @@ import Sidebar from './sidebar'
 import Table from './table'
 import Filter from './filter'
 import Dashboard from './dashboard'
-import Help from './help'
 
 import explorerLogic from 'scenes/explorer/logic'
 import explorerSaga from 'scenes/explorer/saga'
@@ -31,18 +30,14 @@ export default function Explorer () {
   const hasGraph = graph && graph.results
 
   return (
-    <Layout className={`explorer-scene${!selectedModel ? ' with-dashboard' : ''}`}>
+    <Layout className={`explorer-scene${!selectedModel || columns.length === 0 ? ' with-dashboard' : ''}`}>
       <Layout layoutWidth={menuOpen ? 300 : 1} className='explorer-tree-bar'>
         {menuOpen ? <Sidebar /> : null}
       </Layout>
       <LayoutSplitter />
-      {!selectedModel ? (
+      {!selectedModel || columns.length === 0 ? (
         <Layout layoutWidth='flex' className='explorer-dashboard-layout'>
           <Dashboard />
-        </Layout>
-      ) : columns.length === 0 ? (
-        <Layout layoutWidth='flex'>
-          <Help />
         </Layout>
       ) : (
         <Layout layoutWidth='flex'>
