@@ -43,7 +43,6 @@ This creates a folder `.insights` which contains all the config and runtime data
 
 ## Coming Soon
 
-* Export charts via an API for 
 * Embed React or <iframe> components and get data through the insights API
 * Decent mobile support
 * Log in with your Google Account
