@@ -1,23 +1,20 @@
 # Insights
 
-**Insights** is a self-hosted "SQL-not-required" data analytics and business intelligence tool. Featuring linkable URLs, easy data exploration, automatic joins, graphs, exports, facets (pivots), saveable views, pretty colors and a ridiculously permissive license (MIT).
+Insights is a tool to visually explore a PostgreSQL database, with an emphasis on generating graphs that show business performance over time.
 
-It's a work in progress and you're brave for checking it out! Cheers!
+See a [**live demo**](https://demo.insights.sh/) for Widgets Inc, a fictional e-commerce site.
 
-Please consider sponsoring if you would like this product to succeed!
+![Insights Explorer](https://user-images.githubusercontent.com/53387/74577340-e68a6000-4f8e-11ea-95bf-4682f545cc8f.png)
 
-![Insights Explorer](https://user-images.githubusercontent.com/53387/74511997-90bea500-4f07-11ea-8566-ffd5e9c96e27.png)
+## Important Disclaimer and Security Notice!
 
-## Disclaimer and Security Notice!
-
-Please be aware that is an extremely early BETA release of Insights, which has not gone any kind of security audit.
-Heck, it might be full of bugs that cause it to leak critical data.
+Please be aware that is an extremely early BETA release of Insights, which has not gone through any kind of security audit.
 
 Use on a live server at your own risk!
 
 ## Installing
 
-To install, make sure you have Node 7.6+ installed and then run:
+To install, make sure you have Node 10+ installed and then run:
 
 ```
 npm install -g insights
@@ -27,20 +24,45 @@ insights start
 
 This creates a folder `.insights` which contains all the config and runtime data.
 
+## Implemented Features
 
-## Coming soon
+* Self Hosted, installed via NPM
+* PostgreSQL connection support
+* Auto-detect your database schema, including all foreign keys!
+* Connect to multiple databases
+* Edit the schema and add custom SQL fields right there in the interface!
+* Create subsets of your data (e.g. share only a few fields with marketing)
+* Data explorer
+* Filters on the data
+* Time-based graphs
+* Split the graph by some column (e.g. new users by country name)
+* Keyboard navigation in the sidebar
+* Saved views
+* Pinned fields
 
-* Structure editor in the interface
-* Export graphs as iframes or react components for easy embedding
+
+## Coming Soon
+
+* Export charts via an API for 
+* Embed React or <iframe> components and get data through the insights API
+* Decent mobile support
+* Log in with your Google Account
 * Manage users in the interface
-* PDF and XLSX exports (they worked on the old Rails version, but have to be ported to NodeJS)
-* Better graph controls
-* Graphs that don't require a time column
+* Access control for subsets
+* PDF and XLSX exports
+* Way more and better graphs
 * View generated SQL
 * Dashboards
 * Multiple lines from different sources on one chart in the dashboard
-* Polishing
+* Plugins?
 
+
+## Please Support
+
+Insights is built by me ([@mariusandra](https://github.com/mariusandra)) personally from my free time. If you find the project cool or use it in your company, please consider giving [a small monthly donation](https://github.com/sponsors/mariusandra) as thanks!
+
+You can also [follow me on Twitter](https://twitter.com/mariusandra) to receive the latest updates.
+ 
 
 ## Development
 
