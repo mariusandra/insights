@@ -75,7 +75,7 @@ export default function SelectedModel () {
   return (
     <div>
       <div>
-        <Button type='link' icon='close' style={{float: 'right'}} onClick={() => closeModel(selectedModel)} />
+        <Button type='link' icon='home' style={{float: 'right'}} onClick={() => closeModel(selectedModel)} />
         <h4 style={{ lineHeight: '30px', fontSize: 18, fontWeight: 'bold' }}>{selectedModel}</h4>
       </div>
 
