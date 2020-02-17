@@ -291,8 +291,13 @@ export default kea({
       breakpoint()
       actions.setSubsets(subsets, connectionId)
 
-      if (!values.subsetId && subsets[0] && subsets[0]._id) {
-        actions.setConnectionId(connectionId, subsets[0] ? subsets[0]._id : '')
+      if (!values.subsetId) {
+        if (subsets.length === 0) {
+          actions.setConnectionId(connectionId, '')
+        } else {
+          const firstSubset = subsets.filter(s => s.type === 'all_data').concat(subsets.filter(s => s.type !== 'all_data'))[0]
+          actions.setConnectionId(connectionId, firstSubset ? firstSubset._id : '')
+        }
       }
     },
 
