@@ -36,6 +36,11 @@
           color: hsla(210, 100%, 45%, 1);
           font-weight: bold;
         }
+
+        &.id-count-field {
+          font-style: italic;
+          color: hsl(209, 45%, 52%);
+        }
       }
       &.sidebar-field-type-link {
         width: auto;

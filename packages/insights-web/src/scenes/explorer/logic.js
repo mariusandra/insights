@@ -33,6 +33,7 @@ export default kea({
     addColumn: column => ({ column }),
     removeColumnWithIndex: index => ({ index }),
     removeColumnsWithPath: path => ({ path }),
+    removeColumnsWithColumn: column => ({ column }),
     setTransform: (index, transform, aggregate) => ({ index, transform, aggregate }),
     setFacetsColumn: (facetsColumn) => ({ facetsColumn }),
     setFacetsCount: (facetsCount) => ({ facetsCount }),
@@ -162,6 +163,7 @@ export default kea({
         return state.filter(column => i++ !== payload.index)
       },
       [actions.removeColumnsWithPath]: (state, payload) => state.filter(column => column.split('!')[0] !== payload.path),
+      [actions.removeColumnsWithColumn]: (state, payload) => state.filter(column => column !== payload.column),
       [actions.setResults]: (_, payload) => payload.results.columns,
       [actions.clear]: () => [],
       [actions.urlChanged]: (_, payload) => payload.columns,
@@ -404,9 +406,9 @@ export default kea({
     fullFieldsTreeFull: [
       () => [
         selectors.treeState, selectors.sortedStructureObject, selectors.selectedModel, selectors.search,
-        selectors.selectedModelViews, selectors.modelFavourites, selectors.filteredModels
+        selectors.selectedModelViews, selectors.modelFavourites, selectors.filteredModels, selectors.columns
       ],
-      (treeState, sortedStructureObject, selectedModel, search, selectedModelViews, modelFavourites, filteredModels) => {
+      (treeState, sortedStructureObject, selectedModel, search, selectedModelViews, modelFavourites, filteredModels, columns) => {
         const state = []
         let index = 0
 
@@ -498,7 +500,6 @@ export default kea({
         }
 
         // fields
-
         const fieldsRoot = {
           path: `${selectedModel}`,
           key: selectedModel,
@@ -517,16 +518,44 @@ export default kea({
               return
             }
 
+            const isPrimaryKey = field.type === 'column' && field.meta && field.meta.index === 'primary_key'
+
             const path = `${pathSoFar}.${key}`
+            const isSelected = isPrimaryKey
+              ? columns.includes(path)
+              : (columns.includes(path) || columns.some(s => s.indexOf(`${path}.`) >= 0) || columns.some(s => s.indexOf(`${path}!`) >= 0))
+
             const leaf = {
               path,
               key,
               field,
               index: index++,
-              children: []
+              children: [],
+              isSelected
             }
+
             state.push(leaf)
             leafState.push(leaf)
+
+            if (isPrimaryKey && (!mostLocalSearch || stringIn(mostLocalSearch, 'count'))) {
+              const path = `${pathSoFar}.${key}!!count`
+              const leaf = {
+                path,
+                key: `${key}!!count`,
+                field: {
+                  ...field,
+                  type: 'count',
+                  path: path,
+                  key: `${key}!!count`
+                },
+                isIdCountField: true,
+                isSelected: columns.includes(path),
+                index: index++,
+                children: []
+              }
+              state.push(leaf)
+              leafState.push(leaf)
+            }
 
             if (field.type === 'link' && treeState[path]) {
               leaf.children = pushForModel(path, field.meta.model, localSearch.split(' ').slice(1).join(' '))
@@ -762,10 +791,17 @@ export default kea({
 
       const { columns } = values
       const fieldPath = path.indexOf('...pinned.') === 0 ? path.substring('...pinned.'.length) : path
-      const isSelected = columns.includes(fieldPath) || columns.some(s => s.indexOf(`${fieldPath}.`) >= 0) || columns.some(s => s.indexOf(`${fieldPath}!`) >= 0)
+      const isPrimaryKey = field.type === 'column' && field.meta && field.meta.index === 'primary_key'
+      const isSelected = isPrimaryKey
+        ? columns.includes(fieldPath)
+        : columns.includes(fieldPath) || columns.some(s => s.indexOf(`${fieldPath}.`) >= 0) || columns.some(s => s.indexOf(`${fieldPath}!`) >= 0)
 
       if (isSelected) {
-        actions.removeColumnsWithPath(fieldPath)
+        if (field.type === 'count' || isPrimaryKey) {
+          actions.removeColumnsWithColumn(fieldPath)
+        } else {
+          actions.removeColumnsWithPath(fieldPath)
+        }
       } else {
         if (field.meta && field.meta.type === 'time') {
           const column = `${fieldPath}!${DEFAULT_TIMEGROUP}`

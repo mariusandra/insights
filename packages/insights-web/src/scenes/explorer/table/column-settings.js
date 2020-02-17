@@ -157,7 +157,7 @@ class TableHeader extends Component {
         {meta ? (
           <div>
             {this.renderTransform(meta)}
-            <AggregateList columnsMeta={columnsMeta} meta={meta} aggregate={aggregate} className='filter-options' setAggregate={value => setTransform(index, transform, aggregate === value ? '' : value)} />
+            <AggregateList meta={meta} aggregate={aggregate} className='filter-options' setAggregate={value => setTransform(index, transform, aggregate === value ? '' : value)} />
             {this.renderFacets(meta)}
             {this.renderFilter(meta)}
           </div>

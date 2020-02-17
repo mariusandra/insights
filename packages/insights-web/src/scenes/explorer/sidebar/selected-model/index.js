@@ -14,34 +14,43 @@ import FilterButton from './filter-button'
 
 const { TreeNode } = Tree;
 
-function renderTreeNodes ({ title, columns, path, field, localSearch, model, focusSearch, sortedStructure, treeState, fieldClicked, treeNode }) {
+function renderTreeNodes ({ treeNode, title, columns, path, field, localSearch, model, focusSearch, sortedStructure, treeState, fieldClicked }) {
   const fieldPath = path.indexOf('...pinned.') === 0 ? path.substring('...pinned.'.length) : path
-  const isSelected = columns.includes(fieldPath) || columns.some(s => s.indexOf(`${fieldPath}.`) >= 0) || columns.some(s => s.indexOf(`${fieldPath}!`) >= 0)
+  const isSelected = treeNode.isSelected
+
+  let titleToUse = title
+  if (treeNode.isIdCountField) {
+    titleToUse = `count`
+  }
 
   const titleComponent = field
     ? (
       <div className={`sidebar-field-title sidebar-field-type-${field.type}`}>
-        <span className={`field-title${isSelected ? ' field-selected' : ''}`} onClick={() => fieldClicked(field, path)}>
-          {localSearch ? <HighlightText highlight={localSearch}>{title}</HighlightText> : title}
+        <span className={`field-title${isSelected ? ' field-selected' : ''}${treeNode.isIdCountField ? ' id-count-field' : ''}`} onClick={() => fieldClicked(field, path)}>
+          {localSearch ? <HighlightText highlight={localSearch}>{titleToUse}</HighlightText> : titleToUse}
         </span>
         {' '}
         {field.type === 'link' ? (
           <span className='model-link-tag'><Icon type='link' /> {field.meta.model}</span>
-        ) : (
+        ) : !treeNode.isIdCountField ? (
           <span className='model-field-controls'>
             <Pin path={fieldPath} />
             <FilterButton path={path} />
           </span>
+        ) : (
+          <span />
         )}
       </div>
-    ) : <strong>{model}</strong>
+    ) : (
+      <strong>{model}</strong>
+    )
 
   return (
     <TreeNode key={path}
               isLeaf={field && field.type !== 'link'}
               title={titleComponent}
               className={`tree-node${isSelected ? ' tree-node-selected' : ''}${field ? ` field-type-${field.type}` : ''}`}
-              switcherIcon={field && field.type !== 'link' ? <Icon type={field.meta ? (field.meta.index === 'primary_key' ? 'idcard' : (columnIcon[field.meta.type] || 'question-circle')) : 'question-circle'} /> : null}>
+              switcherIcon={field && field.type !== 'link' ? <Icon type={field.meta ? (treeNode.isIdCountField ? 'ordered-list' : field.meta.index === 'primary_key' ? 'idcard' : (columnIcon[field.meta.type] || 'question-circle')) : 'question-circle'} /> : null}>
       {treeNode && treeNode.children.map(child => {
         const { field } = child
         return renderTreeNodes({
