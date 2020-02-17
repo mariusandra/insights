@@ -85,8 +85,13 @@ class TableHeader extends Component {
       className = `${className} facets`
     }
 
-    const localPath = (column.split('!')[0] || '').replace(/^[^.]+\./, '').split('.').reverse().join(' < ')
-    const showCountWarning = meta && meta.index === 'primary_key' && !aggregate && Object.values(columnsMeta).find(m => m.type === 'date' || m.type === 'time') && !Object.values(columnsMeta).find(m => m.aggregate)
+    const isIdCountField = meta && meta.index === 'primary_key' && aggregate === 'count'
+
+    let localPath = (column.split('!')[0] || '').replace(/^[^.]+\./, '').split('.').reverse().join(' < ')
+    if (isIdCountField) {
+      const [, ...l] = localPath.split(' < ')
+      localPath = l.join(' < ')
+    }
 
     return (
       <Popover
@@ -106,7 +111,6 @@ class TableHeader extends Component {
             <span className='filter-split'>split</span>
           )}
           {localPath}
-          {showCountWarning ? <Icon type="warning" style={{ color: 'hsla(42, 102%, 35%, 1)', marginLeft: 5 }} /> : null}
         </div>
       </Popover>
     )

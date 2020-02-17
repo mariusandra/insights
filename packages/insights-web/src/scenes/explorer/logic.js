@@ -514,28 +514,30 @@ export default kea({
           Object.entries(sortedStructureObject[model] || {}).forEach(([key, field]) => {
             const mostLocalSearch = localSearch ? localSearch.split(' ')[0] : ''
 
-            if (mostLocalSearch && !stringIn(mostLocalSearch, key)) {
-              return
-            }
-
             const isPrimaryKey = field.type === 'column' && field.meta && field.meta.index === 'primary_key'
 
-            const path = `${pathSoFar}.${key}`
-            const isSelected = isPrimaryKey
-              ? columns.includes(path)
-              : (columns.includes(path) || columns.some(s => s.indexOf(`${path}.`) >= 0) || columns.some(s => s.indexOf(`${path}!`) >= 0))
+            if (!mostLocalSearch || stringIn(mostLocalSearch, key)) {
+              const path = `${pathSoFar}.${key}`
+              const isSelected = isPrimaryKey
+                ? columns.includes(path)
+                : (columns.includes(path) || columns.some(s => s.indexOf(`${path}.`) >= 0) || columns.some(s => s.indexOf(`${path}!`) >= 0))
 
-            const leaf = {
-              path,
-              key,
-              field,
-              index: index++,
-              children: [],
-              isSelected
+              const leaf = {
+                path,
+                key,
+                field,
+                index: index++,
+                children: [],
+                isSelected
+              }
+
+              state.push(leaf)
+              leafState.push(leaf)
+
+              if (field.type === 'link' && treeState[path]) {
+                leaf.children = pushForModel(path, field.meta.model, localSearch.split(' ').slice(1).join(' '))
+              }
             }
-
-            state.push(leaf)
-            leafState.push(leaf)
 
             if (isPrimaryKey && (!mostLocalSearch || stringIn(mostLocalSearch, 'count'))) {
               const path = `${pathSoFar}.${key}!!count`
@@ -555,10 +557,6 @@ export default kea({
               }
               state.push(leaf)
               leafState.push(leaf)
-            }
-
-            if (field.type === 'link' && treeState[path]) {
-              leaf.children = pushForModel(path, field.meta.model, localSearch.split(' ').slice(1).join(' '))
             }
           })
           return leafState

@@ -174,23 +174,25 @@ export default function Dashboard () {
                     <div className='info'>
                       Select <u>fields</u> on the model to explore data
                       <br />
-                      <img alt='' src='https://user-images.githubusercontent.com/53387/74614085-1f544180-5115-11ea-9437-26594d156c4a.png' style={{ width: 588 / 2 }} />
-                    </div>
-                  </div>
-                  <div className='step-row'>
-                    <Icon type='bars' />
-                    <div className='info'>
-                      Add an <u>aggregation</u> (count, sum) to get summaries
+                      <img alt='' src='https://user-images.githubusercontent.com/53387/74653066-bb1e9580-5187-11ea-8f7c-63ab9f989785.png' style={{ width: 588 / 2 }} />
                       <br />
-                      <img alt='' src='https://user-images.githubusercontent.com/53387/74614481-81fb0c80-5118-11ea-88ea-b6abdcebd4ba.png' style={{ width: 922 / 2 }} />
+                      <img alt='' src='https://user-images.githubusercontent.com/53387/74653219-03d64e80-5188-11ea-8ffc-8f01c5b45507.png' style={{ width: 778 / 2 }} />
                     </div>
                   </div>
                   <div className='step-row'>
                     <Icon type='area-chart' />
                     <div className='info'>
-                      Add a <u>time field</u> to get a timeline
+                      Add "count" and a <u>time field</u> to get a timeline
                       <br />
                       <img alt='' src='https://user-images.githubusercontent.com/53387/74614565-1d8c7d00-5119-11ea-8793-07c270a34045.png' style={{ width: 1162 / 2 }} />
+                    </div>
+                  </div>
+                  <div className='step-row'>
+                    <Icon type='bars' />
+                    <div className='info'>
+                      Add an <u>aggregation</u> to get summaries
+                      <br />
+                      <img alt='' src='https://user-images.githubusercontent.com/53387/74653833-4ba9a580-5189-11ea-95bf-a98d9a2a5fbf.png' style={{ width: 1050 / 2 }} />
                     </div>
                   </div>
                   <div className='step-row'>
