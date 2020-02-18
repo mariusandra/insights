@@ -2,7 +2,7 @@
 
 Insights is a tool to visually explore a PostgreSQL database, with an emphasis on generating graphs that show business performance over time.
 
-Insights aims to evolve into a complete Business Intelligence platform. Think of "Google Data Studio" or "Google Looker", but without the "Google" part. You contributions towards making that happen are greatly appreciated!
+Insights aims to evolve into a complete Business Intelligence platform. Think of "Google Data Studio" or "Google Looker", but without the "Google" part. You [contributions](https://github.com/sponsors/mariusandra) towards making that happen are greatly appreciated!
 
 See a [**live demo**](https://demo.insights.sh/) for Widgets Inc, a fictional e-commerce site.
 
