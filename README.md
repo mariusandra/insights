@@ -62,7 +62,7 @@ This creates a folder `.insights` which contains all the config and runtime data
 
 Insights is built by me ([@mariusandra](https://github.com/mariusandra)) personally from my free time. If you find the project cool or use it in your company, please consider giving [a small monthly donation](https://github.com/sponsors/mariusandra) as thanks!
 
-To stay in touch and receive news when we release a significant update, [plase sign up here](http://eepurl.com/gTlRkf).
+To stay in touch and receive news when we release a significant update, [please sign up here](http://eepurl.com/gTlRkf).
 
 You can also [follow me on Twitter](https://twitter.com/mariusandra) to receive the latest updates.
  
