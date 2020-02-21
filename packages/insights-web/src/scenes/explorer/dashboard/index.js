@@ -175,7 +175,6 @@ export default function Dashboard () {
                       Select <u>fields</u> on the model to explore data
                       <br />
                       <img alt='' src='https://user-images.githubusercontent.com/53387/74653066-bb1e9580-5187-11ea-8f7c-63ab9f989785.png' style={{ width: 588 / 2 }} />
-                      <br />
                       <img alt='' src='https://user-images.githubusercontent.com/53387/74653219-03d64e80-5188-11ea-8ffc-8f01c5b45507.png' style={{ width: 778 / 2 }} />
                     </div>
                   </div>
