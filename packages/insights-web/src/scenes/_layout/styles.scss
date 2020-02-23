@@ -1,5 +1,14 @@
 @import './styles/spinner.scss';
 
+.insights-layout {
+  height: 100vh;
+
+  .insights-content-wrapper {
+    height: calc(100vh - 50px);
+    overflow: scroll;
+  }
+}
+
 .insights-tab-row {
   height: 40px;
   background: #eee;

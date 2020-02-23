@@ -2,7 +2,6 @@ import './styles.scss'
 
 import React, { useEffect } from 'react'
 import { useActions, useValues } from 'kea'
-import { Layout } from 'react-flex-layout'
 import scrollIntoView from 'scroll-into-view'
 
 import { Alert, Input } from 'antd'
