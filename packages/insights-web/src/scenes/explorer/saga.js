@@ -392,7 +392,7 @@ export default kea({
         const structure = yield explorerLogic.get('structure')
         const columnMeta = getMeta(column, structure)
 
-        if (columnMeta && columnMeta.type === 'string') {
+        if (columnMeta && columnMeta.type === 'string' && columnMeta.index !== 'primary_key') {
           yield put(setFacetsColumn(column)) // will trigger refreshData via takeLatest
           return
         }
