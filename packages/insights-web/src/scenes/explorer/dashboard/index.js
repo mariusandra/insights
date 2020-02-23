@@ -9,19 +9,25 @@ import connectionLogic from '../connection/logic'
 import BreadCrumbs from './breadcrumbs'
 import Views from './views'
 import Tutorial from './tutorial'
+import ModelMap from './model-map'
 
 export default function Dashboard () {
   const { selectedModel } = useValues(explorerLogic)
   const { selectedConnection, selectedSubset } = useValues(connectionLogic)
 
+  const showViews = selectedConnection && selectedSubset && !selectedModel
+
   return (
     <div className='explorer-dashboard'>
       <BreadCrumbs />
 
-      {selectedConnection && selectedSubset && !selectedModel ? (
+      {showViews ? (
         <Row gutter={30}>
-          <Col span={24}>
+          <Col span={12}>
             <Views />
+          </Col>
+          <Col span={12}>
+            <ModelMap />
           </Col>
         </Row>
       ) : null}
