@@ -516,6 +516,26 @@ export default kea({
 
             const isPrimaryKey = field.type === 'column' && field.meta && field.meta.index === 'primary_key'
 
+            if (isPrimaryKey && (!mostLocalSearch || stringIn(mostLocalSearch, 'count'))) {
+              const path = `${pathSoFar}.${key}!!count`
+              const leaf = {
+                path,
+                key: `${key}!!count`,
+                field: {
+                  ...field,
+                  type: 'count',
+                  path: path,
+                  key: `${key}!!count`
+                },
+                isIdCountField: true,
+                isSelected: columns.includes(path),
+                index: index++,
+                children: []
+              }
+              state.push(leaf)
+              leafState.push(leaf)
+            }
+
             if (!mostLocalSearch || stringIn(mostLocalSearch, key)) {
               const path = `${pathSoFar}.${key}`
               const isSelected = isPrimaryKey
@@ -537,26 +557,6 @@ export default kea({
               if (field.type === 'link' && treeState[path]) {
                 leaf.children = pushForModel(path, field.meta.model, localSearch.split(' ').slice(1).join(' '))
               }
-            }
-
-            if (isPrimaryKey && (!mostLocalSearch || stringIn(mostLocalSearch, 'count'))) {
-              const path = `${pathSoFar}.${key}!!count`
-              const leaf = {
-                path,
-                key: `${key}!!count`,
-                field: {
-                  ...field,
-                  type: 'count',
-                  path: path,
-                  key: `${key}!!count`
-                },
-                isIdCountField: true,
-                isSelected: columns.includes(path),
-                index: index++,
-                children: []
-              }
-              state.push(leaf)
-              leafState.push(leaf)
             }
           })
           return leafState
