@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'kea'
 import PropTypes from 'prop-types'
 
-import { Popover, Icon } from 'antd'
+import { Popover } from 'antd'
 
 import ColumnSettings from './column-settings'
 
