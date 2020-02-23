@@ -7,8 +7,6 @@ import scrollIntoView from 'scroll-into-view'
 
 import { Alert, Input } from 'antd'
 
-import Connection from '../connection'
-
 import explorerLogic from 'scenes/explorer/logic'
 import Models from './models'
 import SelectedModel from './selected-model'
@@ -31,69 +29,60 @@ export default function Sidebar () {
   }, [selectedKey, selectedModel])
 
   return (
-    <Layout>
-      <Layout layoutHeight={100}>
-        <div>
-          <div style={{ padding: 10, paddingBottom: 0 }}>
-            <Connection />
-          </div>
-          <div style={{ padding: 10 }}>
-            {!connectionId ? (
-              <Alert
-                message="Please select a connection!"
-                type="warning"
-                showIcon
-              />
-            ) : (
-              <Input.Search
-                id='sidebar-model-field-search'
-                placeholder={!selectedModel ? 'Search for a Model' : `Search fields in ${selectedModel}...`}
-                autoComplete="off"
-                value={search}
-                onKeyDown={e => {
-                  if (e.keyCode === 27) {
-                    e.preventDefault()
-                    setSearch('')
+    <div className='sidebar-with-search'>
+      <div className='explorer-search'>
+        {!connectionId ? (
+          <Alert
+            message="Please select a connection!"
+            type="warning"
+            showIcon
+          />
+        ) : (
+          <Input.Search
+            id='sidebar-model-field-search'
+            placeholder={!selectedModel ? 'Search for a Model' : `Search fields in ${selectedModel}...`}
+            autoComplete="off"
+            value={search}
+            onKeyDown={e => {
+              if (e.keyCode === 27) {
+                e.preventDefault()
+                setSearch('')
+                setSelectedKey(selectedModel)
+              }
+              if (e.keyCode === 8) {
+                if (search === '') {
+                  e.preventDefault()
+                  if (selectedKey === selectedModel) {
+                    closeModel(selectedModel)
+                  } else {
                     setSelectedKey(selectedModel)
                   }
-                  if (e.keyCode === 8) {
-                    if (search === '') {
-                      e.preventDefault()
-                      if (selectedKey === selectedModel) {
-                        closeModel(selectedModel)
-                      } else {
-                        setSelectedKey(selectedModel)
-                      }
-                    }
-                  }
-                  if (e.keyCode === 13 || e.keyCode === 38 || e.keyCode === 40) {
-                    e.preventDefault()
-                    if (e.keyCode === 38) {
-                      moveSelectionUp()
-                    }
-                    if (e.keyCode === 40) {
-                      moveSelectionDown()
-                    }
-                    if (e.keyCode === 13) {
-                      enterSelection()
-                    }
-                  }
-                }}
-                onChange={e => setSearch(e.target.value)}
-              />
-            )}
-          </div>
-        </div>
-      </Layout>
-      <Layout layoutHeight='flex'>
-        <div className={`explorer-tree${selectedModel ? ' selected-model' : ''}`}>
-          {selectedModel ? (
-            <SelectedModel />
-          ) : (
-            <Models />
-          )}
-        </div>
-      </Layout>
-    </Layout>
+                }
+              }
+              if (e.keyCode === 13 || e.keyCode === 38 || e.keyCode === 40) {
+                e.preventDefault()
+                if (e.keyCode === 38) {
+                  moveSelectionUp()
+                }
+                if (e.keyCode === 40) {
+                  moveSelectionDown()
+                }
+                if (e.keyCode === 13) {
+                  enterSelection()
+                }
+              }
+            }}
+            onChange={e => setSearch(e.target.value)}
+          />
+        )}
+      </div>
+      <div className={`explorer-tree${selectedModel ? ' selected-model' : ''}`}>
+        {selectedModel ? (
+          <SelectedModel />
+        ) : (
+          <Models />
+        )}
+      </div>
+    </div>
   )
 }

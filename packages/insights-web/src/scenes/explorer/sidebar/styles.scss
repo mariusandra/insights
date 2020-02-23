@@ -1,6 +1,18 @@
+.sidebar-with-search {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  .explorer-search {
+    height: 52px;
+    padding: 10px 6px 10px 10px;
+  }
+  .explorer-tree {
+    overflow: scroll;
+  }
+}
 .explorer-tree {
   &.selected-model {
-    padding: 10px;
+    padding: 10px 6px 10px 10px;
   }
 
   .ant-tree {
@@ -140,7 +152,7 @@
   }
 
   .model-list {
-    padding: 0 10px 40px 10px;
+    padding: 0 6px 40px 10px;
     .ant-tree > .ant-tree-treenode-switcher-close {
       padding: 1px 0;
     }

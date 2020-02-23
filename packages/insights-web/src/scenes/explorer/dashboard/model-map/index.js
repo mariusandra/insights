@@ -63,7 +63,7 @@ export default function ModelMap () {
           }}
           options={{
             colors: [
-              '#1f77b4',
+              '#206cb3',
               '#ff7f0e',
               '#2ca02c',
               '#d62728',
