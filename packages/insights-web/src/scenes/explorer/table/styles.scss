@@ -73,6 +73,7 @@
 }
 .public_fixedDataTableCell_hasReorderHandle .public_fixedDataTableCell_cellContent {
 	margin-left: 12px;
+  width: calc(100% - 12px);
 }
 /**
  * Column reorder goodies.
@@ -197,6 +198,9 @@
     &.facets {
       // text-decoration: underline;
     }
+    &.number-column {
+      text-align: right;
+    }
   }
   .cell-body {
     padding: 6px 8px;
@@ -263,6 +267,10 @@
     &.true {
       background: #8eca10;
     }
+  }
+
+  .cell-number-display {
+    text-align: right;
   }
 }
 .column-settings {

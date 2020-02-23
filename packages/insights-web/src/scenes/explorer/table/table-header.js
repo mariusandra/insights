@@ -84,6 +84,9 @@ class TableHeader extends Component {
     if (facetsColumn === column) {
       className = `${className} facets`
     }
+    if (meta && meta.type === 'number'){
+      className = `${className} number-column`
+    }
 
     const isIdCountField = meta && meta.index === 'primary_key' && aggregate === 'count'
 

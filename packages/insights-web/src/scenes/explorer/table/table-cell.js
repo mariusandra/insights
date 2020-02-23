@@ -68,6 +68,13 @@ export default (props) => {
     displayValue = <span style={{ opacity: 0.5 }}>undefined</span>
   }
 
+  if (meta && meta.type === 'number') {
+    if (typeof displayValue === 'string' && displayValue.indexOf('.') >= 0) {
+      displayValue = <span title={displayValue} style={{ cursor: 'help' }}>{(Math.round(parseFloat(displayValue) * 100) / 100).toFixed(2)}</span>
+    }
+    displayValue = <div className='cell-number-display'>{displayValue}</div>
+  }
+
   if (meta && meta.aggregate) {
     return (
       <Cell {...cellProps} className='cell-body'>
