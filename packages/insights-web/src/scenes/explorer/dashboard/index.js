@@ -23,10 +23,10 @@ export default function Dashboard () {
 
       {showViews ? (
         <Row gutter={30}>
-          <Col span={12}>
+          <Col xs={24} sm={24} md={24} lg={8} xl={8}>
             <Views />
           </Col>
-          <Col span={12}>
+          <Col xs={24} sm={24} md={24} lg={16} xl={16}>
             <ModelMap />
           </Col>
         </Row>
