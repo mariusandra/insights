@@ -1,6 +1,6 @@
 {
   "name": "insights-web",
-  "version": "0.0.100",
+  "version": "0.0.101",
   "dependencies": {
     "@feathersjs/client": "^4.5.0",
     "@types/jest": "24.9.1",

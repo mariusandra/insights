@@ -58,7 +58,9 @@ export default function HeaderScene () {
   return (
     <div className='header-navbar'>
       <div>
-        <Button onClick={page === 'explorer' ? toggleMenu : () => openLocation(pathHistory['explorer'] || `/explorer`)} type='link'><Icon type={page === 'explorer' ? (menuOpen ? 'close' : 'menu') : 'home'} style={{ color: 'white' }} /></Button>
+        <Button onClick={page === 'explorer' ? toggleMenu : () => openLocation(pathHistory['explorer'] || `/explorer`)} type='link'>
+          <Icon type={page === 'explorer' ? (menuOpen ? 'menu-fold' : 'menu') : 'home'} style={{ color: 'white' }} />
+        </Button>
         <span className={`header-link ${page === 'explorer' ? 'selected' : ''}`} onClick={() => openLocation(pathHistory['explorer'] || `/explorer`)}>
           Explorer
         </span>
