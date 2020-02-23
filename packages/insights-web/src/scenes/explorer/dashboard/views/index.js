@@ -1,3 +1,5 @@
+import './styles.scss'
+
 import React from 'react'
 import { kea, useActions, useValues } from 'kea'
 import { Card, Icon } from 'antd'
@@ -59,15 +61,20 @@ export default function Views () {
       ) : (
         <div>
           {groupedViews.map(({group, views}) => (
-            <div key={group}>
+            <div key={group} className='saved-views'>
               <strong>{group}</strong>
-              <ol>
+              <ul>
                 {views.map(view => (
                   <li key={view._id}>
-                    <u style={{cursor: 'pointer'}} onClick={() => openView(view._id)}>{view.name}</u>
+                    <span>
+                      <Icon type="caret-right" />
+                    </span>
+                    <div>
+                      <a href='#' style={{cursor: 'pointer'}} onClick={() => openView(view._id)}>{view.name}</a>
+                    </div>
                   </li>
                 ))}
-              </ol>
+              </ul>
             </div>
           ))}
         </div>

@@ -1,0 +1,28 @@
+.saved-views {
+  > strong {
+    display: block;
+    margin-bottom: 4px;
+    color: #333;
+  }
+  ul {
+    padding-left: 0;
+    list-style: none;
+    li {
+      display: flex;
+      margin-bottom: 2px;
+      > span {
+        padding-top: 1px;
+        i {
+          color: hsl(209, 54%, 31%);
+        }
+        width: 18px;
+      }
+      > div {
+        flex: 1;
+        a:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
