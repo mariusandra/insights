@@ -4,16 +4,19 @@ import React, { useEffect } from 'react'
 import { useActions, useValues } from 'kea'
 import scrollIntoView from 'scroll-into-view'
 
-import { Alert, Input } from 'antd'
+import { Input } from 'antd'
 
-import explorerLogic from 'scenes/explorer/logic'
 import Models from './models'
 import SelectedModel from './selected-model'
+import ConnectionMenu from '../connection/database/menu'
+import SubsetMenu from '../connection/subset/menu'
+
+import explorerLogic from 'scenes/explorer/logic'
 import connectionLogic from '../connection/logic'
 
 export default function Sidebar () {
   const { search, selectedModel, selectedKey } = useValues(explorerLogic)
-  const { connectionId } = useValues(connectionLogic)
+  const { connectionId, subsetId } = useValues(connectionLogic)
 
   const { setSearch, focusSearch, moveSelectionUp, moveSelectionDown, enterSelection, closeModel, setSelectedKey } = useActions(explorerLogic)
 
@@ -31,11 +34,9 @@ export default function Sidebar () {
     <div className='sidebar-with-search'>
       <div className='explorer-search'>
         {!connectionId ? (
-          <Alert
-            message="Please select a connection!"
-            type="warning"
-            showIcon
-          />
+          <h2 className='no-connection'>Please select a connection!</h2>
+        ) : !subsetId ? (
+          <h2 className='no-connection'>Please select a subset!</h2>
         ) : (
           <Input.Search
             id='sidebar-model-field-search'
@@ -75,8 +76,12 @@ export default function Sidebar () {
           />
         )}
       </div>
-      <div className={`explorer-tree${selectedModel ? ' selected-model' : ''}`}>
-        {selectedModel ? (
+      <div className={`explorer-tree${!connectionId ? ' no-connection' : ''}${selectedModel ? ' selected-model' : ''}`}>
+        {!connectionId ? (
+          <ConnectionMenu />
+        ) : !subsetId ? (
+          <SubsetMenu />
+        ) : selectedModel ? (
           <SelectedModel />
         ) : (
           <Models />

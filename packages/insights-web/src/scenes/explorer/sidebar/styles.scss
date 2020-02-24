@@ -10,6 +10,25 @@
     overflow: scroll;
   }
 }
+.explorer-search {
+  h2.no-connection {
+    margin: 0px;
+  }
+}
+.explorer-tree {
+  &.no-connection {
+    .ant-menu {
+      margin: 0 10px 10px 10px;
+      background: none;
+      li:hover {
+        background: hsla(209, 34%, 85%, 1);
+      }
+      > .ant-menu-item-divider {
+        background: none;
+      }
+    }
+  }
+}
 .explorer-tree {
   &.selected-model {
     padding: 10px 6px 10px 10px;
