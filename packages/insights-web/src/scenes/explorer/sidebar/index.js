@@ -76,7 +76,7 @@ export default function Sidebar () {
           />
         )}
       </div>
-      <div className={`explorer-tree${!connectionId ? ' no-connection' : ''}${selectedModel ? ' selected-model' : ''}`}>
+      <div className={`explorer-tree${!connectionId || !subsetId ? ' no-connection' : ''}${selectedModel ? ' selected-model' : ''}`}>
         {!connectionId ? (
           <ConnectionMenu />
         ) : !subsetId ? (
