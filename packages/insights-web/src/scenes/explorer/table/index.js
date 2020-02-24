@@ -17,20 +17,20 @@ import explorerLogic from 'scenes/explorer/logic'
 const defaultColumnWidth = (meta) => {
   if (meta) {
     if (meta.type === 'boolean') {
-      return 50
+      return 100
     } else if (meta.type === 'time') {
       if (meta.transform) {
-        return 75
+        return 150
       } else {
-        return 175
+        return 350
       }
     } else if (meta.type === 'number') {
-      return 75
+      return 150
     } else {
-      return 100
+      return 200
     }
   } else {
-    return 100
+    return 200
   }
 }
 
@@ -179,7 +179,7 @@ class ExplorerTable extends Component {
                     digDeeper={digDeeper} />
                 )}
                 width={columnWidths[column] || defaultColumnWidth(meta)}
-                flexGrow={typeof columnWidths[column] === 'undefined' ? 1 : null} />
+                flexGrow={false} />
             )
           })}
         </Table>
