@@ -10,7 +10,6 @@ import Dimensions from 'react-dimensions'
 
 import TableCell from './table-cell'
 import TableHeader from './table-header'
-import TableSettings from './table-settings'
 
 import explorerLogic from 'scenes/explorer/logic'
 
@@ -146,7 +145,7 @@ class ExplorerTable extends Component {
           onColumnReorderEndCallback={this.handleColumnReorder}
           onScrollStart={this.handleScrollStart}
           onScrollEnd={this.handleScrollEnd} >
-          <Column header={<Cell><TableSettings /></Cell>}
+          <Column
             cell={props => (
               <Cell {...props}>
                 <div className='cell-body'>
