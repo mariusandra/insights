@@ -70,7 +70,7 @@ export default function Views () {
                       <Icon type="caret-right" />
                     </span>
                     <div>
-                      <a href='#' style={{cursor: 'pointer'}} onClick={() => openView(view._id)}>{view.name}</a>
+                      <a href={view.path} style={{cursor: 'pointer'}} onClick={e => { e.preventDefault(); openView(view._id) }}>{view.name}</a>
                     </div>
                   </li>
                 ))}
