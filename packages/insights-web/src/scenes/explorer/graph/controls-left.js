@@ -5,6 +5,7 @@ import { kea, useActions, useValues } from 'kea'
 import PropTypes from 'prop-types'
 
 import explorerLogic from 'scenes/explorer/logic'
+import { Button } from 'antd'
 
 export const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
 
@@ -43,32 +44,32 @@ export default function ControlsLeft () {
 
   return (
     <div className='left'>
-      <span className='control-group'>
-        <span className={graphTimeGroup === 'day' ? 'control selected' : 'control'} onClick={() => setGraphTimeGroupLocal('day')}>
+      <Button.Group>
+        <Button size='small' type={graphTimeGroup === 'day' ? 'primary' : ''} onClick={() => setGraphTimeGroupLocal('day')}>
           day
-        </span>
-        <span className={graphTimeGroup === 'week' ? 'control selected' : 'control'} onClick={() => setGraphTimeGroupLocal('week')}>
+        </Button>
+        <Button size='small' type={graphTimeGroup === 'week' ? 'primary' : ''} onClick={() => setGraphTimeGroupLocal('week')}>
           week
-        </span>
-        <span className={graphTimeGroup === 'month' ? 'control selected' : 'control'} onClick={() => setGraphTimeGroupLocal('month')}>
+        </Button>
+        <Button size='small' type={graphTimeGroup === 'month' ? 'primary' : ''} onClick={() => setGraphTimeGroupLocal('month')}>
           month
-        </span>
+        </Button>
         {!moreShown && (
-          <span className='control' onClick={showMore}>
+          <Button size='small' type='' onClick={showMore}>
             ...
-          </span>
+          </Button>
         )}
         {moreShown && (
-          <span className={graphTimeGroup === 'quarter' ? 'control selected' : 'control'} onClick={() => setGraphTimeGroupLocal('quarter')}>
+          <Button size='small' type={graphTimeGroup === 'quarter' ? 'primary' : ''} onClick={() => setGraphTimeGroupLocal('quarter')}>
             quarter
-          </span>
+          </Button>
         )}
         {moreShown && (
-          <span className={graphTimeGroup === 'year' ? 'control selected' : 'control'} onClick={() => setGraphTimeGroupLocal('year')}>
+          <Button size='small' type={graphTimeGroup === 'year' ? 'primary' : ''} onClick={() => setGraphTimeGroupLocal('year')}>
             year
-          </span>
+          </Button>
         )}
-      </span>
+      </Button.Group>
     </div>
   )
 }

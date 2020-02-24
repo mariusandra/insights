@@ -5,6 +5,7 @@ import { kea, useActions, useValues } from 'kea'
 import PropTypes from 'prop-types'
 
 import explorerLogic from 'scenes/explorer/logic'
+import { Button } from 'antd'
 
 export const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
 
@@ -52,27 +53,29 @@ export default function CompareWith () {
 
   return (
     <div className='left'>
-      <span className='control-group'>
-        <span className='control' onClick={() => moreShown ? showLess() : showMore()}>
+      <Button.Group>
+        <Button size='small' type='' onClick={() => moreShown ? showLess() : showMore()}>
           Compare with
-        </span>
+        </Button>
         {(moreShown ? options : compareWith ? [compareWith] : []).map(option => (
-          <span
+          <Button
+            size='small'
             key={option}
-            className={compareWith === option ? 'control selected' : 'control'}
+            type={compareWith === option ? 'primary' : ''}
             onClick={() => moreShown ? setGraphControls({ compareWith: compareWith === option ? 0 : option, type: 'bar' }) : showMore()}>
             {option}
             {compareWith === option ? ` ${graphTimeGroup} ago` : ''}
-          </span>
+          </Button>
         ))}
         {!!compareWith && compareWith !== 0 && (
-          <span
-            className={compareWithPercentageLine ? 'control selected' : 'control'}
+          <Button
+            size='small'
+            type={compareWithPercentageLine ? 'primary' : ''}
             onClick={() => setGraphControls({ compareWithPercentageLine: !compareWithPercentageLine })}>
             {'%'}
-          </span>
+          </Button>
         )}
-      </span>
+      </Button.Group>
     </div>
   )
 }

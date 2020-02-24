@@ -10,7 +10,8 @@
     .left {
       float: left;
       margin-left: 10px;
-      > .control, .control-group {
+
+      > .ant-btn, > .ant-btn-group {
         margin-right: 8px;
       }
     }
@@ -18,50 +19,9 @@
     .right {
       float: right;
       margin-right: 10px;
-      > .control, .control-group {
+
+      > .ant-btn, > .ant-btn-group {
         margin-left: 8px;
-      }
-    }
-
-    .control {
-      cursor: pointer;
-      color: #333;
-      border: 1px solid #aaa;
-      background: #eee;
-      border-radius: 3px;
-      padding: 0 5px;
-      display: inline-block;
-      text-align: center;
-
-      &:hover {
-        background: #ddd;
-      }
-
-      &.selected {
-        color: #f5f8fa;
-        background: #384b5a;
-        border-color: #384b5a;
-        &:hover {
-          background: #384b5a;
-        }
-      }
-    }
-
-    .control-group {
-      cursor: pointer;
-      display: inline-block;
-      .control {
-        border-left-width: 0px;
-        border-radius: 0;
-      }
-      .control:first-child {
-        border-left-width: 1px;
-        border-top-left-radius: 3px;
-        border-bottom-left-radius: 3px;
-      }
-      .control:last-child {
-        border-top-right-radius: 3px;
-        border-bottom-right-radius: 3px;
       }
     }
   }

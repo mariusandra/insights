@@ -45,13 +45,14 @@ export default function ModelMap () {
   const { openModel } = useActions(explorerLogic)
 
   return (
-    <Card bordered={false}>
-      <h2>
+    <Card bordered={false} title={
+      <>
         Most Linked Models
         <Tooltip title="Models with the most other models linking to them">
           <Icon type="question-circle" style={{ marginLeft: 10, fontSize: 14, verticalAlign: 'baseline', color: '#888' }} />
         </Tooltip>
-      </h2>
+      </>
+    }>
       {words.length === 0 ? (
         <div>Your database has no foreign keys</div>
       ) : (

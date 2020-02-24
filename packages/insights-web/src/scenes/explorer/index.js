@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { useActions, useMountedLogic, useValues } from 'kea'
 
 import { Layout, LayoutSplitter } from 'react-flex-layout'
-import { Button } from "antd";
+import { Button, Card, Col, Row } from "antd"
 
 import Graph from './graph'
 import TimeFilter from './time-filter'
@@ -17,18 +17,29 @@ import Dashboard from './dashboard'
 import explorerLogic from 'scenes/explorer/logic'
 import explorerSaga from 'scenes/explorer/saga'
 import layoutLogic from '../_layout/logic'
+import BreadCrumbs from './dashboard/breadcrumbs'
+
+function Reload () {
+  const { isSubmitting } = useValues(explorerLogic)
+  const { refreshData } = useActions(explorerLogic)
+
+  return (
+    <Button icon='reload' size='small' loading={isSubmitting} onClick={refreshData}>
+      Reload
+    </Button>
+  )
+}
 
 export default function Explorer () {
   useMountedLogic(explorerSaga)
 
-  const { isSubmitting, columns, hasGraph, selectedModel } = useValues(explorerLogic)
-  const { refreshData } = useActions(explorerLogic)
+  const { columns, hasGraph, selectedModel, count, filter } = useValues(explorerLogic)
   const { menuOpen } = useValues(layoutLogic)
 
-  const [filterHeight, setFilterHeight] = useState(40)
+  const [tableExpanded, setTableExpanded] = useState(false)
 
   return (
-    <Layout className={`explorer-scene${!selectedModel || columns.length === 0 ? ' with-dashboard' : ''}`}>
+    <Layout className={`explorer-scene with-dashboard`}>
       <Layout layoutWidth={menuOpen ? 300 : 1} className='explorer-tree-bar'>
         {menuOpen ? <Sidebar /> : null}
       </Layout>
@@ -38,36 +49,77 @@ export default function Explorer () {
           <Dashboard />
         </Layout>
       ) : (
-        <Layout layoutWidth='flex' className='explorer-table-layout'>
-          <Layout layoutHeight={50}>
-            <div style={{padding: 10}} className='min-width'>
-              <div className='top-controls'>
-                {columns.length > 0 ? (
-                  <Button icon='reload' loading={isSubmitting} onClick={refreshData}>
-                    Reload
-                  </Button>
-                ) : null}
-                {hasGraph ? (
-                  <TimeFilter />
-                ) : null}
-              </div>
-              <div className='top-pagination'>
-                <Pagination />
-              </div>
-            </div>
-          </Layout>
-          <Layout layoutHeight={filterHeight}>
-            {selectedModel ? <Filter filterHeight={filterHeight} setFilterHeight={setFilterHeight} /> : null}
-          </Layout>
-          {hasGraph ? (
-            <Layout layoutHeight={300} className='visible-overflow'>
-              <Graph />
-            </Layout>
-          ) : <div />}
-          {hasGraph ? <LayoutSplitter /> : <div />}
-          <Layout layoutHeight='flex'>
-            <Table />
-          </Layout>
+        <Layout layoutWidth='flex' className='explorer-dashboard-layout'>
+          <div className='explorer-dashboard'>
+            <BreadCrumbs />
+
+            {filter.length > 0 ? (
+              <Row gutter={30}>
+                <Col span={24}>
+                  <Card bordered={false} title='Filters'>
+                    <div style={{ marginTop: -5, marginBottom: -5 }}>
+                      <Filter />
+                    </div>
+                  </Card>
+                </Col>
+              </Row>
+            ) : null}
+
+            <Row gutter={30}>
+              <Col span={24}>
+                <Card bordered={false} title={
+                  <>
+                    {hasGraph ? (
+                      <div style={{ float: 'right' }}>
+                        <TimeFilter />
+                        {' '}
+                        <Reload />
+                      </div>
+                    ) : null}
+                    Graph
+                  </>
+                }>
+                  {hasGraph ? (
+                    <div style={{ height: 300 }} className='visible-overflow'>
+                      <Graph />
+                    </div>
+                  ) : (
+                    <div style={{ color: '#aaa' }}>
+                      Please add a date field to see a graph
+                    </div>
+                  )}
+                </Card>
+              </Col>
+            </Row>
+
+            <Row gutter={30}>
+              <Col span={24}>
+                <Card bordered={false} title={
+                  <>
+                    <div style={{ float: 'right' }}>
+                      <Reload />
+                    </div>
+                    Table: <Pagination />
+                  </>
+                }>
+                  {count > 0 ? (
+                    <>
+                      <Table tableHeight={count < 10 ? (count + 1) * 30 + 2 : tableExpanded ? 600 : 300} />
+                      {count >= 10 ? (
+                        <div style={{ textAlign: 'center', marginTop: 20 }}>
+                          <Button onClick={() => setTableExpanded(!tableExpanded)} icon={tableExpanded ? 'up' : 'down'} />
+                        </div>
+                      ) : null}
+                    </>
+                  ) : (
+                    <div style={{ color: '#aaa' }}>
+                      No results found
+                    </div>
+                  )}
+                </Card>
+              </Col>
+            </Row>
+          </div>
         </Layout>
       )}
     </Layout>

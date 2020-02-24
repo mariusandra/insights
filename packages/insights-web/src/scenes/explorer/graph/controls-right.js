@@ -2,7 +2,7 @@ import './styles.scss'
 
 import React from 'react'
 import { useActions, useValues } from 'kea'
-import { Icon, Tooltip } from 'antd'
+import { Button, Tooltip } from 'antd'
 
 import explorerLogic from 'scenes/explorer/logic'
 
@@ -17,67 +17,41 @@ export default function ControlsRight () {
   return (
     <div className='right'>
       <Tooltip title='Show Cumulative Data'>
-        <span
-          className={cumulative ? 'control selected' : 'control'}
-          onClick={() => setGraphControls({ cumulative: !cumulative })}>
-          <Icon type="rise" />
-        </span>
+        <Button size='small' icon='rise' type={cumulative ? 'primary' : ''} onClick={() => setGraphControls({ cumulative: !cumulative })} />
       </Tooltip>
 
       <Tooltip title='Show as a percentage from the whole'>
-        <span
-          className={percentages ? 'control selected' : 'control'}
-          onClick={() => setGraphControls({ percentages: !percentages })}>
-          <Icon type="percentage" />
-        </span>
+        <Button size='small' icon='percentage' type={percentages ? 'primary' : ''} onClick={() => setGraphControls({ percentages: !percentages })} />
       </Tooltip>
 
       <Tooltip title={`Show prediction for the last ${graphTimeGroup} in the graph tooltip`}>
-        <span
-          className={prediction ? 'control selected' : 'control'}
-          onClick={() => setGraphControls({ prediction: !prediction })}>
-          <Icon type="question" />
-        </span>
+        <Button size='small' icon='question' type={prediction ? 'primary' : ''} onClick={() => setGraphControls({ prediction: !prediction })} />
       </Tooltip>
 
       <Tooltip title={`Show Labels`}>
-        <span
-          className={labels ? 'control selected' : 'control'}
-          onClick={() => setGraphControls({ labels: !labels })}>
-          <Icon type="ordered-list" />
-        </span>
+        <Button size='small' icon='ordered-list' type={labels ? 'primary' : ''} onClick={() => setGraphControls({ labels: !labels })} />
       </Tooltip>
 
-      <span className='control-group' onClick={() => setGraphControls({ sort: sort === 'abc' ? '123' : 'abc' })}>
+      <Button.Group>
         <Tooltip title={`Sort by value`}>
-          <span className={sort === '123' ? 'control selected' : 'control'}>
-            <Icon type="number" />
-          </span>
+          <Button size='small' icon='number' type={sort === '123' ? 'primary' : ''} onClick={() => setGraphControls({ sort: '123' })} />
         </Tooltip>
         <Tooltip title={`Sort alphabetically`}>
-          <span className={sort === 'abc' ? 'control selected' : 'control'}>
-            <Icon type="sort-ascending" />
-          </span>
+          <Button size='small' icon='sort-ascending' type={sort === 'abc' ? 'primary' : ''} onClick={() => setGraphControls({ sort: 'abc' })} />
         </Tooltip>
-      </span>
+      </Button.Group>
 
-      <span className='control-group'>
+      <Button.Group>
         <Tooltip title='Area Chart'>
-          <span className={type === 'area' ? 'control selected' : 'control'} onClick={() => setGraphControls({ type: 'area', compareWith: 0 })}>
-            <Icon type="area-chart" />
-          </span>
+          <Button size='small' icon='area-chart' type={type === 'area' ? 'primary' : ''} onClick={() => setGraphControls({ type: 'area', compareWith: 0 })} />
         </Tooltip>
         <Tooltip title='Bar Chart'>
-          <span className={type === 'bar' ? 'control selected' : 'control'} onClick={() => setGraphControls({ type: 'bar' })}>
-            <Icon type="bar-chart" />
-          </span>
+          <Button size='small' icon='bar-chart' type={type === 'bar' ? 'primary' : ''} onClick={() => setGraphControls({ type: 'bar' })} />
         </Tooltip>
         <Tooltip title='Line Chart'>
-          <span className={type === 'line' ? 'control selected' : 'control'} onClick={() => setGraphControls({ type: 'line', compareWith: 0 })}>
-            <Icon type="line-chart" />
-          </span>
+          <Button size='small' icon='line-chart' type={type === 'line' ? 'primary' : ''} onClick={() => setGraphControls({ type: 'line', compareWith: 0 })} />
         </Tooltip>
-      </span>
+      </Button.Group>
     </div>
   )
 }

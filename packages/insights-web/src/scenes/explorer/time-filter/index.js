@@ -30,7 +30,7 @@ export default function TimeFilter () {
 
   return (
     <div style={{display: 'inline-block'}}>
-      <Select value={graphTimeFilter} onChange={setGraphTimeFilter} style={{ minWidth: 150 }}>
+      <Select value={graphTimeFilter} onChange={setGraphTimeFilter} style={{ minWidth: 150 }} size='small'>
         {graphTimeFilters.map(([v, k]) => <Select.Option value={k} key={k}>{v}</Select.Option>)}
       </Select>
     </div>

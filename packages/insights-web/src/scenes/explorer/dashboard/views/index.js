@@ -11,13 +11,13 @@ import viewsLogic from 'scenes/header/views/logic'
 
 const logic = kea({
   connect: {
-    values: [explorerLogic, ['subsetViews']]
+    values: [explorerLogic, ['subsetViews', 'selectedModel']]
   },
 
   selectors: ({ selectors }) => ({
     groupedViews: [
-      () => [selectors.subsetViews],
-      (subsetViews) => {
+      () => [selectors.subsetViews, selectors.selectedModel],
+      (subsetViews, selectedModel) => {
         let groups = {}
         subsetViews.forEach(view => {
           let model = ''
@@ -25,7 +25,7 @@ const logic = kea({
           if (viewState.columns && viewState.columns[0]) {
             model = viewState.columns[0].split('.')[0]
           }
-          if (model) {
+          if (model && (!selectedModel || selectedModel === model)) {
             if (!groups[model]) {
               groups[model] = []
             }
@@ -43,17 +43,19 @@ const logic = kea({
 })
 
 export default function Views () {
-  const {groupedViews} = useValues(logic)
+  const { groupedViews } = useValues(logic)
+  const { selectedModel } = useValues(explorerLogic)
 
-  const {openView} = useActions(viewsLogic)
+  const { openView } = useActions(viewsLogic)
 
   return (
-    <Card bordered={false}>
-      <h2>
+    <Card bordered={false} title={
+      <>
         Saved views
         <Icon type='star' theme={groupedViews.length > 0 ? "filled" : ''}
               style={{color: 'hsl(42, 98%, 45%)', marginLeft: 5}}/>
-      </h2>
+      </>
+    }>
       {groupedViews.length === 0 ? (
         <p>
           Saved views will show up here
@@ -62,7 +64,7 @@ export default function Views () {
         <div>
           {groupedViews.map(({group, views}) => (
             <div key={group} className='saved-views'>
-              <strong>{group}</strong>
+              {selectedModel !== group ? <strong>{group}</strong> : null}
               <ul>
                 {views.map(view => (
                   <li key={view._id}>

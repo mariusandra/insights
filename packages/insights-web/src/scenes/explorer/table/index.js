@@ -118,12 +118,11 @@ class ExplorerTable extends Component {
   }
 
   tableHeight = () => {
-    const { containerHeight } = this.props
-    return containerHeight - 10
+    return this.props.tableHeight
   }
 
   render () {
-    const { columnWidths, columns, columnsMeta, results, count, offset, containerWidth, filter } = this.props
+    const { columnWidths, columns, columnsMeta, results, count, offset, filter, tableHeight, containerWidth } = this.props
     const { setColumnWidth, digDeeper, addFilter, removeFiltersByKey } = this.props.actions
     const { scrollToRow } = this.state
 
@@ -138,8 +137,8 @@ class ExplorerTable extends Component {
         <Table rowsCount={count}
           rowHeight={30}
           headerHeight={30}
-          width={containerWidth - 20}
-          height={this.tableHeight()}
+          width={containerWidth}
+          height={tableHeight}
           scrollToRow={scrollToRow}
           isColumnResizing={false}
           isColumnReordering={false}

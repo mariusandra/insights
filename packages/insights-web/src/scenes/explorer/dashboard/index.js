@@ -21,16 +21,16 @@ export default function Dashboard () {
     <div className='explorer-dashboard'>
       <BreadCrumbs />
 
-      {showViews ? (
-        <Row gutter={30}>
-          <Col xs={24} sm={24} md={24} lg={8} xl={8}>
-            <Views />
-          </Col>
-          <Col xs={24} sm={24} md={24} lg={16} xl={16}>
+      <Row gutter={30}>
+        <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+          <Views />
+        </Col>
+        <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+          {showViews ? (
             <ModelMap />
-          </Col>
-        </Row>
-      ) : null}
+          ) : null}
+        </Col>
+      </Row>
 
       <Row gutter={30}>
         <Col span={24}>

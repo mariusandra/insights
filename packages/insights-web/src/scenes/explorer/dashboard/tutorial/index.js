@@ -10,9 +10,8 @@ export default function Tutorial () {
   const {selectedConnection, selectedSubset} = useValues(connectionLogic)
 
   return (
-    <Card bordered={false}>
+    <Card bordered={false} title='Next steps'>
       <div className='next-steps'>
-        <h2>Next steps</h2>
         {!selectedConnection || !selectedSubset ? (
           <div className='step-row'>
             <Icon type='database'/>
