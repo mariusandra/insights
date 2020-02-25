@@ -177,7 +177,7 @@ class ExplorerTable extends Component {
                     digDeeper={digDeeper} />
                 )}
                 width={columnWidths[column] || defaultColumnWidth(meta)}
-                flexGrow={false} />
+              />
             )
           })}
         </Table>

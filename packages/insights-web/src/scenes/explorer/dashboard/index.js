@@ -22,14 +22,14 @@ export default function Dashboard () {
       <BreadCrumbs />
 
       <Row gutter={30}>
-        <Col xs={24} sm={24} md={24} lg={12} xl={12}>
+        <Col xs={24} sm={24} md={24} lg={showViews ? 12 : 24} xl={showViews ? 12 : 24}>
           <Views />
         </Col>
-        <Col xs={24} sm={24} md={24} lg={12} xl={12}>
-          {showViews ? (
+        {showViews ? (
+          <Col xs={24} sm={24} md={24} lg={12} xl={12}>
             <ModelMap />
-          ) : null}
-        </Col>
+          </Col>
+        ) : null}
       </Row>
 
       <Row gutter={30}>
