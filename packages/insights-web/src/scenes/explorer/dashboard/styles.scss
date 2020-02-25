@@ -44,6 +44,26 @@
       padding: 10px 0;
     }
 
+    &.compact {
+      margin-top: -10px;
+
+      .ant-row {
+        padding: 5px 20px;
+      }
+      .ant-col {
+        padding: 0;
+      }
+      .dashboard-statistic {
+        .statistic-title {
+          display: none;
+        }
+        .statistic-value,
+        .statistic-value > .ant-btn {
+          font-size: 16px;
+        }
+      }
+    }
+
     .dashboard-statistic {
       &.no-value {
         .statistic-value {
@@ -68,7 +88,7 @@
         font-size: 22px;
         display: block;
         word-break: break-word;
-        padding-left: 0px;
+        padding-left: 0;
       }
       .anticon {
         color: white;

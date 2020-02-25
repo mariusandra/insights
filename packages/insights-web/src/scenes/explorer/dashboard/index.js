@@ -19,7 +19,7 @@ export default function Dashboard () {
 
   return (
     <div className='explorer-dashboard'>
-      <BreadCrumbs />
+      <BreadCrumbs compact={selectedConnection && selectedSubset && selectedModel} />
 
       <Row gutter={30}>
         <Col xs={24} sm={24} md={24} lg={showViews ? 12 : 24} xl={showViews ? 12 : 24}>

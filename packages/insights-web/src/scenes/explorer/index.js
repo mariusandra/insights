@@ -81,7 +81,7 @@ export default function Explorer () {
       ) : (
         <Layout layoutWidth='flex' className='explorer-dashboard-layout'>
           <div className='explorer-dashboard'>
-            <BreadCrumbs />
+            <BreadCrumbs compact />
 
             {filter.length > 0 ? (
               <Row gutter={30}>

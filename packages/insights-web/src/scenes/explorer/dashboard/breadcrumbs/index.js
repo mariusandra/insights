@@ -17,14 +17,14 @@ function CustomStatistic({ title, className, value }) {
   )
 }
 
-export default function BreadCrumbs () {
+export default function BreadCrumbs ({ compact }) {
   const { selectedModel } = useValues(explorerLogic)
   const { selectedConnection, selectedSubset } = useValues(connectionLogic)
 
   const { focusSearch } = useActions(explorerLogic)
 
   return (
-    <div className='dashboard-summary-row'>
+    <div className={`dashboard-summary-row${compact ? ' compact' : ''}`}>
       <Row gutter={20}>
         <Col xs={24} sm={24} md={12} lg={8} xl={8}>
           <CustomStatistic
@@ -64,9 +64,9 @@ export default function BreadCrumbs () {
             title='Model'
             className={`with-icon${!selectedModel ? ' no-value' : ''}`}
             value={selectedModel ? (
-              <div onClick={focusSearch}>
+              <Button type='link' onClick={focusSearch}>
                 {selectedModel}
-              </div>
+              </Button>
             ) : 'Not Selected'}
           />
         </Col>
