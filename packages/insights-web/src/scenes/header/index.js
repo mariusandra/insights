@@ -19,7 +19,7 @@ const locationSelector = state => state.router.location
 
 const pathHistoryReducer = (state, { page, url }) => ({ ...state, [page]: url })
 
-function openDashboards () {
+export function openDashboards () {
   Modal.info({
     title: 'DashboardsNotFoundException',
     content: (

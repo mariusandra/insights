@@ -19,6 +19,7 @@ import explorerLogic from 'scenes/explorer/logic'
 import explorerSaga from 'scenes/explorer/saga'
 import layoutLogic from '../_layout/logic'
 import BreadCrumbs from './dashboard/breadcrumbs'
+import { openDashboards } from '../header'
 
 function Reload () {
   const { isSubmitting } = useValues(explorerLogic)
@@ -34,7 +35,7 @@ function Reload () {
 function AddToDashboard () {
   return (
     <Tooltip title='Add To Dashboard'>
-      <Button icon='fund' size='small' />
+      <Button icon='fund' size='small' onClick={openDashboards} />
     </Tooltip>
   )
 }
