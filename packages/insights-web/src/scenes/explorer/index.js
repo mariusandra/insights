@@ -4,9 +4,10 @@ import React, { useState } from 'react'
 import { useActions, useMountedLogic, useValues } from 'kea'
 
 import { Layout, LayoutSplitter } from 'react-flex-layout'
-import { Button, Card, Col, Row } from "antd"
+import { Button, Card, Col, Row, Tooltip } from "antd"
 
 import Graph from './graph'
+import TimeGroupSelect from './graph/time-group-select'
 import TimeFilter from './time-filter'
 import Pagination from './pagination'
 import Sidebar from './sidebar'
@@ -24,9 +25,37 @@ function Reload () {
   const { refreshData } = useActions(explorerLogic)
 
   return (
-    <Button icon='reload' size='small' loading={isSubmitting} onClick={refreshData}>
-      Reload
-    </Button>
+    <Tooltip title='Reload'>
+      <Button icon='sync' size='small' loading={isSubmitting} onClick={refreshData} />
+    </Tooltip>
+  )
+}
+
+function AddToDashboard () {
+  return (
+    <Tooltip title='Add To Dashboard'>
+      <Button icon='fund' size='small' />
+    </Tooltip>
+  )
+}
+
+function FullScreen () {
+  return (
+    <Tooltip title='Toggle FullScreen'>
+      <Button icon='fullscreen' size='small' />
+    </Tooltip>
+  )
+}
+
+function CardControls () {
+  return (
+    <>
+      <AddToDashboard />
+      {' '}
+      <FullScreen />
+      {' '}
+      <Reload />
+    </>
   )
 }
 
@@ -73,7 +102,9 @@ export default function Explorer () {
                       <div style={{ float: 'right' }}>
                         <TimeFilter />
                         {' '}
-                        <Reload />
+                        <TimeGroupSelect style={{ display: 'inline-block' }} />
+                        {' '}
+                        <CardControls />
                       </div>
                     ) : null}
                     Graph
@@ -97,7 +128,7 @@ export default function Explorer () {
                 <Card bordered={false} title={
                   <>
                     <div style={{ float: 'right' }}>
-                      <Reload />
+                      <CardControls />
                     </div>
                     Table: <Pagination />
                   </>
