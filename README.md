@@ -2,7 +2,7 @@
 
 Insights is a tool to visually explore a PostgreSQL database, with an emphasis on generating graphs that show business performance over time.
 
-Insights is MIT-licensed Sponsorware. If you use it in your business, please [contribute](https://github.com/sponsors/mariusandra) towards its development!
+Think of Google Data Studio or Google Looker, but totally free, self-hosted and without the "Google" part.
 
 See a [**live demo**](https://demo.insights.sh/) for Widgets Inc, a fictional e-commerce site.
 
@@ -60,7 +60,7 @@ This creates a folder `.insights` which contains all the config and runtime data
 
 ## Support
 
-If you use Insights in your company, please [contribute](https://github.com/sponsors/mariusandra) to its continued development.
+Insights is MIT-licensed Sponsorware. If you use it in your business, please [contribute](https://github.com/sponsors/mariusandra) towards its development!
 
 To stay in touch and receive news when we release a significant update, [please sign up here](http://eepurl.com/gTlRkf).
 
