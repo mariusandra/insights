@@ -51,15 +51,16 @@ export default function Views () {
   return (
     <Card bordered={false} title={
       <>
-        Saved views
         <Icon type='star' theme={groupedViews.length > 0 ? "filled" : ''}
-              style={{color: 'hsl(42, 98%, 45%)', marginLeft: 5}}/>
+              style={{color: 'white', marginRight: 5}}/>
+        Saved views
+
       </>
     }>
       {groupedViews.length === 0 ? (
-        <p>
-          Saved views will show up here
-        </p>
+        <div>
+          Saved views will appear here
+        </div>
       ) : (
         <div>
           {groupedViews.map(({group, views}) => (

@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { useActions, useMountedLogic, useValues } from 'kea'
 
 import { Layout, LayoutSplitter } from 'react-flex-layout'
-import { Button, Card, Col, Row, Tooltip } from "antd"
+import { Button, Card, Col, Icon, Row, Tooltip } from "antd"
 
 import Graph from './graph'
 import TimeGroupSelect from './graph/time-group-select'
@@ -84,7 +84,7 @@ export default function Explorer () {
             <BreadCrumbs compact />
 
             {filter.length > 0 ? (
-              <Row gutter={30}>
+              <Row gutter={20}>
                 <Col span={24}>
                   <Card bordered={false} title='Filters'>
                     <div style={{ marginTop: -5, marginBottom: -5 }}>
@@ -95,7 +95,7 @@ export default function Explorer () {
               </Row>
             ) : null}
 
-            <Row gutter={30}>
+            <Row gutter={20}>
               <Col span={24}>
                 <Card bordered={false} title={
                   <>
@@ -108,6 +108,7 @@ export default function Explorer () {
                         <CardControls />
                       </div>
                     ) : null}
+                    <Icon type='line-chart' style={{color: 'white', marginRight: 5}}/>
                     Graph
                   </>
                 }>
@@ -117,34 +118,37 @@ export default function Explorer () {
                     </div>
                   ) : (
                     <div style={{ color: '#aaa' }}>
-                      Please add a date field to see a graph
+                      Add a date field to see a graph
                     </div>
                   )}
                 </Card>
               </Col>
             </Row>
 
-            <Row gutter={30}>
+            <Row gutter={20}>
               <Col span={24}>
                 <Card bordered={false} title={
                   <>
                     <div style={{ float: 'right' }}>
+                      {count >= 10 ? (
+                        <Button size='small' onClick={() => setTableExpanded(!tableExpanded)} icon={tableExpanded ? 'up' : 'down'} style={{ marginRight: 3 }}>
+                          {tableExpanded ? 'Collapse' : 'Expand'}
+                        </Button>
+                      ) : null}
                       <CardControls />
                     </div>
-                    Table: <Pagination />
+                    {count > 0 ? <>
+                      <Icon type='ordered-list' style={{color: 'white', marginRight: 5}}/>
+                      Results: <Pagination />
+                    </> : <><Icon type='ordered-list' style={{color: 'white', marginRight: 5}}/>Results</>}
                   </>
-                }>
+                } bodyStyle={{ padding: 0 }}>
                   {count > 0 ? (
                     <>
                       <Table tableHeight={count < 10 ? (count + 1) * 30 + 2 : tableExpanded ? 600 : 300} />
-                      {count >= 10 ? (
-                        <div style={{ textAlign: 'center', marginTop: 20 }}>
-                          <Button onClick={() => setTableExpanded(!tableExpanded)} icon={tableExpanded ? 'up' : 'down'} />
-                        </div>
-                      ) : null}
                     </>
                   ) : (
-                    <div style={{ color: '#aaa' }}>
+                    <div style={{ color: '#aaa', padding: 16 }}>
                       No results found
                     </div>
                   )}

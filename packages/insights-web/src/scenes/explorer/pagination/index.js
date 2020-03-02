@@ -6,6 +6,10 @@ import explorerLogic from 'scenes/explorer/logic'
 export default function Pagination () {
   const { count, visibleStart, visibleEnd } = useValues(explorerLogic)
 
+  if (count === 0) {
+    return <span />
+  }
+
   return (
     <span>
       {count > 0 ? (
@@ -14,7 +18,7 @@ export default function Pagination () {
           {' '}
         </span>
       ) : null}
-      {count} results
+      {count}
     </span>
   )
 }

@@ -17,7 +17,7 @@
   &.with-dashboard {
     & > .LayoutSplitter.horizontal {
       border-left-color: #e8f3fd;
-      border-right-color: hsla(209, 32%, 69%, 1);
+      border-right-color: hsla(209, 32%, 28%, 1);
     }
   }
 
@@ -42,7 +42,7 @@
   }
 }
 .explorer-dashboard-layout {
-  background: hsla(209, 32%, 69%, 1);
+  background: hsla(209, 32%, 28%, 1);
   overflow: hidden;
   .explorer-dashboard {
     min-width: 300px;
