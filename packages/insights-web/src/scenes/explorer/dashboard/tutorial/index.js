@@ -15,7 +15,7 @@ export default function Tutorial () {
         {!selectedConnection || !selectedSubset ? (
           <div className='step-row'>
             <Icon type='database'/>
-            <div className='info'>Please select a <u>{!selectedConnection ? 'connection' : 'subset'}</u></div>
+            <div className='info'>Select a <u>{!selectedConnection ? 'connection' : 'subset'}</u></div>
           </div>
         ) : null}
         {selectedConnection && selectedSubset && !selectedModel ? (

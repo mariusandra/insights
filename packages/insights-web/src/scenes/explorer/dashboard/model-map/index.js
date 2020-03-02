@@ -48,7 +48,7 @@ export default function ModelMap () {
     <Card bordered={false} title={
       <>
         Most Linked Models
-        <Tooltip title="Models with the most other models linking to them">
+        <Tooltip title="Models with the highest number of other models linking to them">
           <Icon type="question-circle" style={{ marginLeft: 10, fontSize: 14, verticalAlign: 'baseline', color: '#888' }} />
         </Tooltip>
       </>

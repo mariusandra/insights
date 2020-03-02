@@ -4,6 +4,7 @@ import { Button, Col, Icon, Row } from 'antd'
 
 import Database from '../../connection/database'
 import Subset from '../../connection/subset'
+import Model from './model'
 
 import connectionLogic from '../../connection/logic'
 import explorerLogic from 'scenes/explorer/logic'
@@ -26,7 +27,7 @@ export default function BreadCrumbs ({ compact }) {
   return (
     <div className={`dashboard-summary-row${compact ? ' compact' : ''}`}>
       <Row gutter={20}>
-        <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+        <Col xs={24} sm={24} md={8} lg={8} xl={8}>
           <CustomStatistic
             title='Connection'
             value={
@@ -39,7 +40,7 @@ export default function BreadCrumbs ({ compact }) {
             }
           />
         </Col>
-        <Col xs={24} sm={24} md={12} lg={8} xl={8}>
+        <Col xs={24} sm={24} md={8} lg={8} xl={8}>
           <CustomStatistic
             title='Subset'
             className={`with-icon${!selectedSubset ? ' no-value' : ''}`}
@@ -59,14 +60,17 @@ export default function BreadCrumbs ({ compact }) {
             }
           />
         </Col>
-        <Col xs={24} sm={24} md={24} lg={8} xl={8}>
+        <Col xs={24} sm={24} md={8} lg={8} xl={8}>
           <CustomStatistic
             title='Model'
             className={`with-icon${!selectedModel ? ' no-value' : ''}`}
             value={selectedModel ? (
-              <Button type='link' onClick={focusSearch}>
-                {selectedModel}
-              </Button>
+              <Model>
+                <Button type='link' onClick={focusSearch}>
+                  {selectedModel}
+                  <Icon type="caret-down"/>
+                </Button>
+              </Model>
             ) : 'Not Selected'}
           />
         </Col>

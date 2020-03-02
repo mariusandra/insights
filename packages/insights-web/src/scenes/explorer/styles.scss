@@ -54,3 +54,8 @@
     min-width: 300px;
   }
 }
+
+.ant-menu.scrollable-menu {
+  overflow: scroll;
+  max-height: 80vh;
+}

@@ -34,9 +34,9 @@ export default function Sidebar () {
     <div className='sidebar-with-search'>
       <div className='explorer-search'>
         {!connectionId ? (
-          <h2 className='no-connection'>Please select a connection!</h2>
+          <h2 className='no-connection'>Select a connection</h2>
         ) : !subsetId ? (
-          <h2 className='no-connection'>Please select a subset!</h2>
+          <h2 className='no-connection'>Select a subset</h2>
         ) : (
           <Input.Search
             id='sidebar-model-field-search'
