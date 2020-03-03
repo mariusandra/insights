@@ -130,7 +130,7 @@ export default function Explorer () {
                 <Card bordered={false} title={
                   <>
                     <div style={{ float: 'right' }}>
-                      {count >= 10 ? (
+                      {hasGraph && count >= 10 ? (
                         <Button size='small' onClick={() => setTableExpanded(!tableExpanded)} icon={tableExpanded ? 'up' : 'down'} style={{ marginRight: 3 }}>
                           {tableExpanded ? 'Collapse' : 'Expand'}
                         </Button>
@@ -145,7 +145,7 @@ export default function Explorer () {
                 } bodyStyle={{ padding: 0 }}>
                   {count > 0 ? (
                     <>
-                      <Table tableHeight={count < 10 ? (count + 1) * 30 + 2 : tableExpanded ? 600 : 300} />
+                      <Table tableHeight={(tableExpanded || !hasGraph) ? 600 : 329} />
                     </>
                   ) : (
                     <div style={{ color: '#aaa', padding: 16 }}>
