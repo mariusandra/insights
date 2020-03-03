@@ -64,14 +64,14 @@ export default function BreadCrumbs ({ compact }) {
           <CustomStatistic
             title='Model'
             className={`with-icon${!selectedModel ? ' no-value' : ''}`}
-            value={selectedModel ? (
+            value={
               <Model>
                 <Button type='link' onClick={focusSearch}>
-                  {selectedModel}
+                  {selectedModel || 'Not Selected'}
                   <Icon type="caret-down"/>
                 </Button>
               </Model>
-            ) : 'Not Selected'}
+            }
           />
         </Col>
       </Row>

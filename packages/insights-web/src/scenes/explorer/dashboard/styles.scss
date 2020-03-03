@@ -91,11 +91,11 @@
 
     .dashboard-statistic {
       &.no-value {
-        .statistic-value {
-          color: hsla(209, 37%, 51%, 1);
+        .statistic-value, .statistic-value button {
+          color: hsla(209, 37%, 72%, 1);
         }
         .anticon {
-          color: hsla(209, 37%, 51%, 1);
+          color: hsla(209, 37%, 72%, 1);
         }
       }
       .statistic-title {
@@ -103,7 +103,7 @@
         text-transform: uppercase;
         font-weight: bold;
         font-size: 12px;
-        color: hsla(197, 37%, 51%, 1);
+        color: hsla(197, 37%, 68%, 1);
         letter-spacing: 0.4px;
 
       }
