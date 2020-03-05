@@ -28,6 +28,7 @@
     "yarn": ">= 0.18.0"
   },
   "scripts": {
+    "desktop": "cd packages/insights-desktop && yarn run start",
     "init": "rm -rf .insights && ./packages/insights/bin/insights-init --dev",
     "init-no-login": "rm -rf .insights && ./packages/insights/bin/insights-init --dev --no-login",
     "start": "concurrently --kill-others \"yarn run start-api\" \"yarn run start-web\" \"yarn run start-charts\"",
