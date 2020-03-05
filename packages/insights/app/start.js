@@ -15,7 +15,8 @@ module.exports = function startInsights({
 
   apiPath = process.env.INSIGHTS_API_PATH || `/api`,
   // TODO: no way to configure socketPath yet, must stay at "/socket.io"
-  socketPath = process.env.INSIGHTS_SOCKET_PATH || '/socket.io'
+  socketPath = process.env.INSIGHTS_SOCKET_PATH || '/socket.io',
+  onListening = undefined
 } = {}) {
   console.log({
     host,
@@ -62,6 +63,7 @@ module.exports = function startInsights({
 
   server.on('listening', () => {
     console.info(`--> ${publicUrl}`)
+    onListening && onListening(app, server)
   })
 
   return app

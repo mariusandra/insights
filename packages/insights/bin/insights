@@ -14,5 +14,6 @@ program
   .command('start', 'start insights on port 8000')
   .command('createsecret', 'create a new authentication secret')
   .command('createsuperuser', 'create a new admin user')
+  .command('desktop', 'start desktop app (run `npm install -g insights-desktop` first)')
 
 program.parse(process.argv)

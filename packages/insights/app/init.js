@@ -10,11 +10,14 @@ const createFolder = require('./lib/create-folder')
 const { promisify } = require('util');
 const exec = promisify(require('child_process').exec)
 
-async function initInsights ({ dev = false, login = undefined }) {
+async function initInsights ({
+  dev = false,
+  login = undefined,
+  configFolder = path.join(process.cwd(), '.insights'),
+  exitWhenDone = true
+}) {
   console.log(`Welcome to Insights v${pkg.version}!`)
   console.log('')
-
-  const configFolder = path.join(process.cwd(), '.insights')
 
   if (fs.existsSync(configFolder)) {
     console.error('!! Fatal Error! The folder ".insights" already exists. ')
@@ -89,7 +92,9 @@ async function initInsights ({ dev = false, login = undefined }) {
   console.log('')
   console.log('Success! Run "insights start" to start the server!')
 
-  process.exit(0)
+  if (exitWhenDone) {
+    process.exit(0)
+  }
 }
 
 module.exports = initInsights

@@ -1,0 +1,24 @@
+{
+  "name": "insights-desktop",
+  "description": "insights electron app",
+  "version": "0.0.32",
+  "author": "Marius Andra <marius.andra@gmail.com>",
+  "main": "main.js",
+  "dependencies": {
+    "get-port": "^5.1.1"
+  },
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+  },
+  "bin": {
+    "electron": "^8.0.3",
+    "insights-desktop": "./bin/insights-desktop"
+  },
+  "files": [
+    "bin",
+    "src",
+    "main.js"
+  ]
+}

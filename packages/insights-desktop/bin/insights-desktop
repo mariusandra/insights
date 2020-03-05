@@ -1,0 +1,16 @@
+#!/usr/bin/env electron
+
+const path = require('path')
+const program = require('commander')
+const root = path.join(__dirname, '..')
+const pkg = require(path.join(root, 'package.json'))
+
+const startInsightsDesktop = require('../src/insights-desktop')
+
+program.version(pkg.version)
+  .usage('<command> [options]')
+  .description('Start Insights in desktop mode via Electron')
+
+program.parse(process.argv)
+
+startInsightsDesktop()
