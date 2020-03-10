@@ -66,5 +66,5 @@ module.exports = function startInsights({
     onListening && onListening(app, server)
   })
 
-  return app
+  return { app, server }
 }

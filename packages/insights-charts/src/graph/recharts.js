@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-import { ResponsiveContainer, ComposedChart, Area, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine } from 'recharts'
+import { ResponsiveContainer, ComposedChart, Area, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine, Pie, PieChart } from 'recharts'
 import moment from 'moment'
 
 import BasicTooltip from './basic-tooltip'
@@ -9,10 +9,10 @@ import BasicTooltip from './basic-tooltip'
 export const colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
 
 function sharedStart (array) {
-  let A = array.concat().sort()
-  let a1 = A[0]
-  let a2 = A[A.length - 1]
-  let L = a1.length
+  const A = array.concat().sort()
+  const a1 = A[0]
+  const a2 = A[A.length - 1]
+  const L = a1.length
   let i = 0
   while (i < L && a1.charAt(i) === a2.charAt(i)) { i++ }
   return a1.substring(0, i)
@@ -24,53 +24,68 @@ function getGraphData (graph, controls) {
   const { results, keys, timeGroup } = graph
   const { percentages, compareWith, compareWithPercentageLine, prediction } = controls
 
-  const graphData = results.map(oldRow => {
-    const time = oldRow.time
-    const row = Object.assign({}, oldRow, { time: moment(time).valueOf() })
+  if (timeGroup) {
+    const graphData = results.map(oldRow => {
+      const time = oldRow.time
+      const row = Object.assign({}, oldRow, {time: moment(time).valueOf()})
 
-    if (percentages || (compareWith)) {
-      let total = 0
-      for (const key of keys) {
-        total += parseFloat(row[key] || 0)
-      }
-      if (percentages) {
+      if (percentages || (compareWith)) {
+        let total = 0
         for (const key of keys) {
-          row[key + '__%'] = total !== 0 ? (parseFloat(row[key]) / total * 100) : 0
+          total += parseFloat(row[key] || 0)
         }
-      }
-
-      if (compareWith) {
-        let compareWithTotal = 0
-        for (const key of keys) {
-          compareWithTotal += parseFloat(row['compareWith::' + key] || 0)
-        }
-
         if (percentages) {
           for (const key of keys) {
-            row['compareWith::' + key + '__%'] = compareWithTotal !== 0 ? (parseFloat(row['compareWith::' + key]) / compareWithTotal * 100) : 0
+            row[key + '__%'] = total !== 0 ? (parseFloat(row[key]) / total * 100) : 0
           }
         }
 
-        if (compareWithPercentageLine && compareWithTotal !== 0) {
-          let totalToCompareWith = compareWithTotal
+        if (compareWith) {
+          let compareWithTotal = 0
+          for (const key of keys) {
+            compareWithTotal += parseFloat(row['compareWith::' + key] || 0)
+          }
 
-          if (prediction) {
-            if (moment().startOf(timeGroup === 'week' ? 'isoWeek' : timeGroup).format('YYYY-MM-DD') === time) {
-              const fullTime = moment().endOf(timeGroup === 'week' ? 'isoWeek' : timeGroup).unix() - moment().startOf(timeGroup === 'week' ? 'isoWeek' : timeGroup).unix()
-              const elapsedTime = moment().unix() - moment().startOf(timeGroup === 'week' ? 'isoWeek' : timeGroup).unix()
-
-              totalToCompareWith = totalToCompareWith * elapsedTime / fullTime
+          if (percentages) {
+            for (const key of keys) {
+              row['compareWith::' + key + '__%'] = compareWithTotal !== 0 ? (parseFloat(row['compareWith::' + key]) / compareWithTotal * 100) : 0
             }
           }
 
-          row['compareWith:percentageLine'] = (total - totalToCompareWith) / totalToCompareWith * 100
+          if (compareWithPercentageLine && compareWithTotal !== 0) {
+            let totalToCompareWith = compareWithTotal
+
+            if (prediction) {
+              if (moment().startOf(timeGroup === 'week' ? 'isoWeek' : timeGroup).format('YYYY-MM-DD') === time) {
+                const fullTime = moment().endOf(timeGroup === 'week' ? 'isoWeek' : timeGroup).unix() - moment().startOf(timeGroup === 'week' ? 'isoWeek' : timeGroup).unix()
+                const elapsedTime = moment().unix() - moment().startOf(timeGroup === 'week' ? 'isoWeek' : timeGroup).unix()
+
+                totalToCompareWith = totalToCompareWith * elapsedTime / fullTime
+              }
+            }
+
+            row['compareWith:percentageLine'] = (total - totalToCompareWith) / totalToCompareWith * 100
+          }
         }
       }
-    }
-    return row
-  })
+      return row
+    })
 
-  return graphData
+    console.log(graphData)
+
+    return graphData
+  } else {
+    // console.log(keys)
+    results.map(oldRow => {
+      const key = Object.keys(oldRow)[0]
+      return {
+        name: key,
+        value: oldRow[key]
+      }
+    })
+
+    return results
+  }
 }
 
 export class Graph extends Component {
@@ -150,7 +165,7 @@ export class Graph extends Component {
     const { graph: { timeGroup } } = this.props
     const { graphData: data } = this.state
 
-    let ticks = []
+    const ticks = []
 
     if (data.length === 0) {
       return ticks
@@ -195,7 +210,7 @@ export class Graph extends Component {
     const { visibility } = this.state
     let i = 0
 
-    let nameSubString = keys.length === 1 ? keys[0].split('.')[0].length + 1 : sharedStart(keys).length
+    const nameSubString = keys.length === 1 ? keys[0].split('.')[0].length + 1 : sharedStart(keys).length
 
     return keys.filter(v => v).map(v => {
       const visible = typeof visibility[v] === 'undefined' || visibility[v]
@@ -216,7 +231,7 @@ export class Graph extends Component {
 
     const color = compareWith && keys.length === 1 ? colors[1] : key.color
 
-    let data = {
+    const data = {
       key: `${compareWith ? 'compareWith::' : ''}${key.key}${percentages ? '__%' : ''}${key.visible ? '' : '__hidden'}`,
       type: 'linear',
       dataKey: `${compareWith ? 'compareWith::' : ''}${key.key}${percentages ? '__%' : ''}${key.visible ? '' : '__hidden'}`,
@@ -243,7 +258,7 @@ export class Graph extends Component {
   getCompareWithPercentageLine = (key) => {
     const { labels } = this.props.controls
 
-    let data = {
+    const data = {
       key: 'compareWith:percentageLine',
       type: 'linear',
       dataKey: 'compareWith:percentageLine',
@@ -321,30 +336,93 @@ export class Graph extends Component {
     // changing this triggers the chart to be torn down and re-rendered
     const key = keysWithMeta.map(k => `${k.visible}`).join(',') + `${labels ? '-labels' : ''}${type === 'line' ? '-line' : ''}-${sort}`
 
-    const { ticks, tickFormatter } = this.getTicks()
+    if (timeGroup) {
+      const {ticks, tickFormatter} = this.getTicks()
 
-    let xDomain = ['dataMin', 'dataMax']
+      let xDomain = ['dataMin', 'dataMax']
 
-    if (type === 'bar' && graphData.length > 0) {
-      xDomain = [
-        moment(graphData[0].time).add(-0.5, timeGroup).valueOf(),
-        moment(graphData[graphData.length - 1].time).add(0.5, timeGroup).valueOf()
-      ]
-    }
+      if (type === 'bar' && graphData.length > 0) {
+        xDomain = [
+          moment(graphData[0].time).add(-0.5, timeGroup).valueOf(),
+          moment(graphData[graphData.length - 1].time).add(0.5, timeGroup).valueOf()
+        ]
+      }
 
-    const sortedKeysWithMeta = facets
-      ? sort === 'abc'
-        ? keysWithMeta.sort(alphabeticalFacetSorter)
-        : keysWithMeta.reverse()
-      : keysWithMeta
+      const sortedKeysWithMeta = facets
+        ? sort === 'abc'
+          ? keysWithMeta.sort(alphabeticalFacetSorter)
+          : keysWithMeta.reverse()
+        : keysWithMeta
 
-    return (
-      <ResponsiveContainer>
-        <ComposedChart
-          data={graphData}
-          key={key}
-          margin={{top: 0, right: 10, left: 10, bottom: 0}}
-        >
+      return (
+        <ResponsiveContainer>
+          <ComposedChart
+            data={graphData}
+            key={key}
+            margin={{top: 0, right: 10, left: 10, bottom: 0}}
+          >
+            <Legend
+              verticalAlign='top'
+              align='left'
+              height={25}
+              iconSize={10}
+              wrapperStyle={{fontSize: 12, marginRight: -10}}
+              onClick={this.handleClick}
+              onMouseOver={this.handleMouseEnter}
+              onMouseOut={this.handleMouseLeave}
+            />
+            <XAxis
+              type='number'
+              dataKey='time'
+              domain={xDomain}
+              tickFormatter={tickFormatter}
+              ticks={ticks}
+            />
+            <YAxis
+              domain={percentages ? [0, 100] : ['auto', 'auto']}
+              interval={0}
+              orientation='right'
+              tickFormatter={percentages ? (y) => `${Math.round(y)}%` : (y) => `${y.toLocaleString('en')}${unit}`}
+              allowDecimals={false}
+            />
+            <CartesianGrid />
+            <Tooltip content={<TooltipProp graph={graph} controls={controls} />} />
+            {nullLineNeeded ? (
+              <ReferenceLine y={0} stroke='red' alwaysShow />
+            ) : null}
+            {compareWith && sortedKeysWithMeta.map(key => <Bar {...this.getLineData(key, facets, compareWith)} />)}
+            {sortedKeysWithMeta.map(key => (
+              type === 'area'
+                ? <Area {...this.getLineData(key, facets)} />
+                : type === 'bar'
+                  ? <Bar {...this.getLineData(key, facets)} />
+                  : <Line {...this.getLineData(key, facets)} />))}
+            {compareWith && compareWithPercentageLine && (
+              <Line {...this.getCompareWithPercentageLine()} />
+            )}
+            {compareWith && compareWithPercentageLine && (
+              <YAxis
+                yAxisId='percentageLine'
+                orientation='left'
+                tickFormatter={(y) => `${y > 0 ? '+' : ''}${Math.round(y)}%`}
+                domain={compareWithPercentageLineDomain || [dataMin => Math.floor(Math.min(0, dataMin || 0)), dataMax => Math.ceil(Math.max(dataMax || 0, 0) / 25) * 25]}
+              />
+            )}
+            {children}
+          </ComposedChart>
+        </ResponsiveContainer>
+      )
+    } else {
+      return (
+        <PieChart margin={{ top: 0, right: 10, left: 10, bottom: 0 }}>
+          <Pie
+            dataKey='value'
+            isAnimationActive={false}
+            data={graphData}
+            outerRadius={80}
+            fill='#8884d8'
+            label
+          />
           <Legend
             verticalAlign='top'
             align='left'
@@ -355,46 +433,9 @@ export class Graph extends Component {
             onMouseOver={this.handleMouseEnter}
             onMouseOut={this.handleMouseLeave}
           />
-          <XAxis
-            type='number'
-            dataKey='time'
-            domain={xDomain}
-            tickFormatter={tickFormatter}
-            ticks={ticks}
-          />
-          <YAxis
-            domain={percentages ? [0, 100] : ['auto', 'auto']}
-            interval={0}
-            orientation='right'
-            tickFormatter={percentages ? (y) => `${Math.round(y)}%` : (y) => `${y.toLocaleString('en')}${unit}`}
-            allowDecimals={false}
-          />
-          <CartesianGrid />
-          <Tooltip content={<TooltipProp graph={graph} controls={controls} />} />
-          {nullLineNeeded ? (
-            <ReferenceLine y={0} stroke='red' alwaysShow />
-          ) : null}
-          {compareWith && sortedKeysWithMeta.map(key => <Bar {...this.getLineData(key, facets, compareWith)} />)}
-          {sortedKeysWithMeta.map(key => (
-            type === 'area'
-              ? <Area {...this.getLineData(key, facets)} />
-              : type === 'bar'
-                ? <Bar {...this.getLineData(key, facets)} />
-                : <Line {...this.getLineData(key, facets)} />))}
-          {compareWith && compareWithPercentageLine && (
-            <Line {...this.getCompareWithPercentageLine()} />
-          )}
-          {compareWith && compareWithPercentageLine && (
-            <YAxis
-              yAxisId='percentageLine'
-              orientation='left'
-              tickFormatter={(y) => `${y > 0 ? '+' : ''}${Math.round(y)}%`}
-              domain={compareWithPercentageLineDomain || [dataMin => Math.floor(Math.min(0, dataMin || 0)), dataMax => Math.ceil(Math.max(dataMax || 0, 0) / 25) * 25]}
-            />
-          )}
-          {children}
-        </ComposedChart>
-      </ResponsiveContainer>
-    )
+          <Tooltip content={<TooltipProp graph={graph} controls={controls}/>}/>
+        </PieChart>
+      )
+    }
   }
 }

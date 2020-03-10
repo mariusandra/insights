@@ -1,0 +1,21 @@
+#!/usr/bin/env node
+
+const fs = require('fs')
+const path = require('path')
+const program = require('commander')
+const root = path.join(__dirname, '..')
+const pkg = require(path.join(root, 'package.json'))
+
+const connectInsights = require('../app/connect')
+
+program.version(pkg.version)
+  .usage('<command> [options]')
+  .description('Connect to insights.sh')
+  .option('--api', 'API key')
+
+program.parse(process.argv)
+
+
+;(async () => {
+  connectInsights()
+})();

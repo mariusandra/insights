@@ -466,23 +466,25 @@ export default class Results {
     let timeColumns = this.resultsTableColumnMetadata.filter(v => (v.type === 'time' || v.type === 'date') && !v.aggregate)
     const aggregateColumns = this.resultsTableColumnMetadata.filter(v => v.aggregate)
 
-    // must have at least 1 aggregate and exactly 1 time column
-    if (aggregateColumns.length < 1 || timeColumns.length !== 1) {
+    // must have at least 1 aggregate and 0 or 1 time columns
+    if (aggregateColumns.length < 1 || timeColumns.length < 0 || timeColumns.length > 1) {
       return
     }
 
-    // day? week? month?
-    const timeGroup: TruncationType = timeColumns[0].transform || 'day'
+    const graphWithTime = timeColumns.length === 1
 
-    const compareWith = this.params.graphControls.compareWith || 0
+    // day? week? month?
+    const timeGroup: TruncationType = graphWithTime ? (timeColumns[0].transform || 'day') : null
+
+    const compareWith = graphWithTime ? 0 : (this.params.graphControls.compareWith || 0)
 
     // start and end of the graph timeline (or nil)
-    let [firstDate, lastDate] = getTimesFromString(graphTimeFilter, 0, timeGroup)
+    let [firstDate, lastDate] = graphWithTime ? getTimesFromString(graphTimeFilter, 0, timeGroup) : []
 
     let compareWithFirstDate
     let compareWithLastDate
 
-    if (compareWith && firstDate && lastDate) {
+    if (graphWithTime && compareWith && firstDate && lastDate) {
       compareWithFirstDate = moment(firstDate).subtract(compareWith, timeGroup).startOf(timeGroup).format('YYYY-MM-DD')
       compareWithLastDate = moment(lastDate).subtract(compareWith, timeGroup).endOf(timeGroup).format('YYYY-MM-DD')
     }
@@ -493,7 +495,7 @@ export default class Results {
     const rightNow = new Date()
 
     // prediction enabled and we are showing the last month of the time period
-    if (compareWith && prediction && moment(lastDate).startOf(timeGroup).isBefore(rightNow) && moment(lastDate).endOf(timeGroup).isAfter(rightNow)) {
+    if (graphWithTime && compareWith && prediction && moment(lastDate).startOf(timeGroup).isBefore(rightNow) && moment(lastDate).endOf(timeGroup).isAfter(rightNow)) {
       const startOf = moment(rightNow).startOf(timeGroup).valueOf()
       const endOf = moment(rightNow).endOf(timeGroup).valueOf()
       const current = moment(rightNow).valueOf()
@@ -517,7 +519,7 @@ export default class Results {
     const timeColumn = timeColumns[0]
 
     // sort by time
-    const graphSortParts = [this.adapter.orderPart(timeColumn.sql, false)]
+    const graphSortParts = graphWithTime ? [this.adapter.orderPart(timeColumn.sql, false)] : []
     const graphSortSql = this.adapter.orderBy(graphSortParts)
 
     // limit the results to what's visible on the graph
@@ -529,7 +531,7 @@ export default class Results {
 
     let compareWithWhereSql
 
-    if (compareWith) {
+    if (graphWithTime && compareWith) {
       let compareWithWhereConditions = this.commonSqlConditions.where.slice(0)
       if (compareWithFirstDate && compareWithLastDate) {
         compareWithWhereConditions = compareWithWhereConditions.concat(this.adapter.filterDateRange(timeColumn.sql, `${compareWithFirstDate}:${compareWithLastDate}`))
@@ -539,7 +541,7 @@ export default class Results {
 
     let predictionWhereSql
 
-    if (predictionFirstDate && predictionLastDate) {
+    if (graphWithTime && predictionFirstDate && predictionLastDate) {
       let predictionWhereConditions = this.commonSqlConditions.where.slice(0)
       if (predictionFirstDate && predictionLastDate) {
         predictionWhereConditions = predictionWhereConditions.concat(this.adapter.filterDateRange(timeColumn.sql, `${predictionFirstDate}:${predictionLastDate}`))
@@ -684,15 +686,16 @@ export default class Results {
     // save the results in a hash with dates as keys... and all aggregate columns with facets as values
     let resultHash = {}
 
-    graphResults.forEach(result => {
+    graphResults.forEach((result, index) => {
       // TODO: should we do someting special with columns that have no date?
-      if (!result[timeColumn.alias]) {
+      if (graphWithTime && !result[timeColumn.alias]) {
         return
       }
 
-      let date = moment(result[timeColumn.alias]).format('YYYY-MM-DD')
-      if (!resultHash[date]) {
-        resultHash[date] = { time: date }
+      const rowKey = graphWithTime ? moment(result[timeColumn.alias]).format('YYYY-MM-DD') : index
+
+      if (!resultHash[rowKey]) {
+        resultHash[rowKey] = graphWithTime ? { time: rowKey } : {}
       }
 
       aggregateColumns.forEach(aggregateColumn => {
@@ -700,7 +703,7 @@ export default class Results {
         facetsColumns.forEach(column => {
           key += `$$${result[column.alias]}`
         })
-        resultHash[date][key] = result[aggregateColumn.alias]
+        resultHash[rowKey][key] = result[aggregateColumn.alias]
       })
     })
 
@@ -717,88 +720,90 @@ export default class Results {
       }
     })
 
-    // get the first and last dates if not already set
-    if (!firstDate || !lastDate) {
-      const allDateKeys = Object.keys(resultHash).sort()
-      if (!firstDate) {
-        firstDate = allDateKeys[0]
+    if (graphWithTime) {
+      // get the first and last dates if not already set
+      if (!firstDate || !lastDate) {
+        const allDateKeys = Object.keys(resultHash).sort()
+        if (!firstDate) {
+          firstDate = allDateKeys[0]
+        }
+        if (!lastDate) {
+          lastDate = allDateKeys[allDateKeys.length - 1]
+        }
       }
-      if (!lastDate) {
-        lastDate = allDateKeys[allDateKeys.length - 1]
+
+      // calculate all the dates that should be in the results
+      let allDates = []
+      if (firstDate && lastDate) {
+        let lastTime = moment(lastDate)
+
+        for (let date = moment(firstDate); date <= lastTime; date = date.add(1, 'day')) {
+          // could be optimised... but whatever, it's not going to be a huge loop
+          if (timeGroup === 'year' && (date.date() !== 1 || date.month() !== 0)) {
+            continue
+          }
+          if (timeGroup === 'quarter' && !(date.date() === 1 && [0, 3, 6, 9].includes(date.month()))) {
+            continue
+          }
+          if (timeGroup === 'month' && date.date() !== 1) {
+            continue
+          }
+          if (timeGroup === 'week' && date.weekday() !== 1) {
+            continue
+          }
+
+          allDates.push(date.format('YYYY-MM-DD'))
+        }
       }
-    }
 
-    // calculate all the dates that should be in the results
-    let allDates = []
-    if (firstDate && lastDate) {
-      let lastTime = moment(lastDate)
-
-      for (let date = moment(firstDate); date <= lastTime; date = date.add(1, 'day')) {
-        // could be optimised... but whatever, it's not going to be a huge loop
-        if (timeGroup === 'year' && (date.date() !== 1 || date.month() !== 0)) {
-          continue
-        }
-        if (timeGroup === 'quarter' && !(date.date() === 1 && [0, 3, 6, 9].includes(date.month()))) {
-          continue
-        }
-        if (timeGroup === 'month' && date.date() !== 1) {
-          continue
-        }
-        if (timeGroup === 'week' && date.weekday() !== 1) {
-          continue
-        }
-
-        allDates.push(date.format('YYYY-MM-DD'))
-      }
-    }
-
-    // make sure all the dates have all the values present (as 0 if nil)
-    if (allDates.length > 0) {
-      let emptyHash = {}
-      allKeys.forEach(key => {
-        emptyHash[key] = 0
-      })
-
-      allDates.forEach(date => {
-        resultHash[date] = Object.assign({ time: date }, emptyHash, resultHash[date] || {})
-      })
-    }
-
-    if (compareWith) {
-      Object.keys(resultHash).forEach(date => {
-        const compareWithDate = moment(date).subtract(compareWith, timeGroup).format('YYYY-MM-DD')
-        const compareWithResult = compareWithHash[compareWithDate]
-
-        if (compareWithResult) {
-          resultHash[date] = Object.assign({}, resultHash[date], compareWithResult)
-        }
-      })
-    }
-
-    // if we're asking for a cumulative response, sum all the values
-    if (cumulative) {
-      let countHash = {}
-      allKeys.forEach(key => {
-        countHash[key] = 0
-
-        if (compareWith) {
-          const compareWithKey = `compareWith::${key}`
-          countHash[compareWithKey] = 0
-        }
-      })
-
-      allDates.forEach(date => {
+      // make sure all the dates have all the values present (as 0 if nil)
+      if (allDates.length > 0) {
+        let emptyHash = {}
         allKeys.forEach(key => {
-          countHash[key] += parseFloat(resultHash[date][key]) || 0
-          resultHash[date][key] = countHash[key]
+          emptyHash[key] = 0
+        })
+
+        allDates.forEach(date => {
+          resultHash[date] = Object.assign({time: date}, emptyHash, resultHash[date] || {})
+        })
+      }
+
+      if (compareWith) {
+        Object.keys(resultHash).forEach(date => {
+          const compareWithDate = moment(date).subtract(compareWith, timeGroup).format('YYYY-MM-DD')
+          const compareWithResult = compareWithHash[compareWithDate]
+
+          if (compareWithResult) {
+            resultHash[date] = Object.assign({}, resultHash[date], compareWithResult)
+          }
+        })
+      }
+
+      // if we're asking for a cumulative response, sum all the values
+      if (cumulative) {
+        let countHash = {}
+        allKeys.forEach(key => {
+          countHash[key] = 0
 
           if (compareWith) {
             const compareWithKey = `compareWith::${key}`
-            countHash[compareWithKey] += parseFloat(resultHash[date][compareWithKey]) || 0
-            resultHash[date][compareWithKey] = countHash[compareWithKey]
+            countHash[compareWithKey] = 0
           }
         })
-      })
+
+        allDates.forEach(date => {
+          allKeys.forEach(key => {
+            countHash[key] += parseFloat(resultHash[date][key]) || 0
+            resultHash[date][key] = countHash[key]
+
+            if (compareWith) {
+              const compareWithKey = `compareWith::${key}`
+              countHash[compareWithKey] += parseFloat(resultHash[date][compareWithKey]) || 0
+              resultHash[date][compareWithKey] = countHash[compareWithKey]
+            }
+          })
+        })
+      }
     }
 
     this.graphResponse = {

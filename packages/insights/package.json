@@ -32,6 +32,7 @@
   },
   "scripts": {
     "start": "./bin/insights-start",
+    "connect": "./bin/insights-connect",
     "build": "npm run build-web && npm run copy-web",
     "build-web": "cd ../insights-web && npm run build",
     "copy-web": "rm -rf web-build/ && cp -a ../insights-web/build ./web-build",
@@ -46,6 +47,8 @@
   "dependencies": {
     "commander": "^4.1.0",
     "insights-api": "0.0.19",
+    "localtunnel": "^2.0.0",
+    "node-local-tunnel": "^0.1.8",
     "prompt-promise": "^1.0.3"
   }
 }
