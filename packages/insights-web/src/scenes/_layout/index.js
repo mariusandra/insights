@@ -7,21 +7,32 @@ import { useValues } from 'kea'
 import Header from 'scenes/header'
 import Spinner from 'lib/tags/spinner'
 
-import Login from '../login'
+import Setup from 'scenes/setup'
+import Login from 'scenes/login'
 
 import authLogic from 'scenes/auth'
 
 export default function InsightsLayout ({ children }) {
-  const { showLogin, showApp } = useValues(authLogic)
+  const { showSetup, showLogin, showApp } = useValues(authLogic)
 
-  if (!showLogin && !showApp) {
+  if (!showLogin && !showApp && !showSetup) {
     return <div style={{marginTop: 20, marginLeft: 20}}><Spinner /></div>
   }
 
-  if (showLogin || window.location.search.indexOf('embed=true') >= 0) {
+  // override whatever the router gives us
+  if (showSetup) {
     return (
       <div className='insights-layout'>
-        {showLogin ? <Login /> : children}
+        <Setup />
+      </div>
+    )
+  }
+
+  // override whatever the router gives us
+  if (showLogin) {
+    return (
+      <div className='insights-layout'>
+        <Login />
       </div>
     )
   }

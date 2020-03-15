@@ -1,0 +1,32 @@
+{
+  "host": "localhost",
+  "port": 3030,
+  "nedb": "./.insights/data",
+  "authentication": {
+    "secret": "not-secret-insights-setup",
+    "authStrategies": [
+      "jwt",
+      "local"
+    ],
+    "entity": "user",
+    "service": "users",
+    "jwtOptions": {
+      "header": {
+        "typ": "access"
+      },
+      "audience": "https://yourdomain.com",
+      "issuer": "feathers",
+      "algorithm": "HS256",
+      "expiresIn": "1d"
+    },
+    "local": {
+      "usernameField": "email",
+      "passwordField": "password"
+    },
+    "oauth": {}
+  },
+  "paginate": {
+    "default": 10,
+    "max": 50
+  }
+}

@@ -1,4 +1,6 @@
 /* eslint-disable no-console */
+import { inSetupMode } from 'insights-api/src/utils/in-setup-mode'
+
 const path = require('path')
 const fs = require('fs')
 const URL = require('url')
@@ -27,6 +29,8 @@ module.exports = function startInsights({
     apiPath
   })
 
+  const app = express()
+
   let indexHtml
 
   const getIndex = (req, res) => {
@@ -38,12 +42,14 @@ module.exports = function startInsights({
         publicUrl,
         noLogin: api.get('authentication').authStrategies.includes('noLogin')
       }
+      if (inSetupMode(app)) {
+        insightsConfig.setupMode = true
+      }
       indexHtml = html.replace("</head>", `<script>window.__INSIGHTS_CONFIG__ = ${JSON.stringify(insightsConfig)}</script></head>`)
     }
     res.send(indexHtml)
   }
 
-  const app = express()
   app.use(bodyParser.json())
   app.use(bodyParser.urlencoded({extended: true}))
   app.get('/', getIndex)

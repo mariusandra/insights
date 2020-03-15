@@ -13,7 +13,8 @@ export default kea({
     loginStarted: true,
     loginSuccess: (token, user) => ({ token, user }),
     loginFailure: true,
-    setRunningInElectron: true
+    setRunningInElectron: true,
+    setShowSetup: showSetup => ({ showSetup })
   }),
 
   reducers: ({ actions }) => ({
@@ -39,6 +40,10 @@ export default kea({
       [actions.loginFailure]: () => false
     }],
 
+    showSetup: [false, PropTypes.bool, {
+      [actions.setShowSetup]: (_, payload) => payload.showSetup
+    }],
+
     token: [null, PropTypes.string, {
       [actions.loginSuccess]: (_, payload) => payload.token
     }],
@@ -58,7 +63,16 @@ export default kea({
 
   workers: {
     authenticate: function * (credentials) {
-      const { loginStarted, loginSuccess, loginFailure } = this.actions
+      const { loginStarted, loginSuccess, loginFailure, setShowSetup } = this.actions
+
+      // if config says setup, go to /setup
+      if (typeof window !== 'undefined' && window.__INSIGHTS_CONFIG__ && window.__INSIGHTS_CONFIG__.setupMode) {
+        yield put(setShowSetup(true))
+        if (!window.location.pathname.includes('/setup')) {
+          yield put(push('/setup'))
+        }
+        return
+      }
 
       yield put(loginStarted())
 
@@ -82,6 +96,27 @@ export default kea({
         yield put(loginSuccess(accessToken, user))
         return true
       } catch (error) {
+        // running web and api separately (no window._config..)
+        if (typeof window !== 'undefined' && !window.__INSIGHTS_CONFIG__) {
+          // so ask if we should setup. if so, go to /setup
+
+          try {
+            const setupService = client.service('setup')
+            const response = yield setupService.get('setup')
+
+            if (response.inSetupMode) {
+              yield put(setShowSetup(true))
+              if (!window.location.pathname.includes('/setup')) {
+                yield put(push('/setup'))
+              }
+            }
+
+            return
+          } catch (anotherError) {
+            // the setup service should throw if we are not in setup
+          }
+        }
+
         console.error(error)
         const showLogin = yield this.get('showLogin')
         yield put(loginFailure())

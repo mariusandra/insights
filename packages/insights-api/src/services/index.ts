@@ -8,7 +8,10 @@ import connectionTest from './connection-test/connection-test.service';
 import results from './results/results.service';
 import structure from './structure/structure.service';
 import subsets from './subsets/subsets.service';
+import setup from './setup/setup.service';
 // Don't remove this comment. It's needed to format import lines nicely.
+
+import { inSetupMode } from "../utils/in-setup-mode";
 
 export default function (app: Application) {
   app.configure(users);
@@ -20,4 +23,8 @@ export default function (app: Application) {
   app.configure(results);
   app.configure(structure);
   app.configure(subsets);
+
+  if (inSetupMode(app)) {
+    app.configure(setup);
+  }
 }

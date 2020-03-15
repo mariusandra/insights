@@ -1,0 +1,45 @@
+.setup-scene {
+  position: relative;
+  padding-top: calc(46vh - 140px);
+  height: 100%;
+  .background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    // https://unsplash.com/photos/XMLRK8xpEIs
+    background: url('https://images.unsplash.com/photo-1583510772409-8c7329e5ac87?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80') #162c41 center center;
+    background-size: cover;
+    filter: brightness(50%);
+  }
+  .ant-card {
+    margin: 0 auto;
+    .has-error {
+      .ant-form-extra {
+        color: #f5222d;
+      }
+    }
+  }
+
+  .logo {
+    font-size: 32px;
+    font-family: serif;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    text-align: center;
+
+    img {
+      width: 32px;
+      height: 32px;
+      vertical-align: text-top;
+      margin-right: 6px
+    }
+  }
+
+  .setup-box {
+    .setup-form-button {
+      width: 100%;
+    }
+  }
+}

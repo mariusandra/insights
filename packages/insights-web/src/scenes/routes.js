@@ -15,6 +15,7 @@ export function combineScenesAndRoutes (scenes, routes) {
 const scenes = {
   explorer: require('./explorer').default,
   login: require('./login').default,
+  setup: require('./setup').default,
   users: require('./users').default,
   settings: require('./settings').default,
   urls: require('./urls').default
@@ -24,6 +25,7 @@ const routes = {
   '/explorer': 'explorer',
   '/': 'explorer',
   '/login': 'login',
+  '/setup': 'setup',
   '/users': 'users',
   '/settings': 'settings',
   '/url/:url': 'urls'

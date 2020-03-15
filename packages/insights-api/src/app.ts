@@ -17,15 +17,20 @@ import appHooks from './app.hooks';
 import channels from './channels';
 import authentication from './authentication';
 // Don't remove this comment. It's needed to format import lines nicely.
+import { inSetupMode } from "./utils/in-setup-mode";
+
+// @ts-ignore
+import config from './config.json'
 
 const app: Application = express(feathers());
 
-// Load app configuration
-app.configure(configuration());
+// load the default confguration
+Object.entries(config).forEach(([key, value]) => {
+  app.set(key, value)
+})
 
-if (!app.get('authentication') || !app.get('authentication').secret) {
-  throw new Error("A 'secret' must be provided in your authentication configuration")
-}
+// Load the local configuration files
+app.configure(configuration());
 
 if (process.env.INSIGHTS_DATA) {
   app.set('nedb', process.env.INSIGHTS_DATA)
