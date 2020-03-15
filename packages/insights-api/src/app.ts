@@ -22,52 +22,58 @@ import { inSetupMode } from "./utils/in-setup-mode";
 // @ts-ignore
 import config from './config.json'
 
-const app: Application = express(feathers());
+function createApp () {
+  const app: Application = express(feathers());
 
-// load the default confguration
-Object.entries(config).forEach(([key, value]) => {
-  app.set(key, value)
-})
+  // load the default confguration
+  Object.entries(config).forEach(([key, value]) => {
+    app.set(key, value)
+  })
 
-// Load the local configuration files
-app.configure(configuration());
+  // Load the local configuration files
+  app.configure(configuration());
 
-if (process.env.INSIGHTS_DATA) {
-  app.set('nedb', process.env.INSIGHTS_DATA)
-} else {
-  process.env.INSIGHTS_DATA = app.get('nedb') || path.join(process.env.NODE_CONFIG_DIR, 'data')
+  if (process.env.INSIGHTS_DATA) {
+    app.set('nedb', process.env.INSIGHTS_DATA)
+  } else {
+    process.env.INSIGHTS_DATA = app.get('nedb') || path.join(process.env.NODE_CONFIG_DIR, 'data')
+  }
+
+  if (process.env.INSIGHTS_PUBLIC_URL) {
+    app.set('authentication.jwtOptions.audience', process.env.INSIGHTS_PUBLIC_URL)
+  }
+
+  // Enable security, CORS, compression, favicon and body parsing
+  app.use(helmet());
+  app.use(cors());
+  app.use(compress());
+  app.use(express.json());
+  app.use(express.urlencoded({extended: true}));
+
+  // Host the public folder
+  app.get('/', (req, res) => res.send('<p>Insights API backend!</p>'));
+
+  // Set up Plugins and providers
+  app.configure(express.rest());
+  app.configure(socketio());
+
+  // Configure other middleware (see `middleware/index.js`)
+  app.configure(middleware);
+  app.configure(authentication);
+  // Set up our services (see `services/index.js`)
+  app.configure(services);
+  // Set up event channels (see channels.js)
+  app.configure(channels);
+
+  // Configure a middleware for 404s and the error handler
+  app.use(express.notFound());
+  app.use(express.errorHandler({logger} as any));
+
+  app.hooks(appHooks);
+
+  return app
 }
 
-if (process.env.INSIGHTS_PUBLIC_URL) {
-  app.set('authentication.jwtOptions.audience', process.env.INSIGHTS_PUBLIC_URL)
-}
-
-// Enable security, CORS, compression, favicon and body parsing
-app.use(helmet());
-app.use(cors());
-app.use(compress());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// Host the public folder
-app.get('/', (req, res) => res.send('<p>Insights API backend!</p>'));
-
-// Set up Plugins and providers
-app.configure(express.rest());
-app.configure(socketio());
-
-// Configure other middleware (see `middleware/index.js`)
-app.configure(middleware);
-app.configure(authentication);
-// Set up our services (see `services/index.js`)
-app.configure(services);
-// Set up event channels (see channels.js)
-app.configure(channels);
-
-// Configure a middleware for 404s and the error handler
-app.use(express.notFound());
-app.use(express.errorHandler({ logger } as any));
-
-app.hooks(appHooks);
+const app = createApp()
 
 export default app;

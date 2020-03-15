@@ -13,7 +13,11 @@
     background-size: cover;
     filter: brightness(50%);
   }
+
   .ant-card {
+    min-width: 300px;
+    max-width: 600px;
+    width: 80%;
     margin: 0 auto;
     .has-error {
       .ant-form-extra {
@@ -27,7 +31,8 @@
     font-family: serif;
     margin-bottom: 20px;
     text-transform: uppercase;
-    text-align: center;
+    text-align: left;
+    margin-top: -6px;
 
     img {
       width: 32px;

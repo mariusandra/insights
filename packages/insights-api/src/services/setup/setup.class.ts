@@ -1,8 +1,15 @@
+import fs from 'fs'
+import path from 'path'
 import { Id, NullableId, Paginated, Params, ServiceMethods } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import {inSetupMode} from "../../utils/in-setup-mode";
+import randomString from "../../utils/random-string";
 
-interface Data {}
+interface Data {
+  authStrategy: 'noLogin' | 'local',
+  email: string,
+  password: string
+}
 
 interface ServiceOptions {}
 
@@ -19,10 +26,9 @@ export class Setup implements ServiceMethods<Data> {
     return [];
   }
 
-  async get (id: Id, params?: Params): Promise<Data> {
+  async get (id: Id, params?: Params): Promise<any> {
     if (id === 'setup' && inSetupMode(this.app)) {
       return {
-        id: 'setup',
         inSetupMode: true
       }
     }
@@ -32,9 +38,30 @@ export class Setup implements ServiceMethods<Data> {
   }
 
   async create (data: Data, params?: Params): Promise<Data> {
-    if (Array.isArray(data)) {
-      return Promise.all(data.map(current => this.create(current, params)));
+    if (!inSetupMode(this.app)) {
+      throw new Error('what??')
     }
+
+    const secretKey = randomString(64)
+    const template = {
+      authentication: {
+        secret: secretKey,
+        authStrategies: ['jwt', params.authStrategy]
+      }
+    }
+
+    if (!process.env.NODE_CONFIG_DIR) {
+      throw new Error('No config folder!')
+    }
+
+    fs.writeFileSync(path.join(process.env.NODE_CONFIG_DIR, 'insights.json'), JSON.stringify(template, null, 2))
+
+    if (params.authStrategy === 'local') {
+      // TODO: create new app with new auth strategies
+      // TODO: create user in that app
+    }
+
+    // TODO: figure out a way to reload the app
 
     return data;
   }
