@@ -18,7 +18,7 @@
     "kea-saga": "^1.0.1",
     "merge-ranges": "1.0.2",
     "messg": "mariusandra/messg#e698a77bc0b81a4f7b81329361ebbe33afa4f9b8",
-    "moment": "2.24.0",
+    "moment": "2.29.4",
     "node-sass": "^4.13.1",
     "nprogress": "0.2.0",
     "prop-types": "^15.7.2",
