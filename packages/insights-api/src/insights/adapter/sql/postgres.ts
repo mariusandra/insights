@@ -13,7 +13,8 @@ export default class Postgres extends SQL {
 
     this.pool = new Pool({
       connectionString: connection,
-      statement_timeout: timeout ? timeout * 1000 : 15000
+      statement_timeout: timeout ? timeout * 1000 : 15000,
+      connectionTimeoutMillis: timeout ? timeout * 1000 : 15000
     })
   }
 
