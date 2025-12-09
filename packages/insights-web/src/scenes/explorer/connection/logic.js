@@ -354,21 +354,36 @@ export default kea({
       actions.setConnectionId('')
     },
 
-    [actions.testConnection]: async function ({ url, structurePath }) {
-      if (url) {
-        try {
-          const result = await connectionTestService.find({query: {url, structurePath}})
-
-          if (result.working) {
-            actions.testSuccess()
-          } else {
-            actions.testFailure()
-          }
-        } catch (e) {
-          actions.testFailure()
-        }
-      } else {
+    [actions.testConnection]: async function ({ url, structurePath }, breakpoint) {
+      if (!url) {
         actions.testFailure()
+        return
+      }
+
+      try {
+        const TIMEOUT_MS = 5000
+        const timeout = new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), TIMEOUT_MS))
+        const result = await Promise.race([
+          connectionTestService.find({ query: { url, structurePath } }),
+          timeout
+        ])
+
+        breakpoint()
+
+        if (result && result.working) {
+          actions.testSuccess()
+        } else {
+          actions.testFailure()
+          if (result instanceof Error && result.message === 'timeout') {
+            message.error('Connection test timed out. Please check your database or try again.')
+          }
+        }
+      } catch (e) {
+        breakpoint()
+        actions.testFailure()
+        if (e.message === 'timeout') {
+          message.error('Connection test timed out. Please check your database or try again.')
+        }
       }
     },
 
