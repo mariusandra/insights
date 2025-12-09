@@ -19,7 +19,7 @@
     "merge-ranges": "1.0.2",
     "messg": "^2.2.2",
     "moment": "2.24.0",
-    "node-sass": "^9.0.0",
+    "sass": "^1.77.8",
     "nprogress": "0.2.0",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
@@ -40,9 +40,9 @@
     "typescript": "3.7.5"
   },
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
+    "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider react-app-rewired start",
+    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider react-app-rewired build",
+    "test": "cross-env NODE_OPTIONS=--openssl-legacy-provider react-app-rewired test",
     "eject": "react-scripts eject",
     "prepublish": "npm run build"
   },
@@ -64,6 +64,7 @@
   "devDependencies": {
     "babel-plugin-import": "^1.13.0",
     "customize-cra": "^0.9.1",
+    "cross-env": "^6.0.3",
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
     "react-app-rewired": "^2.1.5",
